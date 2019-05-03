@@ -1,0 +1,104 @@
+<html lang="ko">
+<head>
+<title>USB Port Patching</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="usb">
+<meta name="description" content="Patching USB.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<a class="Heading1" name="USB">USB 포트 패치</a>
+<p>
+일반 컴퓨터의 경우 최대 26개의 USB 포트가 사용되는 문제가 있지만 (2.0/3.0포함) 이와 달리 맥 운영체제는 15포트이하를 사용하므로<br>
+15개를 초과하는 포트를 15개이하로 낮춰서 수량을 조절해야 합니다.<br>
+보다 쉽게 작업하기 위해 커스텀맥툴을 이용해 실제 사용되는 포트를 확인하여 사용되지 않는 포트는 제외하는 형태로 패치할 수 있습니다.<br>
+<a href="https://bitbucket.org/RehabMan/os-x-usb-inject-all/downloads/">Rehabman</a>은 Config.plist에서 부트 플래그를 이용해 제외할 USB 포트 목록을 제외 시킬 수 있는 업데이트 본을 배포 했습니다</p>
+<p>
+* 커스텀맥 툴을 이용한 USB 포트 패치가 어려울 경우 Config.plist/Kernel and Kext Patches/KextsToPatch 항목에 15 포트 해제 패치를<br>
+하지 않고 IOREG EXP상에서 HS(USB 2.0 포트를 검출하여 USB 3.0와 짝을 지어 사용되지 않는 포트를 제거합니다 <br>(만약 잘 안되는 분께선 식스플로우 <a href="https://sixflow.kr"><b>ZISQO</b></a>의 게시물을 참고하여 USB 포트 패치를 진행하면 됩니다</p>
+<p>1. EFI/CLOVER/kexts/Other폴더에 USBInjectAll.kext(포트 제외시킨 버전은 사용불가)를 배치 합니다</p>
+<p>    <a href="https://bitbucket.org/RehabMan/os-x-usb-inject-all/downloads/">USBInjectAll.kext</a>와함께 포트 정리 작업시 Config.plist에 추가해야할 내용  </p>
+<ul>
+  <li>클로버 ACPI/DSDT 패치 : XHCI -&gt; XHC</li>
+  <li>클로버 ACPI/DSDT 패치 : XHC1 -&gt; XHC</li>
+  <li>클로버 ACPI/DSDT 패치 : EHC1 -&gt; EH01</li>
+  <li>클로버 ACPI/DSDT 패치 : EHC2 -&gt; EH02</li>
+</ul>
+<p>2.재부팅</p>
+<p>3. 커스텀맥 툴을 실행한 다음, 상단 도구탭의 설치된 Kexts 탭을 클릭하여 USBInjectAll.kext가 정상로드 되었는지 확인 합니다</p>
+<ul>
+  <li>예) USBInjectAll: Yes (Release-0.7.1)</li>
+</ul>
+<p>4. 커스텀맥 툴 → USB 탭에서 USB 컨트롤러 목록을 확인해 주세요. USB 장치에 따라 추가 켁스트를 설치해야 할 수 있습니다</p>
+<p>필요한 켁스트 목록  </p>
+<ul>
+  <li>8086:8CB1 또는 macOS 운영체제 버전이 10.11.1 이상일 땐 → XHCI-9-series.kext 사용</li>
+  <li>8086:8D31, 8086:A2AF, 8086:A36D, 8086:9DED의 경우 -&gt; XHCI-unsupported.kext 사용</li>
+  <li>8086:1E31, 8086:8C31, 8086:8CB1, 8086:8D31, 8086:9C31, 8086:9CB1 -&gt; FakePCIID.kext와 FakePCIID_XHCIMux.kext 사용</li>
+  <li>만약 썬더볼트 장치는 썬더볼트 인젝션용 SSDT.aml이 필요합니다 (KGP, ZISQO의 내용 참고)</li>
+  <li>Z390 DESIGNARE 마더보드의 경우 USB 3.0 장치는 XHC 포트에 연결됨을 유의합니다</li>
+  <li>X299 마더보드의 경우 USB 3.0 장치는 썬더볼트 USB 포트에 연결됨을 유의합니다</li>
+  <li>썬더볼트 AIC의 경우 USB 2.0/3.0 장치는 썬더볼트 USB 포트에 연결됨을 유의합니다</li>
+</ul>
+<p>5. 추가 켁스트를 설치한 다음 커스텀 맥을 재실행해야 하는데 이 경우 반드시 시스템을 재부팅 해주세요</p>
+<p>6. 커스텀맥 툴을 실행한 다음 USB 탭으로 이동해 주세요</p>
+<p>7. USB 포트의 모든 항목을 선택한 다음 하단의 “ 삭제 “ 아이콘을 눌러 삭제한 다음 “새로고침” 버튼을 누릅니다</p>
+<p>실제 사용되는 USB 2.0 포트 확인  </p>
+<p>8. Config.plist의 부트 플래그에 -uia_exclude_ss uia_include=HS01,HS02를 추가한 다음 재부팅 합니다</p>
+<ul>
+  <li>HS01, HS02 포트에 키보드및 마우스가 연결되도록 포트로 변경해 주세요 (물리 포트 연결)</li>
+</ul>
+<p>9. 커스텀맥 툴을 실행한 다음 USB 탭으로 이동합니다</p>
+<ul>
+  <li>USB 2.0 장치를 시스템의 모든 포트에 꽂아 놓거나 USB 2.0 장치 한 개로 모든 포트에 꽂은 다음 뽑습니다</li>
+  <li>활성화된 포트는 녹색으로 강조되어 표시됩니다</li>
+</ul>
+<p>10. 녹색으로 강조되지 않은 모든 포트는 삭제합니다</p>
+<p>실제 사용되는 USB 3.0 &amp; C Type 포트 확인  </p>
+<p>11. Config.plist의 부트 플래그에서 -uia_exclude_hs를 입력하고 기존의 -uia_exclude_ss 부트 플래그를 삭제한 다음 재부팅 합니다</p>
+<p>12. 커스텀 맥 툴을 실행한 다음 USB 탭으로 이동합니다</p>
+<ul>
+  <li>USB 3.0 장치를 모든 포트에 꽂거나 뽑습니다</li>
+  <li>타입 C 포트에도 해당 장치를 꽂거나 뽑습니다 (마더 보드 전,후면 모두)</li>
+  <li>활성화된 포트는 녹색으로 강조되어 표시됩니다</li>
+</ul>
+<p>13. 녹색으로 강조되지 않은 포트는 삭제합니다</p>
+<p>포트 연결  </p>
+<p>14. USB 포트의 커넥터 드랍 다운 목록을 사용하여 각 포트별 해당 커넥터로 연결해 주세요</p>
+<ul>
+  <li>장치가 영구적으로 연결된 USB 포트 (이를테면 M.2 블루투스 카드)는 “Internal”로 설정해 주세요</li>
+  <li>HSxx 포트는 USB3으로 설정해야 합니다</li>
+  <li>내부 허브는 일반적으로 포트 PR11과 PR12로 연결되므로 “Internal”로 설정해야 합니다</li>
+</ul>
+<p>Type-C설정  </p>
+<ul>
+  <li>전후면에서 포트에서 동일한 HSxx/SSxx 포트로 사용되는 경우 내부 스위치로 지정합니다 (“TypeC+Sw”)</li>
+  <li>전후면 포트에서 각각 다른 HSxx/SSxx 포트로 사용되는 경우 내부 스위치가 없습니다 (“TypeC”)</li>
+</ul>
+<p>USB 포트 정리내용 내보내기  </p>
+<p>15. 내보내기 버튼을 눌러 바탕화면에 파일을 생성합니다</p>
+<ul>
+  <li>USBPorts.kext를 EFI/CLOVER/kexts/Other에 복사합니다</li>
+  <li>만약 SSDT-EC.aml을 만들 경우 EFI/CLOVER/ACPI/patched에 복사합니다</li>
+</ul>
+<p>16. 이제 정리 작업을 통해 불 필요한 포트를 제거할 수 있습니다</p>
+<ul>
+  <li>클로버의 부트 플래그 제거 : -uia_exclude_ss -uia_exclude_hs uia_include=xx;xx;xx</li>
+  <li>USBInjectAll.kext제거</li>
+  <li>클로버에서 추가한 ACPI/DSDT 패치 제거 : (XHC, EH01, EH02)</li>
+</ul>
+<p>17. 재부팅 합니다</p>
+<p>18. 커스텀맥 툴을 실행하여 USB 탭으로 이동합니다</p>
+<p>19. USB 포트 목록에서 모든 항목을 선택하고 “삭제’ 버튼을 눌러 삭제한 다음 “새로고침” 버튼을 누릅니다</p>
+<ul>
+  <li>이제 여러분이 정리한 USB 포트 목록대로 작동하는지 확인할 수 있습니다</li>
+  <li>커넥터 타입을 변경해야할 경우 15번 항목대로 내보내기하여 재부팅하여 변경 사항을 확인합니다</li>
+  <li>실수한 경우 USBPorts.kext를 삭제하고 처음부터 다시 시작하도록 합니다</li>
+</ul>
+<p><br></p>
+<p>Q. USBPorts.kext는 무엇인가요?</p>
+<p>A. 이 것은 <a href="https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/KEXTConcept/KEXTConceptAnatomy/kext_anatomy.html#//apple_ref/doc/uid/20002364-SW8">코드리스 커널 익스텐션</a>으로 USB 포트를 인식시키는데 사용됩니다</p>
+<p>Q. SSDT-UIAC.aml이 필요한가요?</p>
+<p>A. 응 아니야 돌아가(한국식 조크) / 아니오 이 방법은 추가적인 aml등의 코드 없이 사용합니다</p>
+</body>
+</html>

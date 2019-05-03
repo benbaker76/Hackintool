@@ -1,0 +1,47 @@
+<html lang="zh-Hans">
+<head>
+<title>Display EDID Patching</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="edid, display">
+<meta name="description" content="Patching Display EDID.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<p>显示器EDID修补</p>
+<p><br>
+</p>
+<p>使用EDID修补你可以进行显示器型号的修改以及添加缩放选项。操作方法如下：<p>     </p>
+<p><p>    1.从显示列表中选择你要编辑的显示器</p>
+<p><p>    2.如果显示器的EDID没有分辨率范围或不好，有选择性地添加/修复分辨率范围<p>   </p>
+<p><p>    3.单击“添加”按钮添加分辨率，再单击分辨率值进行编辑。选中某个分辨率值再点击“删除”按钮即可删除此分辨率。</p>
+<p><p>    4.编辑完成后，点击“导出”按钮在桌面上生成修改好的补丁文件。</p>
+<p>安装</p>
+<p><br></p>
+<p>安装EDID补丁有两种方法：安装显示器补丁文件，以及显示器驱动：</p>
+<p><p>	</p>
+<p class="p6">安装显示器补丁文件：</p>
+<p><br></p>
+<p><p>    •将生成的DisplayVendorID-x文件夹复制到/system/library/displays/contents/resources/overrides（对于El Capitan系统则是/system/library/displays/overrides ）</p>
+<p><p>    •将生成的icons.plist复制到/system/library/displays/contents/resources/overrides（对于El Capitan则是/system/library/displays/overrides）</p>
+<p><br>
+</p>
+<p class="p6">安装显示器驱动：</p>
+<p><br></p>
+<p><p>   •将生成的DisplayEDID-x-x.kext复制到/library/extensions或efi/clover/kexts/other（取决于您的配置）</p>
+<p><br>
+</p>
+<p>注意：在复制文件之前，请先关闭系统完整性保护（SIP)</p>
+<p><br>
+</p>
+<p>其他信息</p>
+<p>对于16:10且想使用缩放分辨率的显示器，可以选择如下类型显示器：</p>
+<p><p>	•iMac显示器</p>
+<p><p>	•MacBook Pro显示器</p>
+<p><p>	•影院高清显示器</p>
+<p><p>	•LED影院显示屏</p>
+<p>对于16:9的，则可以选择：</p>
+<p><p>	•Apple Thunderbolt显示器（此种切勿用在内部显示器上！）</p>
+<p><p>	•iMac视网膜显示</p>
+<p><p>	•MacBook Air显示器</p>
+</body>
+</html>

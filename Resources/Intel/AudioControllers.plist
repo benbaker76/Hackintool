@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>1002FFFF</key>
+	<string>AMD HD Audio Controller</string>
+	<key>80862668</key>
+	<string>Intel ICH6 HD Audio Controller</string>
+	<key>8086269A</key>
+	<string>Intel 63XXESB HD Audio Controller</string>
+	<key>808627D8</key>
+	<string>Intel ICH7 HD Audio Controller</string>
+	<key>8086284B</key>
+	<string>Intel ICH8 HD Audio Controller</string>
+	<key>8086293E</key>
+	<string>Intel ICH9 HD Audio Controller</string>
+	<key>80863A3E</key>
+	<string>Intel ICH10 HD Audio Controller</string>
+	<key>80863A6E</key>
+	<string>Intel ICH10 HD Audio Controller</string>
+	<key>80863B56</key>
+	<string>Intel 5 Series HD Audio Controller</string>
+	<key>80863B57</key>
+	<string>Intel 5 Series HD Audio Controller</string>
+	<key>80861C20</key>
+	<string>Intel 6 Series HD Audio Controller</string>
+	<key>80861D20</key>
+	<string>Intel X79/C600 Series HD Audio Controller</string>
+	<key>80861E20</key>
+	<string>Intel 7 Series HD Audio Controller</string>
+	<key>80868C20</key>
+	<string>Intel 8 Series HD Audio Controller</string>
+	<key>80868C21</key>
+	<string>Intel 8 Series HD Audio Controller</string>
+	<key>80869C20</key>
+	<string>Intel 8 Series HD Audio Controller</string>
+	<key>80869C21</key>
+	<string>Intel 8 Series HD Audio Controller</string>
+	<key>80868CA0</key>
+	<string>Intel 9 Series HD Audio Controller</string>
+	<key>80869CA0</key>
+	<string>Intel 9 Series HD Audio Controller</string>
+	<key>80868D20</key>
+	<string>Intel X99/C610 Series HD Audio Controller</string>
+	<key>80868D21</key>
+	<string>Intel X99/C610 Series HD Audio Controller</string>
+	<key>8086A170</key>
+	<string>Intel 100 Series HD Audio Controller</string>
+	<key>8086A2F0</key>
+	<string>Intel 200 Series HD Audio Controller</string>
+	<key>8086A348</key>
+	<string>Intel 300 Series HD Audio Controller</string>
+	<key>80860A0C</key>
+	<string>Intel Haswell HD Audio Controller</string>
+	<key>80860C0C</key>
+	<string>Intel Ivy Bridge/Haswell HD Audio Controller</string>
+	<key>80860D0C</key>
+	<string>Intel Crystal Well HD Audio Controller</string>
+	<key>8086160C</key>
+	<string>Intel Broadwell HD Audio Controller</string>
+	<key>8086FFFF</key>
+	<string>Intel HD Audio Controller</string>
+	<key>10DE026C</key>
+	<string>NVIDIA MCP51 HD Audio Controller</string>
+	<key>10DE0371</key>
+	<string>NVIDIA MCP55 HD Audio Controller</string>
+	<key>10DE03E4</key>
+	<string>NVIDIA MCP61 HD Audio Controller</string>
+	<key>10DE03F0</key>
+	<string>NVIDIA MCP61 HD Audio Controller</string>
+	<key>10DE044A</key>
+	<string>NVIDIA MCP65 HD Audio Controller</string>
+	<key>10DE044B</key>
+	<string>NVIDIA MCP65 HD Audio Controller</string>
+	<key>10DE055C</key>
+	<string>NVIDIA MCP67 HD Audio Controller</string>
+	<key>10DE055D</key>
+	<string>NVIDIA MCP67 HD Audio Controller</string>
+	<key>10DE0774</key>
+	<string>NVIDIA MCP72 HD Audio Controller</string>
+	<key>10DE07FC</key>
+	<string>NVIDIA MCP73 HD Audio Controller</string>
+	<key>10DE0AC0</key>
+	<string>NVIDIA MCP79 HD Audio Controller</string>
+	<key>10DE0AC1</key>
+	<string>NVIDIA MCP79 HD Audio Controller</string>
+	<key>10DE0AC2</key>
+	<string>NVIDIA MCP79 HD Audio Controller</string>
+	<key>10DE0AC3</key>
+	<string>NVIDIA MCP79 HD Audio Controller</string>
+	<key>10DE0D94</key>
+	<string>NVIDIA MCP89 HD Audio Controller</string>
+	<key>10DE0BE2</key>
+	<string>NVIDIA GT216 HD Audio Controller</string>
+	<key>10DE0BE5</key>
+	<string>NVIDIA GF100 HD Audio Controller</string>
+	<key>10DE0BE9</key>
+	<string>NVIDIA GF106 HD Audio Controller</string>
+	<key>10DE0BEA</key>
+	<string>NVIDIA GF108 HD Audio Controller</string>
+	<key>10DE0BEB</key>
+	<string>NVIDIA GF104 HD Audio Controller</string>
+	<key>10DE0BEE</key>
+	<string>NVIDIA GF116 HD Audio Controller</string>
+	<key>10DE0E08</key>
+	<string>NVIDIA GF119 HD Audio Controller</string>
+	<key>10DE0E09</key>
+	<string>NVIDIA GF110 HD Audio Controller</string>
+	<key>10DE0E0A</key>
+	<string>NVIDIA GK104 HD Audio Controller</string>
+	<key>10DE0E0B</key>
+	<string>NVIDIA GK106 HD Audio Controller</string>
+	<key>10DE0E0C</key>
+	<string>NVIDIA GF114 HD Audio Controller</string>
+	<key>10DE0E0F</key>
+	<string>NVIDIA GK208 HD Audio Controller</string>
+	<key>10DE0E1A</key>
+	<string>NVIDIA GK110 HD Audio Controller</string>
+	<key>10DE0E1B</key>
+	<string>NVIDIA GK107 HD Audio Controller</string>
+	<key>10DE0FB0</key>
+	<string>NVIDIA GM200 HD Audio Controller</string>
+	<key>10DE0FB8</key>
+	<string>NVIDIA GP108 HD Audio Controller</string>
+	<key>10DE0FB9</key>
+	<string>NVIDIA GP107GL HD Audio Controller</string>
+	<key>10DE0FBA</key>
+	<string>NVIDIA GM206 HD Audio Controller</string>
+	<key>10DE0FBB</key>
+	<string>NVIDIA GM204 HD Audio Controller</string>
+	<key>10DE10EF</key>
+	<string>NVIDIA GP102 HD Audio Controller</string>
+	<key>10DE10F0</key>
+	<string>NVIDIA GP104 HD Audio Controller</string>
+	<key>10DE10F1</key>
+	<string>NVIDIA GP106 HD Audio Controller</string>
+	<key>10DE10F7</key>
+	<string>NVIDIA TU102 HD Audio Controller</string>
+	<key>10DEFFFF</key>
+	<string>NVIDIA HD Audio Controller</string>
+</dict>
+</plist>

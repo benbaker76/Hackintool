@@ -1,0 +1,23 @@
+<html lang="ko">
+<head>
+<title>Audio Patching</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="audio">
+<meta name="description" content="Patching Audio.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<a class="Heading1" name="Audio">오디오 레이아웃 ID 패치 </a>
+<ol>
+  <li>최신 <a href="https://github.com/acidanthera/Lilu/releases">Lilu</a>와 <a href="https://github.com/acidanthera/AppleALC/releases">AppleALC</a>를 설치합니다 (EFI/Clover/Kexts/Other)</li>
+  <li>Confi.plist/Devices/Audio : Inject=NO를 설정</li>
+  <li>Config.plist/ACPI : HDAS 또는 CVAS를 HDEF로 설정</li>
+  <li>>커스텀맥 툴에서 Audio 탭 선택</li>
+  <li>>레이아웃 아이디 목록에서 오디오 레이아웃 아이디 선택</li>
+  <li>>파일 → 내보내기 → 클로버용 Config.plist (기존 Config.plist에 덮어 씌워짐)</li>
+  <li>재부팅</li>
+  <li>>만약 오디오가 활성화되지 않은다면 다른 레이아웃 아이디로 4번 항목부터 다시 시작</li>
+</ol>
+<p>NOTE : 만약 모든 레이아웃 ID를 사용했음에도 여전히 문제가 있을 경우<br> 패치 → 고급 → 오디오 장치 ID 스푸핑 옵션을 설정해 보십시오.<br> 그래도 작동하지 않는다면 <a href="https://bitbucket.org/RehabMan/os-x-fake-pci-id/downloads/">FakePCIID.kext, FakePCIID_Intel_HDMI_Audio.kext</a>를<br>설치하거나 VoodooHDA.kext를 설치하십시오</p>
+</body>
+</html>

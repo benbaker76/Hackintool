@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>0x0000</key>
+	<string>Unknown</string>
+	<key>0x0001</key>
+	<string>Intel HD Graphics 3000</string>
+	<key>0x0002</key>
+	<string>Intel HD Graphics 3000</string>
+	<key>0x0003</key>
+	<string>Intel HD Graphics 3000</string>
+	<key>0x0004</key>
+	<string>Intel HD Graphics 3000</string>
+	<key>0x0005</key>
+	<string>Intel HD Graphics 3000</string>
+	<key>0x2E5B</key>
+	<string>Intel 500</string>
+	<key>0x8108</key>
+	<string>Intel 500</string>
+	<key>0x8109</key>
+	<string>Intel 500</string>
+	<key>0x4102</key>
+	<string>Intel 600</string>
+	<key>0x0BE0</key>
+	<string>Intel GMA 3600</string>
+	<key>0x0BE1</key>
+	<string>Intel GMA 3600</string>
+	<key>0x0BE2</key>
+	<string>Intel GMA 3650</string>
+	<key>0x0BE3</key>
+	<string>Intel GMA 3650</string>
+	<key>0x08C7</key>
+	<string>Intel GMA</string>
+	<key>0x08C8</key>
+	<string>Intel GMA</string>
+	<key>0x08C9</key>
+	<string>Intel GMA</string>
+	<key>0x08CA</key>
+	<string>Intel GMA</string>
+	<key>0x08CB</key>
+	<string>Intel GMA</string>
+	<key>0x08CC</key>
+	<string>Intel GMA</string>
+	<key>0x08CD</key>
+	<string>Intel GMA</string>
+	<key>0x08CE</key>
+	<string>Intel GMA</string>
+	<key>0x08CF</key>
+	<string>Intel GMA</string>
+	<key>0x7800</key>
+	<string>Intel 740</string>
+	<key>0x1240</key>
+	<string>Intel 752</string>
+	<key>0x7121</key>
+	<string>Intel 3D graphics 810</string>
+	<key>0x7123</key>
+	<string>Intel 3D graphics 810</string>
+	<key>0x7125</key>
+	<string>Intel 3D graphics 810</string>
+	<key>0x1132</key>
+	<string>Intel 3D graphics 815</string>
+	<key>0x3577</key>
+	<string>Intel Extreme Graphics 830</string>
+	<key>0x357B</key>
+	<string>Intel Extreme Graphics 835</string>
+	<key>0x2562</key>
+	<string>Intel Extreme Graphics 845</string>
+	<key>0x358E</key>
+	<string>Intel Extreme Graphics 2 854</string>
+	<key>0x3582</key>
+	<string>Intel Extreme Graphics 2 855</string>
+	<key>0x2572</key>
+	<string>Intel Extreme Graphics 2 865</string>
+	<key>0x2582</key>
+	<string>Intel GMA 900</string>
+	<key>0x258A</key>
+	<string>Intel GMA 900</string>
+	<key>0x2782</key>
+	<string>Intel GMA 900</string>
+	<key>0x2592</key>
+	<string>Intel GMA 900</string>
+	<key>0x2792</key>
+	<string>Intel GMA 900</string>
+	<key>0x2772</key>
+	<string>Intel GMA 950</string>
+	<key>0x2776</key>
+	<string>Intel GMA 950</string>
+	<key>0x27A2</key>
+	<string>Intel GMA 950</string>
+	<key>0x27A6</key>
+	<string>Intel GMA 950</string>
+	<key>0x27AE</key>
+	<string>Intel GMA 950</string>
+	<key>0x29B2</key>
+	<string>Intel GMA 3100</string>
+	<key>0x29B3</key>
+	<string>Intel GMA 3100</string>
+	<key>0x29C2</key>
+	<string>Intel GMA 3100</string>
+	<key>0x29C3</key>
+	<string>Intel GMA 3100</string>
+	<key>0x29D2</key>
+	<string>Intel GMA 3100</string>
+	<key>0x29D3</key>
+	<string>Intel GMA 3100</string>
+	<key>0xA001</key>
+	<string>Intel GMA 3150</string>
+	<key>0xA002</key>
+	<string>Intel GMA 3150</string>
+	<key>0xA011</key>
+	<string>Intel GMA 3150</string>
+	<key>0xA012</key>
+	<string>Intel GMA 3150</string>
+	<key>0x2972</key>
+	<string>Intel GMA 3000</string>
+	<key>0x2973</key>
+	<string>Intel GMA 3000</string>
+	<key>0x2992</key>
+	<string>Intel GMA 3000</string>
+	<key>0x2993</key>
+	<string>Intel GMA 3000</string>
+	<key>0x29A2</key>
+	<string>Intel GMA X3000</string>
+	<key>0x29A3</key>
+	<string>Intel GMA X3000</string>
+	<key>0x2A02</key>
+	<string>Intel GMA X3100</string>
+	<key>0x2A03</key>
+	<string>Intel GMA X3100</string>
+	<key>0x2A12</key>
+	<string>Intel GMA X3100</string>
+	<key>0x2A13</key>
+	<string>Intel GMA X3100</string>
+	<key>0x2982</key>
+	<string>Intel GMA X3500</string>
+	<key>0x2983</key>
+	<string>Intel GMA X3500</string>
+	<key>0x2E02</key>
+	<string>Intel GMA 4500</string>
+	<key>0x2E03</key>
+	<string>Intel GMA 4500</string>
+	<key>0x2E12</key>
+	<string>Intel GMA 4500</string>
+	<key>0x2E13</key>
+	<string>Intel GMA 4500</string>
+	<key>0x2E42</key>
+	<string>Intel GMA 4500</string>
+	<key>0x2E43</key>
+	<string>Intel GMA 4500</string>
+	<key>0x2E92</key>
+	<string>Intel GMA 4500</string>
+	<key>0x2E93</key>
+	<string>Intel GMA 4500</string>
+	<key>0x2E32</key>
+	<string>Intel GMA X4500</string>
+	<key>0x2E33</key>
+	<string>Intel GMA X4500</string>
+	<key>0x2E22</key>
+	<string>Intel GMA X4500</string>
+	<key>0x2E23</key>
+	<string>Intel GMA X4500HD</string>
+	<key>0x2A42</key>
+	<string>Intel GMA X4500MHD</string>
+	<key>0x2A43</key>
+	<string>Intel GMA X4500MHD</string>
+	<key>0x0042</key>
+	<string>Intel HD Graphics</string>
+	<key>0x0046</key>
+	<string>Intel HD Graphics</string>
+	<key>0x0102</key>
+	<string>Intel HD Graphics 2000</string>
+	<key>0x0106</key>
+	<string>Intel HD Graphics 2000</string>
+	<key>0x010A</key>
+	<string>Intel HD Graphics P3000</string>
+	<key>0x0112</key>
+	<string>Intel HD Graphics 3000</string>
+	<key>0x0116</key>
+	<string>Intel HD Graphics 3000</string>
+	<key>0x0122</key>
+	<string>Intel HD Graphics 3000</string>
+	<key>0x0126</key>
+	<string>Intel HD Graphics 3000</string>
+	<key>0x0152</key>
+	<string>Intel HD Graphics 2500</string>
+	<key>0x0156</key>
+	<string>Intel HD Graphics 2500</string>
+	<key>0x015A</key>
+	<string>Intel HD Graphics 2500</string>
+	<key>0x015E</key>
+	<string>Intel Ivy Bridge GT1</string>
+	<key>0x0162</key>
+	<string>Intel HD Graphics 4000</string>
+	<key>0x0166</key>
+	<string>Intel HD Graphics 4000</string>
+	<key>0x016A</key>
+	<string>Intel HD Graphics P4000</string>
+	<key>0x0402</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0406</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x040A</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x040B</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x040E</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0412</key>
+	<string>Intel HD Graphics 4600</string>
+	<key>0x0416</key>
+	<string>Intel HD Graphics 4600</string>
+	<key>0x041A</key>
+	<string>Intel HD Graphics P4600</string>
+	<key>0x041B</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x041E</key>
+	<string>Intel HD Graphics 4400</string>
+	<key>0x0422</key>
+	<string>Intel HD Graphics 5000</string>
+	<key>0x0426</key>
+	<string>Intel HD Graphics 5000</string>
+	<key>0x042A</key>
+	<string>Intel HD Graphics 5000</string>
+	<key>0x042B</key>
+	<string>Intel Haswell GT3</string>
+	<key>0x042E</key>
+	<string>Intel Haswell GT3</string>
+	<key>0x0A02</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0A06</key>
+	<string>Intel HD Graphics</string>
+	<key>0x0A0A</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0A0B</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0A0E</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0A12</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0A16</key>
+	<string>Intel HD Graphics 4400</string>
+	<key>0x0A1A</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0A1B</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0A1E</key>
+	<string>Intel HD Graphics 4200</string>
+	<key>0x0A22</key>
+	<string>Intel Iris Graphics 5100</string>
+	<key>0x0A26</key>
+	<string>Intel HD Graphics 5000</string>
+	<key>0x0A2A</key>
+	<string>Intel Iris Graphics 5100</string>
+	<key>0x0A2B</key>
+	<string>Intel Iris Graphics 5100</string>
+	<key>0x0A2E</key>
+	<string>Intel Iris Graphics 5100</string>
+	<key>0x0C02</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0C06</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0C0A</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0C0B</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0C0E</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0C12</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0C16</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0C1A</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0C1B</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0C1E</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0C22</key>
+	<string>Intel Haswell GT3</string>
+	<key>0x0C26</key>
+	<string>Intel Haswell GT3</string>
+	<key>0x0C2A</key>
+	<string>Intel Haswell GT3</string>
+	<key>0x0C2B</key>
+	<string>Intel Haswell GT3</string>
+	<key>0x0C2E</key>
+	<string>Intel Haswell GT3</string>
+	<key>0x0D02</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0D06</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0D0A</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0D0B</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0D0E</key>
+	<string>Intel Haswell GT1</string>
+	<key>0x0D12</key>
+	<string>Intel HD Graphics 4600</string>
+	<key>0x0D16</key>
+	<string>Intel HD Graphics 4600</string>
+	<key>0x0D1A</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0D1B</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0D1E</key>
+	<string>Intel Haswell GT2</string>
+	<key>0x0D22</key>
+	<string>Intel Iris Pro Graphics 5200</string>
+	<key>0x0D26</key>
+	<string>Intel Iris Pro Graphics 5200</string>
+	<key>0x0D2A</key>
+	<string>Intel Iris Pro Graphics 5200</string>
+	<key>0x0D2B</key>
+	<string>Intel Iris Pro Graphics 5200</string>
+	<key>0x0D2E</key>
+	<string>Intel Iris Pro Graphics 5200</string>
+	<key>0x0F30</key>
+	<string>Intel HD Graphics</string>
+	<key>0x0F31</key>
+	<string>Intel HD Graphics</string>
+	<key>0x0F32</key>
+	<string>Intel HD Graphics</string>
+	<key>0x0F33</key>
+	<string>Intel HD Graphics</string>
+	<key>0x0155</key>
+	<string>Intel HD Graphics</string>
+	<key>0x0157</key>
+	<string>Intel HD Graphics</string>
+	<key>0x1602</key>
+	<string>Intel Broadwell GT1</string>
+	<key>0x1606</key>
+	<string>Intel Broadwell GT1</string>
+	<key>0x160A</key>
+	<string>Intel Broadwell GT1</string>
+	<key>0x160B</key>
+	<string>Intel Broadwell GT1</string>
+	<key>0x160D</key>
+	<string>Intel Broadwell GT1</string>
+	<key>0x160E</key>
+	<string>Intel Broadwell GT1</string>
+	<key>0x1612</key>
+	<string>Intel HD Graphics 5600</string>
+	<key>0x1616</key>
+	<string>Intel HD Graphics 5500</string>
+	<key>0x161A</key>
+	<string>Intel Broadwell GT2</string>
+	<key>0x161B</key>
+	<string>Intel Broadwell GT2</string>
+	<key>0x161D</key>
+	<string>Intel Broadwell GT2</string>
+	<key>0x161E</key>
+	<string>Intel HD Graphics 5300</string>
+	<key>0x1626</key>
+	<string>Intel HD Graphics 6000</string>
+	<key>0x162B</key>
+	<string>Intel Iris Graphics 6100</string>
+	<key>0x162D</key>
+	<string>Intel Iris Pro Graphics P6300</string>
+	<key>0x1622</key>
+	<string>Intel Iris Pro Graphics 6200</string>
+	<key>0x162A</key>
+	<string>Intel Iris Pro Graphics P6300</string>
+	<key>0x162E</key>
+	<string>Intel Broadwell RSVD</string>
+	<key>0x1632</key>
+	<string>Intel Broadwell RSVD</string>
+	<key>0x1636</key>
+	<string>Intel Broadwell RSVD</string>
+	<key>0x163A</key>
+	<string>Intel Broadwell RSVD</string>
+	<key>0x163B</key>
+	<string>Intel Broadwell RSVD</string>
+	<key>0x163D</key>
+	<string>Intel Broadwell RSVD</string>
+	<key>0x163E</key>
+	<string>Intel Broadwell RSVD</string>
+	<key>0x22B0</key>
+	<string>Intel HD Graphics 400</string>
+	<key>0x22B1</key>
+	<string>Intel HD Graphics 405</string>
+	<key>0x22B2</key>
+	<string>Intel HD Graphics 400</string>
+	<key>0x22B3</key>
+	<string>Intel HD Graphics 405</string>
+	<key>0x1902</key>
+	<string>Intel HD Graphics 510</string>
+	<key>0x1906</key>
+	<string>Intel HD Graphics 510</string>
+	<key>0x190A</key>
+	<string>Intel Skylake GT1</string>
+	<key>0x190B</key>
+	<string>Intel HD Graphics 510</string>
+	<key>0x190E</key>
+	<string>Intel Skylake GT1</string>
+	<key>0x1912</key>
+	<string>Intel HD Graphics 530</string>
+	<key>0x1916</key>
+	<string>Intel HD Graphics 520</string>
+	<key>0x191A</key>
+	<string>Intel Skylake GT2</string>
+	<key>0x191B</key>
+	<string>Intel HD Graphics 530</string>
+	<key>0x191D</key>
+	<string>Intel HD Graphics P530</string>
+	<key>0x191E</key>
+	<string>Intel HD Graphics 515</string>
+	<key>0x1921</key>
+	<string>Intel HD Graphics 520</string>
+	<key>0x1913</key>
+	<string>Intel Skylake GT2f</string>
+	<key>0x1915</key>
+	<string>Intel Skylake GT2f</string>
+	<key>0x1917</key>
+	<string>Intel Skylake GT2f</string>
+	<key>0x1923</key>
+	<string>Intel HD Graphics 535</string>
+	<key>0x1926</key>
+	<string>Intel Iris Graphics 540</string>
+	<key>0x1927</key>
+	<string>Intel Iris Graphics 550</string>
+	<key>0x192B</key>
+	<string>Intel Iris Graphics 555</string>
+	<key>0x192D</key>
+	<string>Intel Iris Graphics P555</string>
+	<key>0x192A</key>
+	<string>Intel Skylake GT4</string>
+	<key>0x1932</key>
+	<string>Intel Iris Pro Graphics 580</string>
+	<key>0x193A</key>
+	<string>Intel Iris Pro Graphics P580</string>
+	<key>0x193B</key>
+	<string>Intel Iris Pro Graphics 580</string>
+	<key>0x193D</key>
+	<string>Intel Iris Pro Graphics P580</string>
+	<key>0x0A84</key>
+	<string>Intel HD Graphics</string>
+	<key>0x1A84</key>
+	<string>Intel HD Graphics</string>
+	<key>0x1A85</key>
+	<string>Intel HD Graphics</string>
+	<key>0x5A84</key>
+	<string>Intel HD Graphics 505</string>
+	<key>0x5A85</key>
+	<string>Intel HD Graphics 500</string>
+	<key>0x5902</key>
+	<string>Intel HD Graphics 610</string>
+	<key>0x5906</key>
+	<string>Intel HD Graphics 610</string>
+	<key>0x590A</key>
+	<string>Intel Kaby Lake GT1</string>
+	<key>0x5908</key>
+	<string>Intel Kaby Lake GT1</string>
+	<key>0x590B</key>
+	<string>Intel Kaby Lake GT1</string>
+	<key>0x590E</key>
+	<string>Intel Kaby Lake GT1</string>
+	<key>0x5913</key>
+	<string>Intel Kaby Lake GT1.5</string>
+	<key>0x5915</key>
+	<string>Intel Kaby Lake GT1.5</string>
+	<key>0x5912</key>
+	<string>Intel HD Graphics 630</string>
+	<key>0x5916</key>
+	<string>Intel HD Graphics 620</string>
+	<key>0x591A</key>
+	<string>Intel HD Graphics P630</string>
+	<key>0x591B</key>
+	<string>Intel HD Graphics 630</string>
+	<key>0x591D</key>
+	<string>Intel HD Graphics P630</string>
+	<key>0x591E</key>
+	<string>Intel HD Graphics 615</string>
+	<key>0x5921</key>
+	<string>Intel Kaby Lake GT2F</string>
+	<key>0x5923</key>
+	<string>Intel HD Graphics 635</string>
+	<key>0x5926</key>
+	<string>Intel Iris Plus Graphics 640</string>
+	<key>0x5927</key>
+	<string>Intel Iris Plus Graphics 650</string>
+	<key>0x593B</key>
+	<string>Intel Kaby Lake GT4</string>
+	<key>0x5917</key>
+	<string>Intel UHD Graphics 620</string>
+	<key>0x3E90</key>
+	<string>Intel UHD Graphics 610</string>
+	<key>0x3E93</key>
+	<string>Intel UHD Graphics 610</string>
+	<key>0x3E91</key>
+	<string>Intel UHD Graphics 630</string>
+	<key>0x3E92</key>
+	<string>Intel UHD Graphics 630</string>
+	<key>0x3E94</key>
+	<string>Intel Coffee Lake GT2</string>
+	<key>0x3E96</key>
+	<string>Intel Coffee Lake GT2</string>
+	<key>0x3E9A</key>
+	<string>Intel Coffee Lake GT2</string>
+	<key>0x3E9B</key>
+	<string>Intel UHD Graphics 630</string>
+	<key>0x3EA5</key>
+	<string>Intel Iris Plus Graphics 655</string>
+	<key>0x3EA6</key>
+	<string>Intel Coffee Lake GT3</string>
+	<key>0x3EA7</key>
+	<string>Intel Coffee Lake GT3</string>
+	<key>0x3EA8</key>
+	<string>Intel Coffee Lake GT3</string>
+	<key>0x3184</key>
+	<string>Intel UHD Graphics 605</string>
+	<key>0x3185</key>
+	<string>Intel UHD Graphics 600</string>
+	<key>0x5A49</key>
+	<string>Intel Cannonlake GT0.5</string>
+	<key>0x5A4A</key>
+	<string>Intel Cannonlake GT0.5</string>
+	<key>0x5A41</key>
+	<string>Intel Cannonlake GT1</string>
+	<key>0x5A42</key>
+	<string>Intel Cannonlake GT1</string>
+	<key>0x5A44</key>
+	<string>Intel Cannonlake GT1</string>
+	<key>0x5A59</key>
+	<string>Intel Cannonlake GT1.5</string>
+	<key>0x5A5A</key>
+	<string>Intel Cannonlake GT1.5</string>
+	<key>0x5A5C</key>
+	<string>Intel Cannonlake GT1.5</string>
+	<key>0x5A50</key>
+	<string>Intel Cannonlake GT2</string>
+	<key>0x5A51</key>
+	<string>Intel Cannonlake GT2</string>
+	<key>0x5A52</key>
+	<string>Intel Cannonlake GT2</string>
+	<key>0x5A54</key>
+	<string>Intel Cannonlake GT2</string>
+	<key>0x8A71</key>
+	<string>Intel Ice Lake GT0.5</string>
+	<key>0x8A5B</key>
+	<string>Intel Ice Lake GT1</string>
+	<key>0x8A5D</key>
+	<string>Intel Ice Lake GT1</string>
+	<key>0x8A5A</key>
+	<string>Intel Ice Lake GT1.5</string>
+	<key>0x8A5C</key>
+	<string>Intel Ice Lake GT1.5</string>
+	<key>0x8A50</key>
+	<string>Intel Ice Lake GT2</string>
+	<key>0x8A51</key>
+	<string>Intel Ice Lake GT2</string>
+	<key>0x8A52</key>
+	<string>Intel Ice Lake GT2</string>
+	<key>0x9840</key>
+	<string>Intel Lakefield</string>
+	<key>0x9850</key>
+	<string>Intel Lakefield</string>
+	<key>0x4500</key>
+	<string>Intel Jasper Lake</string>
+	<key>0x591C</key>
+	<string>Intel UHD Graphics 615</string>
+	<key>0x3EA0</key>
+	<string>Intel UHD Graphics 620</string>
+	<key>0x87C0</key>
+	<string>Intel UHD Graphics 617</string>
+	<key>0x3E98</key>
+	<string>Intel UHD Graphics 630</string>
+</dict>
+</plist>

@@ -1,0 +1,54 @@
+<html lang="ko">
+<head>
+<title>Display EDID Patching</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="edid, display">
+<meta name="description" content="Patching Display EDID.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<a class="Heading1" name="Display">디스플레이 EDID 패치 </a>
+<p>EDID 패치를 사용하면 디스플레이 모델에 맞게끔 해상도를 추가하여 디스플레이 성능을 확장할 수 있습니다</p>
+<ol>
+  <li>디스플레이 목록에서 편집할 디스플레이를 선택해 주세요</li>
+  <li>EDID에 표시되지 않은 해상도의 경우 추가 해상도 범위 입력을 위해 “추가” 버튼을 눌러주세요</li>
+  <li>가로 / 세로 픽셀을 입력하여 해상도를 추가하거나 선택한 해상도를 삭제할 수 있습니다</li>
+  <li>내보내기 아이콘을 클릭하여 바탕화면에 생성된 파일을 이용해 교정 파일을 생성합니다</li>
+    <li>한국 유저는 <a href="https://sixflow.kr">식스플로우</a>에서 보다 상세한 설명을 확인할 수 있습니다</li>
+</ol>
+<p><b>추출된 EDID 설치</b></p>
+<p>EDID 패치를 설치하기 위해선 디스플레이 재정의와 라이브러리 익스텐션을 사용할 수 있습니다</p>
+ <p><b>디스플레이 재정의(DISPLAY OVERRIDES)</b></p>
+<ul>
+  <li>DisplayVendorID-X 폴더를 /System/Library/Displays/Contents/Resources/Overrides로 복사합니다</li>
+  <li>(엘 캐피탄의 경우/System/Library/Displays/Overrides의 경로)</li>
+  <li>Icon.plist를 /System/Library/Displays/Contents/Resources/Overrides로 복사합니다</li>
+  <li>(엘 캐피탄의 경우 /System/Library/Displays/Overrides의 경로)</li>
+</ul>
+<p><b>라이브러리 익스텐션 (LIBRARY EXTENSION)</b></p>
+<ul>
+  <li>DisplayEDID-X-X.kext를 /Library/Extensions 또는 EFI/Clover/kexts/Other에 복사합니다</li>
+  <li>(구성에 따라 다르지만, 한국의 경우 주로 EFI/Clover/Kexts/Other에 넣는 것이 트렌드입니다)</li>
+</ul>
+<p><b>시스템 무결성 보호(SIP) </b></p>
+<ol>
+<li>상단에서 설명된 경로에 파일을 복사하기 위해선 SIP를 비활성화 해야 합니다</li>
+<li>SIP 해제를 위해 클로버 클로버 컨피겨레이터를 실행한 다음 Config.plist/Rt Variables 항목에서</li>
+<li>BooterConfig : 0x28, CsrActiveConfig : 0x67을 입력합니다</li>
+</ol>
+<p><b>추가정보</b></p>
+<p>만약 디스플레이 비율이 16:10이고 크기 조정된 해상도를 사용하려면 다음과 같이 EDID 정보를 사용합니다</p>
+<ul>
+  <li>iMac Display</li>
+  <li>MacBook Pro Display</li>
+  <li>Cinema HD Display</li>
+  <li>LED Cinema Display</li>
+</ul>
+<p>16:9 비율의 디스플레이를 사용하면서 확장해상도를 사용해야 할 경우 다음과 같이 EDID 정보를 사용합니다</p>
+<ul>
+  <li>Apple Thunderbolt Display (내장 그래픽에는 절대 사용하지 말 것)</li>
+  <li>iMac Retina Display</li>
+  <li>MacBook Air Display</li>
+</ul>
+</body>
+</html>

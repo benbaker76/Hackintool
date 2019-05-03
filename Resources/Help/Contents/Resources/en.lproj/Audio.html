@@ -1,0 +1,32 @@
+<html lang="en">
+<head>
+<title>Audio Patching</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="audio">
+<meta name="description" content="Patching Audio.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<a class="Heading1" name="Audio">Audio Patching</a>
+<span LANG="">
+<ol>
+	<li>Install the latest 
+	<a href="https://github.com/acidanthera/Lilu/releases">Lilu</a> + 
+	<a href="https://github.com/acidanthera/AppleALC/releases">AppleALC</a></li>
+	<li>Set config.plist/Devices/Audio/Inject=N</span>O</li>
+	<li>Clover-&gt;DSDT Renames (if detected)<br>
+• AZAL-&gt;HDEF<br>
+• HDAS -&gt; HDEF</li>
+	<li>Check Patch-&gt;General-&gt;Audio</li>
+	<li>Set the Layout ID drop down list</li>
+	<li>File-&gt;Export-&gt;Clover config.plist (overwrite your existing config.plist file)</li>
+	<li>&nbsp;Reboot</li>
+	<li>If you get no audio then go back to step 4 and try a different Layout ID</li>
+</ol>
+<p>NOTE: If you try all Layout ID's and still have issues try setting the 
+Patch-&gt;Advanced-&gt;Spoof Audio Device ID option. If that doesn't work then try 
+installing </span>
+<a HREF="https://bitbucket.org/RehabMan/os-x-fake-pci-id/downloads/">
+<span LANG="">FakePCIID.kext + FakePCIID_Intel_HDMI_Audio.kext</span></a></p>
+</body>
+</html>

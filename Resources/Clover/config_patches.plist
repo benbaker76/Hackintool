@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Comment</key>
+	<string>Common patches not specific to a graphics device</string>
+	<key>KernelAndKextPatches</key>
+	<dict>
+		<key>KernelToPatch</key>
+		<array>
+			<dict>
+				<key>Comment</key>
+				<string>Disable panic kext logging on 10.13 debug kernel (credit vit9696)</string>
+				<key>MatchOS</key>
+				<string>10.13.x</string>
+				<key>Find</key>
+				<data>sABMi1Xw</data>
+				<key>Replace</key>
+				<data>SIPEQF3D</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Disable panic kext logging on 10.13 release kernel (credit vit9696)</string>
+				<key>MatchOS</key>
+				<string>10.13.x</string>
+				<key>Find</key>
+				<data>igKEwHRE</data>
+				<key>Replace</key>
+				<data>igKEwOtE</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Disable panic kext logging on 10.14 release kernel (credit vit9696)</string>
+				<key>MatchOS</key>
+				<string>10.14.x</string>
+				<key>Find</key>
+				<data>igKEwHRC</data>
+				<key>Replace</key>
+				<data>igKEwOtC</data>
+			</dict>
+		</array>
+		<key>KextsToPatch</key>
+		<array>
+			<dict>
+				<key>Comment</key>
+				<string>change F%uT%04x to F%uTxxxx in AppleBacklightInjector.kext (credit RehabMan)</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleBacklight</string>
+				<key>Find</key>
+				<data>RiV1VCUwNHgA</data>
+				<key>Replace</key>
+				<data>RiV1VHh4eHgA</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Prevent Apple I2C kexts from attaching to I2C controllers, credit CoolStar</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleIntelLpssI2C</string>
+				<key>Find</key>
+				<data>SU9LaXQ=</data>
+				<key>Replace</key>
+				<data>SU9LaXM=</data>
+				<key>InfoPlistPatch</key>
+				<true/>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Prevent Apple I2C kexts from attaching to I2C controllers, credit CoolStar</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleIntelLpssI2CController</string>
+				<key>Find</key>
+				<data>SU9LaXQ=</data>
+				<key>Replace</key>
+				<data>SU9LaXM=</data>
+				<key>InfoPlistPatch</key>
+				<true/>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Enable TRIM for SSD</string>
+				<key>Name</key>
+				<string>com.apple.iokit.IOAHCIBlockStorage</string>
+				<key>Find</key>
+				<data>AEFQUExFIFNTRAA=</data>
+				<key>Replace</key>
+				<data>AAAAAAAAAAAAAAA=</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Disable Intel, Fresco Logic USB3.0 controllers check, 10.9.* (credit Zenith432)</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleUSBXHCI</string>
+				<key>Find</key>
+				<data>9oDUAAAAgHU6</data>
+				<key>Replace</key>
+				<data>9oDUAAAAgOs6</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Disable Intel, Fresco Logic USB3.0 controllers check, 10.10.* (credit Zenith432)</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleUSBXHCI</string>
+				<key>Find</key>
+				<data>9oDUAAAAgHU0</data>
+				<key>Replace</key>
+				<data>9oDUAAAAgOs0</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Disable XHCI 1.0 check, 10.9.* (credit Zenith432)</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleUSBXHCI</string>
+				<key>Find</key>
+				<data>Zj0AAQ==</data>
+				<key>Replace</key>
+				<data>Zj0AAA==</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Disable XHCI 1.0 check, 10.10.* (credit Zenith432)</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleUSBXHCI</string>
+				<key>Find</key>
+				<data>QbzHAgDgPQABAAA=</data>
+				<key>Replace</key>
+				<data>QbzHAgDgPQAAAAA=</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Patch MSI or pin interrupts #1, 10.9.*, 10.10.* (credit Zenith432)</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleUSBXHCI</string>
+				<key>Find</key>
+				<data>QcdHCAAAQAA=</data>
+				<key>Replace</key>
+				<data>QcdHCAAAAAA=</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Patch MSI or pin interrupts #2, 10.10.* (credit Zenith432)</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleUSBXHCI</string>
+				<key>Find</key>
+				<data>gUkIAABAAA==</data>
+				<key>Replace</key>
+				<data>gUkIAAAAAA==</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Disable the sleep code leaving the controller in non-working state after wake, 10.9.*, 10.10.* (credit Zenith432)</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleUSBXHCI</string>
+				<key>Find</key>
+				<data>xoDIAAAAAQ==</data>
+				<key>Replace</key>
+				<data>xoDIAAAAAA==</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Enable PCI power management if there is no such code in DSDT, 10.9.*, 10.10.* (credit Zenith432)</string>
+				<key>Name</key>
+				<string>com.apple.driver.AppleUSBXHCI</string>
+				<key>Find</key>
+				<data>dU1Ii7voAQAA</data>
+				<key>Replace</key>
+				<data>601Ii7voAQAA</data>
+			</dict>
+		</array>
+	</dict>
+</dict>
+</plist>

@@ -1,0 +1,58 @@
+<html lang="en">
+<head>
+<title>Display EDID Patching</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="edid, display">
+<meta name="description" content="Patching Display EDID.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<a class="Heading1" name="Display">Display EDID Patching</a>
+<p>With EDID patching you are able to apply display model overrides and add 
+scaled resolutions.</p>
+<ol>
+	<li>From the Displays list select the display you want to edit</li>
+	<li>&nbsp;Optionally add / fix the monitor ranges (if your EDID doesn&#39;t have 
+	them or they are bad)</li>
+	<li>&nbsp;Optionally add scaled resolutions by clicking “Add” and then 
+	clicking on the values to edit them. You can remove entered resolutions by 
+	the “Delete” button after selecting them.</li>
+	<li>&nbsp;Click the “Export” button to generates the overrides on the 
+	desktop</li>
+</ol>
+<a class="Heading1" name="Display_Installation">Installation</a>
+<p>There are two methods to install EDID patches; Display Overrides and Library 
+Extensions:</p>
+<a class="Heading2" name="Display_Overrides">Display Overrides:</a>
+<ul>
+	<li>Copy DisplayVendorID-x folders into 
+	/System/Library/Displays/Contents/Resources/Overrides (or 
+	/System/Library/Displays/Overrides for &lt; El Capitan)</li>
+	<li>Copy Icons.plist to 
+	/System/Library/Displays/Contents/Resources/Overrides (or 
+	/System/Library/Displays/Overrides for &lt; El Capitan)</li>
+</ul>
+<a class="Heading2" name="Display_Library_Extensions">Library Extensions:</a>
+<ul>
+	<li>Copy DisplayEDID-x-x.kext into /Library/Extensions or EFI/CLOVER/kexts/Other 
+	(depending on your configuration)</li>
+</ul>
+<a class="Heading1" name="Display_SIP">System Integrety Protection (SIP)</a>
+<p>You will need to disable SIP to be able to copy the files to the above 
+locations.</p>
+<a class="Heading1" name="Display_Extra_Info">Extra Info</a>
+<p>If you have a 16:10 display and want to use scaled resolutions you can use:</p>
+<ul>
+	<li>iMac Display</li>
+	<li>MacBook Pro Display</li>
+	<li>Cinema HD Display</li>
+	<li>LED Cinema Display</li>
+</ul>
+<p>For 16:9 displays and scaled resolutions you can use:</p>
+<ul>
+	<li>Apple Thunderbolt Display (Do not use for internal display!)</li>
+	<li>iMac Retina Display</li>
+	<li>MacBook Air Display</li>
+</ul>
+</body>
+</html>

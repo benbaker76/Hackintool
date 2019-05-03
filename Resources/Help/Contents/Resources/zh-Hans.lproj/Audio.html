@@ -1,0 +1,30 @@
+<html lang="zh-Hans">
+<head>
+<title>Audio Patching</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="audio">
+<meta name="description" content="Patching Audio.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<a class="Heading1" name="Audio">音频修补</a>
+<span LANG="zh-Hans">
+<ol>
+	<li>安装最新的
+	<a href="https://github.com/acidanthera/Lilu/releases">Lilu</a> + 
+	<a href="https://github.com/acidanthera/AppleALC/releases">AppleALC</a></li>
+	<li>通过 <b>Clover Configurator</b> 设置 config.plist/Devices/Audio/Inject=NO</span></li>
+	<li>Clover-&gt;DSDT 重命名 (如果检测到)<br>
+• AZAL-&gt;HDEF<br>
+• HDAS -&gt; HDEF</li>
+	<li>在 <b>Hackintool</b> 工具中点击 声音</li>
+	<li>通过下拉列表设置 Layout ID</li>
+	<li>文件-&gt;导出-&gt;Clover config.plist (覆盖现有的config.plist文件)</li>
+	<li>&nbsp;重新启动</li>
+	<li>如果没有音频，请返回步骤4并尝试不同的 Layout ID</li>
+</ol>
+<p>注意：如果您尝试所有 Layout ID 但仍有问题，请尝试勾选 核显-> 应用补丁-> 高级-> 仿冒声卡ID 选项。 如果这依然不起作用，那么尝试安装 </span>
+<a HREF="https://bitbucket.org/RehabMan/os-x-fake-pci-id/downloads/">
+<span LANG="">FakePCIID.kext + FakePCIID_Intel_HDMI_Audio.kext</span></a></p>
+</body>
+</html>

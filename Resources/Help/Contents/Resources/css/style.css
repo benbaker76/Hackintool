@@ -1,0 +1,44 @@
+.Normal {
+    font-family: "HelveticaNeue","Helvetica Neue",sans-serif;
+    font-size: 12.000000px;
+    color: RGBA(58,58,58,1.000000);
+}
+.Normal_link  {
+    font-family: "HelveticaNeue","Helvetica Neue",sans-serif;
+    font-size: 12.000000px;
+    color: #0000ff;
+}
+.Code {
+    font-family: "Courier","Courier",serif;
+    font-size: 12.000000px;
+    color: RGBA(58,58,58,1.000000);
+}
+.Heading2 {
+    font-family: "HelveticaNeue","Helvetica Neue",sans-serif;
+    font-size: 16.000000px;
+    color: RGBA(58,58,58,1.000000);
+}
+.Heading1 {
+    font-family: "HelveticaNeue-Light","Helvetica Neue",sans-serif;
+    font-size: 27.000000px;
+    color: RGBA(58,58,58,1.000000);
+}
+.Left {
+    text-align: left;
+}
+.Right {
+    text-align: right;
+}
+.Justify {
+    text-align: justify;
+}
+.Center {
+    text-align: center;
+    width:100%;
+}
+.CenterImage {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}

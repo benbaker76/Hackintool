@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Sandy Bridge</key>
+	<string>AppleIntelSNBGraphicsFB</string>
+	<key>Ivy Bridge</key>
+	<string>AppleIntelFramebufferCapri</string>
+	<key>Haswell</key>
+	<string>AppleIntelFramebufferAzul</string>
+	<key>Broadwell</key>
+	<string>AppleIntelBDWGraphicsFramebuffer</string>
+	<key>Skylake</key>
+	<string>AppleIntelSKLGraphicsFramebuffer</string>
+	<key>Kaby Lake</key>
+	<string>AppleIntelKBLGraphicsFramebuffer</string>
+	<key>Coffee Lake</key>
+	<string>AppleIntelCFLGraphicsFramebuffer</string>
+	<key>Cannon Lake</key>
+	<string>AppleIntelCNLGraphicsFramebuffer</string>
+	<key>Ice Lake (LP)</key>
+	<string>AppleIntelICLLPGraphicsFramebuffer</string>
+	<key>Ice Lake (HP)</key>
+	<string>AppleIntelICLHPGraphicsFramebuffer</string>
+	<key>Tiger Lake</key>
+	<string>AppleIntelTGLGraphicsFramebuffer</string>
+</dict>
+</plist>

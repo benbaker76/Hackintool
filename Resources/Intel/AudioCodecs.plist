@@ -1,0 +1,2702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10134206</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Cirrus Logic CS4206</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10134207</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Cirrus Logic CS4207</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10134210</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Cirrus Logic CS4210</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10134213</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Cirrus Logic CS4213</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0221</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC221</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0225</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC225</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0230</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC230</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0233</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC233</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0235</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC235</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0236</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC236</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0255</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC255</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0256</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC256 (ALC3246)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0257</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC257</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0260</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC260</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0262</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC262</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0267</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC267</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0268</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC268</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0269</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC269</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0269</integer>
+		<key>RevisionID</key>
+		<integer>0x0004</integer>
+		<key>Name</key>
+		<string>Realtek ALC269</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0269</integer>
+		<key>RevisionID</key>
+		<integer>0x0100</integer>
+		<key>Name</key>
+		<string>Realtek ALC269VB</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0269</integer>
+		<key>RevisionID</key>
+		<integer>0x0202</integer>
+		<key>Name</key>
+		<string>Realtek ALC269VC</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0269</integer>
+		<key>RevisionID</key>
+		<integer>0x0203</integer>
+		<key>Name</key>
+		<string>Realtek ALC269VC</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0270</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC270</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0272</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC272</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0273</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC273</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0275</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC275</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0276</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC276</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0280</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC280</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0282</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC282</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0283</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC283</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0284</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC284</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0285</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC285</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0286</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC286</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0288</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC288</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0290</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC290</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0292</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC292</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0293</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC293</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0294</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC294</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0295</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC295</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0298</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC298</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0299</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC299</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0660</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC660</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0662</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC662</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0662</integer>
+		<key>RevisionID</key>
+		<integer>0x0002</integer>
+		<key>Name</key>
+		<string>Realtek ALC662v2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0663</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC663</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0665</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC665</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0668</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC668</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0670</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC670</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0671</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC671</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0680</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC680</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0861</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC861</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0862</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC861-VD</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0867</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC867</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0880</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC880</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0882</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC882</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0883</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC883</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0885</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC885</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0885</integer>
+		<key>RevisionID</key>
+		<integer>0x0004</integer>
+		<key>Name</key>
+		<string>Realtek ALC889A/ALC885</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0885</integer>
+		<key>RevisionID</key>
+		<integer>0x0103</integer>
+		<key>Name</key>
+		<string>Realtek ALC889A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0885</integer>
+		<key>RevisionID</key>
+		<integer>0x0101</integer>
+		<key>Name</key>
+		<string>Realtek ALC889A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0887</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC887</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0887</integer>
+		<key>RevisionID</key>
+		<integer>0x0302</integer>
+		<key>Name</key>
+		<string>Realtek ALC888B</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0887</integer>
+		<key>RevisionID</key>
+		<integer>0x0002</integer>
+		<key>Name</key>
+		<string>Realtek ALC887-VD2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0887</integer>
+		<key>RevisionID</key>
+		<integer>0x0001</integer>
+		<key>Name</key>
+		<string>Realtek ALC887-VD</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0888</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC888</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0888</integer>
+		<key>RevisionID</key>
+		<integer>0x0003</integer>
+		<key>Name</key>
+		<string>Realtek ALC888S-VD</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0888</integer>
+		<key>RevisionID</key>
+		<integer>0x0002</integer>
+		<key>Name</key>
+		<string>Realtek ALC888S-VC</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0888</integer>
+		<key>RevisionID</key>
+		<integer>0x0001</integer>
+		<key>Name</key>
+		<string>Realtek ALC888S</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0889</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC889</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0891</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC891</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0892</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC892</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0898</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC898</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0899</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC899</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0900</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC1150</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC1220</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALC1220</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC0B00</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALCS1200A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10EC1168</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek ALCS1220A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D41882</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1882</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D4882A</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1882A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D41883</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1883</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D41884</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1884</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D4184A</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1884A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D41981</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1981HD</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D41983</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1983</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D41984</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1984</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D4194A</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1984A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D4194B</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1984B</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D41986</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1986A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D41987</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1987</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D41988</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1988A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D4198B</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1988B</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D4989A</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD1989A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D4989B</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices AD2000b</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1102000A</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Creative CA0110-IBG</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1102000B</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Creative CA0110-IBG</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11020011</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Creative CA0132</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1102000D</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Creative SB0880 X-Fi</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x13F69880</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>CMedia CMI9880</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x434D4980</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>CMedia CMI9880</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847661</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel CXD9872RD/K</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847664</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel CXD9872AKD</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847690</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9200</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847691</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9200D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x838476A2</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9204X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x838476A3</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9204D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x838476A0</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9205X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x838476A1</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9205D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847690</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9220</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847882</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9220_A1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847880</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9220_A2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847680</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9221</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847682</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9221_A2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847683</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9221D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847681</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9220D/9223D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847618</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9227X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847619</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9227D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847616</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9228X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847617</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9228D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847614</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9229X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847615</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9229D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847612</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9230X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847613</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9230D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847634</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9250</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847636</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9251</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x838476A4</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9255</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x838476A5</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9255D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x838476A6</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9254</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x838476A7</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9254D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847626</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9271X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847627</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9271D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847624</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9272X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847625</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9272D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847622</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9273X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847623</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9273D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847620</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9274</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847621</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9274D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847628</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9274X5NH</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847629</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9274D5NH</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847662</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel STAC9872AK</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847698</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD005</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847699</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD005D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847645</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD206X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847646</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD206D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76E8</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66B1X5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76E9</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66B2X5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76EA</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66B3X5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76EB</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66C1X5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76EC</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66C2X5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76ED</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66C3X5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76EE</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66B1X3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76EF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66B2X3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76F0</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66B3X3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76F1</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66C1X3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76F2</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66C2X3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76F3</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD66C3/65</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847638</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD700X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x83847639</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD700D</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76B6</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD71B5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76B7</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD71B5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76B4</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD71B6</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76B5</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD71B6</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76B2</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD71B7</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76B3</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD71B7</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76B0</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD71B8</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76B1</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD71B8</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D7675</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD73C1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D7674</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD73D1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D7676</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD73E1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D7695</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT ID7695</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D7608</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD75B3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D7603</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD75BX</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76D5</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD81B1C</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D7605</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD81B1X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76D4</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD83C1C</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D7604</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD83C1X</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76D1</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD87B1/3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76D9</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD87B2/4</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76C0</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89C3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76C1</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89C2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76C2</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89C1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76C3</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89B3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76C4</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89B2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76C5</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89B1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76C6</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89E3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76C7</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89E2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76C8</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89E1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76C9</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89D3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76CA</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89D2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76CB</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89D1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76CC</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89F3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76CD</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89F2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76CE</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD89F1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76E7</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD90BXX</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76E0</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD91BXX</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76DF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD93BXX</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76E3</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD98BXX</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111D76E5</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT 92HD99BXX</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F11F72</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX8050</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F11FD6</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX8150</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F12008</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX8200</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F120D0</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX8400</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15045</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20549 (Venice)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15047</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20551 (Waikiki)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15051</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20561 (Hermosa)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15066</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20582 (Pebble)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15067</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20583 (Pebble HSF)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15068</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20584</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15069</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20585</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F1506C</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20588</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F1506E</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20590</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15097</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20631</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15098</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20632</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F150A1</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20641</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F150A2</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20642</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F150AB</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20651</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F150AC</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20652</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F150B8</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20664</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F150B9</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20665</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F150F2</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20722</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F150F4</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20724</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F1510F</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20751</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15110</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20751/2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15111</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20753/4</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15113</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20755</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15114</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20756</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F15115</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant CX20757</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11064760</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1705</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11061708</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708_8</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11061709</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708_9</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106170A</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708_A</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106170B</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708_B</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E710</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1709_0</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E711</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1709_1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E712</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1709_2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E713</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1709_3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E714</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1709_4</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E715</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1709_5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E716</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1709_6</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E717</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1709_7</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E720</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708B_0</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E721</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708B_1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E722</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708B_2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E723</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708B_3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E724</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708B_4</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E725</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708B_5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E726</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708B_6</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106E727</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708B_7</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11060397</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708S_0</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11061397</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708S_1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11062397</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708S_2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11063397</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708S_3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11064397</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708S_4</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11065397</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708S_5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11066397</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708S_6</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11067397</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1708S_7</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11060398</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1702_0</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11061398</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1702_1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11062398</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1702_2</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11063398</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1702_3</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11064398</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1702_4</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11065398</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1702_5</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11066398</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1702_6</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11067398</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1702_7</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11060433</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1716S_0</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106A721</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1716S_1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11060428</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1718S_0</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11064428</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1718S_1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11060446</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1802_0</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11068446</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1802_1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11060448</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1812</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11060440</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1818S</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11064441</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT1828S</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11060438</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT2002P_0</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11064438</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT2002P_1</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11060441</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA VT2020</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11060441</integer>
+		<key>RevisionID</key>
+		<integer>0x0100</integer>
+		<key>Name</key>
+		<string>VIA VT2020/2021</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1002793C</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>ATI RS600 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10027919</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>ATI RS600 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1002791A</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>ATI RS690/780 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1002AA01</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>ATI R6xx HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0067</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia MCP67 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE8001</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia MCP73 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0002</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia MCP78 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0003</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia MCP78 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0005</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia MCP78 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0006</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia MCP78 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0007</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia MCP7A HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE000A</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GT220 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE000B</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GT21x HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE000C</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia MCP89 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE000D</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GT240 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0010</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GTX470 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0011</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GTS450 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0014</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GT440 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0015</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GTX550 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0018</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GTX570 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE001C</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GT610 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0020</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia Tegra30</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0022</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia Tegra114</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0028</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia Tegra124</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0029</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia Tegra210</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0040</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GTX680 HDMI</string>
+	</dict>
+		<dict>
+		<key>DeviceID</key>
+		<integer>0x10DE0041</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia GTX660 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80860054</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel HD (Ironlake) HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80862801</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel 3100/X3500 (Bearlake) HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80862802</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel 4500MHD (Cantiga) HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80862803</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel (X)4500(HD) (Eaglelake) HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80862804</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel HD (Ironlake) HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80862805</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel HD 3000 (Sandy Bridge) HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80862806</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel HD 4000 (Ivy Bridge) HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80862807</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel Haswell HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80862808</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel Broadwell HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80862809</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel Skylake HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x8086280A</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel Broxton HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x8086280B</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel Kabylake HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x8086280D</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel Coffee Lake HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x808629FB</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel X3100 (Crestline) HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x80860A0C</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel Wellsburg HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10951390</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Silicon Image SiI1390 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10951392</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Silicon Image SiI1392 HDMI</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11D4FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Analog Devices (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x11C1FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Lucent/Agere Systems (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10ECFFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Realtek (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1002FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>ATI (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1102FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Creative (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x13F6FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>CMedia (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x434DFFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>CMedia (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1013FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Cirrus Logic (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x14F1FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Conexant (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x17E8FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Chrontel (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x111DFFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>IDT (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x8086FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Intel (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1057FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Motorola (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x10DEFFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>NVidia (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1095FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Silicon Image (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x8384FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>Sigmatel (Unknown)</string>
+	</dict>
+	<dict>
+		<key>DeviceID</key>
+		<integer>0x1106FFFF</integer>
+		<key>RevisionID</key>
+		<integer>0x0000</integer>
+		<key>Name</key>
+		<string>VIA (Unknown)</string>
+	</dict>
+</array>
+</plist>

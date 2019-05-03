@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>Name</key>
+		<string>DiskArbitrationFixup</string>
+		<key>Description</key>
+		<string>Lilu plugin for disabling the &quot;The disk you inserted was not readable by this computer&quot; message at boot on 10.9 or later. Useful if you have other disks with filesystems unknown to macOS.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/Goldfish64/DiskArbitrationFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>RTCMemoryFixup</string>
+		<key>Description</key>
+		<string>An open source kernel extension providing a way to emulate some offsets in CMOS (RTC) memory. It can help you to avoid some conflicts between osx AppleRTC and firmware/BIOS of your PC.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/RTCMemoryFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Lilu</string>
+		<key>Description</key>
+		<string>An open source kernel extension bringing a platform for arbitrary kext, library, and program patching throughout the system for macOS.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/Lilu</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>VirtualSMC</string>
+		<key>Description</key>
+		<string>Advanced Apple SMC emulator in the kernel. Requires Lilu for full functioning.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/VirtualSMC</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>WhateverGreen</string>
+		<key>Description</key>
+		<string>Lilu plugin providing patches to select GPUs on macOS. Requires Lilu 1.2.5 or newer.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/WhateverGreen</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>AppleALC</string>
+		<key>Description</key>
+		<string>An open source kernel extension enabling native macOS HD audio for not officially supported codecs without any filesystem modifications.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/AppleALC</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>BT4LEContiunityFixup</string>
+		<key>Description</key>
+		<string>An open source kernel extension providing patches for IOBluetoothFamily.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/BT4LEContiunityFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>NoTouchID</string>
+		<key>Description</key>
+		<string>Lilu plugin for disabling Touch ID support.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/al3xtjames/NoTouchID</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>CPUFriend</string>
+		<key>Description</key>
+		<string>A Lilu plug-in for dynamic power management data injection.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/CPUFriend</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>NightShiftUnlocker</string>
+		<key>Description</key>
+		<string>A Lilu plugin that unlocks the Night Shift function for all Macs.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/0xFireWolf/NightShiftUnlocker</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>ATH9KFixup</string>
+		<key>Description</key>
+		<string>An open source kernel extension providing patches for unsupported Atheros cards.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/ATH9KFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>HibernationFixup</string>
+		<key>Description</key>
+		<string>An open source kernel extension providing a sync between RTC variables and NVRAM.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/lvs1974/HibernationFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>AirportBrcmFixup</string>
+		<key>Description</key>
+		<string>An open source kernel extension providing a set of patches required for non-native Airport Broadcom Wi-Fi cards.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/lvs1974/AirportBrcmFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>NoVPAJpeg</string>
+		<key>Description</key>
+		<string>A Lilu plugin that disables the hardware JPEG decoding feature of the AppleVPA framework that breaks Preview and Quicklook on some systems.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/vulgo/NoVPAJpeg</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>SystemProfilerMemoryFixup</string>
+		<key>Description</key>
+		<string>Lilu plugin for showing the memory tab on MacBookAir and MacBookPro10,x platforms. The tab is normally hidden as these models have soldered memory.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/Goldfish64/SystemProfilerMemoryFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>USBInjectAll</string>
+		<key>Description</key>
+		<string>This kext attempts to inject USB ports for each controller, and for hubs as well.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/OS-X-USB-Inject-All</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>ACPIBatteryManager</string>
+		<key>Description</key>
+		<string>Implements an Advanced Configuration and Power Interface (ACPI) based battery manager kernel extension (kext/driver) for non-Apple laptops running OS X.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/OS-X-ACPI-Battery-Driver</string>
+		<key>Type</key>
+		<string>RehabMan</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>BrcmWLFixup</string>
+		<key>Description</key>
+		<string>A Lilu plugin that removes whitelist for Wi-Fi under macOS</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/PMheart/BrcmWLFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+		<key>Superseder</key>
+		<string>AirportBrcmFixup</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>AppleBacklightFixup</string>
+		<key>Description</key>
+		<string>Lilu plugin for enabling support for backlight using RehabMan's patches</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/AppleBacklightFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+		<key>Superseder</key>
+		<string>WhateverGreen</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>AsusSMC</string>
+		<key>Description</key>
+		<string>A VirtualSMC plugin provides native support for ALS, keyboard backlight and Fn keys for Asus laptops on macOS.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/hieplpvip/AsusSMC</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>AtherosE2200Ethernet</string>
+		<key>Description</key>
+		<string>Qualcomm Atheros Killer E2200 driver for OS X</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/Mieze/AtherosE2200Ethernet</string>
+		<key>Type</key>
+		<string>Driver</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>AzulPatcher4600</string>
+		<key>Description</key>
+		<string>Lilu plugin for haswell hd4600 mobile igpus</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/coderobe/AzulPatcher4600</string>
+		<key>Type</key>
+		<string>Lilu</string>
+		<key>Superseder</key>
+		<string>WhateverGreen</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>BrcmFirmwareStore</string>
+		<key>Description</key>
+		<string>Broadcom PatchRAM driver for OS X</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/OS-X-BrcmPatchRAM</string>
+		<key>ProjectFileUrl</key>
+		<string>https://github.com/RehabMan/OS-X-BrcmPatchRAM/raw/master/BrcmPatchRAM.xcodeproj/project.pbxproj</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>CodecCommander</string>
+		<key>Description</key>
+		<string>Used for updating EAPD (External Amplifier) state on HDA (High Definition Audio) codecs that use given amp on Speaker or Headphone nodes (both, or even extra ones in some cases).</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/Dolnor/EAPD-Codec-Commander</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>CoreDisplayFixup</string>
+		<key>Description</key>
+		<string>Enable 4K or greater resolution for all graphics under macOS</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/PMheart/CoreDisplayFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+		<key>Superseder</key>
+		<string>WhateverGreen</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>EnableLidWake</string>
+		<key>Description</key>
+		<string>This kext (actually Lilu friend) provides you the ability to fix the lid wake issue after resuming from sleep on macOS.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/syscl/EnableLidWake</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>FakePCIID</string>
+		<key>Description</key>
+		<string>The purpose of this kext is to attach to any IOPCIDevice so it can provide alternate PCI ID when another driver attached to the same device requests them.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/OS-X-Fake-PCI-ID</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>FakeSMC</string>
+		<key>Description</key>
+		<string>HWSensors is a software bundle that includes drivers and applications that allow you to access information from hardware sensors available on your Mac.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/OS-X-FakeSMC-kozlek</string>
+		<key>ProjectFileUrl</key>
+		<string>https://github.com/RehabMan/OS-X-FakeSMC-kozlek/raw/master/Versioning%20And%20Distribution.xcodeproj/project.pbxproj</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>GenericUSBXHCI</string>
+		<key>Description</key>
+		<string>Fork of Zenith432's GenericUSBXHCI USB 3.0 driver for OS X</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/OS-X-Generic-USB3</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>IntelGraphicsDVMTFixup</string>
+		<key>Description</key>
+		<string>A common problem with Broadwell/Skylake/KabyLake is relatively small DVMT-prealloc setting by PC OEMs.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/BarbaraPalvin/IntelGraphicsDVMTFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+		<key>Superseder</key>
+		<string>WhateverGreen</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>IntelGraphicsFixup</string>
+		<key>Description</key>
+		<string>An open source kernel extension providing patches to select Intel GPUs.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/lvs1974/IntelGraphicsFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+		<key>Superseder</key>
+		<string>WhateverGreen</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>AppleIntelE1000</string>
+		<key>Description</key>
+		<string>An Intel e1000 Linux driver</string>
+		<key>ProjectUrl</key>
+		<string>https://sourceforge.net/p/osx86drivers</string>
+		<key>DownloadUrl</key>
+		<string>https://sourceforge.net/projects/osx86drivers/files/latest/download</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>IntelMausiEthernet</string>
+		<key>Description</key>
+		<string>OS X driver for Intel onboard LAN</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/OS-X-Intel-Network</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>LiluFriend</string>
+		<key>Description</key>
+		<string>A helper of Lilu for those who prefer to leave everything inside /Library/Extensions and /System/Library/Extensions.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/PMheart/LiluFriend</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>NullCPUPowerManagement</string>
+		<key>Description</key>
+		<string>Another problem for OS X running on non-Apple hardware (virtual or otherwise) is the AppleIntelCPUPowerManagement kernel extension which tends to either panic the machine or spew endless debug messages to the console regarding the HPET and its relationship to the CPU.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/corpnewt/NullCPUPowerManagement</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>NullEthernet</string>
+		<key>Description</key>
+		<string>The purpose of this driver is to enable Mac App Store access even if you don’t have a built-in Ethernet port with supporting drivers.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/OS-X-Null-Ethernet</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>NVWebDriverLibValFix</string>
+		<key>Description</key>
+		<string>Fixes the NVIDIA web driver's blank window issue on macOS Sierra with a small and safe kernel patch</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/mologie/NVWebDriverLibValFix</string>
+		<key>Type</key>
+		<string>Kext</string>
+		<key>Superseder</key>
+		<string>WhateverGreen</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>NvidiaGraphicsFixup</string>
+		<key>Description</key>
+		<string>An open source kernel extension providing patches for NVidia GPUs.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/lvs1974/NvidiaGraphicsFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+		<key>Superseder</key>
+		<string>WhateverGreen</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>RealtekRTL8111</string>
+		<key>Description</key>
+		<string>OS X open source driver for the Realtek RTL8111/8168 family</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/OS-X-Realtek-Network</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Shiki</string>
+		<key>Description</key>
+		<string>Protected video playback support and hardware video acceleration on various hardware.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/Shiki</string>
+		<key>Type</key>
+		<string>Lilu</string>
+		<key>Superseder</key>
+		<string>WhateverGreen</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>VoodooHDA</string>
+		<key>Description</key>
+		<string>VoodooHDA is an open source audio driver for devices compliant with the Intel High Definition Audio specification.</string>
+		<key>ProjectUrl</key>
+		<string>https://sourceforge.net/p/voodoohda</string>
+		<key>ProjectFileUrl</key>
+		<string>https://sourceforge.net/p/voodoohda/code/HEAD/tree/branches/zdev/VoodooHDA.xcodeproj/project.pbxproj?format=raw</string>
+		<key>DownloadUrl</key>
+		<string>https://sourceforge.net/projects/voodoohda/files/latest/download</string>
+		<key>Type</key>
+		<string>Driver</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>VoodooI2C</string>
+		<key>Description</key>
+		<string>VoodooI2C is a project consisting of macOS kernel extensions that add support for I2C bus devices.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/alexandred/VoodooI2C</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>VoodooPS2Controller</string>
+		<key>Description</key>
+		<string>Contains updated Voodoo PS/2 Controller, improved Keyboard &amp; Synaptics TouchPad</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/OS-X-Voodoo-PS2-Controller</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>VoodooTSCSync</string>
+		<key>Description</key>
+		<string>A kernel extension which will synchronize the TSC on any Intel CPUs.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/RehabMan/VoodooTSCSync</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+</array>
+</plist>

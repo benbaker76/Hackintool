@@ -1,0 +1,59 @@
+<html lang="zh-Hans">
+<head>
+<title>USB Port Patching</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="usb">
+<meta name="description" content="Patching USB.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<p>USB端口修补</p>
+<p><br></p>
+<p>MacOS 10.14.1以上版本暂时没有可用的USB端口限制补丁，这可能导致无法同时使用电脑上的所有USB端口。Rehabman已更新USBInjectAll.kext来包含用于排除端口组的启动标志。</p>
+<p><br>
+</p>
+<p>使用方法</p>
+<p class="p6"><br></p>
+<p>1、将用于端口识别的USBInjectAll.kext放入EFI/CLOVER/kexts/Other，并用四叶草编辑器在config.plist中对DSDT中以下名称重命名四叶草（有哪些就重命名哪些）：</p>
+<p>◦XHCI -&gt; XHC</p>
+<p>◦XHC1 -&gt; XHC</p>
+<p>◦EHC1 -&gt; EH01</p>
+<p>◦EHC2 -&gt; EH02</p>
+<p>2、重启</p>
+<p>3、运行Hackintool，进入“已安装”选项卡，检查USBInjectAll是否正确安装。</p>
+<p>示例：USBInjectAll: Yes (Release-0.7.1)</p>
+<p>4、进入“USB”选项卡查看USB控制器列表。基于USB控制器类型，可能需要安装其他驱动。如需要安装额外驱动，请安装该驱动，然后重新启动再次运行Hackintool。</p>
+<p><br>
+</p>
+<p>以下是额外驱动列表：</p>
+<p>◦8086:8CB1， macOS版本小于&lt; 10.11.1 -&gt; XHCI-9-series.kext</p>
+<p>◦8086:8D31, 8086:A2AF, 8086:A36D, 8086:9DED -&gt; XHCI-unsupported.kext</p>
+<p>◦8086:1E31, 8086:8C31, 8086:8CB1, 8086:8D31, 8086:9C31, 8086:9CB1 -&gt; FakePCIID.kext + FakePCIID_XHCIMux.kext</p>
+<p><br>
+</p>
+<p>5、转到“USB”选项卡，选择USB端口列表中的所有项目，点击“删除”按钮，再点击“刷新”按钮。</p>
+<p>6、在config.plist中添加 -uia_exclude_ss、uia_include=HS01,HS02启动选项后，重新启动，在HS01、HS02两端口连接鼠标和键盘。</p>
+<p>7、运行Hackintool并转到“USB”选项卡，将USB 2.0设备依次插入到系统上所有USB端口，活动的端口将保持绿色高亮，所有未绿色高亮的端口则需要删除。</p>
+<p>8、在config.plist中添加-uia_exclude_hs并删除-uia_exclude_ss 启动选项后重启，再次运行Hackintool进入“USB”选项卡，将一个USB 3.0设备与一个TypeC设备依次插入系统上的所有可用端口（TypeC为双向的），活动的端口将保持绿色高亮，删除那些未绿色高亮的端口。</p>
+<p>9、接下来对于所有保留下来的端口，点击每一个的“类型”，在弹出的下拉列表里选择正确端口类型：</p>
+<p>◦板载设备（如M2蓝牙卡）设置为“Internal”</p>
+<p>◦USB3.0的HSXX端口设置为“USB3”。</p>
+<p>◦内部集线器通常连接到PR11和PR21，设置为“Internal”</p>
+<p>◦对于TypeC，如果它在2.0与3.0下使用相同的HSXX/SSXX，那么选择“TypeC+Sw”，否则选择 “TypeC”</p>
+<p>10、使用“导出”按钮将文件生成到桌面，导出的文件有两种形式，你可以自由选择：</p>
+<p>1.导出USBPorts.kext，并复制到EFI/CLOVER/kexts/Other</p>
+<p>2.导出SSDT-UIAC.aml和SSDT-USBX.aml ，复制到EFI/CLOVER/ACPI/patched</p>
+<p>11、如果生成了SSDT-EC.aml，将其复制到EFI/CLOVER/ACPI/patched</p>
+<p>12、清理不必要的文件，删除启动标志-uia_exclude_ss -uia_exclude_hs uia_include=x，删除USBInjectAll.kext</p>
+<p>13、重新启动，运行Hackintool，进入“USB”选项卡，选择USB端口列表中的所有项目，点击“删除”，然再点击“刷新”，查看所有端口是否正常工作。如果需要更改端口类型，则需要在更改完成后重新导出USBPorts.kext并复制替换；如果修补错误导致端口不正常，请删除USBPorts.kext然后从头再来。<br>
+</p>
+<p class="p8"><br></p>
+<p>关于USB相关的QAQ</p>
+<p><br>
+</p>
+<p>Q:什么是USBPorts.kext？</p>
+<p>A.这是一个用于注入USB端口的无代码驱动。</p>
+<p>Q:我需要SSDT-UIAC.aml吗？</p>
+<p>A.不，此方法使用了USBPorts.kext这个无代码驱动代替它。</p>
+</body>
+</html>
