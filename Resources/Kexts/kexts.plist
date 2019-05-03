@@ -346,7 +346,7 @@
 		<key>Description</key>
 		<string>OS X driver for Intel onboard LAN</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/RehabMan/OS-X-Intel-Network</string>
+		<string>https://github.com/Mieze/IntelMausiEthernet</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
