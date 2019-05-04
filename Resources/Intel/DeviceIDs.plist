@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Sandy Bridge</key>
-	<string>0x01068086 0x11068086 0x16018086 01168086 01268086</string>
+	<string>0x01068086 0x11068086 0x16018086 0x01168086 0x01268086</string>
 	<key>Ivy Bridge</key>
 	<string>0x01528086 0x01568086 0x01628086 0x01668086</string>
 	<key>Haswell</key>
