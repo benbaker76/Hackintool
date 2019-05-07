@@ -410,7 +410,7 @@
 		<key>Description</key>
 		<string>OS X open source driver for the Realtek RTL8111/8168 family</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/RehabMan/OS-X-Realtek-Network</string>
+		<string>https://github.com/Mieze/RTL8111_driver_for_OS_X</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
