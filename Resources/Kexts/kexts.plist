@@ -414,7 +414,6 @@
 		<key>ProjectFileUrl</key>
 		<string>https://github.com/Mieze/RTL8111_driver_for_OS_X/raw/master/RealtekRTL8111.xcodeproj</string>
 		<key>Type</key>
-		<key>Type</key>
 		<string>Kext</string>
 	</dict>
 	<dict>
