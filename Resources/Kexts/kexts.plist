@@ -39,6 +39,8 @@
 		<string>Advanced Apple SMC emulator in the kernel. Requires Lilu for full functioning.</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/acidanthera/VirtualSMC</string>
+		<key>PreBuildBash</key>
+		<string>$(OUTPUT_PATH)/VirtualSmcPkg/macbuild.tool</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
@@ -413,6 +415,8 @@
 		<string>https://github.com/Mieze/RTL8111_driver_for_OS_X</string>
 		<key>ProjectFileUrl</key>
 		<string>https://github.com/Mieze/RTL8111_driver_for_OS_X/raw/master/RealtekRTL8111.xcodeproj</string>
+		<key>Scheme</key>
+		<string>RealtekRTL8111-V2</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
