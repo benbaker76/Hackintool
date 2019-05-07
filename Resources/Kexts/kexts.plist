@@ -236,7 +236,7 @@
 		<key>ProjectUrl</key>
 		<string>https://github.com/RehabMan/OS-X-BrcmPatchRAM</string>
 		<key>ProjectFileUrl</key>
-		<string>https://github.com/RehabMan/OS-X-BrcmPatchRAM/raw/master/BrcmPatchRAM.xcodeproj/project.pbxproj</string>
+		<string>https://github.com/RehabMan/OS-X-BrcmPatchRAM/raw/master/BrcmPatchRAM.xcodeproj</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
@@ -290,7 +290,7 @@
 		<key>ProjectUrl</key>
 		<string>https://github.com/RehabMan/OS-X-FakeSMC-kozlek</string>
 		<key>ProjectFileUrl</key>
-		<string>https://github.com/RehabMan/OS-X-FakeSMC-kozlek/raw/master/Versioning%20And%20Distribution.xcodeproj/project.pbxproj</string>
+		<string>https://github.com/RehabMan/OS-X-FakeSMC-kozlek/raw/master/Versioning%20And%20Distribution.xcodeproj</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
@@ -434,7 +434,7 @@
 		<key>ProjectUrl</key>
 		<string>https://sourceforge.net/p/voodoohda</string>
 		<key>ProjectFileUrl</key>
-		<string>https://sourceforge.net/p/voodoohda/code/HEAD/tree/branches/zdev/VoodooHDA.xcodeproj/project.pbxproj?format=raw</string>
+		<string>https://sourceforge.net/p/voodoohda/code/HEAD/tree/branches/zdev/VoodooHDA.xcodeproj?format=raw</string>
 		<key>DownloadUrl</key>
 		<string>https://sourceforge.net/projects/voodoohda/files/latest/download</string>
 		<key>Type</key>
