@@ -1,8 +1,8 @@
 #
 #	List of PCI ID's
 #
-#	Version: 2019.05.02
-#	Date:    2019-05-02 03:15:03
+#	Version: 2019.05.03
+#	Date:    2019-05-03 03:15:03
 #
 #	Maintained by Albert Pool, Martin Mares, and other volunteers from
 #	the PCI ID Project at https://pci-ids.ucw.cz/.
@@ -14781,6 +14781,7 @@
 		103c 2a6f  Asus IPIBL-LB Motherboard
 		103c 2a9e  Pavilion p6310f
 		1043 8294  LSI FW322/323 IEEE 1394a FireWire Controller
+		11bd 000e  LSI FW323
 		8086 524c  D865PERL mainboard
 		9005 0033  Adaptec AFW-2100 (HP) 2102900-R
 		dead 0800  FireWire Host Bus Adapter

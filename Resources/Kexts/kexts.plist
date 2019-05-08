@@ -39,6 +39,8 @@
 		<string>Advanced Apple SMC emulator in the kernel. Requires Lilu for full functioning.</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/acidanthera/VirtualSMC</string>
+		<key>PreBuildBash</key>
+		<string>$(OUTPUT_PATH)/VirtualSmcPkg/macbuild.tool</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
@@ -236,7 +238,7 @@
 		<key>ProjectUrl</key>
 		<string>https://github.com/RehabMan/OS-X-BrcmPatchRAM</string>
 		<key>ProjectFileUrl</key>
-		<string>https://github.com/RehabMan/OS-X-BrcmPatchRAM/raw/master/BrcmPatchRAM.xcodeproj/project.pbxproj</string>
+		<string>https://github.com/RehabMan/OS-X-BrcmPatchRAM/raw/master/BrcmPatchRAM.xcodeproj</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
@@ -290,7 +292,7 @@
 		<key>ProjectUrl</key>
 		<string>https://github.com/RehabMan/OS-X-FakeSMC-kozlek</string>
 		<key>ProjectFileUrl</key>
-		<string>https://github.com/RehabMan/OS-X-FakeSMC-kozlek/raw/master/Versioning%20And%20Distribution.xcodeproj/project.pbxproj</string>
+		<string>https://github.com/RehabMan/OS-X-FakeSMC-kozlek/raw/master/Versioning%20And%20Distribution.xcodeproj</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
@@ -410,7 +412,11 @@
 		<key>Description</key>
 		<string>OS X open source driver for the Realtek RTL8111/8168 family</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/RehabMan/OS-X-Realtek-Network</string>
+		<string>https://github.com/Mieze/RTL8111_driver_for_OS_X</string>
+		<key>ProjectFileUrl</key>
+		<string>https://github.com/Mieze/RTL8111_driver_for_OS_X/raw/master/RealtekRTL8111.xcodeproj</string>
+		<key>Scheme</key>
+		<string>RealtekRTL8111-V2</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
@@ -434,7 +440,7 @@
 		<key>ProjectUrl</key>
 		<string>https://sourceforge.net/p/voodoohda</string>
 		<key>ProjectFileUrl</key>
-		<string>https://sourceforge.net/p/voodoohda/code/HEAD/tree/branches/zdev/VoodooHDA.xcodeproj/project.pbxproj?format=raw</string>
+		<string>https://sourceforge.net/p/voodoohda/code/HEAD/tree/branches/zdev/VoodooHDA.xcodeproj?format=raw</string>
 		<key>DownloadUrl</key>
 		<string>https://sourceforge.net/projects/voodoohda/files/latest/download</string>
 		<key>Type</key>
