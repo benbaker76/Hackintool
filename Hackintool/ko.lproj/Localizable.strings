@@ -554,7 +554,7 @@
 "Choose a destination folder" = "대상 폴더 선택";
 "AppleIntelInfo Settings:" = "애플인텔인포 설정 :";
 "Enable HWP" = "HWP(인텔스피드시프트)";
-"CStates" = "C스탯";
+"CStates" = "C 스탯 스트레스";
 "IGPU" = "내장 그래픽";
 "IPG Style" = "IPG 스타일";
 "Intel Regs" = "인텔 레지스트리";
@@ -605,8 +605,8 @@
 "Warning!" = "빼애애애애액~~~ 경고!";
 "Enabling HWP (Intel Speed Shift) will require a reboot to restore the previous value." = "HWP(인텔 스피드 시프트)를 활성화 하려면 이전 값을 복원하기 위해 재부팅 해야 합니다.";
 "Logging Intel registers may cause your system to crash." = "인텔 레지스터를 로깅하면 시스템이 다운될 수 있습니다.";
-"Logging CStates" = "C 스탯 로깅중..";
-"Perform CPU intensive activity..." = "CPU 집중 활동 실행";
+"Logging CStates" = "C 스탯 로깅 중..";
+"Perform CPU intensive activity..." = "CPU 클럭 배수별 스트레스 테스트 실행 중..";
 "Fully Supported" = "하드웨어 가속이 정상적으로 동작합니다";
 "Not Supported" = "아직 지원되지 않습니다";
 "Configuration Error" = "설정 오류";
@@ -618,4 +618,3 @@
 "Failure!" = "실패 하지만 다시한 번 천천히 다시 시도해 보세요!";
 "Missing or incompatible nasm!" = "누락되었거나 호환되지 않는 문제";
 "Click OK to run installation." = "OK를 클릭하여 설치를 실행합니다.";
-
