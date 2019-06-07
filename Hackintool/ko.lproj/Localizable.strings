@@ -606,7 +606,7 @@
 "Enabling HWP (Intel Speed Shift) will require a reboot to restore the previous value." = "HWP(인텔 스피드 시프트)를 활성화 하려면 이전 값을 복원하기 위해 재부팅 해야 합니다.";
 "Logging Intel registers may cause your system to crash." = "인텔 레지스터를 로깅하면 시스템이 다운될 수 있습니다.";
 "Logging CStates" = "C 스탯 로깅 중..";
-"Perform CPU intensive activity..." = "CPU 클럭 배수별 스트레스 테스트 실행 중..";
+"Perform CPU intensive activity..." = "배수별 P 스탯 스트레스 테스트 실행 중..";
 "Fully Supported" = "하드웨어 가속이 정상적으로 동작합니다";
 "Not Supported" = "아직 지원되지 않습니다";
 "Configuration Error" = "설정 오류";
