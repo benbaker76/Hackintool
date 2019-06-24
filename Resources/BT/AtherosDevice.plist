@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4 Bluetooth</string>
+		<key>ProductID</key>
+		<integer>58112</integer>
+		<key>VendorID</key>
+		<integer>3315</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>58114</integer>
+		<key>VendorID</key>
+		<integer>3315</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA9377 Bluetooth</string>
+		<key>ProductID</key>
+		<integer>58208</integer>
+		<key>VendorID</key>
+		<integer>3315</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA9377 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>58224</integer>
+		<key>VendorID</key>
+		<integer>3315</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA9377 Bluetooth</string>
+		<key>ProductID</key>
+		<integer>58624</integer>
+		<key>VendorID</key>
+		<integer>3315</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA6290 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>58368</integer>
+		<key>VendorID</key>
+		<integer>3315</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>12307</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>12306</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>12305</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>12309</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>12310</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4A Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>12311</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4A Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>12313</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>12314</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>12315</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA9377 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>12316</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>57490</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>57500</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>57503</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>57506</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>57507</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Bluetooth USB Module</string>
+		<key>ProductID</key>
+		<integer>57508</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>57512</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>57513</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>5298</integer>
+		<key>VendorID</key>
+		<integer>1221</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>5342</integer>
+		<key>VendorID</key>
+		<integer>1221</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13457</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13459</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13462</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13463</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13568</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13569</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13570</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13571</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13574</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13585</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13586</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13587</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13588</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13593</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13591</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13600</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13601</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13602</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13603</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>13620</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4A Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>6181</integer>
+		<key>VendorID</key>
+		<integer>2821</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4A Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>6187</integer>
+		<key>VendorID</key>
+		<integer>2821</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4A Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>6248</integer>
+		<key>VendorID</key>
+		<integer>2821</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA61x4 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>58113</integer>
+		<key>VendorID</key>
+		<integer>3315</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth</string>
+		<key>ProductID</key>
+		<integer>38913</integer>
+		<key>VendorID</key>
+		<integer>4267</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth</string>
+		<key>ProductID</key>
+		<integer>38914</integer>
+		<key>VendorID</key>
+		<integer>4267</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>QCA6174A Bluetooth 4.1 USB Module</string>
+		<key>ProductID</key>
+		<integer>36872</integer>
+		<key>VendorID</key>
+		<integer>4267</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA9377 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>1923</integer>
+		<key>VendorID</key>
+		<integer>5776</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>1926</integer>
+		<key>VendorID</key>
+		<integer>5776</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>1925</integer>
+		<key>VendorID</key>
+		<integer>5776</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>1924</integer>
+		<key>VendorID</key>
+		<integer>5776</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA9377 Bluetooth 4.1</string>
+		<key>ProductID</key>
+		<integer>1929</integer>
+		<key>VendorID</key>
+		<integer>5776</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA9377 Bluetooth</string>
+		<key>ProductID</key>
+		<integer>2306</integer>
+		<key>VendorID</key>
+		<integer>13889</integer>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Qualcomm Atheros QCA9377 Bluetooth</string>
+		<key>ProductID</key>
+		<integer>2308</integer>
+		<key>VendorID</key>
+		<integer>13889</integer>
+	</dict>
+</array>
+</plist>

@@ -8,9 +8,9 @@
 		<key>Name</key>
 		<string>20702 standalone</string>
 		<key>ProductID</key>
-		<integer>2821</integer>
-		<key>VendorID</key>
 		<integer>6091</integer>
+		<key>VendorID</key>
+		<integer>2821</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -18,9 +18,9 @@
 		<key>Name</key>
 		<string>20702 standalone</string>
 		<key>ProductID</key>
-		<integer>1293</integer>
-		<key>VendorID</key>
 		<integer>1626</integer>
+		<key>VendorID</key>
+		<integer>1293</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -28,9 +28,9 @@
 		<key>Name</key>
 		<string>20702A1 REF6 OTP module standalone</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8684</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -38,9 +38,9 @@
 		<key>Name</key>
 		<string>20702A1 Azurewave standalone</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13188</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -48,9 +48,9 @@
 		<key>Name</key>
 		<string>Dell DW380 Nancy Blakes standalone</string>
 		<key>ProductID</key>
-		<integer>16700</integer>
-		<key>VendorID</key>
 		<integer>33175</integer>
+		<key>VendorID</key>
+		<integer>16700</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -58,9 +58,9 @@
 		<key>Name</key>
 		<string>20702A1 Asus Trust standalone</string>
 		<key>ProductID</key>
-		<integer>5215</integer>
-		<key>VendorID</key>
 		<integer>419</integer>
+		<key>VendorID</key>
+		<integer>5215</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -68,9 +68,9 @@
 		<key>Name</key>
 		<string>20702A1 Lenovo China standalone</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8195</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -78,9 +78,9 @@
 		<key>Name</key>
 		<string>20702A1 Lenovo China standalone</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57410</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -88,9 +88,9 @@
 		<key>Name</key>
 		<string>LenovoChina 43142A0 combo</string>
 		<key>ProductID</key>
-		<integer>4187</integer>
-		<key>VendorID</key>
 		<integer>57445</integer>
+		<key>VendorID</key>
+		<integer>4187</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -98,9 +98,9 @@
 		<key>Name</key>
 		<string>ASUS Chicony BCM43142A0 NGFF</string>
 		<key>ProductID</key>
-		<integer>1266</integer>
-		<key>VendorID</key>
 		<integer>46241</integer>
+		<key>VendorID</key>
+		<integer>1266</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -108,9 +108,9 @@
 		<key>Name</key>
 		<string>LiteOn 43142 combo</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8198</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -118,9 +118,9 @@
 		<key>Name</key>
 		<string>HP Harrier 43142</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8556</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -128,9 +128,9 @@
 		<key>Name</key>
 		<string>HP Hornet 43142Y ngff combo</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8557</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -138,9 +138,9 @@
 		<key>Name</key>
 		<string>Acer BCM943142Y NGFF</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8210</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -148,9 +148,9 @@
 		<key>Name</key>
 		<string>BCM43142A0</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57494</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -158,9 +158,9 @@
 		<key>Name</key>
 		<string>Dell DW1708 43142Y combo</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8554</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -168,19 +168,9 @@
 		<key>Name</key>
 		<string>Toshiba 43142 combo NGFF</string>
 		<key>ProductID</key>
-		<integer>2352</integer>
-		<key>VendorID</key>
 		<integer>549</integer>
-	</dict>
-	<dict>
-		<key>FirmwareName</key>
-		<string>BCM43142A0_001.001.011.0311.0334.hex</string>
-		<key>Name</key>
-		<string>Toshiba 43142 combo NGFF</string>
-		<key>ProductID</key>
+		<key>VendorID</key>
 		<integer>2352</integer>
-		<key>VendorID</key>
-		<integer>550</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -188,9 +178,19 @@
 		<key>Name</key>
 		<string>Toshiba 43142 combo NGFF</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
+		<integer>550</integer>
 		<key>VendorID</key>
+		<integer>2352</integer>
+	</dict>
+	<dict>
+		<key>FirmwareName</key>
+		<string>BCM43142A0_001.001.011.0311.0334.hex</string>
+		<key>Name</key>
+		<string>Toshiba 43142 combo NGFF</string>
+		<key>ProductID</key>
 		<integer>13351</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -198,9 +198,9 @@
 		<key>Name</key>
 		<string>Toshiba 43142</string>
 		<key>ProductID</key>
-		<integer>2352</integer>
-		<key>VendorID</key>
 		<integer>543</integer>
+		<key>VendorID</key>
+		<integer>2352</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -208,9 +208,9 @@
 		<key>Name</key>
 		<string>BRCM Generic 43142A0 RAMUSB</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8663</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -218,9 +218,9 @@
 		<key>Name</key>
 		<string>LiteOn 43142 combo</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8201</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -228,9 +228,9 @@
 		<key>Name</key>
 		<string>43142A0 Acer combo</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57429</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -238,9 +238,9 @@
 		<key>Name</key>
 		<string>BRCM Generic 43142A0 RAMUSB</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13192</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -248,9 +248,9 @@
 		<key>Name</key>
 		<string>BRCM Generic 43142A0 RAMUSB</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13193</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -258,9 +258,9 @@
 		<key>Name</key>
 		<string>AZUREWAVE BCM43142A0 NGFF</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13442</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -268,9 +268,9 @@
 		<key>Name</key>
 		<string>Acer AZUREWAVE BCM43142A0 NGFF</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13444</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -278,9 +278,9 @@
 		<key>Name</key>
 		<string>Asus AZUREWAVE MB BCM4356A2</string>
 		<key>ProductID</key>
-		<integer>2821</integer>
-		<key>VendorID</key>
 		<integer>6173</integer>
+		<key>VendorID</key>
+		<integer>2821</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -288,9 +288,9 @@
 		<key>Name</key>
 		<string>Asus LiteOn BCM4356A2 NGFF</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8212</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -298,9 +298,9 @@
 		<key>Name</key>
 		<string>Acer Foxconn BCM4356A2 NGFF</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57495</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -308,9 +308,9 @@
 		<key>Name</key>
 		<string>Asus AZUREWAVE BCM4356A2 NGFF</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13427</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -318,9 +318,9 @@
 		<key>Name</key>
 		<string>Asus AZUREWAVE BCM4356A2 NB 2217NF</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13445</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -328,9 +328,9 @@
 		<key>Name</key>
 		<string>Asus AZUREWAVE BCM4356A2 NGFF</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13458</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -338,9 +338,9 @@
 		<key>Name</key>
 		<string>Asus AZUREWAVE BCM4356A2 NB 2210</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13448</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -348,9 +348,9 @@
 		<key>Name</key>
 		<string>Acer LiteOn BCM4356A2 NGFF</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8211</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -358,9 +358,9 @@
 		<key>Name</key>
 		<string>BCM4356A2</string>
 		<key>ProductID</key>
-		<integer>1266</integer>
-		<key>VendorID</key>
 		<integer>46242</integer>
+		<key>VendorID</key>
+		<integer>1266</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -368,9 +368,9 @@
 		<key>Name</key>
 		<string>BRCM Generic Reference 4356</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>25610</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -378,9 +378,9 @@
 		<key>Name</key>
 		<string>Lenovo 4356 NGFF combo</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>25614</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -388,9 +388,9 @@
 		<key>Name</key>
 		<string>Emdoor AP6356SD BCM4356A2</string>
 		<key>ProductID</key>
-		<integer>11092</integer>
-		<key>VendorID</key>
 		<integer>22016</integer>
+		<key>VendorID</key>
+		<integer>11092</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -398,9 +398,9 @@
 		<key>Name</key>
 		<string>Asus AP6356SDP1A BCM4356A2</string>
 		<key>ProductID</key>
-		<integer>11092</integer>
-		<key>VendorID</key>
 		<integer>22017</integer>
+		<key>VendorID</key>
+		<integer>11092</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -408,9 +408,9 @@
 		<key>Name</key>
 		<string>AMPAK AP6356SDP2A BCM4356A2</string>
 		<key>ProductID</key>
-		<integer>11092</integer>
-		<key>VendorID</key>
 		<integer>22018</integer>
+		<key>VendorID</key>
+		<integer>11092</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -418,9 +418,9 @@
 		<key>Name</key>
 		<string>20702A1 non-UHE 4313 combo HP Valentine</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8675</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -428,9 +428,9 @@
 		<key>Name</key>
 		<string>Lenovo Edge 4313 + 20702A1 combo</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8692</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -438,9 +438,9 @@
 		<key>Name</key>
 		<string>43228 combo</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8689</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -448,9 +448,9 @@
 		<key>Name</key>
 		<string>20702A1 Toshiba 4352</string>
 		<key>ProductID</key>
-		<integer>2352</integer>
-		<key>VendorID</key>
 		<integer>545</integer>
+		<key>VendorID</key>
+		<integer>2352</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -458,9 +458,9 @@
 		<key>Name</key>
 		<string>20702A1 Toshiba 4352</string>
 		<key>ProductID</key>
-		<integer>2352</integer>
-		<key>VendorID</key>
 		<integer>547</integer>
+		<key>VendorID</key>
+		<integer>2352</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -468,9 +468,9 @@
 		<key>Name</key>
 		<string>HP Supra 4352 20702A1 combo</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8699</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -478,9 +478,9 @@
 		<key>Name</key>
 		<string>HP Rapture 4352z ngff combo</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8555</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -488,9 +488,9 @@
 		<key>Name</key>
 		<string>HP Luffy 43228 + 20702 M.2</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>25611</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -498,9 +498,9 @@
 		<key>Name</key>
 		<string>Lenovo Edge 43228 + 20702A1 combo</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8691</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -508,9 +508,9 @@
 		<key>Name</key>
 		<string>Zebra 4352</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>25623</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -518,9 +518,9 @@
 		<key>Name</key>
 		<string>AW CE160H BCM20702</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13591</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -528,9 +528,9 @@
 		<key>Name</key>
 		<string>Asus 4352_20702A1 combo</string>
 		<key>ProductID</key>
-		<integer>2821</integer>
-		<key>VendorID</key>
 		<integer>6095</integer>
+		<key>VendorID</key>
+		<integer>2821</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -538,9 +538,9 @@
 		<key>Name</key>
 		<string>20702 E032 Combo</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57394</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -548,9 +548,9 @@
 		<key>Name</key>
 		<string>20702A1 Acer 43228+20702 combo card</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57414</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -558,9 +558,9 @@
 		<key>Name</key>
 		<string>20702A1 Lenovo China 43227 WLAN + 20702A1 Combo card</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57423</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -568,9 +568,9 @@
 		<key>Name</key>
 		<string>Asus 43228+20702A1 combo</string>
 		<key>ProductID</key>
-		<integer>2821</integer>
-		<key>VendorID</key>
 		<integer>6069</integer>
+		<key>VendorID</key>
+		<integer>2821</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -578,9 +578,9 @@
 		<key>Name</key>
 		<string>Azurewave 43228+20702</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13202</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -588,9 +588,9 @@
 		<key>Name</key>
 		<string>LiteOn 43228+20702 combo</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8196</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -598,9 +598,9 @@
 		<key>Name</key>
 		<string>Acer 43228 + 20702A1 combo</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57433</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -608,9 +608,9 @@
 		<key>Name</key>
 		<string>LenovoChina 43228+20702 combo</string>
 		<key>ProductID</key>
-		<integer>4187</integer>
-		<key>VendorID</key>
 		<integer>57446</integer>
+		<key>VendorID</key>
+		<integer>4187</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -618,9 +618,9 @@
 		<key>Name</key>
 		<string>LiteOn 43228+20702 combo</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8197</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -628,9 +628,9 @@
 		<key>Name</key>
 		<string>4352+20702A1 combo</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8670</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -638,9 +638,9 @@
 		<key>Name</key>
 		<string>DW1550 4352+20702 combo</string>
 		<key>ProductID</key>
-		<integer>16700</integer>
-		<key>VendorID</key>
 		<integer>33091</integer>
+		<key>VendorID</key>
+		<integer>16700</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -648,9 +648,9 @@
 		<key>Name</key>
 		<string>4352HMB Azurewave Module</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13316</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -658,9 +658,9 @@
 		<key>Name</key>
 		<string>LiteOn 4352 combo</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8202</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -668,9 +668,9 @@
 		<key>Name</key>
 		<string>LiteOn 4352 combo</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8203</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -678,9 +678,9 @@
 		<key>Name</key>
 		<string>LiteOn 4352 combo</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8204</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -688,9 +688,9 @@
 		<key>Name</key>
 		<string>Liteon 43228 NGFF combo</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8206</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -698,9 +698,9 @@
 		<key>Name</key>
 		<string>Acer_LiteOn BCM20702A1_4352</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8207</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -708,9 +708,9 @@
 		<key>Name</key>
 		<string>BRCM Generic 4352z RAMUSB</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8701</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -718,9 +718,9 @@
 		<key>Name</key>
 		<string>Dell Alienware 4352 20702A1 combo</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13329</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -728,9 +728,9 @@
 		<key>Name</key>
 		<string>Azurewave 4360+20702 combo</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13331</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -738,9 +738,9 @@
 		<key>Name</key>
 		<string>Azurewave 4360+20702 combo</string>
 		<key>ProductID</key>
-		<integer>2821</integer>
-		<key>VendorID</key>
 		<integer>6154</integer>
+		<key>VendorID</key>
+		<integer>2821</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -748,9 +748,9 @@
 		<key>Name</key>
 		<string>Azurewave 4352+20702 combo module</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13336</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -758,9 +758,9 @@
 		<key>Name</key>
 		<string>BRCM Generic 43228z</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8553</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -768,9 +768,9 @@
 		<key>Name</key>
 		<string>AZUREWAVE BCM20702A1_4352</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13365</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -778,9 +778,9 @@
 		<key>Name</key>
 		<string>AZUREWAVE BCM20702A1_4352</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13398</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -788,9 +788,9 @@
 		<key>Name</key>
 		<string>Acer 43228 NGFF combo module</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57479</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -798,9 +798,9 @@
 		<key>Name</key>
 		<string>Dell DW1560 4352+20702 M.2</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8559</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -808,9 +808,9 @@
 		<key>Name</key>
 		<string>20702A1 non-UHE HP SoftSailing</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8673</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -818,9 +818,9 @@
 		<key>Name</key>
 		<string>20702A1 dongles</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8680</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -828,9 +828,9 @@
 		<key>Name</key>
 		<string>20702 non-UHE Lenovo Japan</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8678</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -838,9 +838,9 @@
 		<key>Name</key>
 		<string>20702 non-UHE Generic</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57426</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -848,9 +848,9 @@
 		<key>Name</key>
 		<string>20702A1 Toshiba standalone</string>
 		<key>ProductID</key>
-		<integer>2352</integer>
-		<key>VendorID</key>
 		<integer>542</integer>
+		<key>VendorID</key>
+		<integer>2352</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -858,9 +858,9 @@
 		<key>Name</key>
 		<string>Lenovo China 4352+20702 NGFF</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57466</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -868,9 +868,9 @@
 		<key>Name</key>
 		<string>Lenovo China 43162 NGFF</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57465</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -878,9 +878,9 @@
 		<key>Name</key>
 		<string>Lenovo 43162 NGFF combo module</string>
 		<key>ProductID</key>
-		<integer>1226</integer>
-		<key>VendorID</key>
 		<integer>8214</integer>
+		<key>VendorID</key>
+		<integer>1226</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -888,9 +888,9 @@
 		<key>Name</key>
 		<string>BRCM Generic 43162Z</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8552</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -898,9 +898,9 @@
 		<key>Name</key>
 		<string>43162 combo NGFF</string>
 		<key>ProductID</key>
-		<integer>2352</integer>
-		<key>VendorID</key>
 		<integer>553</integer>
+		<key>VendorID</key>
+		<integer>2352</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -908,9 +908,9 @@
 		<key>Name</key>
 		<string>HP Blackbird 43162 NGFF</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>8558</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -918,9 +918,9 @@
 		<key>Name</key>
 		<string>Dell 4350C5</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>25618</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -928,9 +928,9 @@
 		<key>Name</key>
 		<string>Broadcom Generic 4350C5</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>25619</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -938,9 +938,9 @@
 		<key>Name</key>
 		<string>Lenovo 4350C5</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>25620</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -948,9 +948,9 @@
 		<key>Name</key>
 		<string>20703A1 RAM download - DW1830 43602</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>25616</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -958,9 +958,9 @@
 		<key>Name</key>
 		<string>20703A1 HTC runtime RAM dongle</string>
 		<key>ProductID</key>
-		<integer>2996</integer>
-		<key>VendorID</key>
 		<integer>774</integer>
+		<key>VendorID</key>
+		<integer>2996</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -968,9 +968,9 @@
 		<key>Name</key>
 		<string>20703A1 Lenovo 43602 NGFF combo</string>
 		<key>ProductID</key>
-		<integer>1161</integer>
-		<key>VendorID</key>
 		<integer>57505</integer>
+		<key>VendorID</key>
+		<integer>1161</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -978,9 +978,9 @@
 		<key>Name</key>
 		<string>20703A1 RAM download</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>29792</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -988,9 +988,9 @@
 		<key>Name</key>
 		<string>AW CM217NF BCM4371C2</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13572</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -998,9 +998,9 @@
 		<key>Name</key>
 		<string>AW ASUS CM217NF BCM4371C2</string>
 		<key>ProductID</key>
-		<integer>5075</integer>
-		<key>VendorID</key>
 		<integer>13576</integer>
+		<key>VendorID</key>
+		<integer>5075</integer>
 	</dict>
 	<dict>
 		<key>FirmwareName</key>
@@ -1008,9 +1008,9 @@
 		<key>Name</key>
 		<string>HP Brook 2x2ac</string>
 		<key>ProductID</key>
-		<integer>2652</integer>
-		<key>VendorID</key>
 		<integer>25624</integer>
+		<key>VendorID</key>
+		<integer>2652</integer>
 	</dict>
 </array>
 </plist>
