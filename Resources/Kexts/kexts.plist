@@ -66,11 +66,11 @@
 	</dict>
 	<dict>
 		<key>Name</key>
-		<string>BT4LEContiunityFixup</string>
+		<string>BT4LEContinuityFixup</string>
 		<key>Description</key>
 		<string>An open source kernel extension providing patches for IOBluetoothFamily.</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/acidanthera/BT4LEContiunityFixup</string>
+		<string>https://github.com/acidanthera/BT4LEContinuityFixup</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
@@ -190,7 +190,7 @@
 		<key>Name</key>
 		<string>AppleBacklightFixup</string>
 		<key>Description</key>
-		<string>Lilu plugin for enabling support for backlight using RehabMan's patches</string>
+		<string>Lilu plugin for enabling support for backlight using RehabMan&apos;s patches</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/RehabMan/AppleBacklightFixup</string>
 		<key>Type</key>
@@ -300,7 +300,7 @@
 		<key>Name</key>
 		<string>GenericUSBXHCI</string>
 		<key>Description</key>
-		<string>Fork of Zenith432's GenericUSBXHCI USB 3.0 driver for OS X</string>
+		<string>Fork of Zenith432&apos;s GenericUSBXHCI USB 3.0 driver for OS X</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/RehabMan/OS-X-Generic-USB3</string>
 		<key>Type</key>
@@ -396,7 +396,7 @@
 		<key>Name</key>
 		<string>NVWebDriverLibValFix</string>
 		<key>Description</key>
-		<string>Fixes the NVIDIA web driver's blank window issue on macOS Sierra with a small and safe kernel patch</string>
+		<string>Fixes the NVIDIA web driver&apos;s blank window issue on macOS Sierra with a small and safe kernel patch</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/mologie/NVWebDriverLibValFix</string>
 		<key>Type</key>
@@ -472,7 +472,7 @@
 		<key>Description</key>
 		<string>Contains updated Voodoo PS/2 Controller, improved Keyboard &amp; Synaptics TouchPad</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/RehabMan/OS-X-Voodoo-PS2-Controller</string>
+		<string>https://github.com/acidanthera/VoodooPS2</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
