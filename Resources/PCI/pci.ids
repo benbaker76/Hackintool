@@ -1,8 +1,8 @@
 #
 #	List of PCI ID's
 #
-#	Version: 2019.08.08
-#	Date:    2019-08-08 03:15:02
+#	Version: 2019.08.25
+#	Date:    2019-08-25 03:15:01
 #
 #	Maintained by Albert Pool, Martin Mares, and other volunteers from
 #	the PCI ID Project at https://pci-ids.ucw.cz/.
@@ -684,7 +684,15 @@
 		1028 200c  HBA355i Front
 		1028 200d  HBA355e Adapter
 		1028 200e  HBA355i MX
+		1d49 0205  ThinkSystem 440-16i SAS/SATA PCIe Gen4 12Gb Internal HBA
+		1d49 0206  ThinkSystem 440-16e SAS/SATA PCIe Gen4 12Gb HBA
 	00e6  Fusion-MPT 12GSAS/PCIe Secure SAS38xx
+		1028 200b  HBA355i Adapter
+		1028 200c  HBA355i Front
+		1028 200d  HBA355e Adapter
+		1028 200e  HBA355i MX
+		1d49 0205  ThinkSystem 440-16i SAS/SATA PCIe Gen4 12Gb Internal HBA
+		1d49 0206  ThinkSystem 440-16e SAS/SATA PCIe Gen4 12Gb HBA
 	00e7  Fusion-MPT 12GSAS/PCIe Unsupported SAS38xx
 	02b0  Virtual Endpoint on PCIe Switch
 		1d49 0001  ThinkSystem 1610-4P NVMe Switch Adapter
@@ -767,11 +775,23 @@
 		1028 1ae1  PERC H755 Front
 		1028 1ae2  PERC H755N Front
 		1028 1ae3  PERC H755 MX
+		1d49 060a  ThinkSystem RAID 940-8i 4GB Flash PCIe Gen4 12Gb Adapter
+		1d49 060b  ThinkSystem RAID 940-8i 8GB Flash PCIe Gen4 12Gb Adapter
+		1d49 060c  ThinkSystem RAID 940-16i 8GB Flash PCIe Gen4 12Gb Adapter
+		1d49 060d  ThinkSystem RAID 940-16i 8GB Flash PCIe Gen4 12Gb Internal Adapter
+		1d49 060e  ThinkSystem RAID 940-32i 8GB Flash PCIe Gen4 12Gb Adapter
+		1d49 060f  ThinkSystem RAID 940-8e 4GB Flash PCIe Gen4 12Gb Adapter
 	10e2  MegaRAID 12GSAS/PCIe Secure SAS39xx
 		1028 1ae0  PERC H755 Adapter
 		1028 1ae1  PERC H755 Front
 		1028 1ae2  PERC H755N Front
 		1028 1ae3  PERC H755 MX
+		1d49 060a  ThinkSystem RAID 940-8i 4GB Flash PCIe Gen4 12Gb Adapter
+		1d49 060b  ThinkSystem RAID 940-8i 8GB Flash PCIe Gen4 12Gb Adapter
+		1d49 060c  ThinkSystem RAID 940-16i 8GB Flash PCIe Gen4 12Gb Adapter
+		1d49 060d  ThinkSystem RAID 940-16i 8GB Flash PCIe Gen4 12Gb Internal Adapter
+		1d49 060e  ThinkSystem RAID 940-32i 8GB Flash PCIe Gen4 12Gb Adapter
+		1d49 060f  ThinkSystem RAID 940-8e 4GB Flash PCIe Gen4 12Gb Adapter
 	10e3  MegaRAID 12GSAS/PCIe Unsupported SAS39xx
 	10e4  MegaRAID 12GSAS/PCIe Unsupported SAS38xx
 	10e5  MegaRAID 12GSAS/PCIe SAS38xx
@@ -2522,6 +2542,7 @@
 		1028 1726  Radeon RX 560DX
 		103c 8479  Radeon RX 560X Mobile
 		1043 04bc  Radeon RX 560
+		1043 052f  Radeon RX 560
 		1458 22ed  Radeon RX 560
 		148c 2381  Radeon RX 560
 		1682 9560  Radeon RX 560
@@ -18775,6 +18796,7 @@
 	4412  BCM4412 10/100BaseT
 	4430  BCM44xx CardBus iLine32 HomePNA 2.0
 	4432  BCM4432 CardBus 10/100BaseT
+	4464  BCM4464 802.11ac Wireless Network Adapter
 	4610  BCM4610 Sentry5 PCI to SB Bridge
 	4611  BCM4610 Sentry5 iLine32 HomePNA 1.0
 	4612  BCM4610 Sentry5 V.90 56k Modem
@@ -19355,6 +19377,7 @@
 	110f  PCI Express Core Reference Design Virtual Function
 	1110  XpressRich Reference Design
 	1113  XpressSwitch
+	be00  PCI Express Bridge
 1557  MEDIASTAR Co Ltd
 1558  CLEVO/KAPOK Computer
 1559  SI LOGIC Ltd
@@ -22342,12 +22365,15 @@
 		1d6c 2001  DPDK-Aware Virtual Function [Arkville VF]
 	100e  AR-ARKA-FX1 [Arkville 64B DPDK Data Mover]
 		1d6c 2001  DPDK-Aware Virtual Function [Arkville VF]
+	100f  AR-ARKA-FX1 [Arkville 64B DPDK Data Mover for Versal]
+	1010  AR-ARKA-FX1 [Arkville 64B DPDK Data Mover for Agilex]
 	4200  A5PL-E1-10GETI [10 GbE Ethernet Traffic Instrument]
 1d72  Xiaomi
 1d78  DERA
 1d7c  Aerotech, Inc.
 1d82  NETINT Technologies Inc.
 	0101  Codensity D400 SSD
+	0102  Codensity D408 PCIe Gen4 NVMe SSD
 	0202  Codensity T408 Video Encoding-Decoding Accelerator
 1d87  Fuzhou Rockchip Electronics Co., Ltd
 	0100  RK3399 PCI Express Root Port
@@ -22534,6 +22560,7 @@
 20f4  TRENDnet
 2116  ZyDAS Technology Corp.
 21c3  21st Century Computer Corp.
+22b8  Flex-Logix Technologies
 22db  Missing Link Electronics, Inc.
 2304  Colorgraphic Communications Corp.
 2348  Racore
@@ -22929,6 +22956,11 @@
 	0030  [mvHYPERION-HD-SDI-Merger] HD-SDI PCI Express x4 Frame Grabber
 4ddc  ILC Data Device Corp
 	0100  DD-42924I5-300 (ARINC 429 Data Bus)
+	0300  SB-3620 Motion Feedback Device
+	0340  SB-3623 Motion Feedback Device
+	0400  SB-3622 Motion Feedback Device
+	0500  SB-3621 Motion Feedback Device
+	0510  SB-3624 Motion Feedback Device
 	0801  BU-65570I1 MIL-STD-1553 Test and Simulation
 	0802  BU-65570I2 MIL-STD-1553 Test and Simulation
 	0811  BU-65572I1 MIL-STD-1553 Test and Simulation
@@ -22945,6 +22977,10 @@
 	0b02  BU-65569I2 MIL-STD-1553 Data Bus
 	0b03  BU-65569I3 MIL-STD-1553 Data Bus
 	0b04  BU-65569I4 MIL-STD-1553 Data Bus
+	0d01  SB-3641 Motion Feedback Device
+	0d10  SB-365x Motion Feedback Device
+	2f00  SB-3642 Motion Feedback Device
+	3000  SB-3644 Motion Feedback Device
 5045  University of Toronto
 	4243  BLASTbus PCI Interface Card v1
 5046  GemTek Technology Corporation
@@ -25411,6 +25447,8 @@
 	163d  Broadwell-U Integrated Graphics
 	163e  Broadwell-U Integrated Graphics
 	1889  Ethernet Adaptive Virtual Function
+	18a0  C4xxx Series QAT
+	18a1  C4XXX Series QAT Virtual Function
 	1900  Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Host Bridge/DRAM Registers
 	1901  Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16)
 	1902  HD Graphics 510
@@ -26020,6 +26058,7 @@
 	2084  Sky Lake-E PCU Registers
 	2085  Sky Lake-E PCU Registers
 	2086  Sky Lake-E PCU Registers
+	2088  Sky Lake-E DDRIO Registers
 	208d  Sky Lake-E CHA Registers
 	208e  Sky Lake-E CHA Registers
 	2241  Larrabee
@@ -28710,10 +28749,13 @@
 		8086 4210  Dual Band Wireless AC 3165
 	3166  Dual Band Wireless-AC 3165 Plus Bluetooth
 	3184  UHD Graphics 605
+	3185  UHD Graphics 605
 	318c  Celeron/Pentium Silver Processor Dynamic Platform and Thermal Framework Processor Participant
 	318e  Celeron/Pentium Silver Processor NorthPeak
+	3192  Gemini Lake P2SB
 	3197  Celeron/Pentium Silver Processor PCI-default ISA-bridge
 	319a  Celeron/Pentium Silver Processor Trusted Execution Engine Interface
+	31a2  Celeron/Pentium Silver Processor Integrated Sensor Solution
 	31ac  Celeron/Pentium Silver Processor Serial IO I2C Host Controller
 	31ae  Celeron/Pentium Silver Processor Serial IO I2C Host Controller
 	31bc  Celeron/Pentium Silver Processor Serial IO UART Host Controller
@@ -28724,7 +28766,14 @@
 	31c6  Celeron/Pentium Silver Processor Serial IO SPI Host Controller
 	31cc  Celeron/Pentium Silver Processor SDA Standard Compliant SD Host Controller
 	31d4  Celeron/Pentium Silver Processor Gaussian Mixture Model
+	31d6  Gemini Lake PCI Express Root Port
+	31d7  Gemini Lake PCI Express Root Port
+	31d8  Gemini Lake PCI Express Root Port
+	31d9  Gemini Lake PCI Express Root Port
+	31da  Gemini Lake PCI Express Root Port
+	31db  Gemini Lake PCI Express Root Port
 	31ee  Celeron/Pentium Silver Processor Serial IO UART Host Controller
+	31f0  Gemini Lake Host Bridge
 	3200  GD31244 PCI-X SATA HBA
 		1775 c200  C2K onboard SATA host bus adapter
 	3310  IOP348 I/O Processor
@@ -29421,6 +29470,7 @@
 	3e1f  8th Gen Core 4-core Desktop Processor Host Bridge/DRAM Registers [Coffee Lake S]
 		1458 5000  Z370 AORUS Gaming K3-CF
 	3e30  8th Gen Core 8-core Desktop Processor Host Bridge/DRAM Registers [Coffee Lake S]
+	3e34  Coffee Lake HOST and DRAM Controller
 	3e81  8th Gen Core Processor PCIe Controller (x16)
 	3e85  8th Gen Core Processor PCIe Controller (x8)
 	3e89  8th Gen Core Processor PCIe Controller (x4)
@@ -29774,6 +29824,7 @@
 	6f52  Xeon Processor D Family QuickData Technology Register DMA Channel 2
 	6f53  Xeon Processor D Family QuickData Technology Register DMA Channel 3
 	6f54  Xeon Processor D Family QuickAssist Technology
+	6f55  Xeon Processor D Family QuickAssist Technology Virtual Fuction
 	6f60  Xeon E7 v4/Xeon E5 v4/Xeon E3 v4/Xeon D Home Agent 1
 	6f68  Xeon E7 v4/Xeon E5 v4/Xeon E3 v4/Xeon D Target Address/Thermal/RAS
 	6f6a  Xeon E7 v4/Xeon E5 v4/Xeon E3 v4/Xeon D Channel Target Address Decoder
@@ -30032,6 +30083,13 @@
 	8817  Platform Controller Hub EG20T I2C Controller
 	8818  Platform Controller Hub EG20T Controller Area Network (CAN) Controller
 	8819  Platform Controller Hub EG20T IEEE 1588 Hardware Assist
+	8a0d  Ice Lake Thunderbolt 3 NHI #1
+	8a13  Ice Lake Thunderbolt 3 USB Controller
+	8a17  Ice Lake Thunderbolt 3 NHI #0
+	8a1d  Ice Lake Thunderbolt 3 PCI Express Root Port #0
+	8a1f  Ice Lake Thunderbolt 3 PCI Express Root Port #1
+	8a21  Ice Lake Thunderbolt 3 PCI Express Root Port #2
+	8a23  Ice Lake Thunderbolt 3 PCI Express Root Port #3
 	8c00  8 Series/C220 Series Chipset Family 4-port SATA Controller 1 [IDE mode]
 	8c01  8 Series Chipset Family 4-port SATA Controller 1 [IDE mode] - Mobile
 	8c02  8 Series/C220 Series Chipset Family 6-port SATA Controller 1 [AHCI mode]
@@ -30462,6 +30520,7 @@
 	9db6  Cannon Point-LP PCI Express Root Port #15
 	9db8  Cannon Point-LP PCI Express Root Port #1
 	9dbc  Cannon Point-LP PCI Express Root Port #5
+	9dbf  Cannon Point PCI Express Root Port #8
 	9dc8  Cannon Point-LP High Definition Audio Controller
 		1028 089e  Inspiron 5482
 	9dd3  Cannon Point-LP SATA Controller [AHCI Mode]
@@ -30473,6 +30532,7 @@
 	9ded  Cannon Point-LP USB 3.1 xHCI Controller
 	9def  Cannon Point-LP Shared SRAM
 	9df0  Cannon Point-LP CNVi [Wireless-AC]
+	9df5  BayHubTech Integrated SD controller
 	9df9  Cannon Point-LP Thermal Controller
 	9dfc  Cannon Point-LP Integrated Sensor Hub
 	a000  Atom Processor D4xx/D5xx/N4xx/N5xx DMI Bridge
@@ -31866,6 +31926,8 @@ C 11  Signal processing controller
 	80  Signal processing controller
 C 12  Processing accelerators
 	00  Processing accelerators
+# For the class of PCI attached devices which perform a function of Deep Learning Neural Network inference acceleration
+	01  AI Inference Accelerator
 C 13  Non-Essential Instrumentation
 C 40  Coprocessor
 C ff  Unassigned class
