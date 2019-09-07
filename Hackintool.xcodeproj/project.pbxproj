@@ -1,0 +1,856 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E200EE7A21FBD4600082D799 /* NVRAMXmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E200EE7921FBD4600082D799 /* NVRAMXmlParser.m */; };
+		E228024621046E9D00C0FDC6 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E228024521046E9C00C0FDC6 /* IOKit.framework */; };
+		E22AB5392278FC4500A46C8D /* OpenCore.m in Sources */ = {isa = PBXBuildFile; fileRef = E22AB5382278FC4500A46C8D /* OpenCore.m */; };
+		E22AB53C227905FE00A46C8D /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = E22AB53B227905FE00A46C8D /* Config.m */; };
+		E22AB53E2279F02800A46C8D /* OpenCore in Resources */ = {isa = PBXBuildFile; fileRef = E22AB53D2279F02800A46C8D /* OpenCore */; };
+		E22CAB9C226A6919008B4B52 /* VDADecoderChecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E22CAB9A226A6919008B4B52 /* VDADecoderChecker.cpp */; };
+		E22CAB9E226A696A008B4B52 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E22CAB9D226A696A008B4B52 /* CoreVideo.framework */; };
+		E22CABA0226A697D008B4B52 /* VideoDecodeAcceleration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E22CAB9F226A697D008B4B52 /* VideoDecodeAcceleration.framework */; };
+		E22CB14D2126EB2900A883BA /* Framebuffer in Resources */ = {isa = PBXBuildFile; fileRef = E22CB14C2126EB2900A883BA /* Framebuffer */; };
+		E22DE6CE211C58000015C27A /* USB in Resources */ = {isa = PBXBuildFile; fileRef = E22DE6CD211C58000015C27A /* USB */; };
+		E23342012125AEF6000FDF6A /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E23342002125AEF6000FDF6A /* OpenCL.framework */; };
+		E23474CC22132CE6006E2A28 /* Display.m in Sources */ = {isa = PBXBuildFile; fileRef = E23474CB22132CE6006E2A28 /* Display.m */; };
+		E23474CE22133099006E2A28 /* Resolution.m in Sources */ = {isa = PBXBuildFile; fileRef = E23474CD22133099006E2A28 /* Resolution.m */; };
+		E23474D1221330D4006E2A28 /* Disk.m in Sources */ = {isa = PBXBuildFile; fileRef = E23474D0221330D4006E2A28 /* Disk.m */; };
+		E23A52E02200DBB5001ECEA6 /* Clover.m in Sources */ = {isa = PBXBuildFile; fileRef = E23A52DE2200DBB5001ECEA6 /* Clover.m */; };
+		E23A52E3220146D4001ECEA6 /* Authorization.m in Sources */ = {isa = PBXBuildFile; fileRef = E23A52E1220146D4001ECEA6 /* Authorization.m */; };
+		E2489DEE211AE5AD00A48C84 /* NSTabViewImage.m in Sources */ = {isa = PBXBuildFile; fileRef = E2489DED211AE5AD00A48C84 /* NSTabViewImage.m */; };
+		E248A34F211B03CE00A48C84 /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = E248A34E211B03CE00A48C84 /* Audio */; };
+		E24936FF169D1B2B00384895 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E24936FE169D1B2B00384895 /* Cocoa.framework */; };
+		E249370B169D1B2B00384895 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E249370A169D1B2B00384895 /* main.m */; };
+		E2493712169D1B2B00384895 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2493711169D1B2B00384895 /* AppDelegate.m */; };
+		E2493715169D1B2B00384895 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2493713169D1B2B00384895 /* MainMenu.xib */; };
+		E2520BA5226CE3B00077A0FC /* PCIMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2520BA3226CE3AF0077A0FC /* PCIMonitor.m */; };
+		E2521F4522081D7200DB2BD2 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E2521F4322081D7200DB2BD2 /* Credits.rtf */; };
+		E2547D302237F60900EF116F /* Help in Resources */ = {isa = PBXBuildFile; fileRef = E2547D2F2237F60800EF116F /* Help */; };
+		E2674F9720D61D1A007F0F2A /* IntelFramebuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = E2674F9620D61D1A007F0F2A /* IntelFramebuffer.m */; };
+		E26BE3DE22520DC0004901D8 /* PCI in Resources */ = {isa = PBXBuildFile; fileRef = E26BE3DD22520DC0004901D8 /* PCI */; };
+		E277608E21EBD90D00EA6E44 /* FixEDID.m in Sources */ = {isa = PBXBuildFile; fileRef = E277608C21EBD90D00EA6E44 /* FixEDID.m */; };
+		E27BFB91211BCEE300C75CDB /* Intel in Resources */ = {isa = PBXBuildFile; fileRef = E27BFB90211BCEE300C75CDB /* Intel */; };
+		E2804A74220483E700B40C25 /* Localizer.m in Sources */ = {isa = PBXBuildFile; fileRef = E2804A73220483E700B40C25 /* Localizer.m */; };
+		E2804A77220484F900B40C25 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2804A75220484F900B40C25 /* Localizable.strings */; };
+		E28286C221FC508300A0CB2D /* DiskUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E28286C021FC508300A0CB2D /* DiskUtilities.m */; };
+		E28286C821FC943700A0CB2D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E28286C721FC943700A0CB2D /* Security.framework */; };
+		E28341E622346A880022713F /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E28341E522346A880022713F /* libxml2.tbd */; };
+		E28652CE22B55A3C00D42BFB /* BT in Resources */ = {isa = PBXBuildFile; fileRef = E28652CD22B55A3C00D42BFB /* BT */; };
+		E29361D321FFF3DC00ED0105 /* ACPI in Resources */ = {isa = PBXBuildFile; fileRef = E29361D221FFF3DC00ED0105 /* ACPI */; };
+		E29361D521FFF3E300ED0105 /* Utilities in Resources */ = {isa = PBXBuildFile; fileRef = E29361D421FFF3E200ED0105 /* Utilities */; };
+		E29436BF21FBC5D30029FA2D /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E29436BE21FBC5D20029FA2D /* DiskArbitration.framework */; };
+		E29C38CF222B871200F2178F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E29C38CE222B871200F2178F /* Sparkle.framework */; };
+		E29C38D0222B871C00F2178F /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E29C38CE222B871200F2178F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E29F093923241A0E0039D931 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = E29F093723241A0E0039D931 /* utils.c */; };
+		E2A397EE2246F2DE00C6D2B1 /* BarTableRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = E2A397EB2246F2DD00C6D2B1 /* BarTableRowView.m */; };
+		E2A397F02246F34500C6D2B1 /* DiskManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2A397EF2246F34500C6D2B1 /* DiskManagement.framework */; };
+		E2A5A6B122A03BCA00CE02D1 /* DisplayMergeNub in Resources */ = {isa = PBXBuildFile; fileRef = E2A5A6B022A03BCA00CE02D1 /* DisplayMergeNub */; };
+		E2AB57A02234DA3400DD8F8C /* Kexts in Resources */ = {isa = PBXBuildFile; fileRef = E2AB579F2234DA3400DD8F8C /* Kexts */; };
+		E2AB61FC227A44B100724F32 /* EveryMac in Resources */ = {isa = PBXBuildFile; fileRef = E2AB61FB227A44B100724F32 /* EveryMac */; };
+		E2ABF70820D7369000652F83 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2ABF70720D7369000652F83 /* Media.xcassets */; };
+		E2B27E27229DE570002A8B08 /* DisplayMergeNub.h in Headers */ = {isa = PBXBuildFile; fileRef = E2B27E25229DE570002A8B08 /* DisplayMergeNub.h */; };
+		E2B27E2A229DE57C002A8B08 /* DisplayMergeNub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2B27E29229DE57C002A8B08 /* DisplayMergeNub.cpp */; };
+		E2BD9C1B2200642800E04431 /* USB.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BD9C192200642800E04431 /* USB.m */; };
+		E2BD9C2122006B1C00E04431 /* MiscTools.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BD9C1F22006B1C00E04431 /* MiscTools.m */; };
+		E2C5B2E6226FEBEA009BB776 /* Windows in Resources */ = {isa = PBXBuildFile; fileRef = E2C5B2E5226FEBEA009BB776 /* Windows */; };
+		E2D20D4D223184DF00BAC721 /* Clover in Resources */ = {isa = PBXBuildFile; fileRef = E2D20D4C223184DF00BAC721 /* Clover */; };
+		E2DDD8AA2306DE640017F6D7 /* macserial.c in Sources */ = {isa = PBXBuildFile; fileRef = E2DDD8A62306DE640017F6D7 /* macserial.c */; };
+		E2DDD8AE2307E3800017F6D7 /* efidevp.c in Sources */ = {isa = PBXBuildFile; fileRef = E2DDD8AC2307E37F0017F6D7 /* efidevp.c */; };
+		E2ED92F8221349FE00279FEA /* AudioDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = E2ED92F7221349FE00279FEA /* AudioDevice.m */; };
+		E2F6B2C522E3FE2B00BEF274 /* IORegTools.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F6B2C422E3FE2B00BEF274 /* IORegTools.m */; };
+		E2FB8637210EAB1000D6F0E4 /* FBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E2FB8635210EAB1000D6F0E4 /* FBUtilities.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E29C38CD222B856900F2178F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E29C38D0222B871C00F2178F /* Sparkle.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		E200EE7821FBD4600082D799 /* NVRAMXmlParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVRAMXmlParser.h; sourceTree = "<group>"; };
+		E200EE7921FBD4600082D799 /* NVRAMXmlParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NVRAMXmlParser.m; sourceTree = "<group>"; };
+		E228024521046E9C00C0FDC6 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		E22AB5372278FC4500A46C8D /* OpenCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenCore.h; sourceTree = "<group>"; };
+		E22AB5382278FC4500A46C8D /* OpenCore.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = OpenCore.m; sourceTree = "<group>"; };
+		E22AB53A227905FD00A46C8D /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		E22AB53B227905FE00A46C8D /* Config.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Config.m; sourceTree = "<group>"; };
+		E22AB53D2279F02800A46C8D /* OpenCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = OpenCore; sourceTree = "<group>"; };
+		E22CAB9A226A6919008B4B52 /* VDADecoderChecker.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VDADecoderChecker.cpp; sourceTree = "<group>"; };
+		E22CAB9B226A6919008B4B52 /* VDADecoderChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VDADecoderChecker.h; sourceTree = "<group>"; };
+		E22CAB9D226A696A008B4B52 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		E22CAB9F226A697D008B4B52 /* VideoDecodeAcceleration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoDecodeAcceleration.framework; path = System/Library/Frameworks/VideoDecodeAcceleration.framework; sourceTree = SDKROOT; };
+		E22CB14C2126EB2900A883BA /* Framebuffer */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Framebuffer; sourceTree = "<group>"; };
+		E22DE6CD211C58000015C27A /* USB */ = {isa = PBXFileReference; lastKnownFileType = folder; path = USB; sourceTree = "<group>"; };
+		E23342002125AEF6000FDF6A /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
+		E23474CA22132CE5006E2A28 /* Display.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Display.h; sourceTree = "<group>"; };
+		E23474CB22132CE6006E2A28 /* Display.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Display.m; sourceTree = "<group>"; };
+		E23474CD22133099006E2A28 /* Resolution.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Resolution.m; sourceTree = "<group>"; };
+		E23474CF221330B0006E2A28 /* Resolution.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Resolution.h; sourceTree = "<group>"; };
+		E23474D0221330D4006E2A28 /* Disk.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = Disk.m; sourceTree = "<group>"; };
+		E23474D2221330DF006E2A28 /* Disk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Disk.h; sourceTree = "<group>"; };
+		E23A52DE2200DBB5001ECEA6 /* Clover.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = Clover.m; sourceTree = "<group>"; };
+		E23A52DF2200DBB5001ECEA6 /* Clover.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Clover.h; sourceTree = "<group>"; };
+		E23A52E1220146D4001ECEA6 /* Authorization.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = Authorization.m; sourceTree = "<group>"; };
+		E23A52E2220146D4001ECEA6 /* Authorization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Authorization.h; sourceTree = "<group>"; };
+		E2489DEC211AE5AD00A48C84 /* NSTabViewImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSTabViewImage.h; sourceTree = "<group>"; };
+		E2489DED211AE5AD00A48C84 /* NSTabViewImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTabViewImage.m; sourceTree = "<group>"; };
+		E248A34E211B03CE00A48C84 /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Audio; path = Resources/Audio; sourceTree = SOURCE_ROOT; };
+		E24936FA169D1B2B00384895 /* Hackintool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hackintool.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E24936FE169D1B2B00384895 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		E2493706169D1B2B00384895 /* Hackintool-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Hackintool-Info.plist"; sourceTree = "<group>"; };
+		E249370A169D1B2B00384895 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E249370C169D1B2B00384895 /* Hackintool-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hackintool-Prefix.pch"; sourceTree = "<group>"; };
+		E2493710169D1B2B00384895 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E2493711169D1B2B00384895 /* AppDelegate.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = AppDelegate.m; sourceTree = "<group>"; };
+		E2520BA3226CE3AF0077A0FC /* PCIMonitor.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = PCIMonitor.m; sourceTree = "<group>"; };
+		E2520BA4226CE3B00077A0FC /* PCIMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCIMonitor.h; sourceTree = "<group>"; };
+		E2521F4422081D7200DB2BD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
+		E2521F49220894DA00DB2BD2 /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E2544F7B22049E5B0082A4D9 /* ko */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E2547D2F2237F60800EF116F /* Help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Help; sourceTree = "<group>"; };
+		E2674F9220D6195C007F0F2A /* IntelFramebuffer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = IntelFramebuffer.h; sourceTree = "<group>"; };
+		E2674F9620D61D1A007F0F2A /* IntelFramebuffer.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = IntelFramebuffer.m; sourceTree = "<group>"; };
+		E26BE3DD22520DC0004901D8 /* PCI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PCI; sourceTree = "<group>"; };
+		E277608C21EBD90D00EA6E44 /* FixEDID.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = FixEDID.m; sourceTree = "<group>"; };
+		E277608D21EBD90D00EA6E44 /* FixEDID.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FixEDID.h; sourceTree = "<group>"; };
+		E27BFB90211BCEE300C75CDB /* Intel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Intel; path = Resources/Intel; sourceTree = SOURCE_ROOT; };
+		E2804A72220483E700B40C25 /* Localizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Localizer.h; sourceTree = "<group>"; };
+		E2804A73220483E700B40C25 /* Localizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Localizer.m; sourceTree = "<group>"; };
+		E2804A76220484F900B40C25 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E28286C021FC508300A0CB2D /* DiskUtilities.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = DiskUtilities.m; sourceTree = "<group>"; };
+		E28286C121FC508300A0CB2D /* DiskUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiskUtilities.h; sourceTree = "<group>"; };
+		E28286C321FC913800A0CB2D /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
+		E28286C721FC943700A0CB2D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		E28341E522346A880022713F /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		E28652CD22B55A3C00D42BFB /* BT */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BT; sourceTree = "<group>"; };
+		E29361D221FFF3DC00ED0105 /* ACPI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ACPI; sourceTree = "<group>"; };
+		E29361D421FFF3E200ED0105 /* Utilities */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Utilities; sourceTree = "<group>"; };
+		E29436BE21FBC5D20029FA2D /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
+		E29C38CE222B871200F2178F /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
+		E29F093723241A0E0039D931 /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utils.c; sourceTree = "<group>"; };
+		E29F093823241A0E0039D931 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		E2A397EB2246F2DD00C6D2B1 /* BarTableRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarTableRowView.m; sourceTree = "<group>"; };
+		E2A397EC2246F2DD00C6D2B1 /* DMManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMManager.h; sourceTree = "<group>"; };
+		E2A397ED2246F2DE00C6D2B1 /* BarTableRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarTableRowView.h; sourceTree = "<group>"; };
+		E2A397EF2246F34500C6D2B1 /* DiskManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskManagement.framework; path = ../../../../../../System/Library/PrivateFrameworks/DiskManagement.framework; sourceTree = "<group>"; };
+		E2A5A6B022A03BCA00CE02D1 /* DisplayMergeNub */ = {isa = PBXFileReference; lastKnownFileType = folder; path = DisplayMergeNub; sourceTree = "<group>"; };
+		E2AB579F2234DA3400DD8F8C /* Kexts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Kexts; sourceTree = "<group>"; };
+		E2AB61FB227A44B100724F32 /* EveryMac */ = {isa = PBXFileReference; lastKnownFileType = folder; path = EveryMac; sourceTree = "<group>"; };
+		E2ABF70720D7369000652F83 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		E2B27E19229DE4C1002A8B08 /* DisplayMergeNub.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DisplayMergeNub.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2B27E23229DE565002A8B08 /* DisplayMergeNub-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DisplayMergeNub-Info.plist"; sourceTree = "<group>"; };
+		E2B27E25229DE570002A8B08 /* DisplayMergeNub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisplayMergeNub.h; path = Headers/DisplayMergeNub.h; sourceTree = "<group>"; };
+		E2B27E29229DE57C002A8B08 /* DisplayMergeNub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DisplayMergeNub.cpp; path = Classes/DisplayMergeNub.cpp; sourceTree = "<group>"; };
+		E2BD9C192200642800E04431 /* USB.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = USB.m; sourceTree = "<group>"; };
+		E2BD9C1A2200642800E04431 /* USB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = USB.h; sourceTree = "<group>"; };
+		E2BD9C1D220069D800E04431 /* IORegTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IORegTools.h; sourceTree = "<group>"; };
+		E2BD9C1F22006B1C00E04431 /* MiscTools.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MiscTools.m; sourceTree = "<group>"; };
+		E2BD9C2022006B1C00E04431 /* MiscTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiscTools.h; sourceTree = "<group>"; };
+		E2C5B2E5226FEBEA009BB776 /* Windows */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Windows; sourceTree = "<group>"; };
+		E2D20D4C223184DF00BAC721 /* Clover */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Clover; sourceTree = "<group>"; };
+		E2DDD8A62306DE640017F6D7 /* macserial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = macserial.c; sourceTree = "<group>"; };
+		E2DDD8A72306DE640017F6D7 /* macserial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macserial.h; sourceTree = "<group>"; };
+		E2DDD8A82306DE640017F6D7 /* modelinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelinfo.h; sourceTree = "<group>"; };
+		E2DDD8A92306DE640017F6D7 /* modelinfo_autogen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modelinfo_autogen.h; sourceTree = "<group>"; };
+		E2DDD8AC2307E37F0017F6D7 /* efidevp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = efidevp.c; sourceTree = "<group>"; };
+		E2DDD8AD2307E37F0017F6D7 /* efidevp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = efidevp.h; sourceTree = "<group>"; };
+		E2DDEC31222CA59F00661F3C /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E2E7D7EE22065D310062D06D /* ru */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E2E7D7F2220811AC0062D06D /* uk */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E2E7D7F62208124A0062D06D /* de */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E2E9476F2204A9F5005348C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		E2EA734A22845CDB0095E56C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = "zh-Hans"; path = "zh-Hans.lproj/Credits.rtf"; sourceTree = "<group>"; };
+		E2ED92F6221349F000279FEA /* AudioDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioDevice.h; sourceTree = "<group>"; };
+		E2ED92F7221349FE00279FEA /* AudioDevice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioDevice.m; sourceTree = "<group>"; };
+		E2F6B2C422E3FE2B00BEF274 /* IORegTools.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = IORegTools.m; sourceTree = "<group>"; };
+		E2FB8635210EAB1000D6F0E4 /* FBUtilities.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = FBUtilities.m; sourceTree = "<group>"; };
+		E2FB8636210EAB1000D6F0E4 /* FBUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBUtilities.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E24936F7169D1B2B00384895 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E22CABA0226A697D008B4B52 /* VideoDecodeAcceleration.framework in Frameworks */,
+				E22CAB9E226A696A008B4B52 /* CoreVideo.framework in Frameworks */,
+				E2A397F02246F34500C6D2B1 /* DiskManagement.framework in Frameworks */,
+				E28341E622346A880022713F /* libxml2.tbd in Frameworks */,
+				E28286C821FC943700A0CB2D /* Security.framework in Frameworks */,
+				E29C38CF222B871200F2178F /* Sparkle.framework in Frameworks */,
+				E29436BF21FBC5D30029FA2D /* DiskArbitration.framework in Frameworks */,
+				E23342012125AEF6000FDF6A /* OpenCL.framework in Frameworks */,
+				E228024621046E9D00C0FDC6 /* IOKit.framework in Frameworks */,
+				E24936FF169D1B2B00384895 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2B27E16229DE4C1002A8B08 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E24936EF169D1B2B00384895 = {
+			isa = PBXGroup;
+			children = (
+				E2DDD8AB2307E37F0017F6D7 /* GfxUtil */,
+				E2DDD8A52306DE640017F6D7 /* MacSerial */,
+				E2B27E1A229DE4C1002A8B08 /* DisplayMergeNub */,
+				E24936FD169D1B2B00384895 /* Frameworks */,
+				E2493704169D1B2B00384895 /* Hackintool */,
+				E2ABF70720D7369000652F83 /* Media.xcassets */,
+				E24936FB169D1B2B00384895 /* Products */,
+				E2EFB567211B1B6A0051A066 /* Resources */,
+			);
+			sourceTree = "<group>";
+		};
+		E24936FB169D1B2B00384895 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E24936FA169D1B2B00384895 /* Hackintool.app */,
+				E2B27E19229DE4C1002A8B08 /* DisplayMergeNub.kext */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E24936FD169D1B2B00384895 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E22CAB9F226A697D008B4B52 /* VideoDecodeAcceleration.framework */,
+				E22CAB9D226A696A008B4B52 /* CoreVideo.framework */,
+				E2A397EF2246F34500C6D2B1 /* DiskManagement.framework */,
+				E28341E522346A880022713F /* libxml2.tbd */,
+				E29C38CE222B871200F2178F /* Sparkle.framework */,
+				E28286C721FC943700A0CB2D /* Security.framework */,
+				E28286C321FC913800A0CB2D /* LocalAuthentication.framework */,
+				E29436BE21FBC5D20029FA2D /* DiskArbitration.framework */,
+				E23342002125AEF6000FDF6A /* OpenCL.framework */,
+				E24936FE169D1B2B00384895 /* Cocoa.framework */,
+				E228024521046E9C00C0FDC6 /* IOKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E2493704169D1B2B00384895 /* Hackintool */ = {
+			isa = PBXGroup;
+			children = (
+				E2493710169D1B2B00384895 /* AppDelegate.h */,
+				E2493711169D1B2B00384895 /* AppDelegate.m */,
+				E2ED92F6221349F000279FEA /* AudioDevice.h */,
+				E2ED92F7221349FE00279FEA /* AudioDevice.m */,
+				E23A52E2220146D4001ECEA6 /* Authorization.h */,
+				E23A52E1220146D4001ECEA6 /* Authorization.m */,
+				E2A397ED2246F2DE00C6D2B1 /* BarTableRowView.h */,
+				E2A397EB2246F2DD00C6D2B1 /* BarTableRowView.m */,
+				E23A52DF2200DBB5001ECEA6 /* Clover.h */,
+				E23A52DE2200DBB5001ECEA6 /* Clover.m */,
+				E22AB53A227905FD00A46C8D /* Config.h */,
+				E22AB53B227905FE00A46C8D /* Config.m */,
+				E2521F4322081D7200DB2BD2 /* Credits.rtf */,
+				E23474D2221330DF006E2A28 /* Disk.h */,
+				E23474D0221330D4006E2A28 /* Disk.m */,
+				E28286C121FC508300A0CB2D /* DiskUtilities.h */,
+				E28286C021FC508300A0CB2D /* DiskUtilities.m */,
+				E23474CA22132CE5006E2A28 /* Display.h */,
+				E23474CB22132CE6006E2A28 /* Display.m */,
+				E2A397EC2246F2DD00C6D2B1 /* DMManager.h */,
+				E2FB8636210EAB1000D6F0E4 /* FBUtilities.h */,
+				E2FB8635210EAB1000D6F0E4 /* FBUtilities.m */,
+				E277608D21EBD90D00EA6E44 /* FixEDID.h */,
+				E277608C21EBD90D00EA6E44 /* FixEDID.m */,
+				E2674F9220D6195C007F0F2A /* IntelFramebuffer.h */,
+				E2674F9620D61D1A007F0F2A /* IntelFramebuffer.m */,
+				E2BD9C1D220069D800E04431 /* IORegTools.h */,
+				E2F6B2C422E3FE2B00BEF274 /* IORegTools.m */,
+				E2804A75220484F900B40C25 /* Localizable.strings */,
+				E2804A72220483E700B40C25 /* Localizer.h */,
+				E2804A73220483E700B40C25 /* Localizer.m */,
+				E2493713169D1B2B00384895 /* MainMenu.xib */,
+				E2BD9C2022006B1C00E04431 /* MiscTools.h */,
+				E2BD9C1F22006B1C00E04431 /* MiscTools.m */,
+				E2489DEC211AE5AD00A48C84 /* NSTabViewImage.h */,
+				E2489DED211AE5AD00A48C84 /* NSTabViewImage.m */,
+				E200EE7821FBD4600082D799 /* NVRAMXmlParser.h */,
+				E200EE7921FBD4600082D799 /* NVRAMXmlParser.m */,
+				E22AB5372278FC4500A46C8D /* OpenCore.h */,
+				E22AB5382278FC4500A46C8D /* OpenCore.m */,
+				E2520BA4226CE3B00077A0FC /* PCIMonitor.h */,
+				E2520BA3226CE3AF0077A0FC /* PCIMonitor.m */,
+				E23474CF221330B0006E2A28 /* Resolution.h */,
+				E23474CD22133099006E2A28 /* Resolution.m */,
+				E2493705169D1B2B00384895 /* Supporting Files */,
+				E2BD9C1A2200642800E04431 /* USB.h */,
+				E2BD9C192200642800E04431 /* USB.m */,
+				E22CAB9A226A6919008B4B52 /* VDADecoderChecker.cpp */,
+				E22CAB9B226A6919008B4B52 /* VDADecoderChecker.h */,
+			);
+			path = Hackintool;
+			sourceTree = "<group>";
+		};
+		E2493705169D1B2B00384895 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E2493706169D1B2B00384895 /* Hackintool-Info.plist */,
+				E249370A169D1B2B00384895 /* main.m */,
+				E249370C169D1B2B00384895 /* Hackintool-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E2B27E1A229DE4C1002A8B08 /* DisplayMergeNub */ = {
+			isa = PBXGroup;
+			children = (
+				E2B27E29229DE57C002A8B08 /* DisplayMergeNub.cpp */,
+				E2B27E25229DE570002A8B08 /* DisplayMergeNub.h */,
+				E2B27E23229DE565002A8B08 /* DisplayMergeNub-Info.plist */,
+			);
+			path = DisplayMergeNub;
+			sourceTree = "<group>";
+		};
+		E2DDD8A52306DE640017F6D7 /* MacSerial */ = {
+			isa = PBXGroup;
+			children = (
+				E2DDD8A62306DE640017F6D7 /* macserial.c */,
+				E2DDD8A72306DE640017F6D7 /* macserial.h */,
+				E2DDD8A82306DE640017F6D7 /* modelinfo.h */,
+				E2DDD8A92306DE640017F6D7 /* modelinfo_autogen.h */,
+			);
+			path = MacSerial;
+			sourceTree = "<group>";
+		};
+		E2DDD8AB2307E37F0017F6D7 /* GfxUtil */ = {
+			isa = PBXGroup;
+			children = (
+				E2DDD8AC2307E37F0017F6D7 /* efidevp.c */,
+				E2DDD8AD2307E37F0017F6D7 /* efidevp.h */,
+				E29F093723241A0E0039D931 /* utils.c */,
+				E29F093823241A0E0039D931 /* utils.h */,
+			);
+			path = GfxUtil;
+			sourceTree = "<group>";
+		};
+		E2EFB567211B1B6A0051A066 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E29361D221FFF3DC00ED0105 /* ACPI */,
+				E248A34E211B03CE00A48C84 /* Audio */,
+				E28652CD22B55A3C00D42BFB /* BT */,
+				E2D20D4C223184DF00BAC721 /* Clover */,
+				E2A5A6B022A03BCA00CE02D1 /* DisplayMergeNub */,
+				E2AB61FB227A44B100724F32 /* EveryMac */,
+				E22CB14C2126EB2900A883BA /* Framebuffer */,
+				E2547D2F2237F60800EF116F /* Help */,
+				E27BFB90211BCEE300C75CDB /* Intel */,
+				E2AB579F2234DA3400DD8F8C /* Kexts */,
+				E22AB53D2279F02800A46C8D /* OpenCore */,
+				E26BE3DD22520DC0004901D8 /* PCI */,
+				E22DE6CD211C58000015C27A /* USB */,
+				E29361D421FFF3E200ED0105 /* Utilities */,
+				E2C5B2E5226FEBEA009BB776 /* Windows */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E2B27E14229DE4C1002A8B08 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2B27E27229DE570002A8B08 /* DisplayMergeNub.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E24936F9169D1B2B00384895 /* Hackintool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2493718169D1B2B00384895 /* Build configuration list for PBXNativeTarget "Hackintool" */;
+			buildPhases = (
+				E24936F6169D1B2B00384895 /* Sources */,
+				E24936F7169D1B2B00384895 /* Frameworks */,
+				E24936F8169D1B2B00384895 /* Resources */,
+				E29C38CD222B856900F2178F /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Hackintool;
+			productName = Hackintool;
+			productReference = E24936FA169D1B2B00384895 /* Hackintool.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E2B27E18229DE4C1002A8B08 /* DisplayMergeNub */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2B27E1E229DE4C1002A8B08 /* Build configuration list for PBXNativeTarget "DisplayMergeNub" */;
+			buildPhases = (
+				E2B27E14229DE4C1002A8B08 /* Headers */,
+				E2B27E15229DE4C1002A8B08 /* Sources */,
+				E2B27E16229DE4C1002A8B08 /* Frameworks */,
+				E2B27E17229DE4C1002A8B08 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DisplayMergeNub;
+			productName = DisplayMergeNub;
+			productReference = E2B27E19229DE4C1002A8B08 /* DisplayMergeNub.kext */;
+			productType = "com.apple.product-type.kernel-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E24936F1169D1B2B00384895 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = Headsoft;
+				TargetAttributes = {
+					E24936F9169D1B2B00384895 = {
+						DevelopmentTeam = 5LGHPJM9ZR;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
+					};
+					E2B27E18229DE4C1002A8B08 = {
+						CreatedOnToolsVersion = 10.2.1;
+						DevelopmentTeam = HJZSSYBKX3;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = E24936F4169D1B2B00384895 /* Build configuration list for PBXProject "Hackintool" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				ko,
+				en,
+				ru,
+				uk,
+				de,
+				fr,
+				"zh-Hans",
+			);
+			mainGroup = E24936EF169D1B2B00384895;
+			productRefGroup = E24936FB169D1B2B00384895 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E24936F9169D1B2B00384895 /* Hackintool */,
+				E2B27E18229DE4C1002A8B08 /* DisplayMergeNub */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E24936F8169D1B2B00384895 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2C5B2E6226FEBEA009BB776 /* Windows in Resources */,
+				E2547D302237F60900EF116F /* Help in Resources */,
+				E2AB61FC227A44B100724F32 /* EveryMac in Resources */,
+				E22CB14D2126EB2900A883BA /* Framebuffer in Resources */,
+				E2804A77220484F900B40C25 /* Localizable.strings in Resources */,
+				E2ABF70820D7369000652F83 /* Media.xcassets in Resources */,
+				E248A34F211B03CE00A48C84 /* Audio in Resources */,
+				E28652CE22B55A3C00D42BFB /* BT in Resources */,
+				E2D20D4D223184DF00BAC721 /* Clover in Resources */,
+				E27BFB91211BCEE300C75CDB /* Intel in Resources */,
+				E29361D521FFF3E300ED0105 /* Utilities in Resources */,
+				E22AB53E2279F02800A46C8D /* OpenCore in Resources */,
+				E2A5A6B122A03BCA00CE02D1 /* DisplayMergeNub in Resources */,
+				E2521F4522081D7200DB2BD2 /* Credits.rtf in Resources */,
+				E29361D321FFF3DC00ED0105 /* ACPI in Resources */,
+				E2AB57A02234DA3400DD8F8C /* Kexts in Resources */,
+				E26BE3DE22520DC0004901D8 /* PCI in Resources */,
+				E22DE6CE211C58000015C27A /* USB in Resources */,
+				E2493715169D1B2B00384895 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2B27E17229DE4C1002A8B08 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E24936F6169D1B2B00384895 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E22CAB9C226A6919008B4B52 /* VDADecoderChecker.cpp in Sources */,
+				E22AB53C227905FE00A46C8D /* Config.m in Sources */,
+				E23474D1221330D4006E2A28 /* Disk.m in Sources */,
+				E29F093923241A0E0039D931 /* utils.c in Sources */,
+				E23474CC22132CE6006E2A28 /* Display.m in Sources */,
+				E249370B169D1B2B00384895 /* main.m in Sources */,
+				E2DDD8AE2307E3800017F6D7 /* efidevp.c in Sources */,
+				E2ED92F8221349FE00279FEA /* AudioDevice.m in Sources */,
+				E23A52E3220146D4001ECEA6 /* Authorization.m in Sources */,
+				E2804A74220483E700B40C25 /* Localizer.m in Sources */,
+				E2BD9C1B2200642800E04431 /* USB.m in Sources */,
+				E2FB8637210EAB1000D6F0E4 /* FBUtilities.m in Sources */,
+				E2F6B2C522E3FE2B00BEF274 /* IORegTools.m in Sources */,
+				E2A397EE2246F2DE00C6D2B1 /* BarTableRowView.m in Sources */,
+				E2BD9C2122006B1C00E04431 /* MiscTools.m in Sources */,
+				E2493712169D1B2B00384895 /* AppDelegate.m in Sources */,
+				E23474CE22133099006E2A28 /* Resolution.m in Sources */,
+				E23A52E02200DBB5001ECEA6 /* Clover.m in Sources */,
+				E2674F9720D61D1A007F0F2A /* IntelFramebuffer.m in Sources */,
+				E28286C221FC508300A0CB2D /* DiskUtilities.m in Sources */,
+				E2489DEE211AE5AD00A48C84 /* NSTabViewImage.m in Sources */,
+				E2520BA5226CE3B00077A0FC /* PCIMonitor.m in Sources */,
+				E277608E21EBD90D00EA6E44 /* FixEDID.m in Sources */,
+				E2DDD8AA2306DE640017F6D7 /* macserial.c in Sources */,
+				E200EE7A21FBD4600082D799 /* NVRAMXmlParser.m in Sources */,
+				E22AB5392278FC4500A46C8D /* OpenCore.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2B27E15229DE4C1002A8B08 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2B27E2A229DE57C002A8B08 /* DisplayMergeNub.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E2493713169D1B2B00384895 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E2E9476F2204A9F5005348C0 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		E2521F4322081D7200DB2BD2 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E2521F4422081D7200DB2BD2 /* Base */,
+				E2EA734A22845CDB0095E56C /* zh-Hans */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		E2804A75220484F900B40C25 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E2804A76220484F900B40C25 /* en */,
+				E2544F7B22049E5B0082A4D9 /* ko */,
+				E2E7D7EE22065D310062D06D /* ru */,
+				E2E7D7F2220811AC0062D06D /* uk */,
+				E2E7D7F62208124A0062D06D /* de */,
+				E2521F49220894DA00DB2BD2 /* fr */,
+				E2DDEC31222CA59F00661F3C /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E2493716169D1B2B00384895 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E2493717169D1B2B00384895 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E2493719169D1B2B00384895 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Hackintool/Hackintool-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
+				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "$(inherited) $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		E249371A169D1B2B00384895 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Hackintool/Hackintool-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
+				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "$(inherited) $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		E2B27E1F229DE4C1002A8B08 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES_NONAGGRESSIVE;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9.9.9;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = HJZSSYBKX3;
+				DYLIB_COMPATIBILITY_VERSION = 8.8.8;
+				DYLIB_CURRENT_VERSION = 9.9.9;
+				ENABLE_NS_ASSERTIONS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "DisplayMergeNub/DisplayMergeNub-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MODULE_NAME = com.AnV.Software.driver.AppleMonitor;
+				MODULE_START = 0;
+				MODULE_STOP = 0;
+				MODULE_VERSION = 9.9.9;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AnV.Software.driver.AppleMonitor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_BUILDER = "AnV Software";
+				VERSION_INFO_FILE = KextVer.c;
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Debug;
+		};
+		E2B27E20229DE4C1002A8B08 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES_NONAGGRESSIVE;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 9.9.9;
+				DEVELOPMENT_TEAM = HJZSSYBKX3;
+				DYLIB_COMPATIBILITY_VERSION = 8.8.8;
+				DYLIB_CURRENT_VERSION = 9.9.9;
+				ENABLE_NS_ASSERTIONS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "DisplayMergeNub/DisplayMergeNub-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MODULE_NAME = com.AnV.Software.driver.AppleMonitor;
+				MODULE_START = 0;
+				MODULE_STOP = 0;
+				MODULE_VERSION = 9.9.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AnV.Software.driver.AppleMonitor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_BUILDER = "AnV Software";
+				VERSION_INFO_FILE = KextVer.c;
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E24936F4169D1B2B00384895 /* Build configuration list for PBXProject "Hackintool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2493716169D1B2B00384895 /* Debug */,
+				E2493717169D1B2B00384895 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E2493718169D1B2B00384895 /* Build configuration list for PBXNativeTarget "Hackintool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2493719169D1B2B00384895 /* Debug */,
+				E249371A169D1B2B00384895 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E2B27E1E229DE4C1002A8B08 /* Build configuration list for PBXNativeTarget "DisplayMergeNub" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2B27E1F229DE4C1002A8B08 /* Debug */,
+				E2B27E20229DE4C1002A8B08 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E24936F1169D1B2B00384895 /* Project object */;
+}

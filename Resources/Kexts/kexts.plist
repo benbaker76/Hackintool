@@ -469,6 +469,8 @@
 	<dict>
 		<key>Name</key>
 		<string>VoodooPS2Controller</string>
+		<key>BundleID</key>
+		<string>PS2Controller</string>
 		<key>Description</key>
 		<string>Contains updated Voodoo PS/2 Controller, improved Keyboard &amp; Synaptics TouchPad</string>
 		<key>ProjectUrl</key>
