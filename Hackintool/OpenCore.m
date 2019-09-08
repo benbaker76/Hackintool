@@ -204,10 +204,10 @@
 
 + (void)addKernelPatchWith:(NSMutableDictionary *)configDictionary typeName:(NSString *)typeName patchDictionary:(NSMutableDictionary *)patchDictionary
 {
+	NSString *identifier = [patchDictionary objectForKey:@"Identifier"];
 	NSData *findData = [patchDictionary objectForKey:@"Find"];
 	NSData *replaceData = [patchDictionary objectForKey:@"Replace"];
-	NSString *name = [patchDictionary objectForKey:@"Name"];
-	NSString *matchOS = [patchDictionary objectForKey:@"MatchOS"];
+	NSString *matchKernel = [patchDictionary objectForKey:@"MatchKernel"];
 	
 	NSMutableArray *patchesArray = [OpenCore getKernelPatchArrayWith:configDictionary typeName:typeName];
 	
@@ -215,10 +215,10 @@
 	{
 		NSData *existingFindData = [existingPatchDictionary objectForKey:@"Find"];
 		NSData *existingReplaceData = [existingPatchDictionary objectForKey:@"Replace"];
-		NSString *existingName = [existingPatchDictionary objectForKey:@"Name"];
-		NSString *existingMatchOS = [existingPatchDictionary objectForKey:@"MatchOS"];
+		NSString *existingIdentifier = [existingPatchDictionary objectForKey:@"Identifier"];
+		NSString *existingMatchKernel = [existingPatchDictionary objectForKey:@"MatchKernel"];
 		
-		if ([existingFindData isEqual:findData] && [existingReplaceData isEqualToData:replaceData] && [name isEqualToString:existingName] && [matchOS isEqualToString:existingMatchOS])
+		if ([existingFindData isEqual:findData] && [existingReplaceData isEqualToData:replaceData] && [identifier isEqualToString:existingIdentifier] && [matchKernel isEqualToString:existingMatchKernel])
 		{
 			[existingPatchDictionary setValue:@YES forKey:@"Enabled"];
 			

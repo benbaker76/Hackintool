@@ -807,7 +807,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			}
 			
 			[patchDictionary setObject:@"DSDT Rename" forKey:@"Type"];
-			[patchDictionary setObject:@(!foundACPI) forKey:@"Disabled"];
+			//[patchDictionary setObject:@(!foundACPI) forKey:@"Disabled"];
+			[patchDictionary setObject:@(YES) forKey:@"Disabled"];
 			
 			[_bootloaderPatchArray addObject:patchDictionary];
 		}
@@ -8958,8 +8959,12 @@ NSInteger usbSort(id a, id b, void *context)
 			
 			if ([self isBootloaderOpenCore])
 			{
+				NSString *name = [newPatchDictionary objectForKey:@"Name"];
+				NSString *matchOS = [newPatchDictionary objectForKey:@"MatchOS"];
+		
+				[newPatchDictionary removeObjectForKey:@"Name"];
+				[newPatchDictionary removeObjectForKey:@"MatchOS"];
 				[newPatchDictionary removeObjectForKey:@"Disabled"];
-				[newPatchDictionary setObject:@(YES) forKey:@"Enabled"];
 				
 				if ([type isEqualToString:@"DSDT Rename"])
 				{
@@ -8968,7 +8973,23 @@ NSInteger usbSort(id a, id b, void *context)
 					[OpenCore addACPIDSDTPatchWith:configDictionary patchDictionary:newPatchDictionary];
 				}
 				else if ([type isEqualToString:@"KernelToPatch"] || [type isEqualToString:@"KextsToPatch"])
+				{
+					NSArray *versionArray = [matchOS componentsSeparatedByString:@"."];
+					
+					if ([versionArray count] > 1)
+						[newPatchDictionary setObject:[NSString stringWithFormat:@"%d.", [versionArray[1] intValue] + 4] forKey:@"MatchKernel"];
+					
+					[newPatchDictionary setObject:@(YES) forKey:@"Enabled"];
+					[newPatchDictionary setObject:name forKey:@"Identifier"];
+					[newPatchDictionary setObject:@"" forKey:@"Base"];
+					[newPatchDictionary setObject:@(0) forKey:@"Count"];
+					[newPatchDictionary setObject:@(0) forKey:@"Limit"];
+					[newPatchDictionary setObject:@(0) forKey:@"Skip"];
+					[newPatchDictionary setObject:[NSData data] forKey:@"Mask"];
+					[newPatchDictionary setObject:[NSData data] forKey:@"ReplaceMask"];
+					
 					[OpenCore addKernelPatchWith:configDictionary typeName:@"Patch" patchDictionary:newPatchDictionary];
+				}
 			}
 			else
 			{
