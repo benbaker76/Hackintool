@@ -32,6 +32,9 @@
 		E2520BA5226CE3B00077A0FC /* PCIMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2520BA3226CE3AF0077A0FC /* PCIMonitor.m */; };
 		E2521F4522081D7200DB2BD2 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E2521F4322081D7200DB2BD2 /* Credits.rtf */; };
 		E2547D302237F60900EF116F /* Help in Resources */ = {isa = PBXBuildFile; fileRef = E2547D2F2237F60800EF116F /* Help */; };
+		E256471323256F28000CB6C8 /* DisplayMergeNub-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E256471023256F28000CB6C8 /* DisplayMergeNub-Info.plist */; };
+		E256471423256F28000CB6C8 /* DisplayMergeNub.h in Headers */ = {isa = PBXBuildFile; fileRef = E256471123256F28000CB6C8 /* DisplayMergeNub.h */; };
+		E256471523256F28000CB6C8 /* DisplayMergeNub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E256471223256F28000CB6C8 /* DisplayMergeNub.cpp */; };
 		E2674F9720D61D1A007F0F2A /* IntelFramebuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = E2674F9620D61D1A007F0F2A /* IntelFramebuffer.m */; };
 		E26BE3DE22520DC0004901D8 /* PCI in Resources */ = {isa = PBXBuildFile; fileRef = E26BE3DD22520DC0004901D8 /* PCI */; };
 		E277608E21EBD90D00EA6E44 /* FixEDID.m in Sources */ = {isa = PBXBuildFile; fileRef = E277608C21EBD90D00EA6E44 /* FixEDID.m */; };
@@ -54,8 +57,6 @@
 		E2AB57A02234DA3400DD8F8C /* Kexts in Resources */ = {isa = PBXBuildFile; fileRef = E2AB579F2234DA3400DD8F8C /* Kexts */; };
 		E2AB61FC227A44B100724F32 /* EveryMac in Resources */ = {isa = PBXBuildFile; fileRef = E2AB61FB227A44B100724F32 /* EveryMac */; };
 		E2ABF70820D7369000652F83 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2ABF70720D7369000652F83 /* Media.xcassets */; };
-		E2B27E27229DE570002A8B08 /* DisplayMergeNub.h in Headers */ = {isa = PBXBuildFile; fileRef = E2B27E25229DE570002A8B08 /* DisplayMergeNub.h */; };
-		E2B27E2A229DE57C002A8B08 /* DisplayMergeNub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2B27E29229DE57C002A8B08 /* DisplayMergeNub.cpp */; };
 		E2BD9C1B2200642800E04431 /* USB.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BD9C192200642800E04431 /* USB.m */; };
 		E2BD9C2122006B1C00E04431 /* MiscTools.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BD9C1F22006B1C00E04431 /* MiscTools.m */; };
 		E2C5B2E6226FEBEA009BB776 /* Windows in Resources */ = {isa = PBXBuildFile; fileRef = E2C5B2E5226FEBEA009BB776 /* Windows */; };
@@ -123,6 +124,9 @@
 		E2521F49220894DA00DB2BD2 /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E2544F7B22049E5B0082A4D9 /* ko */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E2547D2F2237F60800EF116F /* Help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Help; sourceTree = "<group>"; };
+		E256471023256F28000CB6C8 /* DisplayMergeNub-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DisplayMergeNub-Info.plist"; sourceTree = "<group>"; };
+		E256471123256F28000CB6C8 /* DisplayMergeNub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayMergeNub.h; sourceTree = "<group>"; };
+		E256471223256F28000CB6C8 /* DisplayMergeNub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DisplayMergeNub.cpp; sourceTree = "<group>"; };
 		E2674F9220D6195C007F0F2A /* IntelFramebuffer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = IntelFramebuffer.h; sourceTree = "<group>"; };
 		E2674F9620D61D1A007F0F2A /* IntelFramebuffer.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = IntelFramebuffer.m; sourceTree = "<group>"; };
 		E26BE3DD22520DC0004901D8 /* PCI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PCI; sourceTree = "<group>"; };
@@ -153,9 +157,6 @@
 		E2AB61FB227A44B100724F32 /* EveryMac */ = {isa = PBXFileReference; lastKnownFileType = folder; path = EveryMac; sourceTree = "<group>"; };
 		E2ABF70720D7369000652F83 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		E2B27E19229DE4C1002A8B08 /* DisplayMergeNub.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DisplayMergeNub.kext; sourceTree = BUILT_PRODUCTS_DIR; };
-		E2B27E23229DE565002A8B08 /* DisplayMergeNub-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DisplayMergeNub-Info.plist"; sourceTree = "<group>"; };
-		E2B27E25229DE570002A8B08 /* DisplayMergeNub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisplayMergeNub.h; path = Headers/DisplayMergeNub.h; sourceTree = "<group>"; };
-		E2B27E29229DE57C002A8B08 /* DisplayMergeNub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DisplayMergeNub.cpp; path = Classes/DisplayMergeNub.cpp; sourceTree = "<group>"; };
 		E2BD9C192200642800E04431 /* USB.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = USB.m; sourceTree = "<group>"; };
 		E2BD9C1A2200642800E04431 /* USB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = USB.h; sourceTree = "<group>"; };
 		E2BD9C1D220069D800E04431 /* IORegTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IORegTools.h; sourceTree = "<group>"; };
@@ -320,9 +321,9 @@
 		E2B27E1A229DE4C1002A8B08 /* DisplayMergeNub */ = {
 			isa = PBXGroup;
 			children = (
-				E2B27E29229DE57C002A8B08 /* DisplayMergeNub.cpp */,
-				E2B27E25229DE570002A8B08 /* DisplayMergeNub.h */,
-				E2B27E23229DE565002A8B08 /* DisplayMergeNub-Info.plist */,
+				E256471023256F28000CB6C8 /* DisplayMergeNub-Info.plist */,
+				E256471223256F28000CB6C8 /* DisplayMergeNub.cpp */,
+				E256471123256F28000CB6C8 /* DisplayMergeNub.h */,
 			);
 			path = DisplayMergeNub;
 			sourceTree = "<group>";
@@ -378,7 +379,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2B27E27229DE570002A8B08 /* DisplayMergeNub.h in Headers */,
+				E256471423256F28000CB6C8 /* DisplayMergeNub.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,6 +503,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E256471323256F28000CB6C8 /* DisplayMergeNub-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,7 +547,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2B27E2A229DE57C002A8B08 /* DisplayMergeNub.cpp in Sources */,
+				E256471523256F28000CB6C8 /* DisplayMergeNub.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
