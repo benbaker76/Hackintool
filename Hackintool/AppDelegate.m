@@ -2142,8 +2142,6 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSURL *gitHubAPIUrl = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.github.com/repos/%@/%@/releases/latest", username, projectName]];
 	NSData *jsonData = [NSData dataWithContentsOfURL:gitHubAPIUrl options:NSDataReadingUncached error:&error];
 	
-	NSLog(@"%@", gitHubAPIUrl);
-	
 	if (jsonData == nil)
 		return false;
 	
