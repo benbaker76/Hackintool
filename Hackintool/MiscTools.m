@@ -20,76 +20,6 @@
 
 #define WEXISTATUS(status) (((status) & 0xff00) >> 8)
 
-// https://svn.ajdeveloppement.org/ajcommons/branches/1.1/c-src/MacOSXAuthProcess.c
-/* OSStatus AuthorizationExecuteWithPrivilegesStdErr(AuthorizationRef authorization, const char *pathToTool, AuthorizationFlags options, char * const *arguments, FILE **commPipe, FILE **errPipe)
-{
-	OSStatus result;
-	char stderrPath[] = "/tmp/AuthorizationExecuteWithPrivilegesStdErrXXXXXXX.err";
-	char command[1024];
-	const char **args;
-	int i;
-	int argCount = 0;
-	int stderrfd = 0;
-	
-	// Create temporary file for stderr
-	if (errPipe)
-	{
-		stderrfd = mkstemps(stderrPath, strlen(".err"));
-		
-		// create a pipe on that path
-		close(stderrfd);
-		unlink(stderrPath);
-		
-		if (mkfifo(stderrPath, S_IRWXU | S_IRWXG) != 0)
-			return errAuthorizationInternal;
-		
-		if (stderrfd < 0)
-			return errAuthorizationInternal;
-	}
-	
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
-	// Create command to be executed
-	for (argCount = 0; arguments[argCount] != 0; ++argCount) {}
-	args = (const char **)malloc(sizeof(char *)*(argCount + 5));
-	args[0] = "-c";
-	snprintf(command, sizeof(command), "\"$@\" 2>%s", stderrPath);
-	args[1] = command;
-	args[2] = "";
-	args[3] = (char *)pathToTool;
-	
-	for (i = 0; i < argCount; ++i)
-		args[i + 4] = arguments[i];
-	
-	args[argCount + 4] = 0;
-	
-	// for debugging: log the executed command
-	//printf ("Exec:\n%s", "/bin/sh"); for (i = 0; args[i] != 0; ++i) { printf (" \"%s\"", args[i]); } printf ("\n");
-	
-	// Execute command
-	result = AuthorizationExecuteWithPrivileges(authorization, "/bin/sh",  options, (char **)args, commPipe);
-	
-	free(args);
-	
-	[pool drain];
-	
-	if (result != noErr)
-	{
-		unlink(stderrPath);
-		return result;
-	}
-	
-	if (errPipe)
-	{
-		stderrfd = open(stderrPath, O_RDONLY, 0);
-		*errPipe = fdopen(stderrfd, "r");
-	}
-	
-	unlink(stderrPath);
-	
-	return noErr;
-} */
-
 bool getStdioOutput(FILE *pipe, NSString **stdoutString, bool waitForExit)
 {
 	if (pipe == NULL)
@@ -262,6 +192,7 @@ bool launchCommandAsAdmin(NSString *launchPath, NSArray *arguments, NSString **s
 	return (status == errAuthorizationSuccess);
 }
 
+// https://svn.ajdeveloppement.org/ajcommons/branches/1.1/c-src/MacOSXAuthProcess.c
 bool launchCommandAsAdmin(NSString *launchPath, NSArray *arguments, NSString **stdoutString, NSString **stderrString)
 {
 	OSStatus status;
@@ -456,59 +387,6 @@ bool launchCommandAsAdmin(NSString *launchPath, NSArray *arguments, NSString **s
 	
 	return true;
 }
-
-/* bool launchCommandAsAdmin(NSString *launchPath, NSArray *arguments, NSString **stdoutString, NSString **stderrString)
-{
-	OSStatus status = 0;
-	AuthorizationRef authorization = NULL;
-	
-	if ((status = getAuthorization(&authorization)) != errAuthorizationSuccess)
-		return status;
-	
-	AuthorizationItem adminAuthorization = { "system.privilege.admin", 0, NULL, 0 };
-	AuthorizationRights rightSet = { 1, &adminAuthorization };
-	
-	status = AuthorizationCopyRights(authorization, &rightSet, kAuthorizationEmptyEnvironment, kAuthorizationFlagPreAuthorize | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights, NULL);
-	
-	callAuthorizationGrantedCallback(status);
-	
-	if (status != errAuthorizationSuccess)
-		return false;
-	
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
-	FILE *commPipe = NULL, *errPipe = NULL;
-	NSUInteger count = [arguments count];
-	char **args = (char **)calloc(count + 1, sizeof(char *));
-	
-	for(uint32_t i = 0; i < count; i++)
-		args[i] = (char *)[arguments[i] UTF8String];
-	
-	args[count] = NULL;
-	
-	status = AuthorizationExecuteWithPrivilegesStdErr(authorization, [launchPath UTF8String], kAuthorizationFlagDefaults, args, &commPipe, &errPipe);
-	
-	free(args);
-	
-	[pool drain];
-	
-	if (status == errAuthorizationSuccess)
-	{
-		getStdioOutput(commPipe, stdoutString, false);
-		getStdioOutput(errPipe, stderrString, false);
-		
-		if ([*stdoutString length] > 0)
-			*stdoutString = [*stdoutString stringByAppendingString:@"\n"];
-	
-		if ([*stderrString length] > 0)
-			*stderrString = [*stderrString stringByAppendingString:@"\n"];
-	}
-	
-	//fclose(commPipe);
-	//fclose(errPipe);
-	
-	return (status == errAuthorizationSuccess);
-} */
 
 NSString *getBase64String(uint32_t uint32Value)
 {
