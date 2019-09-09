@@ -5615,6 +5615,10 @@ NSInteger usbSort(id a, id b, void *context)
 	{
 		[self fixSleepImage];
 	}
+	else if ([identifier isEqualToString:@"Refresh"])
+	{
+		[self getPowerSettings];
+	}
 }
 
 - (IBAction)toolsButtonClicked:(id)sender
