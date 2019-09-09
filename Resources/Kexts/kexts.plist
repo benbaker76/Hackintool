@@ -345,6 +345,8 @@
 	<dict>
 		<key>Name</key>
 		<string>IntelMausiEthernet</string>
+		<key>BundleID</key>
+		<string>IntelMausi</string>
 		<key>Description</key>
 		<string>OS X driver for Intel onboard LAN</string>
 		<key>ProjectUrl</key>
