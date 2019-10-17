@@ -232,15 +232,15 @@
 	</dict>
 	<dict>
 		<key>Name</key>
-		<string>BrcmFirmwareStore</string>
+		<string>BrcmPatchRAM</string>
+		<key>BundleID</key>
+		<string>BrcmPatchRAM2</string>
 		<key>Description</key>
-		<string>Broadcom PatchRAM driver for OS X</string>
+		<string>Broadcom PatchRAM driver for macOS</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/RehabMan/OS-X-BrcmPatchRAM</string>
-		<key>ProjectFileUrl</key>
-		<string>https://github.com/RehabMan/OS-X-BrcmPatchRAM/raw/master/BrcmPatchRAM.xcodeproj</string>
+		<string>https://github.com/acidanthera/BrcmPatchRAM</string>
 		<key>Type</key>
-		<string>Lilu</string>
+		<string>Kext</string>
 	</dict>
 	<dict>
 		<key>Name</key>
