@@ -234,7 +234,7 @@
 		<key>Name</key>
 		<string>BrcmPatchRAM</string>
 		<key>BundleID</key>
-		<string>BrcmPatchRAM2</string>
+		<string>BrcmPatchRAM3</string>
 		<key>Description</key>
 		<string>Broadcom PatchRAM driver for macOS</string>
 		<key>ProjectUrl</key>
