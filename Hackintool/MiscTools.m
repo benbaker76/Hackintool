@@ -433,6 +433,27 @@ NSMutableString *getByteString(NSData *data, NSString *delimiter, NSString *pref
 	return result;
 }
 
+NSMutableString *getByteStringClassic(NSData *data)
+{
+	NSMutableString *result = [NSMutableString string];
+	[result appendString:@"<"];
+	
+	for (int i = 0; i < data.length; i++)
+	{
+		if (i > 0)
+		{
+			if ((i % 4) == 0)
+				[result appendString:@" "];
+		}
+
+		[result appendFormat:@"%02x", ((unsigned char *)data.bytes)[i]];
+	}
+	
+	[result appendString:@">"];
+	
+	return result;
+}
+
 NSData *getReverseData(NSData *data)
 {
 	NSMutableData *result = [[[NSMutableData alloc] init] autorelease];

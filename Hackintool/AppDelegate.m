@@ -6233,7 +6233,14 @@ NSInteger usbSort(id a, id b, void *context)
 		if([identifier isEqualToString:@"Name"])
 			result.textField.stringValue = key;
 		else if([identifier isEqualToString:@"Value"])
-			result.textField.stringValue = [NSString stringWithFormat:@"%@", value];
+		{
+			if ([value isKindOfClass:[NSString class]])
+				result.textField.stringValue = [NSString stringWithFormat:@"%@", value];
+			else if ([value isKindOfClass:[NSData class]])
+				result.textField.stringValue = [NSString stringWithFormat:@"%@", getByteStringClassic(value)];
+			else
+				result.textField.stringValue = @"???";
+		}
 	}
 	else if (tableView == _kextsTableView)
 	{
