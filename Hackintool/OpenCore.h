@@ -13,8 +13,15 @@
 #import "AppDelegate.h"
 #include <stdio.h>
 
-#define kOpenCoreProjectURL			@"https://github.com/acidanthera/OpenCorePkg"
-#define kOpenCoreProjectFileURL		@"https://github.com/acidanthera/OpenCorePkg/raw/master/OpenCorePkg.xcodeproj"
+#define kOpenCoreProjectURL				@"https://github.com/acidanthera/OpenCorePkg"
+#define kOpenCoreProjectFileURL			@"https://github.com/acidanthera/OpenCorePkg/raw/master/OpenCorePkg.xcodeproj"
+#define kOpenCoreLatestReleaseURL		@"https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest"
+
+#define kOpenCoreLastVersionDownloaded	@"OpenCoreLastVersionDownloaded"
+#define kOpenCoreLastDownloadWarned		@"OpenCoreLastDownloadWarned"
+
+#define kOpenCoreLastCheckTimestamp		@"OpenCoreLastCheckTimestamp"
+#define kOpenCoreScheduledCheckInterval	@"OpenCoreScheduledCheckInterval"
 
 @interface OpenCore : NSObject
 {

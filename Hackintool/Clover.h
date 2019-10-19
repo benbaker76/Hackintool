@@ -21,13 +21,13 @@
 //  Copyright (c) 2013 Kozlek. All rights reserved.
 //
 
-#define kCloverLatestInstallerURL       @"http://sourceforge.net/projects/cloverefiboot/files/latest/download"
+#define kCloverLatestReleaseURL			@"https://api.github.com/repos/CloverHackyColor/CloverBootloader/releases/latest"
 
-#define kCloverLastVersionDownloaded    @"LastVersionDownloaded"
-#define kCloverLastDownloadWarned       @"LastDownloadWarned"
+#define kCloverLastVersionDownloaded    @"CloverLastVersionDownloaded"
+#define kCloverLastDownloadWarned       @"CloverLastDownloadWarned"
 
-#define kCloverLastCheckTimestamp       @"LastCheckTimestamp"
-#define kCloverScheduledCheckInterval   @"ScheduledCheckInterval"
+#define kCloverLastCheckTimestamp       @"CloverLastCheckTimestamp"
+#define kCloverScheduledCheckInterval   @"CloverScheduledCheckInterval"
 
 #define kCloverThemeName                @"Clover.Theme"
 #define kCloverLogLineCount             @"Clover.LogLineCount"
@@ -44,7 +44,7 @@
 + (NSArray *)getMountedVolumes;
 + (NSArray *)getPathsCollection;
 + (NSUInteger)getVersion:(NSString *)string;
-+ (bool)tryGetVersionInfo:(NSString **)bootedRevision installedRevision:(NSString **)installedRevision;
++ (bool)tryGetVersionInfo:(NSString **)bootedVersion installedVersion:(NSString **)installedVersion;
 + (NSMutableDictionary *)getDevicesPropertiesDictionaryWith:(NSMutableDictionary *)configDictionary;
 + (NSMutableArray *)getKernelAndKextPatchArrayWith:(NSMutableDictionary *)configDictionary kernelAndKextName:(NSString *)kernelAndKextName;
 + (void)applyKextsToPatchWith:(NSMutableDictionary *)destConfigDictionary name:(NSString *)name inDirectory:(NSString *)subpath;

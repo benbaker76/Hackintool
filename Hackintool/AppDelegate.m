@@ -215,11 +215,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_graphicDevicesArray release];
 	[_audioDevicesArray release];
 	[_storageDevicesArray release];
-	[_suggestedFileName release];
-	[_installerPath release];
 	[_connection release];
 	[_download release];
-	[_remoteVersion release];
 	[_pciMonitor release];
 	[_bootloaderDeviceUUID release];
 	[_bootloaderDirPath release];
@@ -710,6 +707,22 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	_bootloaderInfoArray = [[NSMutableArray array] retain];
 	_bootloaderPatchArray = [[NSMutableArray array] retain];
+
+	_cloverInfo.LastVersionDownloaded = kCloverLastVersionDownloaded;
+	_cloverInfo.LastDownloadWarned = kCloverLastDownloadWarned;
+	_cloverInfo.LastCheckTimestamp = kCloverLastCheckTimestamp;
+	_cloverInfo.ScheduledCheckInterval = kCloverScheduledCheckInterval;
+	_cloverInfo.LatestReleaseURL = kCloverLatestReleaseURL;
+	_cloverInfo.IconName = @"IconClover";
+	_cloverInfo.DownloadExtension = @"pkg";
+	
+	_openCoreInfo.LastVersionDownloaded = kOpenCoreLastVersionDownloaded;
+	_openCoreInfo.LastDownloadWarned = kOpenCoreLastDownloadWarned;
+	_openCoreInfo.LastCheckTimestamp = kOpenCoreLastCheckTimestamp;
+	_openCoreInfo.ScheduledCheckInterval = kOpenCoreScheduledCheckInterval;
+	_openCoreInfo.LatestReleaseURL = kOpenCoreLatestReleaseURL;
+	_openCoreInfo.IconName = @"IconOpenCore";
+	_openCoreInfo.DownloadExtension = @"zip";
 	
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSString *filePath = nil;
@@ -2123,23 +2136,14 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	*downloadVersion = [[downloadUrl stringByDeletingLastPathComponent] lastPathComponent];
 	*downloadVersion = [*downloadVersion stringByReplacingOccurrencesOfString:@"v" withString:@""];
-
+	
 	return true;
 }
 
-- (Boolean)getGithubDownloadUrl:(NSMutableDictionary **)kextDictionary
+- (Boolean)getGithubLatestDownloadInfo:(NSString *)url extension:(NSString *)extension browserDownloadUrl:(NSString **)downloadUrl downloadVersion:(NSString **)downloadVersion
 {
 	NSError *error;
-	//NSString *name = [*kextDictionary objectForKey:@"Name"];
-	NSString *projectUrl = [*kextDictionary objectForKey:@"ProjectUrl"];
-	bool isGithub = [projectUrl containsString:@"github.com"];
-	NSString *projectName = [projectUrl lastPathComponent];
-	NSString *username = [[projectUrl stringByDeletingLastPathComponent] lastPathComponent];
-	
-	if (!isGithub)
-		return false;
-	
-	NSURL *gitHubAPIUrl = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.github.com/repos/%@/%@/releases/latest", username, projectName]];
+	NSURL *gitHubAPIUrl = [NSURL URLWithString:url];
 	NSData *jsonData = [NSData dataWithContentsOfURL:gitHubAPIUrl options:NSDataReadingUncached error:&error];
 	
 	if (jsonData == nil)
@@ -2155,17 +2159,48 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	{
 		NSString *browserDownloadUrl = [assetsDictionary objectForKey:@"browser_download_url"];
 		NSString *fileName = [browserDownloadUrl lastPathComponent];
+		NSString *version = nil;
 		
 		if ([fileName rangeOfString:@"debug" options:NSCaseInsensitiveSearch].location != NSNotFound)
 			continue;
+
+		if ([assetsDictionary objectForKey:@"browser_download_url"] == nil)
+			continue;
 		
-		[*kextDictionary setObject:browserDownloadUrl forKey:@"DownloadUrl"];
-		NSString *downloadVersion = nil;
+		if (extension != nil && [[browserDownloadUrl pathExtension] isNotEqualTo:extension])
+			continue;
 		
-		if ([self tryGetGithubDownloadVersion:browserDownloadUrl downloadVersion:&downloadVersion])
-			[*kextDictionary setObject:downloadVersion forKey:@"DownloadVersion"];
+		*downloadUrl = [browserDownloadUrl retain];
+		
+		if ([self tryGetGithubDownloadVersion:browserDownloadUrl downloadVersion:&version])
+			*downloadVersion = [version retain];
 		
 		return true;
+	}
+	
+	return false;
+}
+
+- (Boolean)getGithubDownloadUrl:(NSMutableDictionary **)kextDictionary
+{
+	//NSString *name = [*kextDictionary objectForKey:@"Name"];
+	NSString *projectUrl = [*kextDictionary objectForKey:@"ProjectUrl"];
+	bool isGithub = [projectUrl containsString:@"github.com"];
+	NSString *projectName = [projectUrl lastPathComponent];
+	NSString *username = [[projectUrl stringByDeletingLastPathComponent] lastPathComponent];
+	
+	if (!isGithub)
+		return false;
+	
+	NSString *githubUrl = [NSString stringWithFormat:@"https://api.github.com/repos/%@/%@/releases/latest", username, projectName];
+	NSString *browserDownloadUrl = nil, *downloadVersion = nil;
+	
+	if ([self getGithubLatestDownloadInfo:githubUrl extension:nil browserDownloadUrl:&browserDownloadUrl downloadVersion:&downloadVersion])
+	{
+		[*kextDictionary setObject:browserDownloadUrl forKey:@"DownloadUrl"];
+		
+		if (downloadVersion != nil)
+			[*kextDictionary setObject:downloadVersion forKey:@"DownloadVersion"];
 	}
 	
 	return false;
@@ -7023,7 +7058,7 @@ NSInteger usbSort(id a, id b, void *context)
 	{
 		_settings.SelectedBootloader = (uint32_t)[_bootloaderComboBox indexOfSelectedItem];
 		
-		[self setBootloaderInfo];
+		[self initBootloaderDownloader:@"forced"];
 	}
 }
 
@@ -8561,6 +8596,8 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (bool)initBootloaderDownloader:(NSString *)mode
 {
+	BootloaderInfo *bootloaderInfo = ([self isBootloaderOpenCore] ? &_openCoreInfo : &_cloverInfo);
+	
 	if ([mode isEqualToString:@"update"])
 	{
 		[self showDockIcon];
@@ -8577,23 +8614,26 @@ NSInteger usbSort(id a, id b, void *context)
 		
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];
-		NSTimeInterval lastCheckTimestamp = [[defaults objectForKey:kCloverLastCheckTimestamp] timeIntervalSince1970];
-		NSInteger scheduledCheckInterval = [defaults integerForKey:kCloverScheduledCheckInterval] * 0.9;
+		NSTimeInterval lastCheckTimestamp = [[defaults objectForKey:bootloaderInfo->LastCheckTimestamp] timeIntervalSince1970];
+		NSInteger scheduledCheckInterval = [defaults integerForKey:bootloaderInfo->ScheduledCheckInterval] * 0.9;
 		NSTimeInterval intervalFromRef = [now timeIntervalSince1970];
 		
 		if ((scheduledCheckInterval && lastCheckTimestamp + scheduledCheckInterval < intervalFromRef - scheduledCheckInterval * 0.05) || forced)
 		{
 			NSLog(@"Starting updates check...");
 			
-			[defaults setObject:now forKey:kCloverLastCheckTimestamp];
+			[defaults setObject:now forKey:bootloaderInfo->LastCheckTimestamp];
 			[defaults synchronize];
 			
-			NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kCloverLatestInstallerURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
-			
-			_connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-			
-			if (!_connection)
-				return false;
+			if ([self getGithubLatestDownloadInfo:bootloaderInfo->LatestReleaseURL extension:bootloaderInfo->DownloadExtension browserDownloadUrl:&bootloaderInfo->LatestDownloadURL downloadVersion:&bootloaderInfo->LatestVersion])
+			{
+				NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:bootloaderInfo->LatestDownloadURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
+				
+				_connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+				
+				if (!_connection)
+					return false;
+			}
 		}
 		else
 		{
@@ -8612,29 +8652,22 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
+	BootloaderInfo *bootloaderInfo = ([self isBootloaderOpenCore] ? &_openCoreInfo : &_cloverInfo);
+	
 	// Stop downloading installer
 	[connection cancel];
 	
-	_suggestedFileName = [response.suggestedFilename retain];
+	bootloaderInfo->SuggestedFileName = [response.suggestedFilename retain];
 	
 	[self setBootloaderInfo];
 	
-	NSString *bootedRevision = @"-";
-	CFTypeRef property = nil;
-	
-	if (getIORegProperty(@"IODeviceTree:/efi/platform", @"clovergui-revision", &property))
-		bootedRevision =  [NSString stringWithFormat:@"%u", *((uint32_t *)CFDataGetBytePtr((CFDataRef)property))];
-	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSNumberFormatter *formatter = [[[NSNumberFormatter alloc] init] autorelease];
-	NSNumber *local = [formatter numberFromString:bootedRevision];
-	NSNumber *downloaded = [NSNumber numberWithInteger:[defaults integerForKey:kCloverLastVersionDownloaded]];
-	NSDate *downloadedDate = [defaults objectForKey:kCloverLastDownloadWarned];
+	NSDate *downloadedDate = [defaults objectForKey:bootloaderInfo->LastDownloadWarned];
 	
-	if ([_remoteVersion isGreaterThan:local] && ([_remoteVersion isGreaterThan:downloaded] || (downloadedDate && [downloadedDate timeIntervalSinceDate:[NSDate date]] > 60 * 60 * 24)) )
+	if ([bootloaderInfo->LatestVersion isNotEqualTo:bootloaderInfo->BootedVersion] || (downloadedDate && [downloadedDate timeIntervalSinceDate:[NSDate date]] > 60 * 60 * 24))
 	{
-		[_hasUpdateImageView setImage:[NSImage imageNamed:@"IconClover"]];
-		[_hasUpdateTextField setStringValue:[NSString stringWithFormat:[_hasUpdateTextField stringValue], _remoteVersion.intValue, local.intValue]];
+		[_hasUpdateImageView setImage:[NSImage imageNamed:bootloaderInfo->IconName]];
+		[_hasUpdateTextField setStringValue:[NSString stringWithFormat:GetLocalizedString(@"Bootloader Version %@ is Available - you have %@. Would you like to download a newer Version?"), bootloaderInfo->LatestVersion, bootloaderInfo->BootedVersion]];
 		
 		[[NSOperationQueue mainQueue] addOperationWithBlock:^
 		 {
@@ -8645,7 +8678,7 @@ NSInteger usbSort(id a, id b, void *context)
 	}
 	else if (_forcedUpdate)
 	{
-		[_noUpdatesImageView setImage:[NSImage imageNamed:@"IconClover"]];
+		[_noUpdatesImageView setImage:[NSImage imageNamed:bootloaderInfo->IconName]];
 		
 		[[NSOperationQueue mainQueue] addOperationWithBlock:^
 		 {
@@ -8658,12 +8691,14 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (void)download:(NSURLDownload *)download decideDestinationWithSuggestedFilename:(NSString *)filename
 {
-	if (_installerPath == nil)
+	BootloaderInfo *bootloaderInfo = ([self isBootloaderOpenCore] ? &_openCoreInfo : &_cloverInfo);
+	
+	if (bootloaderInfo->DownloadPath == nil)
 		return;
 	
-	//NSLog(@"Downloading to: %@", _installerPath);
+	//NSLog(@"Downloading to: %@", _bootloaderDownloadPath);
 	
-	[download setDestination:_installerPath allowOverwrite:YES];
+	[download setDestination:bootloaderInfo->DownloadPath allowOverwrite:YES];
 }
 
 - (void)download:(NSURLDownload *)download didReceiveResponse:(NSURLResponse *)response;
@@ -8714,11 +8749,13 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (void)downloadDidFinish:(NSURLDownload *)download
 {
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[[NSWorkspace sharedWorkspace] openFile:_installerPath];
+	BootloaderInfo *bootloaderInfo = ([self isBootloaderOpenCore] ? &_openCoreInfo : &_cloverInfo);
 	
-	[defaults setInteger:_remoteVersion.intValue forKey:kCloverLastVersionDownloaded];
-	[defaults setObject:[NSDate date] forKey:kCloverLastDownloadWarned];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[[NSWorkspace sharedWorkspace] openFile:bootloaderInfo->DownloadPath];
+	
+	[defaults setInteger:bootloaderInfo->LatestVersion.intValue forKey:bootloaderInfo->LastVersionDownloaded];
+	[defaults setObject:[NSDate date] forKey:bootloaderInfo->LastDownloadWarned];
 	
 	[_window endSheet:_progressWindow];
 }
@@ -8738,49 +8775,31 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (void)setBootloaderInfo
 {
-	NSString *bootedRevision, *installedRevision;
-	
 	[_bootloaderInfoArray removeAllObjects];
 	
-	if ([OpenCore tryGetVersionInfo:&bootedRevision])
-		_settings.DetectedBootloader = kBootloaderOpenCore;
-	else if ([Clover tryGetVersionInfo:&bootedRevision installedRevision:&installedRevision])
+	if ([Clover tryGetVersionInfo:&_cloverInfo.BootedVersion installedVersion:&_cloverInfo.InstalledVersion])
 		_settings.DetectedBootloader = kBootloaderClover;
+	
+	if ([OpenCore tryGetVersionInfo:&_openCoreInfo.BootedVersion])
+		_settings.DetectedBootloader = kBootloaderOpenCore;
 	
 	if ([self isBootloaderOpenCore])
 	{
 		[_bootloaderImageView setImage:[NSImage imageNamed:@"IconOpenCore"]];
 		
 		[self addToList:_bootloaderInfoArray name:@"Name" value:GetLocalizedString(@"OpenCore")];
-		
-		if (_settings.DetectedBootloader == kBootloaderOpenCore)
-		{
-			[self addToList:_bootloaderInfoArray name:@"Current Booted Revision" value:bootedRevision];
-			//[self addToList:_bootloaderInfoArray name:@"Latest Available Revision" value:[_remoteVersion stringValue]];
-		}
+		[self addToList:_bootloaderInfoArray name:@"Current Booted Version" value:_openCoreInfo.BootedVersion];
+		[self addToList:_bootloaderInfoArray name:@"Latest Available Version" value:_openCoreInfo.LatestVersion];
 	}
 	else
 	{
 		[_bootloaderImageView setImage:[NSImage imageNamed:@"IconClover"]];
-		
-		NSString *remoteFilename = [[_suggestedFileName lastPathComponent] stringByDeletingPathExtension];
-		uint32_t version = (uint32_t)[Clover getVersion:remoteFilename];
-		
 		[_bootloaderInfoArray removeAllObjects];
 		
 		[self addToList:_bootloaderInfoArray name:@"Name" value:GetLocalizedString(@"Clover")];
-		
-		if (_settings.DetectedBootloader == kBootloaderClover)
-		{
-			[self addToList:_bootloaderInfoArray name:@"Current Booted Revision" value:bootedRevision];
-			[self addToList:_bootloaderInfoArray name:@"Last Installed Revision" value:installedRevision];
-			
-			if (version != 0)
-			{
-				_remoteVersion = [NSNumber numberWithInteger:version];
-				[self addToList:_bootloaderInfoArray name:@"Latest Available Revision" value:[_remoteVersion stringValue]];
-			}
-		}
+		[self addToList:_bootloaderInfoArray name:@"Current Booted Version" value:_cloverInfo.BootedVersion];
+		[self addToList:_bootloaderInfoArray name:@"Last Installed Version" value:_cloverInfo.InstalledVersion];
+		[self addToList:_bootloaderInfoArray name:@"Latest Available Version" value:_cloverInfo.LatestVersion];
 	}
 	
 	[_bootloaderInfoTableView reloadData];
@@ -8788,11 +8807,13 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (void)showProgressWindow
 {
+	BootloaderInfo *bootloaderInfo = ([self isBootloaderOpenCore] ? &_openCoreInfo : &_cloverInfo);
+	
 	[_progressCancelButton setAction:@selector(bootloaderButtonClicked:)];
 	[_progressLevelIndicator setDoubleValue:0.0];
-	[_progressImageView setImage:[NSImage imageNamed:@"IconClover"]];
+	[_progressImageView setImage:[NSImage imageNamed:bootloaderInfo->IconName]];
 	[_progressTitleTextField setStringValue:@""];
-	[_progressMessageTextField setStringValue:[NSString stringWithFormat:GetLocalizedString(@"Downloading %@"), [_installerPath lastPathComponent]]];
+	[_progressMessageTextField setStringValue:[NSString stringWithFormat:GetLocalizedString(@"Downloading %@"), [bootloaderInfo->DownloadPath lastPathComponent]]];
 	
 	[_window beginSheet:_progressWindow completionHandler:^(NSModalResponse returnCode)
 	 {
@@ -8801,14 +8822,13 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (IBAction)doUpdate:(id)sender
 {
-	// [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@kCloverLatestInstallerURL]];
-	// [self terminate];
+	BootloaderInfo *bootloaderInfo = ([self isBootloaderOpenCore] ? &_openCoreInfo : &_cloverInfo);
 	
 	[self showDockIcon];
 	
 	if (_forcedUpdate)
 	{
-		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kCloverLatestInstallerURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20.0];
+		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:bootloaderInfo->LatestDownloadURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20.0];
 		
 		_download = [[NSURLDownload alloc] initWithRequest:request delegate:self];
 		
@@ -8821,19 +8841,19 @@ NSInteger usbSort(id a, id b, void *context)
 	{
 		NSSavePanel *savePanel = [NSSavePanel savePanel];
 		
-		//[savePanel setNameFieldStringValue:[_installerPath lastPathComponent]];
-		[savePanel setNameFieldStringValue:_suggestedFileName];
-		[savePanel setTitle:GetLocalizedString(@"Set Clover Installer Location")];
+		//[savePanel setNameFieldStringValue:[bootloaderInfo->DownloadPath lastPathComponent]];
+		[savePanel setNameFieldStringValue:bootloaderInfo->SuggestedFileName];
+		[savePanel setTitle:GetLocalizedString(@"Set Bootloader Installer Location")];
 		
-		[_hasUpdateImageView setImage:[NSImage imageNamed:@"IconClover"]];
+		[_hasUpdateImageView setImage:[NSImage imageNamed:bootloaderInfo->IconName]];
 		
 		[savePanel beginSheetModalForWindow:_hasUpdateWindow completionHandler:^(NSInteger result)
 		 {
 			 if (result == NSFileHandlingPanelOKButton)
 			 {
-				 _installerPath = [savePanel.URL.path retain];
+				 bootloaderInfo->DownloadPath = [savePanel.URL.path retain];
 				 
-				 NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kCloverLatestInstallerURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20.0];
+				 NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:bootloaderInfo->LatestDownloadURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20.0];
 				 
 				 _download = [[NSURLDownload alloc] initWithRequest:request delegate:self];
 				 
@@ -8873,12 +8893,14 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (IBAction)bootloaderButtonClicked:(id)sender
 {
+	BootloaderInfo *bootloaderInfo = ([self isBootloaderOpenCore] ? &_openCoreInfo : &_cloverInfo);
+	
 	NSButton *button = (NSButton *)sender;
 	NSString *identifier = [button identifier];
 	
-	if ([identifier isEqualToString:@"BootloaderDownload"])
+	if ([identifier isEqualToString:@"BootloaderInfo"])
 	{
-		if (_suggestedFileName == nil)
+		if (bootloaderInfo->SuggestedFileName == nil)
 		{
 			[self initBootloaderDownloader:@"forced"];
 			
@@ -8886,7 +8908,7 @@ NSInteger usbSort(id a, id b, void *context)
 		}
 		
 		NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-		NSString *installerPath = [NSString stringWithFormat:@"%@/%@", desktopPath, _suggestedFileName];
+		NSString *installerPath = [NSString stringWithFormat:@"%@/%@", desktopPath, bootloaderInfo->SuggestedFileName];
 		
 		//NSLog(@"installerFilename: %@", installerPath);
 		
@@ -8900,7 +8922,7 @@ NSInteger usbSort(id a, id b, void *context)
 		{
 			if (result == NSFileHandlingPanelOKButton)
 			{
-				_installerPath = [savePanel.URL.path retain];
+				bootloaderInfo->DownloadPath = [savePanel.URL.path retain];
 				
 				[self initBootloaderDownloader:@"update"];
 			}
@@ -9692,7 +9714,7 @@ NSInteger usbSort(id a, id b, void *context)
 	[_progressLevelIndicator setMaxValue:1.0];
 	[_progressImageView setImage:[NSImage imageNamed:NSImageNameApplicationIcon]];
 	[_progressTitleTextField setStringValue:GetLocalizedString(title)];
-	[_progressMessageTextField setStringValue:[NSString stringWithFormat:GetLocalizedString(message), [_installerPath lastPathComponent]]];
+	[_progressMessageTextField setStringValue:GetLocalizedString(message)];
 	
 	__block bool cancelProgress = NO;
 	

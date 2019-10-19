@@ -76,18 +76,18 @@
 	return 0;
 }
 
-+ (bool)tryGetVersionInfo:(NSString **)bootedRevision installedRevision:(NSString **)installedRevision
++ (bool)tryGetVersionInfo:(NSString **)bootedVersion installedVersion:(NSString **)installedVersion
 {
 	bool result = false;
-	*bootedRevision = @"???";
-	*installedRevision = @"???";
+	*bootedVersion = @"???";
+	*installedVersion = @"???";
 	
 	CFTypeRef property = nil;
 	
 	if (getIORegProperty(@"IODeviceTree:/efi/platform", @"clovergui-revision", &property))
 	{
 		NSData *valueData = (__bridge NSData *)property;
-		*bootedRevision = [NSString stringWithFormat:@"%u", *((uint32_t *)valueData.bytes)];
+		*bootedVersion = [NSString stringWithFormat:@"%u", *((uint32_t *)valueData.bytes)];
 		
 		CFRelease(property);
 		
@@ -103,10 +103,10 @@
 		return result;
 	
 	NSDictionary *propertyDictionary = [NSDictionary dictionaryWithContentsOfFile:cloverInstallerPlist];
-	NSNumber *cloverRevision = [propertyDictionary objectForKey:@"CloverRevision"];
+	NSNumber *cloverVersion = [propertyDictionary objectForKey:@"CloverRevision"];
 
-	if (cloverRevision)
-		*installedRevision = [cloverRevision stringValue];
+	if (cloverVersion)
+		*installedVersion = [cloverVersion stringValue];
 	
 	return result;
 }

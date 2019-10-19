@@ -99,6 +99,23 @@ typedef struct
 	bool AII_LogMSRs;
 } Settings;
 
+typedef struct
+{
+	NSString *LastVersionDownloaded;
+	NSString *LastDownloadWarned;
+	NSString *LastCheckTimestamp;
+	NSString *ScheduledCheckInterval;
+	NSString *LatestReleaseURL;
+	NSString *LatestDownloadURL;
+	NSString *LatestVersion;
+	NSString *BootedVersion;
+	NSString *InstalledVersion;
+	NSString *DownloadPath;
+	NSString *DownloadExtension;
+	NSString *SuggestedFileName;
+	NSString *IconName;
+} BootloaderInfo;
+
 @class AudioDevice;
 
 @interface AppDelegate : NSResponder <NSApplicationDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, NSTableViewDataSource, NSTabViewDelegate, NSOutlineViewDelegate, NSWindowDelegate, NSURLConnectionDelegate, NSURLDownloadDelegate, NSMenuDelegate, NSTextFieldDelegate, NSTextViewDelegate, NSComboBoxDelegate, PCIMonitorDelegate>
@@ -150,13 +167,12 @@ typedef struct
 	NSMutableDictionary *_systemWidePowerSettings;
 	NSMutableDictionary *_currentPowerSettings;
 	
-	// Bootloader Download
-	NSString *_suggestedFileName;
-	NSString *_installerPath;
+	// Bootloader Info
+	BootloaderInfo _cloverInfo;
+	BootloaderInfo _openCoreInfo;
 	BOOL _forcedUpdate;
 	NSURLConnection *_connection;
 	NSURLDownload *_download;
-	NSNumber *_remoteVersion;
 	
 	NSString *_bootloaderDeviceUUID;
 	NSString *_bootloaderDirPath;
