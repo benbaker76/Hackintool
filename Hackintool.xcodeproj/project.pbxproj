@@ -32,7 +32,6 @@
 		E2520BA5226CE3B00077A0FC /* PCIMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2520BA3226CE3AF0077A0FC /* PCIMonitor.m */; };
 		E2521F4522081D7200DB2BD2 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E2521F4322081D7200DB2BD2 /* Credits.rtf */; };
 		E2547D302237F60900EF116F /* Help in Resources */ = {isa = PBXBuildFile; fileRef = E2547D2F2237F60800EF116F /* Help */; };
-		E256471323256F28000CB6C8 /* DisplayMergeNub-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E256471023256F28000CB6C8 /* DisplayMergeNub-Info.plist */; };
 		E256471423256F28000CB6C8 /* DisplayMergeNub.h in Headers */ = {isa = PBXBuildFile; fileRef = E256471123256F28000CB6C8 /* DisplayMergeNub.h */; };
 		E256471523256F28000CB6C8 /* DisplayMergeNub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E256471223256F28000CB6C8 /* DisplayMergeNub.cpp */; };
 		E2674F9720D61D1A007F0F2A /* IntelFramebuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = E2674F9620D61D1A007F0F2A /* IntelFramebuffer.m */; };
@@ -153,6 +152,7 @@
 		E2A397ED2246F2DE00C6D2B1 /* BarTableRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarTableRowView.h; sourceTree = "<group>"; };
 		E2A397EF2246F34500C6D2B1 /* DiskManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskManagement.framework; path = ../../../../../../System/Library/PrivateFrameworks/DiskManagement.framework; sourceTree = "<group>"; };
 		E2A5A6B022A03BCA00CE02D1 /* DisplayMergeNub */ = {isa = PBXFileReference; lastKnownFileType = folder; path = DisplayMergeNub; sourceTree = "<group>"; };
+		E2A91B71235CA34A007B7851 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E2AB579F2234DA3400DD8F8C /* Kexts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Kexts; sourceTree = "<group>"; };
 		E2AB61FB227A44B100724F32 /* EveryMac */ = {isa = PBXFileReference; lastKnownFileType = folder; path = EveryMac; sourceTree = "<group>"; };
 		E2ABF70720D7369000652F83 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
@@ -428,7 +428,7 @@
 		E24936F1169D1B2B00384895 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = Headsoft;
 				TargetAttributes = {
 					E24936F9169D1B2B00384895 = {
@@ -460,6 +460,7 @@
 				de,
 				fr,
 				"zh-Hans",
+				tr,
 			);
 			mainGroup = E24936EF169D1B2B00384895;
 			productRefGroup = E24936FB169D1B2B00384895 /* Products */;
@@ -503,7 +504,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E256471323256F28000CB6C8 /* DisplayMergeNub-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,6 +581,7 @@
 				E2E7D7F62208124A0062D06D /* de */,
 				E2521F49220894DA00DB2BD2 /* fr */,
 				E2DDEC31222CA59F00661F3C /* zh-Hans */,
+				E2A91B71235CA34A007B7851 /* tr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -690,6 +691,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0283;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -722,6 +724,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0283;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -762,6 +765,7 @@
 				DEVELOPMENT_TEAM = HJZSSYBKX3;
 				DYLIB_COMPATIBILITY_VERSION = 8.8.8;
 				DYLIB_CURRENT_VERSION = 9.9.9;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -804,6 +808,7 @@
 				DEVELOPMENT_TEAM = HJZSSYBKX3;
 				DYLIB_COMPATIBILITY_VERSION = 8.8.8;
 				DYLIB_CURRENT_VERSION = 9.9.9;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
