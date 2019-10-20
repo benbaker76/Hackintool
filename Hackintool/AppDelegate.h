@@ -170,6 +170,8 @@ typedef struct
 	// Bootloader Info
 	BootloaderInfo _cloverInfo;
 	BootloaderInfo _openCoreInfo;
+	BootloaderInfo *_bootloaderInfo;
+	
 	BOOL _forcedUpdate;
 	NSURLConnection *_connection;
 	NSURLDownload *_download;
