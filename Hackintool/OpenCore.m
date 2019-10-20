@@ -80,7 +80,7 @@
 + (bool)tryGetVersionInfo:(NSString **)bootedRevision
 {
 	bool result = false;
-	*bootedRevision = @"???";
+	*bootedRevision = @"0.0.0";
 	
 	CFTypeRef property = nil;
 	

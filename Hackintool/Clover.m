@@ -79,8 +79,8 @@
 + (bool)tryGetVersionInfo:(NSString **)bootedVersion installedVersion:(NSString **)installedVersion
 {
 	bool result = false;
-	*bootedVersion = @"???";
-	*installedVersion = @"???";
+	*bootedVersion = @"0";
+	*installedVersion = @"0";
 	
 	CFTypeRef property = nil;
 	

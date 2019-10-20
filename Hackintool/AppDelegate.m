@@ -8594,6 +8594,28 @@ NSInteger usbSort(id a, id b, void *context)
 
 // -----------------------------------------------------------------------------------------
 
+- (NSComparisonResult)compareVersion:(NSString *)versionOne toVersion:(NSString *)versionTwo
+{
+    NSArray *versionOneComp = [versionOne componentsSeparatedByString:@"."];
+	NSArray *versionTwoComp = [versionTwo componentsSeparatedByString:@"."];
+    NSInteger pos = 0;
+
+    while ([versionOneComp count] > pos || [versionTwoComp count] > pos)
+	{
+        NSInteger v1 = [versionOneComp count] > pos ? [[versionOneComp objectAtIndex:pos] integerValue] : 0;
+        NSInteger v2 = [versionTwoComp count] > pos ? [[versionTwoComp objectAtIndex:pos] integerValue] : 0;
+        
+		if (v1 < v2)
+            return NSOrderedAscending;
+        else if (v1 > v2)
+            return NSOrderedDescending;
+        
+		pos++;
+    }
+
+    return NSOrderedSame;
+}
+
 - (bool)initBootloaderDownloader:(NSString *)mode
 {
 	_bootloaderInfo = ([self isBootloaderOpenCore] ? &_openCoreInfo : &_cloverInfo);
@@ -8662,7 +8684,7 @@ NSInteger usbSort(id a, id b, void *context)
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSDate *downloadedDate = [defaults objectForKey:_bootloaderInfo->LastDownloadWarned];
 	
-	if ([_bootloaderInfo->LatestVersion isNotEqualTo:_bootloaderInfo->BootedVersion] || (downloadedDate && [downloadedDate timeIntervalSinceDate:[NSDate date]] > 60 * 60 * 24))
+	if (([self compareVersion:_bootloaderInfo->BootedVersion toVersion:_bootloaderInfo->LatestVersion] == NSOrderedAscending) || (downloadedDate && [downloadedDate timeIntervalSinceDate:[NSDate date]] > 60 * 60 * 24))
 	{
 		[_hasUpdateImageView setImage:[NSImage imageNamed:_bootloaderInfo->IconName]];
 		[_hasUpdateTextField setStringValue:[NSString stringWithFormat:GetLocalizedString(@"Bootloader Version %@ is Available - you have %@. Would you like to download a newer Version?"), _bootloaderInfo->LatestVersion, _bootloaderInfo->BootedVersion]];
