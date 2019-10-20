@@ -101,6 +101,7 @@ typedef struct
 
 typedef struct
 {
+	NSString *Name;
 	NSString *LastVersionDownloaded;
 	NSString *LastDownloadWarned;
 	NSString *LastCheckTimestamp;

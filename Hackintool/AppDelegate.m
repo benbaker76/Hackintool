@@ -708,6 +708,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_bootloaderInfoArray = [[NSMutableArray array] retain];
 	_bootloaderPatchArray = [[NSMutableArray array] retain];
 
+	_cloverInfo.Name = @"Clover";
 	_cloverInfo.LastVersionDownloaded = kCloverLastVersionDownloaded;
 	_cloverInfo.LastDownloadWarned = kCloverLastDownloadWarned;
 	_cloverInfo.LastCheckTimestamp = kCloverLastCheckTimestamp;
@@ -716,6 +717,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_cloverInfo.IconName = @"IconClover";
 	_cloverInfo.DownloadExtension = @"pkg";
 	
+	_openCoreInfo.Name = @"OpenCore";
 	_openCoreInfo.LastVersionDownloaded = kOpenCoreLastVersionDownloaded;
 	_openCoreInfo.LastDownloadWarned = kOpenCoreLastDownloadWarned;
 	_openCoreInfo.LastCheckTimestamp = kOpenCoreLastCheckTimestamp;
@@ -8687,7 +8689,7 @@ NSInteger usbSort(id a, id b, void *context)
 	if (([self compareVersion:_bootloaderInfo->BootedVersion toVersion:_bootloaderInfo->LatestVersion] == NSOrderedAscending) || (downloadedDate && [downloadedDate timeIntervalSinceDate:[NSDate date]] > 60 * 60 * 24))
 	{
 		[_hasUpdateImageView setImage:[NSImage imageNamed:_bootloaderInfo->IconName]];
-		[_hasUpdateTextField setStringValue:[NSString stringWithFormat:GetLocalizedString(@"Bootloader Version %@ is Available - you have %@. Would you like to download a newer Version?"), _bootloaderInfo->LatestVersion, _bootloaderInfo->BootedVersion]];
+		[_hasUpdateTextField setStringValue:[NSString stringWithFormat:GetLocalizedString(@"%@ Version %@ is Available - you have %@. Would you like to download a newer Version?"), _bootloaderInfo->Name, _bootloaderInfo->LatestVersion, _bootloaderInfo->BootedVersion]];
 		
 		[[NSOperationQueue mainQueue] addOperationWithBlock:^
 		 {
@@ -8699,6 +8701,7 @@ NSInteger usbSort(id a, id b, void *context)
 	else if (_forcedUpdate)
 	{
 		[_noUpdatesImageView setImage:[NSImage imageNamed:_bootloaderInfo->IconName]];
+		[_noUpdatesImageView setStringValue:[NSString stringWithFormat:GetLocalizedString(@"No new %@ Version is Avaliable at this Time!"), _bootloaderInfo->Name]];
 		
 		[[NSOperationQueue mainQueue] addOperationWithBlock:^
 		 {
@@ -8752,7 +8755,7 @@ NSInteger usbSort(id a, id b, void *context)
 	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
 	
 	[alert setIcon:[NSImage imageNamed:NSImageNameCaution]];
-	[alert setMessageText:GetLocalizedString(@"An error occured while trying to download Bootloader installer!")];
+	[alert setMessageText:[NSString stringWithFormat:GetLocalizedString(@"An error occured while trying to download %@ installer!"), _bootloaderInfo->Name]];
 	[alert setInformativeText:error.localizedDescription];
 	[alert addButtonWithTitle:GetLocalizedString(@"OK")];
 	
@@ -8855,7 +8858,7 @@ NSInteger usbSort(id a, id b, void *context)
 		
 		//[savePanel setNameFieldStringValue:[bootloaderInfo->DownloadPath lastPathComponent]];
 		[savePanel setNameFieldStringValue:_bootloaderInfo->SuggestedFileName];
-		[savePanel setTitle:GetLocalizedString(@"Set Bootloader Installer Location")];
+		[savePanel setTitle:[NSString stringWithFormat:GetLocalizedString(@"Set %@ Installer Location"), _bootloaderInfo->Name]];
 		
 		[_hasUpdateImageView setImage:[NSImage imageNamed:_bootloaderInfo->IconName]];
 		
@@ -8980,7 +8983,7 @@ NSInteger usbSort(id a, id b, void *context)
 		if (bootloaderPatchCount == 0)
 			return;
 		
-		if (![self showAlert:@"Bootloader Patch" text:[NSString stringWithFormat:GetLocalizedString(@"Are you sure you want to apply %d Bootloader patch(s)?"), bootloaderPatchCount]])
+		if (![self showAlert:[NSString stringWithFormat:GetLocalizedString(@"%@ Patch"), _bootloaderInfo->Name] text:[NSString stringWithFormat:GetLocalizedString(@"Are you sure you want to apply %d %@ patch(s)?"), bootloaderPatchCount, _bootloaderInfo->Name]])
 			return;
 		
 		NSMutableDictionary *configDictionary = nil;
