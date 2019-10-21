@@ -30,7 +30,7 @@
 + (NSArray *)getMountedVolumes;
 + (NSArray *)getPathsCollection;
 + (NSUInteger)getVersion:(NSString *)string;
-+ (bool)tryGetVersionInfo:(NSString **)bootedRevision;
++ (bool)tryGetVersionInfo:(NSString **)bootedVersion;
 + (NSMutableDictionary *)getDevicePropertiesDictionaryWith:(NSMutableDictionary *)configDictionary typeName:(NSString *)typeName;
 + (NSMutableArray *)getKernelPatchArrayWith:(NSMutableDictionary *)configDictionary typeName:(NSString *)typeName;
 + (void)applyKextsToPatchWith:(NSMutableDictionary *)destConfigDictionary name:(NSString *)name inDirectory:(NSString *)subpath;

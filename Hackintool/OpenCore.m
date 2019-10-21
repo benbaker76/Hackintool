@@ -77,10 +77,10 @@
 	return 0;
 }
 
-+ (bool)tryGetVersionInfo:(NSString **)bootedRevision
++ (bool)tryGetVersionInfo:(NSString **)bootedVersion
 {
 	bool result = false;
-	*bootedRevision = @"0.0.0";
+	*bootedVersion = @"0.0.0";
 	
 	CFTypeRef property = nil;
 	
@@ -97,7 +97,7 @@
 			//NSString *openCoreYear = [valueString substringWithRange:NSMakeRange(8, 4)];
 			//NSString *openCoreMonth = [valueString substringWithRange:NSMakeRange(13, 2)];
 			//NSString *openCoreDay = [valueString substringWithRange:NSMakeRange(16, 2)];
-			*bootedRevision = [NSString stringWithFormat:@"%@.%@.%@", [openCoreVersion substringWithRange:NSMakeRange(0, 1)], [openCoreVersion substringWithRange:NSMakeRange(1, 1)], [openCoreVersion substringWithRange:NSMakeRange(2, 1)]];
+			*bootedVersion = [NSString stringWithFormat:@"%@.%@.%@", [openCoreVersion substringWithRange:NSMakeRange(0, 1)], [openCoreVersion substringWithRange:NSMakeRange(1, 1)], [openCoreVersion substringWithRange:NSMakeRange(2, 1)]];
 			
 			result = true;
 		}
