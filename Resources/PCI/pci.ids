@@ -1,8 +1,8 @@
 #
 #	List of PCI ID's
 #
-#	Version: 2019.10.12
-#	Date:    2019-10-12 03:15:02
+#	Version: 2019.10.30
+#	Date:    2019-10-30 18:30:25
 #
 #	Maintained by Albert Pool, Martin Mares, and other volunteers from
 #	the PCI ID Project at https://pci-ids.ucw.cz/.
@@ -12,6 +12,10 @@
 #
 #	This file can be distributed under either the GNU General Public License
 #	(version 2 or higher) or the 3-clause BSD License.
+#
+#	The database is a compilation of factual data, and as such the copyright
+#	only covers the aggregation and formatting. The copyright is held by
+#	Martin Mares and Albert Pool.
 #
 
 # Vendors, devices and subsystems. Please keep sorted.
@@ -15046,7 +15050,7 @@
 11fb  Datel Inc
 11fc  Silicon Magic
 11fd  High Street Consultants
-11fe  Comtrol Corporation
+11fe  Pepperl+Fuchs Comtrol, Inc.
 	0001  RocketPort PCI 32-port w/external I/F
 	0002  RocketPort PCI 8-port w/external I/F
 	0003  RocketPort PCI 16-port w/external I/F

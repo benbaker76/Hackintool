@@ -1660,7 +1660,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			NSString *vendorName = [deviceDictionary objectForKey:@"USB Vendor Name"];
 			NSNumber *productID = [deviceDictionary objectForKey:@"idProduct"];
 			NSNumber *vendorID = [deviceDictionary objectForKey:@"idVendor"];
-			NSNumber *fwLoaded = [deviceDictionary objectForKey:@"RM,FirmwareLoaded"];
+			NSNumber *fwLoaded = [deviceDictionary objectForKey:@"FirmwareLoaded"];
+			
+			// Try legacy entry
+			if (fwLoaded == nil)
+				fwLoaded = [deviceDictionary objectForKey:@"RM,FirmwareLoaded"];
 			
 			// PCI device
 			if (productID == nil && vendorID == nil)
@@ -4403,6 +4407,9 @@ NSInteger usbSort(id a, id b, void *context)
 				uint32_t minKernel = 255;
 				uint32_t maxKernel = 0;
 				
+				if (codecName == nil)
+					continue;
+				
 				NSMutableDictionary *codecDictionary = [NSMutableDictionary dictionary];
 				
 				[codecDictionary setObject:codecName forKey:@"CodecName"];
@@ -4436,6 +4443,9 @@ NSInteger usbSort(id a, id b, void *context)
 		
 		break;
 	}
+	
+	if (codecArray.count == 0)
+		return;
 	
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	[savePanel setNameFieldStringValue:@"Codecs.plist"];
