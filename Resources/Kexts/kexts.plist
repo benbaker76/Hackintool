@@ -251,6 +251,8 @@
 		<string>https://github.com/Dolnor/EAPD-Codec-Commander</string>
 		<key>Type</key>
 		<string>Kext</string>
+		<key>Superseder</key>
+		<string>AppleALC</string>
 	</dict>
 	<dict>
 		<key>Name</key>

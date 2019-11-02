@@ -61,7 +61,7 @@ bool getDevicePath(NSString *search, NSString **devicePath)
 	return retVal;
 }
 
-bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, uint32_t *foundIndex, bool recursive)
+bool getIORegChild(io_service_t device, NSString *name, io_service_t *foundDevice, bool recursive)
 {
 	kern_return_t kr;
 	io_iterator_t childIterator;
@@ -73,22 +73,18 @@ bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundD
 	
 	for (io_service_t childDevice; IOIteratorIsValid(childIterator) && (childDevice = IOIteratorNext(childIterator)); IOObjectRelease(childDevice))
 	{
-		for (int i = 0; i < [nameArray count]; i++)
+		if (IOObjectConformsTo(childDevice, [name UTF8String]))
 		{
-			if (IOObjectConformsTo(childDevice, [[nameArray objectAtIndex:i] UTF8String]))
-			{
-				*foundDevice = childDevice;
-				*foundIndex = i;
-				
-				IOObjectRelease(childIterator);
-				
-				return true;
-			}
+			*foundDevice = childDevice;
+			
+			IOObjectRelease(childIterator);
+			
+			return true;
 		}
 		
 		if (recursive)
 		{
-			if (getIORegChild(childDevice, nameArray, foundDevice, foundIndex, recursive))
+			if (getIORegChild(childDevice, name, foundDevice, recursive))
 				return true;
 		}
 	}
@@ -96,14 +92,7 @@ bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundD
 	return false;
 }
 
-bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, bool recursive)
-{
-	uint32_t foundIndex = 0;
-	
-	return getIORegChild(device, nameArray, foundDevice, &foundIndex, recursive);
-}
-
-bool getIORegParentArray(io_service_t device, NSArray *nameArray, NSMutableArray *parentArray, bool recursive)
+bool getIORegParentArray(io_service_t device, NSString *name, NSMutableArray *parentArray, bool recursive)
 {
 	bool retVal = false;
 	kern_return_t kr;
@@ -118,19 +107,16 @@ bool getIORegParentArray(io_service_t device, NSArray *nameArray, NSMutableArray
 	{
 		id parentObject = @(parentDevice);
 		
-		for (int i = 0; i < [nameArray count]; i++)
+		if (IOObjectConformsTo(parentDevice, [name UTF8String]))
 		{
-			if (IOObjectConformsTo(parentDevice, [[nameArray objectAtIndex:i] UTF8String]))
-			{
-				[parentArray addObject:parentObject];
-				
-				retVal = true;
-			}
+			[parentArray addObject:parentObject];
+			
+			retVal = true;
 		}
 		
 		if (recursive)
 		{
-			if (getIORegParentArray(parentDevice, nameArray, parentArray, recursive))
+			if (getIORegParentArray(parentDevice, name, parentArray, recursive))
 				retVal = true;
 		}
 		
@@ -143,7 +129,7 @@ bool getIORegParentArray(io_service_t device, NSArray *nameArray, NSMutableArray
 	return retVal;
 }
 
-bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, uint32_t *foundIndex, bool recursive)
+bool getIORegParent(io_service_t device, NSString *name, io_service_t *foundDevice, bool recursive)
 {
 	kern_return_t kr;
 	io_iterator_t parentIterator;
@@ -155,22 +141,18 @@ bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *found
 	
 	for (io_service_t parentDevice; IOIteratorIsValid(parentIterator) && (parentDevice = IOIteratorNext(parentIterator)); IOObjectRelease(parentDevice))
 	{
-		for (int i = 0; i < [nameArray count]; i++)
+		if (IOObjectConformsTo(parentDevice, [name UTF8String]))
 		{
-			if (IOObjectConformsTo(parentDevice, [[nameArray objectAtIndex:i] UTF8String]))
-			{
-				*foundDevice = parentDevice;
-				*foundIndex = i;
-				
-				IOObjectRelease(parentIterator);
-				
-				return true;
-			}
+			*foundDevice = parentDevice;
+			
+			IOObjectRelease(parentIterator);
+			
+			return true;
 		}
 		
 		if (recursive)
 		{
-			if (getIORegParent(parentDevice, nameArray, foundDevice, foundIndex, recursive))
+			if (getIORegParent(parentDevice, name, foundDevice, recursive))
 				return true;
 		}
 	}
@@ -178,11 +160,52 @@ bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *found
 	return false;
 }
 
-bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, bool recursive)
+bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, uint32_t *foundIndex, bool useClass, bool recursive)
+{
+	kern_return_t kr;
+	io_iterator_t parentIterator;
+	
+	kr = IORegistryEntryGetParentIterator(device, kIOServicePlane, &parentIterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t parentDevice; IOIteratorIsValid(parentIterator) && (parentDevice = IOIteratorNext(parentIterator)); IOObjectRelease(parentDevice))
+	{
+		io_name_t name {};
+		kr = (useClass ? IOObjectGetClass(parentDevice, name) : IORegistryEntryGetName(parentDevice, name));
+		
+		if (kr == KERN_SUCCESS)
+		{
+			for (int i = 0; i < [nameArray count]; i++)
+			{
+				if (CFStringCompare((__bridge CFStringRef)[NSString stringWithUTF8String:name], (__bridge CFStringRef)[nameArray objectAtIndex:i], 0) == kCFCompareEqualTo)
+				{
+					*foundDevice = parentDevice;
+					*foundIndex = i;
+					
+					IOObjectRelease(parentIterator);
+					
+					return true;
+				}
+			}
+		}
+		
+		if (recursive)
+		{
+			if (getIORegParent(parentDevice, nameArray, foundDevice, foundIndex, useClass, recursive))
+				return true;
+		}
+	}
+	
+	return false;
+}
+
+bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, bool useClass, bool recursive)
 {
 	uint32_t foundIndex = 0;
 	
-	return getIORegParent(device, nameArray, foundDevice, &foundIndex, recursive);
+	return getIORegParent(device, nameArray, foundDevice, &foundIndex, useClass, recursive);
 }
 
 bool getAPFSPhysicalStoreBSDName(NSString *mediaUUID, NSString **bsdName)
@@ -212,7 +235,7 @@ bool getAPFSPhysicalStoreBSDName(NSString *mediaUUID, NSString **bsdName)
 		
 		io_service_t parentDevice;
 		
-		if (getIORegParent(device, @[@"IOMedia"], &parentDevice, true))
+		if (getIORegParent(device, @[@"IOMedia"], &parentDevice, true, true))
 		{
 			CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
 			
@@ -263,9 +286,9 @@ bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray
 		
 		if (kr != KERN_SUCCESS)
 			continue;
-		
-		bool isHubPort = (CFStringCompare((__bridge CFStringRef)[NSString stringWithUTF8String:className], (__bridge CFStringRef)@"AppleUSB20HubPort", 0) == kCFCompareEqualTo);
-		bool isInternalHubPort = (CFStringCompare((__bridge CFStringRef)[NSString stringWithUTF8String:className], (__bridge CFStringRef)@"AppleUSB20InternalHubPort", 0) == kCFCompareEqualTo);
+
+		bool isHubPort = IOObjectConformsTo(device, "AppleUSBHubPort");
+		bool isInternalHubPort = IOObjectConformsTo(device, "AppleUSBInternalHubPort");
 		bool hubDeviceFound = false;
 		uint32_t hubLocationID = 0;
 		io_service_t hubDevice;
@@ -273,7 +296,7 @@ bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray
 		
 		if (isHubPort || isInternalHubPort)
 		{
-			if (getIORegParent(device, @[@"AppleUSB20InternalHub", @"AppleUSB20Hub"], &hubDevice, true))
+			if (getIORegParent(device, @"IOUSBDevice", &hubDevice, true))
 			{
 				kr = IORegistryEntryGetName(hubDevice, hubName);
 				
@@ -299,7 +322,7 @@ bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray
 		
 		io_service_t parentDevice;
 		
-		if (getIORegParent(device, @[@"IOPCIDevice"], &parentDevice, true))
+		if (getIORegParent(device, @"IOPCIDevice", &parentDevice, true))
 		{
 			io_name_t parentName {};
 			kr = IORegistryEntryGetName(parentDevice, parentName);
@@ -381,7 +404,7 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 		
 		io_service_t parentDevice;
 		
-		if (getIORegParent(device, @[@"IOPCIDevice"], &parentDevice, true))
+		if (getIORegParent(device, @"IOPCIDevice", &parentDevice, true))
 		{
 			io_name_t parentName {};
 			kr = IORegistryEntryGetName(parentDevice, parentName);
@@ -433,7 +456,7 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 						
 						io_service_t childDevice;
 						
-						if (getIORegChild(device, @[@"AppleHDACodecGeneric"], &childDevice, true))
+						if (getIORegChild(device, @"AppleHDACodec", &childDevice, true))
 						{
 							io_name_t childName {};
 							kr = IORegistryEntryGetName(childDevice, childName);
@@ -650,7 +673,7 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			
 			NSMutableArray *parentArray = [NSMutableArray array];
 			
-			if (getIORegParentArray(device, @[@"IOPCIDevice"], parentArray, true))
+			if (getIORegParentArray(device, @"IOPCIDevice", parentArray, true))
 			{
 				for (NSNumber *parentNumber in parentArray)
 				{
@@ -672,7 +695,7 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			
 			io_service_t rootDevice;
 			
-			if (getIORegParent(device, @[@"IOACPIPlatformDevice"], &rootDevice, true))
+			if (getIORegParent(device, @"IOACPIPlatformDevice", &rootDevice, true))
 			{
 				io_name_t rootName {};
 				io_struct_inband_t pnp {}, uid {};
@@ -744,7 +767,7 @@ bool getIORegNetworkArray(NSMutableArray **networkInterfacesArray)
 	{
 		io_service_t parentDevice;
 		
-		if (getIORegParent(device, @[@"IOPCIDevice"], &parentDevice, true))
+		if (getIORegParent(device, @"IOPCIDevice", &parentDevice, true))
 		{
 			CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
 			
@@ -829,7 +852,7 @@ bool getIORegGraphicsArray(NSMutableArray **graphicsArray)
 		
 		io_service_t parentDevice;
 		
-		if (getIORegParent(device, @[@"IOPCIDevice"], &parentDevice, true))
+		if (getIORegParent(device, @"IOPCIDevice", &parentDevice, true))
 		{
 			CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
 			
@@ -946,7 +969,7 @@ bool getIORegStorageArray(NSMutableArray **storageArray)
 	return ([*storageArray count] > 0);
 }
 
-bool getIORegPropertyDictionaryArrayWithParent(NSString *serviceName, NSArray *parentArray, NSMutableArray **propertyArray)
+bool getIORegPropertyDictionaryArrayWithParent(NSString *serviceName, NSString *parentName, NSMutableArray **propertyArray)
 {
 	*propertyArray = [NSMutableArray array];
 	io_iterator_t iterator;
@@ -960,7 +983,7 @@ bool getIORegPropertyDictionaryArrayWithParent(NSString *serviceName, NSArray *p
 	{
 		io_service_t parentDevice;
 		
-		if (getIORegParent(device, parentArray, &parentDevice, true))
+		if (getIORegParent(device, parentName, &parentDevice, true))
 		{
 			CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
 			
@@ -1242,7 +1265,7 @@ bool hasACPIEntry(NSString *name)
 	
 	io_service_t foundDevice;
 	
-	result = getIORegChild(device, @[name], &foundDevice, true);
+	result = getIORegChild(device, name, &foundDevice, true);
 
 	IOObjectRelease(device);
 	
@@ -1585,10 +1608,10 @@ bool getDisplayArray(NSMutableArray **displayArray)
 			io_service_t framebufferDevice, videoDevice;
 			uint32_t framebufferIndex = 0;
 			
-			if (!getIORegParent(device, @[@"IOFramebuffer"], &framebufferDevice, true))
+			if (!getIORegParent(device, @"IOFramebuffer", &framebufferDevice, true))
 				continue;
 			
-			if (!getIORegParent(device, @[@"IOPCIDevice"], &videoDevice, true))
+			if (!getIORegParent(device, @"IOPCIDevice", &videoDevice, true))
 				continue;
 			
 			io_name_t locationInPlane {};

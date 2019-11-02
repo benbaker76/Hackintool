@@ -85,6 +85,7 @@ typedef struct
 	bool USBPortLimit;
 	bool SpoofAudioDeviceID;
 	uint32_t SelectedAudioDevice;
+	bool ShowInstalledOnly;
 	bool LSPCON_Enable;
 	bool LSPCON_AutoDetect;
 	bool LSPCON_Connector;
@@ -150,6 +151,7 @@ typedef struct
 	NSArray *_systemsArray;
 	NSDictionary *_audioVendorsDictionary;
 	NSMutableArray *_kextsArray;
+	NSMutableArray *_installedKextsArray;
 	NSMutableDictionary *_installedKextVersionDictionary;
 	
 	NSMutableArray *_bootloaderPatchArray;
@@ -214,6 +216,7 @@ typedef struct
 @property (assign) IBOutlet NSTextView *createNVRAMTextView;
 // Installed
 @property (assign) IBOutlet NSTableView *kextsTableView;
+@property (assign) IBOutlet NSButton *showInstalledOnlyButton;
 @property (assign) IBOutlet NSMenu *installMenu;
 @property (assign) IBOutlet NSTextView *compileOutputTextView;
 @property (assign) IBOutlet NSProgressIndicator *compileProgressIndicator;
@@ -266,7 +269,6 @@ typedef struct
 // Tools
 @property (assign) IBOutlet NSTextView *toolsOutputTextView;
 @property (assign) IBOutlet NSButton *aiiEnableHWP;
-@property (assign) IBOutlet NSButton *aiiSleepFor5Seconds;
 @property (assign) IBOutlet NSButton *aiiLogCStates;
 @property (assign) IBOutlet NSButton *aiiLogIGPU;
 @property (assign) IBOutlet NSButton *aiiLogIPGStyle;

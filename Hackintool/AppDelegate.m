@@ -198,13 +198,14 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_usbPortsArray release];
 	[_displaysArray release];
 	[_kextsArray release];
+	[_installedKextsArray release];
+	[_installedKextVersionDictionary release];
 	[_fileName release];
 	[_intelPlatformIDsDictionary_10_13_6 release];
 	[_intelPlatformIDsDictionary_10_14 release];
 	[_disksArray release];
 	[_efiBootDeviceUUID	release];
 	[_nvramDictionary release];
-	[_installedKextVersionDictionary release];
 	[_pciVendorsDictionary release];
 	[_pciClassesDictionary release];
 	[_pciDevicesArray release];
@@ -932,6 +933,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_injectDeviceIDButton setState:_settings.InjectDeviceID];
 	[_spoofAudioDeviceIDButton setState:_settings.SpoofAudioDeviceID];
 	[_usbPortLimitButton setState:_settings.USBPortLimit];
+	[_showInstalledOnlyButton setState:_settings.ShowInstalledOnly];
 	[_lspconEnableDriverButton setState:_settings.LSPCON_Enable];
 	[_lspconAutoDetectRadioButton setState:_settings.LSPCON_AutoDetect];
 	[_lspconConnectorRadioButton setState:_settings.LSPCON_Connector];
@@ -1652,7 +1654,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	NSMutableArray *bluetoothArray = nil;
 	
-	if (getIORegPropertyDictionaryArrayWithParent(@"IOBluetoothHostControllerTransport", @[@"IOUSBDevice", @"IOPCIDevice"], &bluetoothArray))
+	if (getIORegPropertyDictionaryArrayWithParent(@"IOBluetoothHostControllerTransport", @"IOUSBDevice", &bluetoothArray))
 	{
 		for (NSDictionary *deviceDictionary in bluetoothArray)
 		{
@@ -2028,6 +2030,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 {
 	NSLog(@"Initializing Installed");
 	
+	_installedKextsArray = [[NSMutableArray array] retain];
+	
+	[self getInstalledKextVersionDictionary];
+	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSArray *kextsArray = [defaults objectForKey:@"Kexts"];
 	
@@ -2045,9 +2051,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		{
 			NSMutableDictionary *kextDictionary = _kextsArray[i];
 			NSString *name = [kextDictionary objectForKey:@"Name"];
+			NSString *bundleID = [kextDictionary objectForKey:@"BundleID"];
 			NSString *downloadUrl = [kextDictionary objectForKey:@"DownloadUrl"];
+			NSString *installedVersion = [_installedKextVersionDictionary objectForKey:[(bundleID != nil ? bundleID : name) lowercaseString]];
 			
-			[kextDictionary setObject:@"" forKey:@"InstalledVersion"];
+			[kextDictionary setObject:(installedVersion != nil ? installedVersion : @"") forKey:@"InstalledVersion"];
 			[kextDictionary setObject:@"" forKey:@"CurrentVersion"];
 			[kextDictionary setObject:@"" forKey:@"DownloadVersion"];
 			
@@ -2071,6 +2079,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 					}
 				}
 			}
+			
+			if (installedVersion != nil)
+				[_installedKextsArray addObject:kextDictionary];
 		
 			_kextsArray[i] = kextDictionary;
 		}
@@ -2214,9 +2225,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 
 - (NSMutableArray *)getSelectedKextsArray
 {
+	NSMutableArray *kextsArray = (_settings.ShowInstalledOnly ? _installedKextsArray : _kextsArray);
 	NSMutableArray *selectedArray = [NSMutableArray array];
 	
-	for (int i = 0; i < _kextsArray.count; i++)
+	for (int i = 0; i < kextsArray.count; i++)
 	{
 		NSButton *button = [_kextsTableView viewAtColumn:0 row:i makeIfNecessary:NO];
 		[selectedArray addObject:[NSNumber numberWithBool:button.state]];
@@ -2295,14 +2307,15 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	if(![fileManager fileExistsAtPath:kextsPath isDirectory:&isDir])
 		[fileManager createDirectoryAtPath:kextsPath withIntermediateDirectories:YES attributes:nil error:&error];
 
+	NSMutableArray *kextsArray = (_settings.ShowInstalledOnly ? _installedKextsArray : _kextsArray);
 	NSMutableArray *selectedArray = [self getSelectedKextsArray];
 	
 	void (^progressBlock)(void);
 	progressBlock =
 	^{
-		for (int i = 0; i < _kextsArray.count; i++)
+		for (int i = 0; i < kextsArray.count; i++)
 		{
-			NSMutableDictionary *kextDictionary = _kextsArray[i];
+			NSMutableDictionary *kextDictionary = kextsArray[i];
 			//NSString *name = [kextDictionary objectForKey:@"Name"];
 			NSString *downloadUrl = [kextDictionary objectForKey:@"DownloadUrl"];
 			NSString *fileName = [downloadUrl lastPathComponent];
@@ -2461,18 +2474,22 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	if(![fileManager fileExistsAtPath:releasePath isDirectory:&isDir])
 		[fileManager createDirectoryAtPath:releasePath withIntermediateDirectories:YES attributes:nil error:&error];
 	
+	NSMutableArray *kextsArray = (_settings.ShowInstalledOnly ? _installedKextsArray : _kextsArray);
 	NSMutableArray *selectedArray = [self getSelectedKextsArray];
-	int compileCount = 0;
+	int compileCount = 1;
 	
-	for (int i = 0; i < _kextsArray.count; i++)
+	for (int i = 0; i < kextsArray.count; i++)
 	{
-		NSMutableDictionary *kextDictionary = _kextsArray[i];
+		NSMutableDictionary *kextDictionary = kextsArray[i];
 		NSString *name = [kextDictionary objectForKey:@"Name"];
 		NSNumber *selectedNumber = selectedArray[i];
 		bool isSelected = [selectedNumber boolValue];
 		bool isLilu = [name isEqualToString:@"Lilu"];
 		
-		if (isLilu || isSelected)
+		if (isLilu)
+			continue;
+		
+		if (isSelected)
 			compileCount++;
 	}
 	
@@ -2511,10 +2528,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			});
 		}
 		
-		for (int i = 0; i < _kextsArray.count; i++)
+		for (int i = 0; i < kextsArray.count; i++)
 		{
 			NSError *error;
-			NSMutableDictionary *kextDictionary = _kextsArray[i];
+			NSMutableDictionary *kextDictionary = kextsArray[i];
 			NSString *name = [kextDictionary objectForKey:@"Name"];
 			NSString *scheme = [kextDictionary objectForKey:@"Scheme"];
 			NSString *preBuildBash = [kextDictionary objectForKey:@"PreBuildBash"];
@@ -2637,15 +2654,18 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	void (^progressBlock)(void);
 	progressBlock =
 	^{
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[_showInstalledOnlyButton setEnabled:NO];
+		});
+		
 		NSError *error;
-		[self getInstalledKextVersionDictionary];
+		NSMutableArray *kextsArray = (_settings.ShowInstalledOnly ? _installedKextsArray : _kextsArray);
 		NSString *tempPath = getTempPath();
 		
-		for (int i = 0; i < _kextsArray.count; i++)
+		for (int i = 0; i < kextsArray.count; i++)
 		{
-			NSMutableDictionary *kextDictionary = _kextsArray[i];
+			NSMutableDictionary *kextDictionary = kextsArray[i];
 			NSString *name = [kextDictionary objectForKey:@"Name"];
-			NSString *bundleID = [kextDictionary objectForKey:@"BundleID"];
 			NSString *projectUrl = [kextDictionary objectForKey:@"ProjectUrl"];
 			NSString *projectFileUrl = [kextDictionary objectForKey:@"ProjectFileUrl"];
 			bool isGithub = [projectUrl containsString:@"github.com"];
@@ -2657,15 +2677,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			NSURL *gitProjFile2Url = [NSURL URLWithString:[NSString stringWithFormat:@"https://raw.githubusercontent.com/%@/%@/master/%@.xcodeproj/project.pbxproj", username, projectName, name]];
 			NSURL *gitProjFile3Url = [NSURL URLWithString:[NSString stringWithFormat:@"https://raw.githubusercontent.com/%@/%@/master/%@/%@.xcodeproj/project.pbxproj", username, projectName, name, name]];
 			NSURL *sfProjFile1Url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/code/HEAD/tree/%@/%@.xcodeproj/project.pbxproj?format=raw", projectUrl, name, name]];
-
-			NSString *installedVersion = [_installedKextVersionDictionary objectForKey:[(bundleID != nil ? bundleID : name) lowercaseString]];
 			NSString *projFileDest = [NSString stringWithFormat:@"%@/project.pbxproj", tempPath];
 			NSData *projFileData = nil;
 			
 			[self getGithubDownloadUrl:&kextDictionary];
-			
-			if (installedVersion != nil)
-				[kextDictionary setObject:installedVersion forKey:@"InstalledVersion"];
 			
 			if ([[NSFileManager defaultManager] fileExistsAtPath:projFileDest])
 				[[NSFileManager defaultManager] removeItemAtPath:projFileDest error:&error];
@@ -2702,7 +2717,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			if ([self tryGetProjectFileVersion:projFileDest projectVersion:&projectVersion])
 				[kextDictionary setObject:projectVersion forKey:@"CurrentVersion"];
 			
-			double progressPercent = (double)(i + 1) / (double)_kextsArray.count;
+			double progressPercent = (double)(i + 1) / (double)kextsArray.count;
 			
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[_compileProgressIndicator setDoubleValue:progressPercent];
@@ -2715,6 +2730,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSString *stdoutString = nil;
 		
 		launchCommand(@"/bin/rm", @[@"-Rf", tempPath], &stdoutString);
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[_showInstalledOnlyButton setEnabled:YES];
+		});
 	};
 	
 	dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
@@ -4955,6 +4974,7 @@ NSInteger usbSort(id a, id b, void *context)
 										@NO, @"USBPortLimit",
 										@NO, @"ApplyCurrentPatches",
 										@(0), @"SelectedAudioDevice",
+										@YES, @"ShowInstalledOnly",
 										@NO, @"LSPCON_Enable",
 										@YES, @"LSPCON_AutoDetect",
 										@NO, @"LSPCON_Connector",
@@ -5011,6 +5031,7 @@ NSInteger usbSort(id a, id b, void *context)
 	_settings.USBPortLimit = [defaults boolForKey:@"USBPortLimit"];
 	_settings.ApplyCurrentPatches = [defaults boolForKey:@"ApplyCurrentPatches"];
 	_settings.SelectedAudioDevice = (uint32_t)[defaults integerForKey:@"SelectedAudioDevice"];
+	_settings.ShowInstalledOnly = [defaults boolForKey:@"ShowInstalledOnly"];
 	_settings.LSPCON_Enable = [defaults boolForKey:@"LSPCON_Enable"];
 	_settings.LSPCON_AutoDetect = [defaults boolForKey:@"LSPCON_AutoDetect"];
 	_settings.LSPCON_Connector = [defaults boolForKey:@"LSPCON_Connector"];
@@ -5063,6 +5084,7 @@ NSInteger usbSort(id a, id b, void *context)
 	[defaults setBool:_settings.SpoofAudioDeviceID forKey:@"SpoofAudioDeviceID"];
 	[defaults setBool:_settings.ApplyCurrentPatches forKey:@"ApplyCurrentPatches"];
 	[defaults setInteger:_settings.SelectedAudioDevice forKey:@"SelectedAudioDevice"];
+	[defaults setBool:_settings.ShowInstalledOnly forKey:@"ShowInstalledOnly"];
 	[defaults setBool:_settings.LSPCON_Enable forKey:@"LSPCON_Enable"];
 	[defaults setBool:_settings.LSPCON_AutoDetect forKey:@"LSPCON_AutoDetect"];
 	[defaults setBool:_settings.LSPCON_Connector forKey:@"LSPCON_Connector"];
@@ -5263,7 +5285,7 @@ NSInteger usbSort(id a, id b, void *context)
 	}
 	else if (tableView == _kextsTableView)
 	{
-		return [_kextsArray count];
+		return [(_settings.ShowInstalledOnly ? _installedKextsArray : _kextsArray) count];
 	}
 	else if (tableView == _usbControllersTableView)
 	{
@@ -6291,7 +6313,8 @@ NSInteger usbSort(id a, id b, void *context)
 	}
 	else if (tableView == _kextsTableView)
 	{
-		NSMutableDictionary *kextDictionary = _kextsArray[row];
+		NSMutableArray *kextsArray = (_settings.ShowInstalledOnly ? _installedKextsArray : _kextsArray);
+		NSMutableDictionary *kextDictionary = kextsArray[row];
 		NSString *superseder = [kextDictionary objectForKey:@"Superseder"];
 		
 		if([identifier isEqualToString:@"Name"])
@@ -6652,13 +6675,18 @@ NSInteger usbSort(id a, id b, void *context)
 	}
 	else if (tableView == _kextsTableView)
 	{
-		NSMutableDictionary *kextDictionary = _kextsArray[row];
-		NSString *installedVersion =  [kextDictionary objectForKey:@"InstalledVersion"];
-		NSString *currentVersion =  [kextDictionary objectForKey:@"CurrentVersion"];
-		NSString *downloadVersion =  [kextDictionary objectForKey:@"DownloadVersion"];
+		NSMutableArray *kextsArray = (_settings.ShowInstalledOnly ? _installedKextsArray : _kextsArray);
+		NSMutableDictionary *kextDictionary = kextsArray[row];
+		NSString *installedVersion = [kextDictionary objectForKey:@"InstalledVersion"];
+		NSString *currentVersion = [kextDictionary objectForKey:@"CurrentVersion"];
+		NSString *downloadVersion = [kextDictionary objectForKey:@"DownloadVersion"];
 		NSString *superseder = [kextDictionary objectForKey:@"Superseder"];
 		bool isInstalled = ![installedVersion isEqualToString:@""];
-		bool isLatestVersion = ([installedVersion isEqualToString:currentVersion] || [installedVersion isEqualToString:downloadVersion]);
+		NSComparisonResult currentVersionComparison = [self compareVersion:currentVersion toVersion:installedVersion];
+		NSComparisonResult downloadVersionComparison = [self compareVersion:downloadVersion toVersion:installedVersion];
+		bool isNewerThanCurrentVersion = (currentVersionComparison == NSOrderedSame || currentVersionComparison == NSOrderedAscending);
+		bool isNewerThanDownloadVersion = (downloadVersionComparison == NSOrderedSame || downloadVersionComparison == NSOrderedAscending);
+		bool isLatestVersion = (isNewerThanCurrentVersion || isNewerThanDownloadVersion);
 		bool isSuperseded = (superseder != nil && ![superseder isEqualToString:@""]);
 		
 		if (isInstalled)
@@ -8189,8 +8217,8 @@ NSInteger usbSort(id a, id b, void *context)
 	
 	if ([menuItem.identifier isEqualToString:@"Open Url"])
 	{
-		NSMutableDictionary *kextDictionary = _kextsArray[row];
-		
+		NSMutableArray *kextsArray = (_settings.ShowInstalledOnly ? _installedKextsArray : _kextsArray);
+		NSMutableDictionary *kextDictionary = kextsArray[row];
 		NSString *projectUrl = [kextDictionary objectForKey:@"ProjectUrl"];
 		
 		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:projectUrl]];
@@ -8902,7 +8930,13 @@ NSInteger usbSort(id a, id b, void *context)
 	NSButton *button = (NSButton *)sender;
 	NSString *identifier = [button identifier];
 	
-	if ([identifier isEqualToString:@"Refresh"])
+	if ([identifier isEqualToString:@"ShowInstalledOnly"])
+	{
+		_settings.ShowInstalledOnly = [_showInstalledOnlyButton state];
+		[_kextsTableView reloadData];
+		[self getKextCurrentVersions];
+	}
+	else if ([identifier isEqualToString:@"Refresh"])
 	{
 		[self getKextCurrentVersions];
 	}

@@ -26,7 +26,7 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray);
 bool getIORegNetworkArray(NSMutableArray **networkInterfacesArray);
 bool getIORegGraphicsArray(NSMutableArray **graphicsArray);
 bool getIORegStorageArray(NSMutableArray **storageArray);
-bool getIORegPropertyDictionaryArrayWithParent(NSString *serviceName, NSArray *parentArray, NSMutableArray **propertyArray);
+bool getIORegPropertyDictionaryArrayWithParent(NSString *serviceName, NSString *parentName, NSMutableArray **propertyArray);
 bool getIORegPropertyDictionary(NSString *serviceName, NSArray *entryNameArray, NSMutableDictionary **propertyDictionary, uint32_t *foundIndex);
 bool getIORegPropertyDictionary(NSString *serviceName, NSString *entryName, NSMutableDictionary **propertyDictionary);
 bool getIORegPropertyDictionary(NSString *serviceName, NSString *entryName, NSArray *classNameArray, NSMutableDictionary **propertyDictionary);
