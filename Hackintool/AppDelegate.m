@@ -7840,8 +7840,11 @@ NSInteger usbSort(id a, id b, void *context)
 					 
 					 bool result = applyFindAndReplacePatch(findData, replaceData, _originalFramebufferList, _modifiedFramebufferList, _framebufferSize * _framebufferCount, FIND_AND_REPLACE_COUNT);
 					 
-					 [self showAlert:@"Importing KextsToPatch" text:result ? @"Patch Success!" : @"Patch Fail!"];
-					 
+					 [[NSOperationQueue mainQueue] addOperationWithBlock:^
+					  {
+						  [self showAlert:@"Importing KextsToPatch" text:result ? @"Patch Success!" : @"Patch Fail!"];
+					  }];
+
 					 [self updateFramebufferList];
 					 break;
 				 }
