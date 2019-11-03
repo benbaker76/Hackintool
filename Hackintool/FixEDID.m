@@ -582,7 +582,13 @@ uint32_t LEDProductID = 0x9236;
 {
 	EDID edid {};
 	
-	memcpy(&edid, [display.eDID bytes], sizeof(EDID));
+	if (display.eDID.bytes == nil)
+		return;
+	
+	if (display.eDID.length < sizeof(EDID))
+		return;
+	
+	memcpy(&edid, display.eDID.bytes, sizeof(EDID));
 	
 	*edidOrigData = [NSData dataWithBytes:&edid length:sizeof(EDID)];
 }
@@ -591,7 +597,13 @@ uint32_t LEDProductID = 0x9236;
 {
 	EDID edid {};
 	
-	memcpy(&edid, [display.eDID bytes], sizeof(EDID));
+	if (display.eDID.bytes == nil)
+		return;
+	
+	if (display.eDID.length < sizeof(EDID))
+		return;
+	
+	memcpy(&edid, display.eDID.bytes, sizeof(EDID));
 	
 	switch(display.eDIDIndex)
 	{
@@ -695,6 +707,9 @@ uint32_t LEDProductID = 0x9236;
 	
 	[FixEDID getEDIDOrigData:display edidOrigData:&edidOrigData];
 	[FixEDID getEDIDData:display edidData:&edidData];
+	
+	if (edidOrigData == nil || edidData == nil)
+		return;
 	
 	switch(display.eDIDIndex)
 	{
