@@ -1,0 +1,31 @@
+<html lang="tr">
+<head>
+<title>Ses Yaması</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="audio">
+<meta name="description" content="Patching Audio.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<a class="Heading1" name="Audio">Hackintool ile Ses Yaması</a>
+<span LANG="">
+<ol>
+	<li>Güncel
+	<a href="https://github.com/acidanthera/Lilu/releases">Lilu</a> + 
+	<a href="https://github.com/acidanthera/AppleALC/releases">AppleALC</a> kurulumunu yapın</li>
+	<li>config.plist/Devices/Audio/Inject=NO olarak ayarlayın</span></li>
+	<li>Clover-&gt;DSDT Yeniden adlandırın (Eğer algılanırsa)<br>
+• AZAL-&gt;HDEF<br>
+• HDAS -&gt; HDEF</li>
+	<li>Yama-&gt;Genel-&gt;Ses Aygıtı seçeneğini aktif edin</li>
+    <li>Ses-&gt; Ses Bilgisi içinde Ses kodeksinize uygun Layout-ID belirleyin.</li>
+    <li>Dosya-&gt;Dışa Aktar-&gt;Clover config.plist (Mevcut Config dosyasınızın üzerine yazdırın.)</li>
+	<li>&nbsp;Yeniden başlatın</li>
+	<li>Ses alamazsanız 4. adıma geri dönün ve farklı bir Layout-ID deneyin</li>
+</ol>
+<p>Not: Eğer bütün Layout-ID'leri denediğiniz halde ses tanıtamazsanız Yama-&gt;Gelişmiş içinde "Spoof Audio Device ID" seçeneğini aktif edin. Bütün bunlara rağmen hala ses aktif edilmiyorsa
+</span>
+<a HREF="https://bitbucket.org/RehabMan/os-x-fake-pci-id/downloads/">
+    <span LANG="">FakePCIID.kext + FakePCIID_Intel_HDMI_Audio.kext</span></a> kextlerini kurup deneme yapın.</p>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<html lang="tr">
+<head>
+<title>Ekran EDID Yaması</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="edid, display">
+<meta name="description" content="Patching Display EDID.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<a class="Heading1" name="Display">Ekran EDID Yaması</a>
+<p>EDID yama işlemiyle macOS ile uyumsuz bir ekranı uyumlu bir profille yeniden tanımlayabilir,ve ölçeklendirilmiş çözünürlükler ekleyebilirsiniz.Yine bu yama işlemi ile Night Shift Aktif edilebilir.</p>
+<ol>
+    <li>Hackintool-&gt; Ekranlar içinde düzenlemek istediğiniz ekranı seçin.</li>
+	<li>&nbsp;İsteğe bağlı olarak, monitör aralıklarını ekleyin / düzeltin (Eğer sizin EDID&#39;niz bunu içermiyorsa veya bozuksa)</li>
+    <li>&nbsp;İsteğe bağlı olarak "Çözünürlük Ekle" seçeneği ile farklı çözünürlükler ekleyip bunlara tıklayıp düzenleyebilirsiniz. Kullanmak istemediğiniz bu çözünürlükleri silme seçeneği ile silebilirsiniz </li>
+    <li>&nbsp;Son olarak "dışa aktar" ile bu ayarların masaüstüne çıkartılmasını sağlayın.</li>
+</ol>
+<a class="Heading1" name="Display_Installation">Kurulum</a>
+<p>EDID yamalarını kurmak için iki farklı yöntem vardır. Ekran Profil üzerinde yazdırmak ve Library / Extensions içine kurmak:</p>
+<a class="Heading2" name="Display_Overrides">Ekran Profil :</a>
+<ul>
+	<li>DisplayVendorID-x dosyalarını /System/Library/Displays/Contents/Resources/Overrides içine koyun ( El Capitan için&lt;
+	/System/Library/Displays/Overrides)</li>
+	<li>Icons.plist dosyasını
+        /System/Library/Displays/Contents/Resources/Overrides içine koyun (El Capitan için&lt;
+	/System/Library/Displays/Overrides)</li>
+</ul>
+<a class="Heading2" name="Display_Library_Extensions">Library / Extensions ile Kurulum:</a>
+<ul>
+	<li> DisplayEDID-x-x.kext dosyasını /Library/Extensions içine kurun ya da  EFI/CLOVER/kexts/Other içine koyun (Sizin konfügrasyonunuza göre)</li>
+</ul>
+<a class="Heading1" name="Display_SIP">System Integrety Protection (SIP)</a>
+<p>Bu dosyaların Kütüphane içine kurulabilmesi için SIP Güvenliğinin devre dışı bırakılmış olması gerektiğini unutmayın.</p>
+<a class="Heading1" name="Display_Extra_Info">Ekstra Bilgi</a>
+<p>Eğer 16:10 bir monitorünüz varsa ve bununla ölçeklendirilmiş çözünürlükler kullanmak istiyorsanız aşağıdakileri seçin:</p>
+<ul>
+	<li>iMac Display</li>
+	<li>MacBook Pro Display</li>
+	<li>Cinema HD Display</li>
+	<li>LED Cinema Display</li>
+</ul>
+<p>16:9 monitörlerde  ölçeklendirilmiş çözünürlükler için aşağıdakileri kullanın:</p>
+<ul>
+	<li>Apple Thunderbolt Display (Dahili ekranlar için bunu kullanmayın!)</li>
+	<li>iMac Retina Display</li>
+	<li>MacBook Air Display</li>
+</ul>
+</body>
+</html>
