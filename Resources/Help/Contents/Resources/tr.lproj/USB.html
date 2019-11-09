@@ -1,0 +1,103 @@
+<html lang="tr">
+<head>
+<title>USB Port Yamalama</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="usb">
+<meta name="description" content="Patching USB.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<a class="Heading1" name="USB">USB Port Yamalama</a></a>
+<p>macOS 10.14.1 ve sonrası USB port limit yaması çalışmamakta.Bu nedenle tüm bağlantı noktalarının aynı anda yapılandırılması için bir yol yoktur. RehabMan, USB portlarını hariç tutmak için önyükleme komutlarını içerecek şekilde USBInjectAll.kext dosyasını güncelledi. Bu bağlamda buradaki rehberi uygulamadan önce bu kextin sisteminizde yüklü olması gerekmektedir.  </p>
+<ol>
+	<li>
+	<a HREF="https://bitbucket.org/RehabMan/os-x-usb-inject-all/downloads/">
+        USBInjectAll.kext</a> (portların tespit edilmesi için )  EFI/CLOVER/kexts/Other içine koyun.</li>
+	<li>USBInjectAll.kext Gerekenler:</li>
+	<li>Clover-&gt;DSDT Yeniden Adlandırma (Algılanırsa)<ul>
+		<li>XHCI -&gt; XHC</li>
+		<li>XHC1 -&gt; XHC</li>
+		<li>EHC1 -&gt; EH01</li>
+		<li>EHC2 -&gt; EH02</li>
+	</ul>
+	</li>
+	<li>&nbsp;Sistemi yeniden Başlatın</li>
+    <li>&nbsp;Hackintool'u çalıştırın sonra USBInjectAll'ın doğru kurulduğunu kontrol etmek için Genel&gt; Yüklendi'ye gidin.<ul>
+		<li>ÖrnekUSBInjectAll: Yes (Release-0.7.1)</li>
+	</ul>
+	</li>
+	<li>&nbsp;Genel-&gt;USB sekmesine gidin ve burada sizin USB Kontrol Listesini kontrol edin.
+	USB Denetleyicinize bağlı olarak ayrıca kextler kurmanız gerekebilir:<ul>
+		<li>8086:8CB1 ve macOS &lt; 10.11.1 -&gt; XHCI-9-series.kext</li>
+		<li>8086:8D31, 8086:A2AF, 8086:A36D, 8086:9DED -&gt; XHCI-desteklenmeyen.kext</li>
+		<li>8086:1E31, 8086:8C31, 8086:8CB1, 8086:8D31, 8086:9C31, 8086:9CB1 -&gt; 
+		FakePCIID.kext + FakePCIID_XHCIMux.kext</li>
+	</ul>
+	</li>
+	<li>&nbsp;Bu kextlerden birini yüklemeniz gerekirse bundan sonra sistemi yeniden başlatın ve sonra Hackintool’u tekrar çalıştırın.</li>
+	<li>&nbsp;Tekrar Genel-&gt;USB sekmesine gidin</li>
+	<li>&nbsp;USB Bağlantı Noktaları listesindeki tüm öğeleri seçin ve “Sil” ve ardından “Yenile” düğmesini seçin</li>
+    <li>&nbsp;Boot argümanlarına -uia_exclude_ss uia_include=HS01,HS02 komutlarını ekleyip sistemi yeniden başlatın.  <ul>
+		<li>Fare ve klavyenin bağlı olduğu portların aktif olması için boot argümanlarına bu aygıtların bağlı olduğu portların aktif olması için -uia_include=x boot komutu (örnek: uia_include=HS01,HS02) girilmesi gerekebilir.</li>
+	</ul>
+	</li>
+    <li>&nbsp;Hackintool çalıştırın ve Genel-&gt;USB seçeneğine gidin.</li>
+	<li>USB 2.0 aygıtını sisteminizdeki tüm bağlantı noktalarına takın ve çıkarın<ul>
+		<li>Etkin olan portlar yeşil renkte vurgulanmış olarak kalır</li>
+		<li>&nbsp;Yeşil renkle vurgulanmamış tüm bağlantı noktalarını silin</li>
+	</ul>
+	</li>
+    <li>&nbsp;Boot argümanlarında -uia_exclude_hs komutunu bırakın ve  -uia_exclude_ss komutunu silin.</li>
+	<li>&nbsp;Hackintool çalıştırın ve Genel-&gt;USB seçeneğine gidin.<ul>
+		<li>USB 3.0 aygıtını sisteminizdeki tüm bağlantı noktalarına takın ve çıkarın</li>
+		<li>Bir TypeC cihazını tüm bağlantı noktalarına takın ve çıkarın (her iki yönde de)</li>
+		<li>Etkin olan portlar yeşil renkte vurgulanmış olarak kalır</li>
+		<li>Yeşil renkle vurgulanmamış tüm bağlantı noktalarını silin</li>
+	</ul>
+	</li>
+	<li>&nbsp;Seçenekleri kullanarak her bağlantı noktasını uygun bağlayıcıya ayarlayın<ul>
+		<li>Bluetooth kart gibi kalıcı aygıtların portlarını "Internal" olarak ayarlayın.</li>
+		<li>USB3 bağlantı noktalarına bağlı HSxx bağlantı noktaları USB3 olarak ayarlanmalıdır.</li>
+		<li>Dahili Hub'lar tipik olarak PR11 ve PR21 bağlantı noktalarına bağlanır ve bu nedenle "Internal" olarak ayarlanmalıdır.</li>
+		<li>TypeC:<ul>
+			<li>Her iki yönde de aynı HSxx / SSxx kullanıyorsa, dahili (internal) bir dönüştürme vardır. Bu durumda "TypeC + Sw kullanın.</li>
+			<li>Her iki yönde de farklı HSxx / SSxx kullanıyorsa bir dönüştürme yoktur. Bu durumda ise "TypeC" olarak sınıflandırın.</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>Bütün düzenlemeleri yaptıktan sonra masaüstünüze dosya oluşturmak için “Dışa Aktar” düğmesini kullanın<ul>
+		<li>SSDT-EC.aml dosyasını (eğer oluşturulduysa)
+		EFI/CLOVER/ACPI/patched içine koyun</li>
+		<li>Aşağıdaki ikisinden birini seçin:<ol>
+			<li>USBPorts.kext dosyasını EFI/CLOVER/kexts/Other içine koyun ya da;</li>
+			<li>SSDT-UIAC.aml ve SSDT-USBX.aml (eğer oluşturulduysa)
+			EFI/CLOVER/ACPI/patched içine koyun</li>
+		</ol>
+		</li>
+	</ul>
+	</li>
+	<li>Bu işlemden sonra gerekmeyecek komut yada dosyaları kaldırabilirsiniz::<ul>
+        <li>Boot komutlarını silin: (-uia_exclude_ss -uia_exclude_hs
+		uia_include=x)</li>
+		<li>USBInjectAll.kext silin (USBPorts.kext kullanılıyorsa)</li>
+	</ul>
+	</li>
+    <li>Bundan sonra sistemi yeniden başlatın.</li>
+    <li>Hackintool çalıştırın ve Genel-&gt;USB Sekmesine gidin.</li>
+	<li>USB Bağlantı Noktaları listesindeki tüm öğeleri seçin ve
+    “Sil” sonra “Yenile” düğmesine basın<ul>
+		<li>Artık tüm bağlantı noktalarının doğru çalıştığını kontrol edebilirsiniz.</li>
+		<li>Bir Bağlayıcı türünü değiştirmeniz gerekirse, USBPorts.kext dosyanızı geçerli olanın üzerine dışa aktarmanız gerekir.</li>
+		<li>Bir hata yaptıysanız, USBPorts.kext dosyasını silin ve rehberi başından itibaren yeniden uygulayın.</li>
+	</ul>
+	</li>
+</ol>
+<p>Soru: USBPorts.kext nedir?<br>
+Cevap: USB portlarını enjekte etmek için kullanılan
+<a HREF="https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/KEXTConcept/KEXTConceptAnatomy/kext_anatomy.html">
+kodsuz bir çekirdek uzantısıdır.</a> </p>
+<p>Soru: SSDT-UIAC.aml'e ihtiyacım var mı?<br>
+Cevap: Hayır, bu yöntem kodsuz bir kext kullanır </p>
+</body>
+</html>
