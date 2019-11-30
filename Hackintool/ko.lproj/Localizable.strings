@@ -46,7 +46,7 @@
 "Possibly" = "지속 생산중";
 "Unlikely" = "단종 제품";
 // Info / Serial Generator
-"Serial Generator Info:" = "시리널 생성기 정보:";
+"Serial Generator Info:" = "시리얼 생성기 정보:";
 // Info / Model
 "Model Info:" = "모델 정보:";
 "2nd Disp Support" = "보조 디스플레이 지원";
