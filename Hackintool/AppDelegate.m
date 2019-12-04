@@ -39,6 +39,7 @@ extern "C" {
 #define BluetoothPath2				@"com.apple.Bluetoothd.plist"
 #define PCIIDsUrl					@"https://pci-ids.ucw.cz/pci.ids"
 #define PCIIDsPath					[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"pci.ids"]
+#define GitSubmoduleUpdate          @"/usr/bin/git submodule update --init --recursive"
 
 uint32_t const FIND_AND_REPLACE_COUNT = 20;
 
@@ -2508,6 +2509,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			NSString *projectFileUrl = [kextDictionary objectForKey:@"ProjectFileUrl"];
 			NSString *outputPath = [buildPath stringByAppendingPathComponent:name];
 			NSString *projectFileName = (projectFileUrl != nil ? [[projectFileUrl lastPathComponent] stringByRemovingPercentEncoding] : [name stringByAppendingString:@".xcodeproj"]);
+            NSString *updateGitSubmodules = @"cd $(OUTPUT_PATH) && $(SUBMODULE_UPDATE)";
 			bool isLilu = [name isEqualToString:@"Lilu"];
 			
 			if (!isLilu)
@@ -2517,6 +2519,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 				[[NSFileManager defaultManager] removeItemAtPath:outputPath error:&error];
 			
 			launchCommand(@"/usr/bin/git", @[@"clone", projectUrl, outputPath], self, @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
+            updateGitSubmodules = [updateGitSubmodules stringByReplacingOccurrencesOfString:@"$(OUTPUT_PATH)" withString:outputPath];
+            updateGitSubmodules = [updateGitSubmodules stringByReplacingOccurrencesOfString:@"$(SUBMODULE_UPDATE)" withString:GitSubmoduleUpdate];
+            launchCommand(@"/bin/bash", @[@"-c", updateGitSubmodules], self,  @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
 			launchCommand(@"/usr/bin/xcodebuild", @[@"-project", [outputPath stringByAppendingPathComponent:projectFileName], @"-configuration", @"Debug", @"clean", @"build", @"ARCHS=x86_64", [NSString stringWithFormat:@"CONFIGURATION_BUILD_DIR=%@", debugPath]], self, @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
 			launchCommand(@"/usr/bin/xcodebuild", @[@"-project", [outputPath stringByAppendingPathComponent:projectFileName], @"-configuration", @"Release", @"clean", @"build", @"ARCHS=x86_64", [NSString stringWithFormat:@"CONFIGURATION_BUILD_DIR=%@", releasePath]], self, @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
 			
@@ -2543,6 +2548,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			NSString *outputLiluKextPath = [outputPath stringByAppendingPathComponent:@"Lilu.kext"];
 			NSString *liluKextPath = [debugPath stringByAppendingPathComponent:@"Lilu.kext"];
 			NSString *projectFileName = (projectFileUrl != nil ? [[projectFileUrl lastPathComponent] stringByRemovingPercentEncoding] : [name stringByAppendingString:@".xcodeproj"]);
+            NSString *updateGitSubmodules = @"cd $(OUTPUT_PATH) && $(SUBMODULE_UPDATE)";
 			NSNumber *selectedNumber = selectedArray[i];
 			bool isSelected = [selectedNumber boolValue];
 			bool isLilu = [name isEqualToString:@"Lilu"];
@@ -2562,7 +2568,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 				[[NSFileManager defaultManager] removeItemAtPath:outputPath error:&error];
 			
 			launchCommand(@"/usr/bin/git", @[@"clone", projectUrl, outputPath], self, @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
-			
+            updateGitSubmodules = [updateGitSubmodules stringByReplacingOccurrencesOfString:@"$(OUTPUT_PATH)" withString:outputPath];
+            updateGitSubmodules = [updateGitSubmodules stringByReplacingOccurrencesOfString:@"$(SUBMODULE_UPDATE)" withString:GitSubmoduleUpdate];
+            launchCommand(@"/bin/bash", @[@"-c", updateGitSubmodules], self,  @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
+
 			if ([type isEqualToString:@"Lilu"])
 			{
 				if ([[NSFileManager defaultManager] fileExistsAtPath:outputLiluKextPath])
