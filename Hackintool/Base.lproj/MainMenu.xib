@@ -3845,7 +3845,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" ambiguous="YES" id="60B-XC-nWz">
                                                 <rect key="frame" x="1" y="0.0" width="513" height="255"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="qSb-Zn-Lqr" viewBased="YES" id="4jT-oU-dw4" userLabel="Clover Patch Table View">
                                                         <rect key="frame" x="0.0" y="0.0" width="649" height="230"/>
@@ -4009,7 +4009,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" id="7Lw-5f-rEk">
                                                 <rect key="frame" x="1" y="0.0" width="513" height="113"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="IP6-E6-pMc" viewBased="YES" id="2Yj-EO-Phz">
                                                         <rect key="frame" x="0.0" y="0.0" width="513" height="88"/>
@@ -4146,7 +4146,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="NVRAM" identifier="NVRAM" image="IconNVRAM" id="hQD-3i-G2X" userLabel="NVRAM">
-                                <view key="view" id="4eV-Np-Pbb">
+                                <view key="view" ambiguous="YES" id="4eV-Np-Pbb">
                                     <rect key="frame" x="10" y="7" width="543" height="498"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -4164,7 +4164,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" ambiguous="YES" id="XUf-Tv-t2l">
                                                 <rect key="frame" x="1" y="0.0" width="513" height="248"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="xoN-lI-XWN" viewBased="YES" id="yoh-l2-RAi" userLabel="NVRAM Variables Table View">
                                                         <rect key="frame" x="0.0" y="0.0" width="678" height="223"/>
@@ -4270,7 +4270,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" id="u7c-pl-lVb">
                                                 <rect key="frame" x="1" y="1" width="498" height="99"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textView ambiguous="YES" importsGraphics="NO" richText="NO" horizontallyResizable="YES" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" spellingCorrection="YES" id="0Zt-Uf-LML">
                                                         <rect key="frame" x="0.0" y="0.0" width="498" height="99"/>
@@ -4350,7 +4350,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" id="3dz-7v-8bM">
                                                 <rect key="frame" x="1" y="0.0" width="513" height="230"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" selectionHighlightStyle="none" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="epo-zP-Ylb" viewBased="YES" id="IZu-4J-XFd" userLabel="Kexts Table View">
                                                         <rect key="frame" x="0.0" y="0.0" width="694" height="205"/>
@@ -4650,7 +4650,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" id="SwR-6D-xC5">
                                                 <rect key="frame" x="1" y="1" width="498" height="103"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <textView ambiguous="YES" importsGraphics="NO" richText="NO" horizontallyResizable="YES" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" spellingCorrection="YES" id="rmE-uQ-Iga">
                                                         <rect key="frame" x="0.0" y="0.0" width="498" height="103"/>
@@ -6700,7 +6700,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="PCI" identifier="PCI" image="IconPCI" id="h4l-aq-8xn" userLabel="PCI">
-                                <view key="view" ambiguous="YES" id="dBB-BR-D8i">
+                                <view key="view" id="dBB-BR-D8i">
                                     <rect key="frame" x="10" y="7" width="543" height="498"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
