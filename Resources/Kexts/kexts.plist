@@ -160,7 +160,7 @@
 		<key>Description</key>
 		<string>This kext attempts to inject USB ports for each controller, and for hubs as well.</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/RehabMan/OS-X-USB-Inject-All</string>
+		<string>https://github.com/Sniki/OS-X-USB-Inject-All</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
@@ -489,6 +489,16 @@
 		<string>A kernel extension which will synchronize the TSC on any Intel CPUs.</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/RehabMan/VoodooTSCSync</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>VoodooInput</string>
+		<key>Description</key>
+		<string>An opensource trackpad aggregator kernel extension providing Magic Trackpad 2 software emulation for arbitrary input sources like VoodooPS2.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/VoodooInput</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
