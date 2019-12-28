@@ -145,6 +145,7 @@
 		<key>LayoutIDs</key>
 		<array>
 			<integer>21</integer>
+			<integer>22</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>13</integer>
@@ -383,6 +384,7 @@
 			<integer>9</integer>
 			<integer>10</integer>
 			<integer>11</integer>
+			<integer>12</integer>
 			<integer>13</integer>
 			<integer>14</integer>
 			<integer>15</integer>
@@ -687,6 +689,7 @@
 			<integer>3</integer>
 			<integer>11</integer>
 			<integer>18</integer>
+			<integer>21</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -695,6 +698,7 @@
 		<key>Revisions</key>
 		<array>
 			<string>0x100001</string>
+			<string>0x100002</string>
 		</array>
 	</dict>
 	<dict>
