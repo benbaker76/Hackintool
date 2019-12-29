@@ -103,35 +103,20 @@ bool get_ascii7(uint32_t value, char *dst, size_t sz) {
   return true;
 }
 
-const char *verify_mlb_code(const char *alphabet, char key) {
-  while (1) {
-    char curr = *alphabet++;
-    if (curr <= 0)
-      break;
-    if (curr == key)
-      return alphabet - 1;
-  }
-
-  if (key)
-    return NULL;
-
-  return alphabet - 1;
-}
-
-bool verify_mlb(const char *mlb, size_t len) {
-  const char mlb_alphabet[] = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
-  int checksum = 0;
+bool verify_mlb_checksum(const char *mlb, size_t len) {
+  const char alphabet[] = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+  size_t checksum = 0;
   for (size_t i = 0; i < len; ++i) {
-    const char *code = verify_mlb_code(mlb_alphabet, mlb[len - i - 1]);
-    if (!code)
-      return false;
-    int diff = code - mlb_alphabet;
-    if (i & 1)
-      checksum += 3 * diff;
-    else
-      checksum += diff;
+    for (size_t j = 0; j <= sizeof (alphabet); ++j) {
+      if (j == sizeof (alphabet))
+        return false;
+      if (mlb[i] == alphabet[j]) {
+        checksum += (((i & 1) == (len & 1)) * 2 + 1) * j;
+        break;
+      }
+    }
   }
-  return checksum % 34 == 0;
+  return checksum % (sizeof(alphabet) - 1) == 0;
 }
 
 // Taken from https://en.wikipedia.org/wiki/Xorshift#Example_implementation
@@ -143,7 +128,7 @@ uint32_t pseudo_random(void) {
       return arc4random();
 #endif
 
-  uint32_t state;
+  static uint32_t state;
 
   if (!state) {
     fprintf(stderr, "Warning: arc4random is not available!\n");
@@ -285,7 +270,7 @@ bool get_serial_info(const char *serial, SERIALINFO *info, bool print) {
     }
   }
 
-  size_t model_len = 0, model_max = 0;
+  size_t model_len = 0;
 
   // Start with looking up the model.
   info->modelIndex = -1;
@@ -295,13 +280,30 @@ bool get_serial_info(const char *serial, SERIALINFO *info, bool print) {
       if (!code)
         break;
       model_len = strlen(code);
+      if (model_len == 0)
+        break;
       assert(model_len == MODEL_CODE_OLD_LEN || model_len == MODEL_CODE_NEW_LEN);
-      if (model_max < model_len && !strncmp(serial + serial_len - model_len, code, model_len)) {
+      if (((serial_len == SERIAL_OLD_LEN && model_len == MODEL_CODE_OLD_LEN)
+        || (serial_len == SERIAL_NEW_LEN && model_len == MODEL_CODE_NEW_LEN))
+        && !strncmp(serial + serial_len - model_len, code, model_len)) {
         strncpy(info->model, code, sizeof(info->model));
         info->model[sizeof(info->model)-1] = '\0';
         info->modelIndex = (int32_t)i;
-		model_max = model_len;
+        break;
       }
+    }
+  }
+
+  // Also lookup apple model.
+  for (uint32_t i = 0; i < ARRAY_SIZE(AppleModelDesc); i++) {
+    const char *code = AppleModelDesc[i].code;
+    model_len = strlen(code);
+    assert(model_len == MODEL_CODE_OLD_LEN || model_len == MODEL_CODE_NEW_LEN);
+    if (((serial_len == SERIAL_OLD_LEN && model_len == MODEL_CODE_OLD_LEN)
+      || (serial_len == SERIAL_NEW_LEN && model_len == MODEL_CODE_NEW_LEN))
+      && !strncmp(serial + serial_len - model_len, code, model_len)) {
+      info->appleModel = AppleModelDesc[i].name;
+      break;
     }
   }
 
@@ -462,7 +464,8 @@ bool get_serial_info(const char *serial, SERIALINFO *info, bool print) {
     printf("%14s: %4s - %d (copy %d)\n", "Line", info->line, info->decodedLine,
       info->decodedCopy >= 0 ? info->decodedCopy + 1 : -1);
     printf("%14s: %4s - %s\n", "Model", info->model, info->modelIndex >= 0 ?
-      ApplePlatformData[info->modelIndex].productName : "Unknown, please report!");
+      ApplePlatformData[info->modelIndex].productName : "Unknown");
+    printf("%14s: %s\n", "SystemModel", info->appleModel != NULL ? info->appleModel : "Unknown, please report!");
     printf("%14s: %s\n", "Valid", info->valid ? "Possibly" : "Unlikely");
   }
 
@@ -603,12 +606,14 @@ void get_mlb(SERIALINFO *info, char *dst, size_t sz) {
     }
 
     if (legacy) {
-      char code[5] = {0};
+      char code[4] = {0};
       // The loop is not present in CCC, but it throws an exception here,
       // and effectively generates nothing. The logic is crazy :/.
       // Also, it was likely meant to be written as pseudo_random() % 0x8000.
       while (!get_ascii7(pseudo_random_between(0, 0x7FFE) * 0x73BA1C, code, sizeof(code)));
-      snprintf(dst, sz, "%s%d%02d0%s%s", info->country, year, week, info->model, code);
+      const char *board = get_board_code(info->modelIndex, false);
+      char suffix = AppleBase34Reverse[pseudo_random() % 34];
+      snprintf(dst, sz, "%s%d%02d0%s%s%c", info->country, year, week, code, board, suffix);
     } else {
       const char *part1 = MLBBlock1[pseudo_random() % ARRAY_SIZE(MLBBlock1)];
       const char *part2 = MLBBlock2[pseudo_random() % ARRAY_SIZE(MLBBlock2)];
@@ -617,7 +622,7 @@ void get_mlb(SERIALINFO *info, char *dst, size_t sz) {
 
       snprintf(dst, sz, "%s%d%02d%s%s%s%s", info->country, year, week, part1, part2, board, part3);
     }
-  } while (!verify_mlb(dst, strlen(dst)));
+  } while (!verify_mlb_checksum(dst, strlen(dst)));
 }
 
 void get_system_info(void) {
@@ -692,7 +697,7 @@ void get_system_info(void) {
 
   if (mlb) {
     printf("%14s: %.*s\n", "MLB", (int)CFDataGetLength(mlb), CFDataGetBytePtr(mlb));
-    if (!verify_mlb((const char *)CFDataGetBytePtr(mlb), CFDataGetLength(mlb)))
+    if (!verify_mlb_checksum((const char *)CFDataGetBytePtr(mlb), CFDataGetLength(mlb)))
       printf("WARN: Invalid MLB checksum!\n");
     CFRelease(mlb);
   }
@@ -729,7 +734,7 @@ void strfcat(char *src, const char *fmt, ...)
 	strcat(src, buf);
 }
 
-/* int usage(const char *app) {
+/* static int usage(const char *app) {
   printf(
     "%s arguments:\n"
     " --help           (-h)  show this help\n"
@@ -740,6 +745,7 @@ void strfcat(char *src, const char *fmt, ...)
     " --info <serial>  (-i)  decode serial information\n"
     " --verify <mlb>         verify MLB checksum\n"
     " --list           (-l)  list known mac models\n"
+    " --list-products  (-lp) list known product codes\n"
     " --mlb <serial>         generate MLB based on serial\n"
     " --sys            (-s)  get system info\n\n"
     "Tuning options:\n"
@@ -786,8 +792,10 @@ int main(int argc, char *argv[]) {
       if (++i == argc) return usage(argv[0]);
       mode = MODE_MLB_INFO;
       passed_serial = argv[i];
-    }else if (!strcmp(argv[i], "-l") || !strcmp(argv[i], "--list")) {
+    } else if (!strcmp(argv[i], "-l") || !strcmp(argv[i], "--list")) {
       mode = MODE_LIST_MODELS;
+    } else if (!strcmp(argv[i], "-lp") || !strcmp(argv[i], "--list-products")) {
+      mode = MODE_LIST_PRODUCTS;
     } else if (!strcmp(argv[i], "-mlb") || !strcmp(argv[i], "--mlb")) {
       // -mlb is supported due to legacy versions.
       if (++i == argc) return usage(argv[0]);
@@ -888,7 +896,7 @@ int main(int argc, char *argv[]) {
     } else {
       printf("WARN: Invalid MLB length: %u\n", (unsigned) len);
     }
-    if (verify_mlb(passed_serial, strlen(passed_serial))) {
+    if (verify_mlb_checksum(passed_serial, strlen(passed_serial))) {
       printf("Valid MLB checksum.\n");
     } else {
       printf("WARN: Invalid MLB checksum!\n");
@@ -913,6 +921,9 @@ int main(int argc, char *argv[]) {
     for (size_t j = 0; j < ARRAY_SIZE(AppleLocations); j++)
       printf(" - %s, %s\n", AppleLocations[j], AppleLocationNames[j]);
     puts("");
+  } else if (mode == MODE_LIST_PRODUCTS) {
+    for (size_t j = 0; j < ARRAY_SIZE(AppleModelDesc); j++)
+      printf("%4s - %s\n", AppleModelDesc[j].code, AppleModelDesc[j].name);
   } else if (mode == MODE_GENERATE_MLB) {
     if (get_serial_info(passed_serial, &info, false)) {
       char mlb[MLB_MAX_SIZE];
@@ -927,7 +938,7 @@ int main(int argc, char *argv[]) {
       if (get_serial(&tmp)) {
         char mlb[MLB_MAX_SIZE];
         get_mlb(&tmp, mlb, MLB_MAX_SIZE);
-        printf("%3s%s%s%s%s | %s\n", tmp.country, tmp.year, tmp.week, tmp.line, tmp.model, mlb);
+        printf("%s%s%s%s%s | %s\n", tmp.country, tmp.year, tmp.week, tmp.line, tmp.model, mlb);
       }
     }
   } else if (mode == MODE_GENERATE_ALL) {
@@ -938,7 +949,7 @@ int main(int argc, char *argv[]) {
         if (get_serial(&tmp)) {
           char mlb[MLB_MAX_SIZE];
           get_mlb(&tmp, mlb, MLB_MAX_SIZE);
-          printf("%14s | %3s%s%s%s%s | %s\n", ApplePlatformData[info.modelIndex].productName,
+          printf("%14s | %s%s%s%s%s | %s\n", ApplePlatformData[info.modelIndex].productName,
             tmp.country, tmp.year, tmp.week, tmp.line, tmp.model, mlb);
         }
       }

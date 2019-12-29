@@ -341,7 +341,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	}
 	
 	[self addToList:serialInfoArray name:@"Line" value:[NSString stringWithFormat:@"%d (copy %d)", info.decodedLine, (info.decodedCopy >= 0 ? info.decodedCopy + 1 : -1)]];
-	[self addToList:serialInfoArray name:@"Model" value:(info.modelIndex >= 0 ? [NSString stringWithUTF8String:ApplePlatformData[info.modelIndex].productName] : @"???")];
+	[self addToList:serialInfoArray name:@"Model" value:(info.appleModel ? [NSString stringWithUTF8String:info.appleModel] : @"???")];
+	[self addToList:serialInfoArray name:@"Model Identifier" value:(info.modelIndex >= 0 ? [NSString stringWithUTF8String:ApplePlatformData[info.modelIndex].productName] : @"???")];
 	[self addToList:serialInfoArray name:@"Valid" value:(info.valid ? GetLocalizedString(@"Possibly") : GetLocalizedString(@"Unlikely"))];
 }
 
