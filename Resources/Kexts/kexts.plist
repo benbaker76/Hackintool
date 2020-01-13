@@ -4,6 +4,16 @@
 <array>
 	<dict>
 		<key>Name</key>
+		<string>NVmeFix</string>
+		<key>Description</key>
+		<string>NVMeFix is a set of patches for the Apple NVMe storage driver, IONVMeFamily.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/NVMeFix</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>DiskArbitrationFixup</string>
 		<key>Description</key>
 		<string>Lilu plugin for disabling the &quot;The disk you inserted was not readable by this computer&quot; message at boot on 10.9 or later. Useful if you have other disks with filesystems unknown to macOS.</string>
