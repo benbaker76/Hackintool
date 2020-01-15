@@ -514,7 +514,7 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		NSString *hubName = [usbEntryDictionary objectForKey:@"HubName"];
 		NSNumber *hubLocation = [usbEntryDictionary objectForKey:@"HubLocation"];
 		NSString *modelEntryName = [NSString stringWithFormat:@"%@-%@%@", appDelegate.modelIdentifier, usbController, hubName != nil ? @"-internal-hub" : @""];
-		NSString *providerClass = hubName != nil ? hubName : [usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI"; // IOUSBDevice?
+		NSString *providerClass = (hubName != nil ? hubName : ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI")); // IOUSBDevice?
 		
 		NSMutableDictionary *modelEntryDictionary = [ioKitPersonalities objectForKey:modelEntryName];
 		NSMutableDictionary *ioProviderMergePropertiesDictionary = nil;
@@ -528,20 +528,33 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 			
 			[ioKitPersonalities setObject:modelEntryDictionary forKey:modelEntryName];
 			[modelEntryDictionary setObject:ioProviderMergePropertiesDictionary forKey:@"IOProviderMergeProperties"];
-			[modelEntryDictionary setObject:appDelegate.modelIdentifier forKey:@"model"];
 			[ioProviderMergePropertiesDictionary setObject:portsDictionary forKey:@"ports"];
 			
-			[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBMergeNub" forKey:@"CFBundleIdentifier"];
-			[modelEntryDictionary setObject:@"AppleUSBMergeNub" forKey:@"IOClass"];
+			// For HUB's
+			if (hubName != nil)
+			{
+				[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBHostMergeProperties" forKey:@"CFBundleIdentifier"];
+				[modelEntryDictionary setObject:@"AppleUSBHostMergeProperties" forKey:@"IOClass"];
+				[modelEntryDictionary setObject:providerClass forKey:@"IOProviderClass"];
+				
+				NSMutableDictionary *platformDictionary;
+				
+				if (getIORegProperties(@"IODeviceTree:/", &platformDictionary))
+					[modelEntryDictionary setObject:properyToString([platformDictionary objectForKey:@"board-id"]) forKey:@"board-id"];
+				
+				[modelEntryDictionary setObject:hubLocation forKey:@"locationID"];
+			}
+			else
+			{
+				
+				[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBMergeNub" forKey:@"CFBundleIdentifier"];
+				[modelEntryDictionary setObject:@"AppleUSBMergeNub" forKey:@"IOClass"];
+				[modelEntryDictionary setObject:usbController forKey:@"IONameMatch"];
+				[modelEntryDictionary setObject:providerClass forKey:@"IOProviderClass"];
+				[modelEntryDictionary setObject:appDelegate.modelIdentifier forKey:@"model"];
+			}
+			
 			[modelEntryDictionary setObject:@(5000) forKey:@"IOProbeScore"];
-			
-			//[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBHostMergeProperties" forKey:@"CFBundleIdentifier"];
-			//[modelEntryDictionary setObject:@"AppleUSBHostMergeProperties" forKey:@"IOClass"];
-			
-			//if (hubName != nil)
-			[modelEntryDictionary setObject:usbController forKey:@"IONameMatch"];
-			
-			[modelEntryDictionary setObject:providerClass forKey:@"IOProviderClass"];
 			
 			[modelEntryDictionary setObject:usbController forKey:@"UsbController"];
 			[modelEntryDictionary setObject:usbControllerID forKey:@"UsbControllerID"];
@@ -565,12 +578,6 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		maxPort = MAX(maxPort, port);
 		
 		maxPortDictionary[modelEntryName] = [NSNumber numberWithInt:maxPort];
-		
-		if (hubName != nil)
-		{
-			[modelEntryDictionary setObject:hubLocation forKey:@"locationID"];
-			[modelEntryDictionary setObject:[NSNumber numberWithInt:5000] forKey:@"IOProbeScore"];
-		}
 		
 		NSData *maxPortData = [NSData dataWithBytes:&maxPort length:sizeof(maxPort)];
 		

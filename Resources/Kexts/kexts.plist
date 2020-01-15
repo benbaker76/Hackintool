@@ -502,5 +502,15 @@
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
+	<dict>
+		<key>Name</key>
+		<string>NVMeFix</string>
+		<key>Description</key>
+		<string>NVMeFix is a set of patches for the Apple NVMe storage driver, IONVMeFamily.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/NVMeFix</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
 </array>
 </plist>
