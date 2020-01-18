@@ -1,8 +1,8 @@
 #
 #	List of PCI ID's
 #
-#	Version: 2019.12.26
-#	Date:    2019-12-26 03:15:04
+#	Version: 2020.01.17
+#	Date:    2020-01-17 03:15:04
 #
 #	Maintained by Albert Pool, Martin Mares, and other volunteers from
 #	the PCI ID Project at https://pci-ids.ucw.cz/.
@@ -643,6 +643,8 @@
 		1028 1fd3  HBA330 MMZ
 # Supermicro AOC-S3008L-L8e uses 0808 for their SAS3008 SAS controller
 		15d9 0808  AOC-S3008L-L8e
+		1bd4 000b  12G SAS3008IR
+		1bd4 000c  12G SAS3008IT
 		1bd4 0011  Inspur 12Gb 8i-3008 IT SAS HBA
 	00ab  SAS3516 Fusion-MPT Tri-Mode RAID On Chip (ROC)
 # 8 Internal and 8 External port channel 9400 HBA
@@ -3503,8 +3505,12 @@
 		1043 04a0  Radeon R9 FURY X
 		174b e329  Radeon R9 FURY
 	7310  Navi 10
-	731f  Navi 10 [Radeon RX 5700 / 5700 XT]
-	7340  Navi 14 [Radeon RX 5500 / 5500M]
+	7312  Navi 10 [Radeon Pro W5700]
+	731f  Navi 10 [Radeon RX 5600 OEM/5600 XT / 5700/5700 XT]
+	7340  Navi 14 [Radeon RX 5500/5500M / Pro 5500M]
+	7341  Navi 14 [Radeon Pro W5500]
+	7347  Navi 14 [Radeon Pro W5500M]
+	734f  Navi 14 [Radeon Pro W5300M]
 	7833  RS350 Host Bridge
 	7834  RS350 [Radeon 9100 PRO/XT IGP]
 	7835  RS350M [Mobility Radeon 9000 IGP]
@@ -3758,6 +3764,7 @@
 	9830  Kabini [Radeon HD 8400 / R3 Series]
 	9831  Kabini [Radeon HD 8400E]
 	9832  Kabini [Radeon HD 8330]
+		1849 9832  QC5000-ITX/PH
 	9833  Kabini [Radeon HD 8330E]
 	9834  Kabini [Radeon HD 8210]
 	9835  Kabini [Radeon HD 8310E]
@@ -3767,6 +3774,7 @@
 	9839  Kabini [Radeon HD 8180]
 	983d  Temash [Radeon HD 8250/8280G]
 	9840  Kabini HDMI/DP Audio
+		1849 9840  QC5000-ITX/PH
 	9850  Mullins [Radeon R3 Graphics]
 	9851  Mullins [Radeon R4/R5 Graphics]
 		1179 f928  Beema [Radeon R5 Graphics]
@@ -4580,6 +4588,7 @@
 	1534  Family 16h Processor Function 4
 	1535  Family 16h Processor Function 5
 	1536  Family 16h Processor Root Complex
+		1849 1536  QC5000-ITX/PH
 	1537  Kabini/Mullins PSP-Platform Security Processor
 	1538  Family 16h Processor Function 0
 	1539  Kabini P2P Bridge for PCIe Ports[4:0]
@@ -4875,6 +4884,7 @@
 	7801  FCH SATA Controller [AHCI mode]
 		103c 168b  ProBook 4535s Notebook
 		103c 194e  ProBook 455 G1 Notebook
+		1849 7801  QC5000-ITX/PH
 	7802  FCH SATA Controller [RAID mode]
 	7803  FCH SATA Controller [RAID mode]
 	7804  FCH SATA Controller [AHCI mode]
@@ -4884,29 +4894,35 @@
 	7807  FCH USB OHCI Controller
 		103c 194e  ProBook 455 G1 Notebook
 		103c 1985  Pavilion 17-e163sg Notebook PC
+		1849 7807  QC5000-ITX/PH
 	7808  FCH USB EHCI Controller
 		103c 194e  ProBook 455 G1 Notebook
 		103c 1985  Pavilion 17-e163sg Notebook PC
+		1849 7808  QC5000-ITX/PH
 	7809  FCH USB OHCI Controller
 		103c 194e  ProBook 455 G1 Notebook
 	780a  Kabini/Mullins SATA Raid/AHCI Mode (DotHill driver)
 	780b  FCH SMBus Controller
 		103c 194e  ProBook 455 G1 Notebook
 		103c 1985  Pavilion 17-e163sg Notebook PC
+		1849 780b  QC5000-ITX/PH
 	780c  FCH IDE Controller
 	780d  FCH Azalia Controller
 		103c 194e  ProBook 455 G1 Notebook
 		103c 1985  Pavilion 17-e163sg Notebook PC
 		1043 8444  F2A85-M Series
+		1849 8892  QC5000-ITX/PH
 	780e  FCH LPC Bridge
 		103c 194e  ProBook 455 G1 Notebook
 		103c 1985  Pavilion 17-e163sg Notebook PC
+		1849 780e  QC5000-ITX/PH
 	780f  FCH PCI Bridge
 	7812  FCH USB XHCI Controller
 	7813  FCH SD Flash Controller
 	7814  FCH USB XHCI Controller
 		103c 194e  ProBook 455 G1 Notebook
 		103c 1985  Pavilion 17-e163sg Notebook PC
+		1849 7814  QC5000-ITX/PH
 	7900  FCH SATA Controller [IDE mode]
 	7901  FCH SATA Controller [AHCI mode]
 		103c 8615  Pavilion Laptop 15-cw1xxx
@@ -12169,7 +12185,7 @@
 		103c 006a  NX9500
 		103c 2a20  Pavilion t3030.de Desktop PC
 		103c 30d9  Presario C700
-		1043 1045  L8400B or L3C/S notebook
+		1043 1045  L8400B, L3C/S, X58LE notebook
 		1043 8109  P5P800-MX Mainboard
 		1071 8160  MIM2000
 		10bd 0320  EP-320X-R
@@ -12299,6 +12315,7 @@
 	b822  RTL8822BE 802.11a/b/g/n/ac WiFi adapter
 		103c 831b  Realtek RTL8822BE 802.11ac 2 × 2 Wi-Fi + Bluetooth 4.2 Combo Adapter (MU-MIMO supported)
 	c821  RTL8821CE 802.11ac PCIe Wireless Network Adapter
+	c822  RTL8822CE 802.11ac PCIe Wireless Network Adapter
 	d723  RTL8723DE 802.11b/g/n PCIe Adapter
 10ed  Ascii Corporation
 	7310  V7310
@@ -13961,7 +13978,7 @@
 		1259 2975  AT-2970SX/2SC Gigabit Ethernet Adapter
 		1259 2976  AT-2970LX/2SC Gigabit Ethernet Adapter
 		1259 2977  AT-2970TX/2TX Gigabit Ethernet Adapter
-	4320  SK-9871 V2.0 Gigabit Ethernet 1000Base-ZX Adapter, PCI64, Fiber ZX/SC
+	4320  SK-98xx V2.0 Gigabit Ethernet Adapter [Marvell 88E8001]
 		1148 0121  Marvell RDK-8001 Adapter
 		1148 0221  Marvell RDK-8002 Adapter
 		1148 0321  Marvell RDK-8003 Adapter
@@ -13980,9 +13997,23 @@
 		1148 5061  SK-9861 V2.0 Gigabit Ethernet 1000Base-SX Adapter
 		1148 5071  SK-9871 V2.0 Gigabit Ethernet 1000Base-ZX Adapter
 		1148 9521  SK-9521 10/100/1000Base-T Adapter
+		1259 2916  AT-2916T
 	4400  SK-9Dxx Gigabit Ethernet Adapter
 	4500  SK-9Mxx Gigabit Ethernet Adapter
-	9000  SK-9S21 10/100/1000Base-T Server Adapter, PCI-X, Copper RJ-45
+	9000  SK-9Sxx Gigabit Ethernet Server Adapter PCI-X [Marvell 88E8022]
+		1148 2100  SK-9S21 10/100/1000Base-T Server Adapter, PCI-X, Copper RJ-45
+		1148 2200  SK-9S22 10/100/1000Base-T Dual Port Server Adapter, PCI-X, 2 Copper RJ-45
+		1148 2210  SK-9P22 10/100/1000 Base-T Dual Port PMC card
+		1148 2220  TPMC-GBE-CO
+		1148 8100  SK-9S81 1000Base-SX Server Adapter,PCI-X, Fiber SX/LC
+		1148 8200  SK-9S82 1000Base-SX Dual Port Server Adapter, PCI-X, 2 Fiber SX/LC
+		1148 8210  SK-9P82 1000 Base-SX Dual Port PMC card
+		1148 8220  TPMC-GBE-FI
+		1148 9100  SK-9S91 1000Base-LX Server Adapter,PCI-X, Fiber LX/LC
+		1148 9200  SK-9S92 1000Base-LX Dual Port Server Adapter, PCI-X, 2 Fiber LX/LC
+		1259 2973  AT-2971SX v2 Gigabit Adapter
+		1259 2974  AT-2971T v2 Gigabit Adapter
+		1259 2978  AT-2971LX Gigabit Adapter
 	9843  [Fujitsu] Gigabit Ethernet
 	9e00  SK-9E21D 10/100/1000Base-T Adapter, Copper RJ-45
 		1148 2100  SK-9E21 Server Adapter
@@ -14351,6 +14382,7 @@
 		1028 0188  Inspiron 6000 laptop
 		103c 30c0  Compaq 6710b
 		103c 30c1  Compaq 6910p
+		1043 1017  X58LE
 		1043 1237  A6J-Q008
 		1043 1967  V6800V
 		1043 1987  A4K and Z81K notebooks, possibly others ( mid-2005 machines )
@@ -14395,6 +14427,7 @@
 		103c 30b7  Presario V6133CL
 		103c 30cc  Pavilion dv6700
 		103c 30cf  Pavilion dv95xx/96xx/97xx/98xx series
+		1043 1017  X58LE
 		1043 1237  A6J-Q008
 		1043 1967  V6800V
 		104d 9035  VAIO VGN-FW11ZRU
@@ -14415,6 +14448,7 @@
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
 		103c 30cf  Pavilion dv9668eg Laptop
+		1043 1017  X58LE
 		1043 1237  A6J-Q008
 		1043 1967  V6800V
 		10f7 8338  Panasonic CF-Y5 laptop
@@ -14446,6 +14480,7 @@
 		103c 1521  HP EliteBook 8540w
 		103c 30b7  Presario V6133CL
 		103c 30cf  Pavilion dv9500/9600/9700 series
+		1043 1017  X58LE
 		1183 0843  Alienware Aurora m9700
 	0852  xD-Picture Card Controller
 		1025 0121  Aspire 5920G
@@ -14788,6 +14823,8 @@
 	4380  88E8057 PCI-E Gigabit Ethernet Controller
 # AVB = "Audio Video Bridging"
 	4381  Yukon Optima 88E8059 [PCIe Gigabit Ethernet Controller with AVB]
+		1259 2803  AT-2814FX
+		1259 2804  AT-2874xx
 	4611  GT-64115 System Controller
 	4620  GT-64120/64120A/64121A System Controller
 	4801  GT-48001
@@ -21842,16 +21879,30 @@
 		19e5 3034  NVMe SSD ES3600C V3 1600GB HHHL AIC
 		19e5 3036  NVMe SSD ES3600C V3 3200GB HHHL AIC
 	0200  Hi1822 Family (2*100GE)
+		19e5 d139  Hi1822 SP572 (2*100GE)
 	0202  Hi1822 Family (2*32G FC)
+		19e5 d302  Hi1822 SP521 (2*32G FC)
+		19e5 d304  Hi1822 SP526 (2*32G FC)
 	0203  Hi1822 Family (2*16G FC)
+		19e5 d301  Hi1822 SP520 (2*16G FC)
+		19e5 d305  Hi1822 SP525 (2*16G FC)
 	0205  Hi1822 Family (2*100GE)
+		19e5 df27  Hi1822 MZ731 MEZZ (2*100GE)
 	0206  Hi1822 Family (2*25GE)
+		19e5 d138  Hi1822 SP582 (2*25GE)
 	0210  Hi1822 Family (4*25GE)
+		19e5 df2e  Hi1822 MZ532 MEZZ (4*25GE)
 	0211  Hi1822 Family (4*25GE)
+		19e5 d12f  Hi1822 SP571 (4*25GE)
+		19e5 d137  Hi1822 SP581 (4*25GE)
 	0212  Hi1822 Family (2*8G FC)
+		19e5 d303  Hi1822 SP522 (2*8G FC)
+		19e5 d306  Hi1822 SP523 (2*8G FC)
 	1710  iBMA Virtual Network Adapter
 	1711  Hi1710 [iBMC Intelligent Management system chip w/VGA support]
 	1822  Hi1822 Family (4*25GE)
+		19e5 d129  Hi1822 SP570 (4*25GE)
+		19e5 d136  Hi1822 SP580 (4*25GE)
 	371e  Hi1822 Family Virtual Bridge
 	375e  Hi1822 Family Virtual Function
 	379e  Hi1822 Family Virtual Function
@@ -22040,6 +22091,8 @@
 	0310  Wil6200 802.11ad Wireless Network Adapter
 1aea  Alcor Micro
 	6601  AU6601 PCI-E Flash card reader controller
+	6621  AU6621 PCI-E Flash card reader controller
+	6625  AU6625 PCI-E Flash card reader controller
 1aec  Wolfson Microelectronics
 # nee Fusion-io
 1aed  SanDisk
@@ -22217,6 +22270,7 @@
 1b6f  Etron Technology, Inc.
 	7023  EJ168 USB 3.0 Host Controller
 	7052  EJ188/EJ198 USB 3.0 Host Controller
+		1849 7052  QC5000-ITX/PH
 1b73  Fresco Logic
 	1000  FL1000G USB 3.0 Host Controller
 		1d5c 1000  Anker USB 3.0 Express Card
@@ -22651,6 +22705,7 @@
 1dbb  NGD Systems, Inc.
 1dbf  Guizhou Huaxintong Semiconductor Technology Co., Ltd
 	0401  StarDragon4800 PCI Express Root Port
+1dc5  FADU Inc.
 1dd8  Pensando Systems Inc
 	1000  DSC Capri Upstream Port
 		1dd8 4000  Naples 100Gb 2-port QSFP28 x16 8GB
@@ -23629,6 +23684,7 @@
 		1043 108d  VivoBook X202EV
 		1043 1477  N56VZ
 		1043 1517  Zenbook Prime UX31A
+		10cf 16bf  LIFEBOOK E752
 	0155  Xeon E3-1200 v2/3rd Gen Core processor PCI Express Root Port
 		8086 2010  Server Board S1200BTS
 	0156  3rd Gen Core processor Graphics Controller
@@ -23648,6 +23704,7 @@
 	0166  3rd Gen Core processor Graphics Controller
 		1043 1517  Zenbook Prime UX31A
 		1043 2103  N56VZ
+		10cf 16c1  LIFEBOOK E752
 	016a  Xeon E3-1200 v2/3rd Gen Core processor Graphics Controller
 		1043 844d  P8B WS Motherboard
 	0172  Xeon E3-1200 v2/3rd Gen Core processor Graphics Controller
@@ -25248,6 +25305,7 @@
 		8086 357a  Server Board S1200BTS
 	1503  82579V Gigabit Network Connection
 		1043 849c  P8P67 Deluxe Motherboard
+		10cf 161c  LIFEBOOK E752
 	1507  Ethernet Express Module X520-P2
 	1508  82598EB Gigabit BX Network Connection
 	1509  82580 Gigabit Network Connection
@@ -25445,6 +25503,7 @@
 		18d4 0c08  X550 10Gb 2-port RJ45 OCP Mezz Card MOP81-I-10GT2
 		193d 1008  560T-B
 		193d 1009  560T-L
+		193d 1011  UN-NIC-ETH563T-sL-2P
 		8086 0001  Ethernet Converged Network Adapter X550-T2
 		8086 001a  Ethernet Converged Network Adapter X550-T2
 		8086 001b  Ethernet Server Adapter X550-T2 for OCP
@@ -26111,6 +26170,7 @@
 		1043 108d  VivoBook X202EV
 		1043 1477  N56VZ
 		1043 1517  Zenbook Prime UX31A
+		10cf 16e2  LIFEBOOK E752
 		144d c652  NP300E5C series laptop
 	1e04  7 Series/C210 Series Chipset Family SATA Controller [RAID mode]
 	1e05  7 Series Chipset SATA Controller [RAID mode]
@@ -26125,6 +26185,7 @@
 		1043 1477  N56VZ
 		1043 1517  Zenbook Prime UX31A
 		1043 84ca  P8H77-I Motherboard
+		10cf 16e9  LIFEBOOK E752
 		144d c652  NP300E5C series laptop
 		1849 1e10  Motherboard
 	1e12  7 Series/C210 Series Chipset Family PCI Express Root Port 2
@@ -26132,6 +26193,7 @@
 		1043 1477  N56VZ
 		1043 1517  Zenbook Prime UX31A
 	1e14  7 Series/C210 Series Chipset Family PCI Express Root Port 3
+		10cf 16e9  LIFEBOOK E752
 	1e16  7 Series/C216 Chipset Family PCI Express Root Port 4
 		1043 108d  VivoBook X202EV
 		1043 1477  N56VZ
@@ -26144,6 +26206,7 @@
 		1849 1e1a  Motherboard
 	1e1c  7 Series/C210 Series Chipset Family PCI Express Root Port 7
 	1e1e  7 Series/C210 Series Chipset Family PCI Express Root Port 8
+		10cf 16e9  LIFEBOOK E752
 		1849 1e1e  Motherboard
 	1e20  7 Series/C216 Chipset Family High Definition Audio Controller
 		1028 054b  XPS One 2710
@@ -26152,6 +26215,7 @@
 		1043 1517  Zenbook Prime UX31A
 		1043 8415  P8H77-I Motherboard
 		1043 8445  P8Z77-V LX Motherboard
+		10cf 1757  LIFEBOOK E752
 		144d c652  NP300E5C series laptop
 		1849 1898  Z77 Extreme4 motherboard
 	1e22  7 Series/C216 Chipset Family SMBus Controller
@@ -26159,6 +26223,7 @@
 		1043 1477  N56VZ
 		1043 1517  Zenbook Prime UX31A
 		1043 84ca  P8 series motherboard
+		10cf 16e6  LIFEBOOK E752
 		144d c652  NP300E5C series laptop
 		1849 1e22  Motherboard
 	1e24  7 Series/C210 Series Chipset Family Thermal Management Controller
@@ -26169,6 +26234,7 @@
 		1043 1477  N56VZ
 		1043 1517  Zenbook Prime UX31A
 		1043 84ca  P8 series motherboard
+		10cf 16e8  LIFEBOOK E752
 		144d c652  NP300E5C series laptop
 		1849 1e26  Motherboard
 	1e2d  7 Series/C216 Chipset Family USB Enhanced Host Controller #2
@@ -26176,6 +26242,7 @@
 		1043 1477  N56VZ
 		1043 1517  Zenbook Prime UX31A
 		1043 84ca  P8 series motherboard
+		10cf 16e8  LIFEBOOK E752
 		144d c652  NP300E5C series laptop
 		1849 1e2d  Motherboard
 	1e31  7 Series/C210 Series Chipset Family USB xHCI Host Controller
@@ -26185,6 +26252,7 @@
 		1043 1477  N56VZ
 		1043 1517  Zenbook Prime UX31A
 		1043 84ca  P8 series motherboard
+		10cf 16ee  LIFEBOOK E752
 		17aa 21f3  ThinkPad T430
 		1849 1e31  Motherboard
 	1e33  7 Series/C210 Series Chipset Family LAN Controller
@@ -26193,6 +26261,7 @@
 		1043 1477  N56VZ
 		1043 1517  Zenbook Prime UX31A
 		1043 84ca  P8 series motherboard
+		10cf 16ea  LIFEBOOK E752
 		144d c652  NP300E5C series laptop
 		1849 1e3a  Motherboard
 	1e3b  7 Series/C210 Series Chipset Family MEI Controller #2
@@ -26228,6 +26297,7 @@
 	1e59  HM76 Express Chipset LPC Controller
 		1043 1477  N56VZ
 		1043 1517  Zenbook Prime UX31A
+		10cf 16e0  LIFEBOOK E752
 	1e5a  7 Series Chipset Family LPC Controller
 	1e5b  UM77 Express Chipset LPC Controller
 	1e5c  7 Series Chipset Family LPC Controller
@@ -26520,6 +26590,7 @@
 		103c 309f  Compaq nx9420 Notebook
 		103c 30a3  Compaq nw8440
 		103c 30c1  Compaq 6910p
+		1043 1017  X58LE
 		104d 902d  VAIO VGN-NR120E
 		105b 0d7c  D270S/D250S Motherboard
 		1071 8209  Medion MIM 2240 Notebook PC [MD98100]
@@ -27763,7 +27834,7 @@
 		103c 30a3  Compaq nw8440
 		103c 30d5  530 Laptop
 		1043 1237  A6J-Q008
-		1043 8179  P5KPL-VM,P5LD2-VM Mainboard
+		1043 8179  P5B-MX/WiFi-AP, P5KPL-VM, P5LD2-VM Mainboard
 		1043 83ad  Eee PC 1015PX
 		105b 0d7c  D270S/D250S Motherboard
 		1071 8209  Medion MIM 2240 Notebook PC [MD98100]
@@ -27788,7 +27859,7 @@
 		103c 30a1  NC2400
 		103c 30a3  Compaq nw8440
 		1043 1237  A6J-Q008
-		1043 8179  P5KPL-VM,P5LD2-VM Mainboard
+		1043 8179  P5B-MX/WiFi-AP, P5KPL-VM, P5LD2-VM Mainboard
 		1043 83ad  Eee PC 1015PX
 		105b 0d7c  D270S/D250S Motherboard
 		1071 8209  Medion MIM 2240 Notebook PC [MD98100]
@@ -27813,7 +27884,7 @@
 		103c 30a1  NC2400
 		103c 30a3  Compaq nw8440
 		1043 1237  A6J-Q008
-		1043 8179  P5KPL-VM,P5LD2-VM Mainboard
+		1043 8179  P5B-MX/WiFi-AP, P5KPL-VM, P5LD2-VM Mainboard
 		1043 83ad  Eee PC 1015PX
 		105b 0d7c  D270S/D250S Motherboard
 		1071 8209  Medion MIM 2240 Notebook PC [MD98100]
@@ -27836,7 +27907,7 @@
 		103c 30a1  NC2400
 		103c 30a3  Compaq nw8440
 		1043 1237  A6J-Q008
-		1043 8179  P5KPL-VM,P5LD2-VM Mainboard
+		1043 8179  P5B-MX/WiFi-AP, P5KPL-VM, P5LD2-VM Mainboard
 		1043 83ad  Eee PC 1015PX
 		105b 0d7c  D270S/D250S Motherboard
 		1071 8209  Medion MIM 2240 Notebook PC [MD98100]
@@ -27861,7 +27932,7 @@
 		103c 30a3  Compaq nw8440
 		103c 30d5  530 Laptop
 		1043 1237  A6J-Q008
-		1043 8179  P5KPL-VM,P5LD2-VM Mainboard
+		1043 8179  P5B-MX/WiFi-AP, P5KPL-VM, P5LD2-VM Mainboard
 		1043 83ad  Eee PC 1015PX
 		105b 0d7c  D270S/D250S Motherboard
 		1071 8209  Medion MIM 2240 Notebook PC [MD98100]
@@ -27919,6 +27990,7 @@
 		1043 1123  A6J-Q008
 		1043 13c4  G2P
 		1043 817f  P5LD2-VM Mainboard (Realtek ALC 882 codec)
+		1043 8249  P5B-MX/WiFi-AP
 		1043 8290  P5KPL-VM Motherboard
 		1043 82ea  P5KPL-CM Motherboard
 		1043 8437  Eee PC 1015PX
@@ -28007,6 +28079,7 @@
 		103c 30c0  Compaq 6710b
 		103c 30cc  Pavilion dv6700
 		103c 30d9  Presario C700
+		1043 1017  X58LE
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
 		17aa 20a5  ThinkPad R61
@@ -28046,6 +28119,7 @@
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
 		103c 30d9  Presario C700
+		1043 1017  X58LE
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
 		17aa 20a7  ThinkPad T61/R61
@@ -28063,6 +28137,7 @@
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
 		103c 30d9  Presario C700
+		1043 1017  X58LE
 		1043 81ec  P5B
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
@@ -28079,6 +28154,7 @@
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
 		103c 30d9  Presario C700
+		1043 1017  X58LE
 		1043 81ec  P5B
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
@@ -28095,6 +28171,7 @@
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
 		103c 30d9  Presario C700
+		1043 1017  X58LE
 		1043 81ec  P5B
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
@@ -28111,6 +28188,7 @@
 		103c 30c0  Compaq 6710b
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
+		1043 1017  X58LE
 		1043 81ec  P5B
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
@@ -28126,6 +28204,7 @@
 		103c 30c0  Compaq 6710b
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
+		1043 1017  X58LE
 		1043 81ec  P5B
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
@@ -28141,6 +28220,7 @@
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
 		103c 30d9  Presario C700
+		1043 1017  X58LE
 		1043 81ec  P5B
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
@@ -28156,6 +28236,7 @@
 		103c 30c0  Compaq 6710b
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
+		1043 1017  X58LE
 		1043 81ec  P5B
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
@@ -28168,6 +28249,7 @@
 		1028 01f3  Inspiron 1420
 		1028 022f  Inspiron 1525
 		103c 30d9  Presario C700
+		1043 1017  X58LE
 		1043 81ec  P5B
 		104d 9005  Vaio VGN-FZ260E
 		104d 9008  Vaio VGN-SZ79SN_C
@@ -28179,19 +28261,23 @@
 	283f  82801H (ICH8 Family) PCI Express Port 1
 		1028 01da  OptiPlex 745
 		103c 30c1  Compaq 6910p
+		1043 1017  X58LE
 		104d 902d  VAIO VGN-NR120E
 		17aa 20ad  ThinkPad T61/R61
 		17c0 4083  Medion WIM 2210 Notebook PC [MD96850]
 	2841  82801H (ICH8 Family) PCI Express Port 2
 		103c 30c1  Compaq 6910p
+		1043 1017  X58LE
 		104d 902d  VAIO VGN-NR120E
 		17aa 20ad  ThinkPad T61/R61
 		17c0 4083  Medion WIM 2210 Notebook PC [MD96850]
 	2843  82801H (ICH8 Family) PCI Express Port 3
+		1043 1017  X58LE
 		104d 902d  VAIO VGN-NR120E
 		17aa 20ad  ThinkPad T61/R61
 		17c0 4083  Medion WIM 2210 Notebook PC [MD96850]
 	2845  82801H (ICH8 Family) PCI Express Port 4
+		1043 1017  X58LE
 		17aa 20ad  ThinkPad T61/R61
 		17c0 4083  Medion WIM 2210 Notebook PC [MD96850]
 	2847  82801H (ICH8 Family) PCI Express Port 5
@@ -28215,6 +28301,7 @@
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
 		1043 1339  M51S series
+		1043 17f3  X58LE
 		1043 81ec  P5B
 		104d 9005  Vaio VGN-FZ260E
 		104d 9008  Vaio VGN-SZ79SN_C
@@ -28234,11 +28321,13 @@
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
 		103c 30d9  Presario C700
+		1043 1017  X58LE
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
 		17aa 20a6  ThinkPad T61/R61
 		17c0 4083  Medion WIM 2210 Notebook PC [MD96850]
 		e4bf cc47  CCG-RUMBA
+	28c0  Volume Management Device NVMe RAID Controller
 	2912  82801IH (ICH9DH) LPC Interface Controller
 	2914  82801IO (ICH9DO) LPC Interface Controller
 		1028 0211  Optiplex 755
@@ -28486,8 +28575,10 @@
 	294c  82566DC-2 Gigabit Network Connection
 		17aa 302e  82566DM-2 Gigabit Network Connection
 	2970  82946GZ/PL/GL Memory Controller Hub
+		1043 823b  P5B-MX/WiFi-AP
 	2971  82946GZ/PL/GL PCI Express Root Port
 	2972  82946GZ/GL Integrated Graphics Controller
+		1043 823b  P5B-MX/WiFi-AP
 	2973  82946GZ/GL Integrated Graphics Controller
 	2974  82946GZ/GL HECI Controller
 	2975  82946GZ/GL HECI Controller
@@ -28587,6 +28678,7 @@
 		103c 30c1  Compaq 6910p
 		103c 30cc  Pavilion dv6700
 		103c 30d9  Presario C700
+		1043 1017  X58LE
 		104d 9005  Vaio VGN-FZ260E
 		104d 902d  VAIO VGN-NR120E
 		17aa 20b1  ThinkPad T61
@@ -28600,6 +28692,7 @@
 		1028 022f  Inspiron 1525
 		103c 30c0  Compaq 6710b
 		103c 30d9  Presario C700
+		1043 14e2  X58LE
 		104d 902d  VAIO VGN-NR120E
 		17aa 20b5  GM965 [X3100] on ThinkPad T61/R61
 		17c0 4082  GM965 on Medion WIM 2210 Notebook PC [MD96850]
@@ -28609,6 +28702,7 @@
 		1028 022f  Inspiron 1525
 		103c 30c0  Compaq 6710b
 		103c 30d9  Presario C700
+		1043 14e2  X58LE
 		104d 902d  VAIO VGN-NR120E
 		17aa 20b5  GM965 [X3100] on ThinkPad T61/R61
 		17c0 4082  GM965 on Medion WIM 2210 Notebook PC [MD96850]
@@ -29919,6 +30013,8 @@
 		8086 1311  WiMAX/WiFi Link 5150 AGN
 		8086 1316  WiMAX/WiFi Link 5150 ABG
 	444e  Turbo Memory Controller
+	467f  Volume Management Device NVMe RAID Controller
+	4c3d  Volume Management Device NVMe RAID Controller
 	5001  LE80578
 	5002  LE80578 Graphics Processor Unit
 	5009  LE80578 Video Display Controller
@@ -30617,6 +30713,7 @@
 	9622  Integrated RAID
 	9641  Integrated RAID
 	96a1  Integrated RAID
+	9a0b  Volume Management Device NVMe RAID Controller
 	9b41  UHD Graphics
 	9c00  8 Series SATA Controller 1 [IDE mode]
 	9c01  8 Series SATA Controller 1 [IDE mode]

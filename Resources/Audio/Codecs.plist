@@ -57,6 +57,7 @@
 			<integer>28</integer>
 			<integer>29</integer>
 			<integer>34</integer>
+			<integer>99</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -415,6 +416,7 @@
 			<integer>100</integer>
 			<integer>127</integer>
 			<integer>188</integer>
+			<integer>47</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -1516,6 +1518,7 @@
 			<integer>12</integer>
 			<integer>13</integer>
 			<integer>28</integer>
+			<integer>66</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -1752,6 +1755,7 @@
 			<integer>11</integer>
 			<integer>21</integer>
 			<integer>31</integer>
+			<integer>52</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>

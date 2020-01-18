@@ -67,5 +67,6 @@ bool tryFormatXML(NSString *rawXML, NSString **xmlString, bool formattingAllowed
 NSMutableArray *getHexArrayFromString(NSString *hexString);
 NSArray *translateArray(NSArray *array);
 NSString *trimNewLine(NSString *string);
+NSString *getUUID();
 
 #endif /* MiscTools_hpp */

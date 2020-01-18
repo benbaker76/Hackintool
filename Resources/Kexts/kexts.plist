@@ -248,7 +248,7 @@
 		<key>Description</key>
 		<string>Used for updating EAPD (External Amplifier) state on HDA (High Definition Audio) codecs that use given amp on Speaker or Headphone nodes (both, or even extra ones in some cases).</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/Dolnor/EAPD-Codec-Commander</string>
+		<string>https://github.com/Sniki/EAPD-Codec-Commander</string>
 		<key>Type</key>
 		<string>Kext</string>
 		<key>Superseder</key>
@@ -509,6 +509,26 @@
 		<string>NVMeFix is a set of patches for the Apple NVMe storage driver, IONVMeFamily.</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/acidanthera/NVMeFix</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>	
+	<dict>
+		<key>Name</key>
+		<string>IntelBluetoothFirmware</string>
+		<key>Description</key>
+		<string>Try to load the Intel Bluetooth driver firmware.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/zxystd/IntelBluetoothFirmware</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>AppleIntelWifiAdapter</string>
+		<key>Description</key>
+		<string>Apple IO80211Controller call. Research on Apple's undisclosed AirPort program. Currently based on 10.15 api.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/zxystd/AppleIntelWifiAdapter</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>

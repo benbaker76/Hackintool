@@ -948,3 +948,15 @@ NSString *trimNewLine(NSString *string)
 	
 	return [string substringToIndex:newLineRange.location];
 }
+
+NSString *getUUID()
+{
+	uuid_t binuuid;
+	uuid_generate_random(binuuid);
+	char *uuid = (char *)malloc(37);
+
+	uuid_unparse_upper(binuuid, uuid);
+	uuid_unparse(binuuid, uuid);
+	
+	return [NSString stringWithUTF8String:uuid];
+}

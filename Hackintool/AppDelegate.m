@@ -671,8 +671,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		_generateSerialNumber = [NSString stringWithFormat:@"%s%s%s%s%s", info.country, info.year, info.week, info.line, info.model];
 		
+		NSString *smUUID = getUUID();
+		
 		[self addToList:_generateSerialInfoArray name:@"Serial Number" value:_generateSerialNumber];
 		[self addToList:_generateSerialInfoArray name:@"Board Serial Number" value:[NSString stringWithUTF8String:mlb]];
+		[self addToList:_generateSerialInfoArray name:@"SmUUID" value:smUUID];
 		
 		[self getSerialInfo:_generateSerialNumber serialInfoArray:_generateSerialInfoArray];
 	}
