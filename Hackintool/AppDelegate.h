@@ -477,7 +477,6 @@ typedef struct
 - (IBAction)cancelButtonClicked:(id)sender;
 - (IBAction)okButtonClicked:(id)sender;
 - (IBAction)payPalButtonClicked:(id)sender;
-- (IBAction)doUpdate:(id)sender;
 - (IBAction)installedButtonClicked:(id)sender;
 - (IBAction)progressCancelButtonClicked:(id)sender;
 - (IBAction)bootloaderButtonClicked:(id)sender;

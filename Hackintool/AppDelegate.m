@@ -113,7 +113,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	for (NSTableColumn *tableColumn in _pciDevicesTableView.tableColumns)
 	{
-		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:tableColumn.identifier ascending:YES selector:@selector(caseInsensitiveCompare:)];
+		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:tableColumn.identifier ascending:YES selector:@selector(compare:)];
 		[tableColumn setSortDescriptorPrototype:sortDescriptor];
 	}
 	
