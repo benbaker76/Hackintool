@@ -35,8 +35,8 @@ extern "C" {
 #include <cstddef>
 
 #define MyPrivateTableViewDataType	@"MyPrivateTableViewDataType"
-#define BluetoothPath1				@"blued.plist"
-#define BluetoothPath2				@"com.apple.Bluetoothd.plist"
+#define BluetoothPath1				@"com.apple.Bluetoothd.plist"
+#define BluetoothPath2				@"blued.plist"
 #define PCIIDsUrl					@"https://pci-ids.ucw.cz/pci.ids"
 #define PCIIDsPath					[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"pci.ids"]
 #define GitSubmoduleUpdate          @"/usr/bin/git submodule update --init --recursive"
@@ -9563,23 +9563,30 @@ NSInteger usbSort(id a, id b, void *context)
 	if (requestAdministratorRights() != 0)
 		return;
 	
-	NSError *error;
+	NSError *error = nil;
 	NSString *stdoutString = nil;
+	
+	if (!launchCommandAsAdmin(@"/usr/bin/defaults", @[@"read", BluetoothPath1, @"LinkKeys"], &stdoutString))
+		launchCommandAsAdmin(@"/usr/bin/defaults", @[@"read", BluetoothPath2, @"LinkKeys"], &stdoutString);
+
+	if (stdoutString == nil)
+		return;
+	
+	// Convert new NSData to old format
+	NSRegularExpression *regEx = [NSRegularExpression regularExpressionWithPattern:@"\\{length = \\d+, bytes = 0x([0-9a-fA-F .]*)\\}" options:0 error:&error];
+	stdoutString = [regEx stringByReplacingMatchesInString:stdoutString options:0 range:NSMakeRange(0, [stdoutString length]) withTemplate:@"<$1>"];
+	
+	NSDictionary *linkKeysDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
+	
+	if (linkKeysDictionary == nil)
+		return;
+	
 	NSMutableString *outputString = [NSMutableString string];
 	
 	[outputString appendString:@"Windows Registry Editor Version 5.00\n"];
 	[outputString appendString:@"\n"];
 	[outputString appendString:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys]\n"];
 	[outputString appendString:@"\n"];
-	
-	if (!launchCommandAsAdmin(@"/usr/bin/defaults", @[@"read", BluetoothPath1], &stdoutString))
-		launchCommandAsAdmin(@"/usr/bin/defaults", @[@"read", BluetoothPath2], &stdoutString);
-	
-	if (stdoutString == nil)
-		return;
-	
-	NSDictionary *bluetoothDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:NULL error:&error];
-	NSDictionary *linkKeysDictionary = [bluetoothDictionary objectForKey:@"LinkKeys"];
 	
 	for (NSString *linkKey in linkKeysDictionary.allKeys)
 	{
