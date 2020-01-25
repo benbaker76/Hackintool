@@ -806,7 +806,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 				{
 					NSMutableDictionary *pciDeviceDictionary;
 					
-					if ([self tryGetPCIDeviceDictionary:@"GFX0" pciDeviceDictionary:&pciDeviceDictionary])
+					if ([self tryGetPCIDeviceDictionaryFromIORegName:@"GFX0" pciDeviceDictionary:&pciDeviceDictionary])
 					{
 						NSString *ioregIOName = [pciDeviceDictionary objectForKey:@"IORegIOName"];
 						NSNumber *vendorID = [pciDeviceDictionary objectForKey:@"VendorID"];
@@ -1311,8 +1311,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 {
 	NSMutableString *outputString = [NSMutableString string];
 
-	[outputString appendString:@"VID  DID  SVID SDID Vendor Name                    Device Name                                        Class Name           SubClass Name        IOReg Name      IOReg IOName    Device Path\n"];
-	[outputString appendString:@"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"];
+	[outputString appendString:@"VID  DID  SVID SDID ASPM Vendor Name                    Device Name                                        Class Name           SubClass Name        IOReg Name      IOReg IOName    Device Path\n"];
+	[outputString appendString:@"------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"];
 	
 	for (int i = 0; i < [_pciDevicesArray count]; i++)
 	{
@@ -1321,6 +1321,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSNumber *deviceID = [pciDeviceDictionary objectForKey:@"DeviceID"];
 		NSNumber *subVendorID = [pciDeviceDictionary objectForKey:@"SubVendorID"];
 		NSNumber *subDeviceID = [pciDeviceDictionary objectForKey:@"SubDeviceID"];
+		NSNumber *aspm = [pciDeviceDictionary objectForKey:@"ASPM"];
 		NSString *vendorName = [pciDeviceDictionary objectForKey:@"VendorName"];
 		NSString *deviceName = [pciDeviceDictionary objectForKey:@"DeviceName"];
 		NSString *className = [pciDeviceDictionary objectForKey:@"ClassName"];
@@ -1341,6 +1342,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		[outputString appendString:[NSString stringWithFormat:@"%04X ", [deviceID unsignedIntValue]]];
 		[outputString appendString:[NSString stringWithFormat:@"%04X ", [subVendorID unsignedIntValue]]];
 		[outputString appendString:[NSString stringWithFormat:@"%04X ", [subDeviceID unsignedIntValue]]];
+		[outputString appendString:[NSString stringWithFormat:@"%04X ", [aspm unsignedIntValue]]];
 		[outputString appendString:[NSString stringWithFormat:@"%-30s ", [vendorName UTF8String]]];
 		[outputString appendString:[NSString stringWithFormat:@"%-50s ", [deviceName UTF8String]]];
 		[outputString appendString:[NSString stringWithFormat:@"%-20s ", [className UTF8String]]];
@@ -1468,14 +1470,14 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 {
 	NSMutableDictionary *pciDeviceDictionary;
 	
-	return [self tryGetPCIDeviceDictionary:@"GFX0" pciDeviceDictionary:&pciDeviceDictionary];
+	return [self tryGetPCIDeviceDictionaryFromIORegName:@"GFX0" pciDeviceDictionary:&pciDeviceDictionary];
 }
 
 - (bool)hasIGPU
 {
 	NSMutableDictionary *pciDeviceDictionary;
 	
-	return [self tryGetPCIDeviceDictionary:@"IGPU" pciDeviceDictionary:&pciDeviceDictionary];
+	return [self tryGetPCIDeviceDictionaryFromIORegName:@"IGPU" pciDeviceDictionary:&pciDeviceDictionary];
 }
 
 - (bool)hasGPU:(uint32_t)vID
@@ -1527,7 +1529,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	return ioregName;
 }
 
-- (bool)tryGetPCIDeviceDictionary:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary
+- (bool)tryGetPCIDeviceDictionaryFromIORegName:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary
 {
 	for (int i = 0; i < [_pciDevicesArray count]; i++)
 	{
@@ -1544,6 +1546,20 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSString *ioregName = [*pciDeviceDictionary objectForKey:@"IORegName"];
 		
 		if ([[self getIORegName:name] isEqualToString:[self getIORegName:ioregName]])
+			return true;
+	}
+	
+	return false;
+}
+
+- (bool)tryGetPCIDeviceDictionaryFromClassCode:(NSNumber *)code pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary
+{
+	for (int i = 0; i < [_pciDevicesArray count]; i++)
+	{
+		*pciDeviceDictionary = _pciDevicesArray[i];
+		NSNumber *classCode = [*pciDeviceDictionary objectForKey:@"ClassCode"];
+		
+		if ([code isEqualToNumber:classCode])
 			return true;
 	}
 	
@@ -6509,6 +6525,8 @@ NSInteger usbSort(id a, id b, void *context)
 			result.textField.stringValue = [pciDeviceDictionary objectForKey:@"IORegName"];
 		else if([identifier isEqualToString:@"IORegIOName"])
 			result.textField.stringValue = [pciDeviceDictionary objectForKey:@"IORegIOName"];
+		else if([identifier isEqualToString:@"ASPM"])
+			result.textField.stringValue = [NSString stringWithFormat:@"0x%04X", [[pciDeviceDictionary objectForKey:@"ASPM"] unsignedIntValue]];
 		else if([identifier isEqualToString:@"DevicePath"])
 			result.textField.stringValue =  [pciDeviceDictionary objectForKey:@"DevicePath"];
 	}
@@ -7595,7 +7613,7 @@ NSInteger usbSort(id a, id b, void *context)
 	NSMutableDictionary *propertyDictionary = ([self isBootloaderOpenCore] ? [OpenCore getDevicePropertiesDictionaryWith:configDictionary typeName:@"Add"] : [Clover getDevicesPropertiesDictionaryWith:configDictionary]);
 	NSMutableDictionary *pciDeviceDictionary;
 	
-	if (![self tryGetPCIDeviceDictionary:@"IGPU" pciDeviceDictionary:&pciDeviceDictionary])
+	if (![self tryGetPCIDeviceDictionaryFromIORegName:@"IGPU" pciDeviceDictionary:&pciDeviceDictionary])
 		return NO;
 	
 	NSString *devicePath = [pciDeviceDictionary objectForKey:@"DevicePath"];

@@ -41,6 +41,7 @@ bool getAudioProperties(AppDelegate *appDelegate, NSString *name, NSMutableDicti
 bool appendFramebufferInfoDSL(AppDelegate *appDelegate, uint32_t tab, NSMutableDictionary *configDictionary, NSString *name, NSMutableString **outputString);
 void appendFramebufferInfoDSL(AppDelegate *appDelegate);
 void injectUseIntelHDMI(AppDelegate *appDelegate, NSMutableDictionary *configDictionary);
+bool injectWLAN(AppDelegate *appDelegate, NSMutableDictionary *configDictionary);
 
 template <typename T>
 void setMemory(T &framebuffer, uint32_t stolenMem, uint32_t fbMem, uint32_t unifiedMem)
@@ -619,7 +620,7 @@ void getIGPUProperties(AppDelegate *appDelegate, NSMutableDictionary *configDict
 	NSMutableDictionary *devicesPropertiesDictionary = ([appDelegate isBootloaderOpenCore] ? [OpenCore getDevicePropertiesDictionaryWith:configDictionary typeName:@"Add"] : [Clover getDevicesPropertiesDictionaryWith:configDictionary]);
 	NSMutableDictionary *pciDeviceDictionary;
 	
-	if (![appDelegate tryGetPCIDeviceDictionary:@"IGPU" pciDeviceDictionary:&pciDeviceDictionary])
+	if (![appDelegate tryGetPCIDeviceDictionaryFromIORegName:@"IGPU" pciDeviceDictionary:&pciDeviceDictionary])
 		return;
 	
 	NSString *deviceName = [pciDeviceDictionary objectForKey:@"DeviceName"];

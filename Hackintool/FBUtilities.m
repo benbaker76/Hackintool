@@ -96,13 +96,14 @@ void getConfigDictionary(AppDelegate *appDelegate, NSMutableDictionary *configDi
 		getPCIProperties(appDelegate, configDictionary);
 	
 	injectUseIntelHDMI(appDelegate, configDictionary);
+	injectWLAN(appDelegate, configDictionary);
 }
 
 bool appendFramebufferInfoDSL(AppDelegate *appDelegate, uint32_t tab, NSMutableDictionary *configDictionary, NSString *name, NSMutableString **outputString)
 {
 	NSMutableDictionary *pciDeviceDictionary;
 
-	if (![appDelegate tryGetPCIDeviceDictionary:name pciDeviceDictionary:&pciDeviceDictionary])
+	if (![appDelegate tryGetPCIDeviceDictionaryFromIORegName:name pciDeviceDictionary:&pciDeviceDictionary])
 		return false;
 	
 	NSString *ioregName = [pciDeviceDictionary objectForKey:@"IORegName"];
@@ -202,7 +203,7 @@ bool getAudioProperties(AppDelegate *appDelegate, NSString *name, NSMutableDicti
 	NSMutableDictionary *devicesPropertiesDictionary = ([appDelegate isBootloaderOpenCore] ? [OpenCore getDevicePropertiesDictionaryWith:configDictionary typeName:@"Add"] : [Clover getDevicesPropertiesDictionaryWith:configDictionary]);
 	NSMutableDictionary *pciDeviceDictionary;
 	
-	if (![appDelegate tryGetPCIDeviceDictionary:name pciDeviceDictionary:&pciDeviceDictionary])
+	if (![appDelegate tryGetPCIDeviceDictionaryFromIORegName:name pciDeviceDictionary:&pciDeviceDictionary])
 		return false;
 	
 	NSString *deviceName = [pciDeviceDictionary objectForKey:@"DeviceName"];
@@ -244,7 +245,7 @@ void injectUseIntelHDMI(AppDelegate *appDelegate, NSMutableDictionary *configDic
 
 	NSMutableDictionary *igpuDeviceDictionary;
 	
-	if ([appDelegate tryGetPCIDeviceDictionary:@"IGPU" pciDeviceDictionary:&igpuDeviceDictionary])
+	if ([appDelegate tryGetPCIDeviceDictionaryFromIORegName:@"IGPU" pciDeviceDictionary:&igpuDeviceDictionary])
 	{
 		NSString *devicePath = [igpuDeviceDictionary objectForKey:@"DevicePath"];
 		NSMutableDictionary *deviceDictionary = [devicesPropertiesDictionary objectForKey:devicePath];
@@ -257,7 +258,7 @@ void injectUseIntelHDMI(AppDelegate *appDelegate, NSMutableDictionary *configDic
 	
 	NSMutableDictionary *hdefDeviceDictionary;
 	
-	if ([appDelegate tryGetPCIDeviceDictionary:@"HDEF" pciDeviceDictionary:&hdefDeviceDictionary])
+	if ([appDelegate tryGetPCIDeviceDictionaryFromIORegName:@"HDEF" pciDeviceDictionary:&hdefDeviceDictionary])
 	{
 		NSString *devicePath = [hdefDeviceDictionary objectForKey:@"DevicePath"];
 		NSMutableDictionary *deviceDictionary = [devicesPropertiesDictionary objectForKey:devicePath];
@@ -270,7 +271,7 @@ void injectUseIntelHDMI(AppDelegate *appDelegate, NSMutableDictionary *configDic
 	
 	NSMutableDictionary *gfx0DeviceDictionary;
 	
-	if ([appDelegate tryGetPCIDeviceDictionary:@"GFX0" pciDeviceDictionary:&gfx0DeviceDictionary])
+	if ([appDelegate tryGetPCIDeviceDictionaryFromIORegName:@"GFX0" pciDeviceDictionary:&gfx0DeviceDictionary])
 	{
 		NSString *devicePath = [gfx0DeviceDictionary objectForKey:@"DevicePath"];
 		NSMutableDictionary *deviceDictionary = [devicesPropertiesDictionary objectForKey:devicePath];
@@ -283,7 +284,7 @@ void injectUseIntelHDMI(AppDelegate *appDelegate, NSMutableDictionary *configDic
 	
 	NSMutableDictionary *hdauDeviceDictionary;
 	
-	if ([appDelegate tryGetPCIDeviceDictionary:@"HDAU" pciDeviceDictionary:&hdauDeviceDictionary])
+	if ([appDelegate tryGetPCIDeviceDictionaryFromIORegName:@"HDAU" pciDeviceDictionary:&hdauDeviceDictionary])
 	{
 		NSString *devicePath = [hdefDeviceDictionary objectForKey:@"DevicePath"];
 		NSMutableDictionary *deviceDictionary = [devicesPropertiesDictionary objectForKey:devicePath];
@@ -293,4 +294,67 @@ void injectUseIntelHDMI(AppDelegate *appDelegate, NSMutableDictionary *configDic
 		else
 			[deviceDictionary setObject:@"onboard-1" forKey:@"hda-gfx"];
 	}
+}
+
+bool injectWLAN(AppDelegate *appDelegate, NSMutableDictionary *configDictionary)
+{
+	// https://blog.daliansky.net/DW1820A_BCM94350ZAE-driver-inserts-the-correct-posture.html
+	
+	NSMutableDictionary *devicesPropertiesDictionary = ([appDelegate isBootloaderOpenCore] ? [OpenCore getDevicePropertiesDictionaryWith:configDictionary typeName:@"Add"] : [Clover getDevicesPropertiesDictionaryWith:configDictionary]);
+	NSMutableDictionary *pciDeviceDictionary;
+	
+	if (![appDelegate tryGetPCIDeviceDictionaryFromClassCode:@(0x28000) pciDeviceDictionary:&pciDeviceDictionary])
+		return false;
+	
+	NSNumber *vendorID = [pciDeviceDictionary objectForKey:@"VendorID"];
+	NSNumber *deviceID = [pciDeviceDictionary objectForKey:@"DeviceID"];
+	NSNumber *subVendorID = [pciDeviceDictionary objectForKey:@"SubVendorID"];
+	NSNumber *subDeviceID = [pciDeviceDictionary objectForKey:@"SubDeviceID"];
+	NSString *deviceName = [pciDeviceDictionary objectForKey:@"DeviceName"];
+	NSString *devicePath = [pciDeviceDictionary objectForKey:@"DevicePath"];
+	
+	// Vendor: 0x14E4
+	// Device: 0x43A3
+	//	 Sub Vendor: 1028 or 106B
+	//	 Sub Device: 0021 0022 0023 075a
+	
+	if (vendorID.unsignedIntValue != 0x14E4 ||
+		deviceID.unsignedIntValue != 0x43A3)
+		return false;
+	
+	if (subVendorID.unsignedIntValue != 0x1028 &&
+		subVendorID.unsignedIntValue != 0x106B)
+		return false;
+	
+	if (subDeviceID.unsignedIntValue != 0x0021 &&
+		subDeviceID.unsignedIntValue != 0x0022 &&
+		subDeviceID.unsignedIntValue != 0x0023 &&
+		subDeviceID.unsignedIntValue != 0x075a)
+		return false;
+	
+	NSMutableDictionary *wlanDictionary = [NSMutableDictionary dictionary];
+	
+	[devicesPropertiesDictionary setObject:wlanDictionary forKey:devicePath];
+	
+	// <key>AAPL,slot-name</key>
+	// <string>WLAN</string>
+	// <key>compatible</key>
+	// <string>pci14e4,4331</string>
+	// <key>device_type</key>
+	// <string>Airport Extreme</string>
+	// <key>model</key>
+	// <string>DW1820A (BCM4350) 802.11ac Wireless</string>
+	// <key>name</key>
+	// <string>Airport</string>
+	// <key>pci-aspm-default</key>
+	// <integer>0</integer>
+	
+	[wlanDictionary setObject:@"WLAN" forKey:@"AAPL,slot-name"];
+	[wlanDictionary setObject:@"pci14e4,4331" forKey:@"compatible"];
+	[wlanDictionary setObject:@"Airport Extreme" forKey:@"device_type"];
+	[wlanDictionary setObject:deviceName forKey:@"model"];
+	[wlanDictionary setObject:@"Airport" forKey:@"name"];
+	[wlanDictionary setObject:@(0) forKey:@"pci-aspm-default"];
+
+	return true;
 }

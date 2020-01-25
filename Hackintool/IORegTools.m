@@ -615,6 +615,7 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			NSData *deviceID = [propertyDictionary objectForKey:@"device-id"];
 			NSData *subVendorID = [propertyDictionary objectForKey:@"subsystem-vendor-id"];
 			NSData *subDeviceID = [propertyDictionary objectForKey:@"subsystem-id"];
+			NSNumber *aspm = [propertyDictionary objectForKey:@"pci-aspm-default"];
 			NSData *classCode = [propertyDictionary objectForKey:@"class-code"];
 			NSString *_name = properyToString([propertyDictionary objectForKey:@"name"]);
 			NSString *model = properyToString([propertyDictionary objectForKey:@"model"]);
@@ -642,6 +643,7 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			[pciDictionary setObject:[NSNumber numberWithInt:deviceIDInt] forKey:@"DeviceID"];
 			[pciDictionary setObject:[NSNumber numberWithInt:subVendorIDInt] forKey:@"SubVendorID"];
 			[pciDictionary setObject:[NSNumber numberWithInt:subDeviceIDInt] forKey:@"SubDeviceID"];
+			[pciDictionary setObject:(aspm != nil ? aspm : @(0)) forKey:@"ASPM"];
 			[pciDictionary setObject:[NSNumber numberWithInt:classCodeInt] forKey:@"ClassCode"];
 			//[pciDictionary setObject:@"Internal" forKey:@"SlotName"];
 			//[pciDictionary setObject:@"???" forKey:@"DevicePath"];

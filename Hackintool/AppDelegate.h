@@ -423,7 +423,8 @@ typedef struct
 - (bool)isConnectorHeadless;
 - (NSString *)getIORegName:(NSString *)ioregName;
 - (bool)isValidACPIEntry:(NSString *)ioregName;
-- (bool)tryGetPCIDeviceDictionary:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
+- (bool)tryGetPCIDeviceDictionaryFromIORegName:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
+- (bool)tryGetPCIDeviceDictionaryFromClassCode:(NSNumber *)code pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
 - (IBAction)generateAudioCodecsInfo:(id)sender;
 - (IBAction)displaySettingsChanged:(id)sender;
 - (IBAction)platformIDButtonClicked:(id)sender;
