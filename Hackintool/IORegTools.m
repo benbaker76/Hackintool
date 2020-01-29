@@ -528,7 +528,8 @@ uint32_t properyToUInt32(id value)
 		NSData *data = (NSData *)value;
 		uint32_t retValue = 0;
 		memcpy(&retValue, data.bytes, MIN(data.length, 4));
-		//return CFSwapInt32BigToHost(retValue); ???
+		//return CFSwapInt32LittleToHost(retValue);
+		//return CFSwapInt32BigToHost(retValue);
 		return retValue;
 	}
 	
@@ -545,8 +546,12 @@ uint32_t nameToUInt32(NSString *name)
 	return (uint32_t)(strHexDec([nameArray objectAtIndex:1]) << 16 | strHexDec([nameArray objectAtIndex:0]));
 }
 
-bool getDeviceLocation(io_service_t device, uint32_t *deviceNum, uint32_t *functionNum)
+bool getDeviceLocation(io_service_t device, uint32_t *deviceNum, uint32_t *functionNum, bool *hasFunction)
 {
+	*deviceNum = 0;
+	*functionNum = 0;
+	*hasFunction = false;
+	
 	io_name_t locationInPlane {};
 	kern_return_t kr = IORegistryEntryGetLocationInPlane(device, kIOServicePlane, locationInPlane);
 	
@@ -554,10 +559,19 @@ bool getDeviceLocation(io_service_t device, uint32_t *deviceNum, uint32_t *funct
 		return false;
 	
 	NSArray *locationArray = [[NSString stringWithUTF8String:locationInPlane] componentsSeparatedByString:@","];
-	NSScanner *deviceScanner = [NSScanner scannerWithString:([locationArray count] > 0 ? locationArray[0] : @"")];
-	NSScanner *functionScanner = [NSScanner scannerWithString:([locationArray count] > 1 ? locationArray[1] : @"")];
-	[deviceScanner scanHexInt:deviceNum];
-	[functionScanner scanHexInt:functionNum];
+	
+	if ([locationArray count] > 0)
+	{
+		NSScanner *deviceScanner = [NSScanner scannerWithString:locationArray[0]];
+		[deviceScanner scanHexInt:deviceNum];
+	}
+	
+	if ([locationArray count] > 1)
+	{
+		NSScanner *functionScanner = [NSScanner scannerWithString:locationArray[1]];
+		[functionScanner scanHexInt:functionNum];
+		*hasFunction = true;
+	}
 	
 	return true;
 }
@@ -623,7 +637,7 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			NSString *_name = properyToString([propertyDictionary objectForKey:@"name"]);
 			NSString *model = properyToString([propertyDictionary objectForKey:@"model"]);
 			NSString *ioName = properyToString([propertyDictionary objectForKey:@"IOName"]);
-			//NSString *pciDebug = [propertyDictionary objectForKey:@"pcidebug"];
+			NSString *pciDebug = [propertyDictionary objectForKey:@"pcidebug"];
 			//NSString *uid = [propertyDictionary objectForKey:@"_UID"];
 			NSString *deviceName = (ioName != nil ? ioName : _name != nil ? _name : @"???");
 			
@@ -632,6 +646,10 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			uint32_t subVendorIDInt = getUInt32FromData(subVendorID);
 			uint32_t subDeviceIDInt = getUInt32FromData(subDeviceID);
 			uint32_t classCodeInt = getUInt32FromData(classCode);
+			
+			uint32_t busNum = 0, deviceNum = 0, functionNum = 0, secBridgeNum = 0, subBridgeNum = 0;
+			
+			getBusID(pciDebug, &busNum, &deviceNum, &functionNum, &secBridgeNum, &subBridgeNum);
 			
 			NSMutableDictionary *pciDictionary = [NSMutableDictionary dictionary];
 		
@@ -653,6 +671,7 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			//[pciDictionary setObject:@"???" forKey:@"DevicePath"];
 			[pciDictionary setObject:model forKey:@"Model"];
 			//[pciDictionary setObject:uid forKey:@"UID"];
+			[pciDictionary setObject:[NSString stringWithFormat:@"%02X:%02X.%X", busNum, deviceNum, functionNum] forKey:@"PCIDebug"];
 			
 			NSString *bundleID = (__bridge NSString *)IORegistryEntrySearchCFProperty(device, kIOServicePlane, CFSTR("CFBundleIdentifier"), kCFAllocatorDefault, kIORegistryIterateRecursively);
 			
@@ -667,12 +686,13 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			}
 			
 			NSString *devicePath = @"", *slotName = @"", *ioregName = @"";
-			uint32_t deviceNum = 0, functionNum = 0;
+			bool hasFunction = false;
 			
-			getDeviceLocation(device, &deviceNum, &functionNum);
+			getDeviceLocation(device, &deviceNum, &functionNum, &hasFunction);
 			
-			ioregName = [NSString stringWithFormat:@"%s", name];
-			devicePath = [NSString stringWithFormat:@"Pci(0x%x,0x%x)", deviceNum, functionNum];
+			ioregName = (hasFunction ? [NSString stringWithFormat:@"%s@%X,%X", name, deviceNum, functionNum] : [NSString stringWithFormat:@"%s@%X", name, deviceNum]);
+			//devicePath = (hasFunction ? [NSString stringWithFormat:@"Pci(0x%X,0x%X)", deviceNum, functionNum] : [NSString stringWithFormat:@"Pci(0x%X)", deviceNum]);
+			devicePath = [NSString stringWithFormat:@"Pci(0x%X,0x%X)", deviceNum, functionNum];
 			slotName = [NSString stringWithFormat:@"%d,%d", deviceNum, functionNum];
 			
 			[pciDictionary setObject:@(deviceNum << 16 | functionNum) forKey:@"Address"];
@@ -685,14 +705,14 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 				{
 					io_service_t parentDevice = [parentNumber unsignedIntValue];
 					io_name_t parentName {};
-					uint32_t deviceNum = 0, functionNum = 0;
 					
 					kr = IORegistryEntryGetName(parentDevice, parentName);
 					
-					getDeviceLocation(parentDevice, &deviceNum, &functionNum);
+					getDeviceLocation(parentDevice, &deviceNum, &functionNum, &hasFunction);
 					
-					ioregName = [NSString stringWithFormat:@"%s.%@", parentName, ioregName];
-					devicePath = [NSString stringWithFormat:@"Pci(0x%x,0x%x)/%@", deviceNum, functionNum, devicePath];
+					ioregName = (hasFunction ? [NSString stringWithFormat:@"%s@%X,%X/%@", parentName, deviceNum, functionNum, ioregName] : [NSString stringWithFormat:@"%s@%X/%@", parentName, deviceNum, ioregName]);
+					//devicePath = (hasFunction ? [NSString stringWithFormat:@"Pci(0x%X,0x%X)/%@", deviceNum, functionNum, devicePath] : [NSString stringWithFormat:@"Pci(0x%X)/%@", deviceNum, devicePath]);
+					devicePath = [NSString stringWithFormat:@"Pci(0x%X,0x%X)/%@", deviceNum, functionNum, devicePath];
 					slotName = [NSString stringWithFormat:@"%d,%d/%@", deviceNum, functionNum, slotName];
 					
 					IOObjectRelease(parentDevice);
@@ -729,18 +749,18 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 				{
 					switch (EISA_ID_TO_NUM(eisaId))
 					{
-						case 0x0a03:
-							devicePath = [NSString stringWithFormat:@"PciRoot(0x%x)/%@", [uidNumber unsignedIntValue], devicePath];
+						case 0x0A03:
+							devicePath = [NSString stringWithFormat:@"PciRoot(0x%X)/%@", [uidNumber unsignedIntValue], devicePath];
 							break;
 						default:
-							devicePath = [NSString stringWithFormat:@"Acpi(PNP%04x,0x%x)/%@", EISA_ID_TO_NUM(eisaId), [uidNumber unsignedIntValue], devicePath];
+							devicePath = [NSString stringWithFormat:@"Acpi(PNP%04X,0x%X)/%@", EISA_ID_TO_NUM(eisaId), [uidNumber unsignedIntValue], devicePath];
 							break;
 					}
 				}
 				else
-					devicePath = [NSString stringWithFormat:@"Acpi(0x%08x,0x%x)/%@", eisaId, [uidNumber unsignedIntValue], devicePath];
+					devicePath = [NSString stringWithFormat:@"Acpi(0x%08X,0x%X)/%@", eisaId, [uidNumber unsignedIntValue], devicePath];
 				
-				ioregName = [NSString stringWithFormat:@"%s.%@", rootName, ioregName];
+				ioregName = [NSString stringWithFormat:@"/%s@%d/%@", rootName, [uidNumber unsignedIntValue], ioregName];
 				slotName = [NSString stringWithFormat:@"Internal@%d,%@", [uidNumber unsignedIntValue], slotName];
 				
 				IOObjectRelease(rootDevice);

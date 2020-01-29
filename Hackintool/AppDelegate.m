@@ -1311,14 +1311,13 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 {
 	NSMutableString *outputString = [NSMutableString string];
 
-	//[outputString appendString:@"VID  DID  SVID SDID ASPM   Vendor Name                    Device Name                                        Class Name           SubClass Name        IOReg Name      IOReg IOName    Device Path\n"];
-	//[outputString appendString:@"--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"];
-	[outputString appendString:@"VID  DID  SVID SDID ASPM Vendor Name                    Device Name                                        Class Name           SubClass Name        IOReg Name      IOReg IOName    Device Path\n"];
-	[outputString appendString:@"------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"];
+	[outputString appendString:@"DEBUG   VID  DID  SVID SDID ASPM   Vendor Name                    Device Name                                        Class Name           SubClass Name        IOReg Name      IOReg IOName    Device Path\n"];
+	[outputString appendString:@"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"];
 	
 	for (int i = 0; i < [_pciDevicesArray count]; i++)
 	{
 		NSMutableDictionary *pciDeviceDictionary = _pciDevicesArray[i];
+		NSString *pciDebug = [pciDeviceDictionary objectForKey:@"PCIDebug"];
 		NSNumber *vendorID = [pciDeviceDictionary objectForKey:@"VendorID"];
 		NSNumber *deviceID = [pciDeviceDictionary objectForKey:@"DeviceID"];
 		NSNumber *subVendorID = [pciDeviceDictionary objectForKey:@"SubVendorID"];
@@ -1334,6 +1333,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSString *devicePath = [pciDeviceDictionary objectForKey:@"DevicePath"];
 		//NSString *bundleID = [pciDeviceDictionary objectForKey:@"BundleID"];
 		
+		pciDebug = [pciDebug substringToIndex:min((int)pciDebug.length, 8)];
 		aspm = [aspm substringToIndex:min((int)aspm.length, 6)];
 		vendorName = [vendorName substringToIndex:min((int)vendorName.length, 30)];
 		deviceName = [deviceName substringToIndex:min((int)deviceName.length, 50)];
@@ -1342,6 +1342,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		ioregName = [ioregName substringFromIndex:ioregName.length - min((int)ioregName.length, 15)];
 		ioregIOName = [ioregIOName substringToIndex:min((int)ioregIOName.length, 15)];
 		
+		[outputString appendString:[NSString stringWithFormat:@"%-7s ", [pciDebug UTF8String]]];
 		[outputString appendString:[NSString stringWithFormat:@"%04X ", [vendorID unsignedIntValue]]];
 		[outputString appendString:[NSString stringWithFormat:@"%04X ", [deviceID unsignedIntValue]]];
 		[outputString appendString:[NSString stringWithFormat:@"%04X ", [subVendorID unsignedIntValue]]];
@@ -1505,17 +1506,29 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	return ((_settings.SelectedBootloader == kBootloaderAutoDetect && _settings.DetectedBootloader == kBootloaderOpenCore) || (_settings.SelectedBootloader == kBootloaderOpenCore));
 }
 
-- (bool)isValidACPIEntry:(NSString *)ioregName
+- (bool)tryGetACPIPath:(NSString *)ioregName acpiPath:(NSString **)acpiPath
 {
 	if (ioregName == nil)
 		return false;
 	
-	NSArray *ioregArray = [ioregName componentsSeparatedByString:@"."];
+	*acpiPath = @"";
+	NSArray *ioregArray = [ioregName componentsSeparatedByString:@"/"];
 	
-	for (NSString *ioregEntry in ioregArray)
+	for (int i = 0; i < [ioregArray count]; i++)
 	{
+		NSString *ioregEntry = ioregArray[i];
+		NSRange atRange = [ioregEntry rangeOfString:@"@" options:NSBackwardsSearch];
+		
+		if (atRange.location != NSNotFound)
+			ioregEntry = [ioregEntry substringToIndex:atRange.location];
+		
 		if ([ioregEntry length] > 4)
 			return false;
+		
+		*acpiPath = [*acpiPath stringByAppendingString:ioregEntry];
+		
+		if (i > 0 && i < [ioregArray count] - 1)
+			*acpiPath = [*acpiPath stringByAppendingString:@"."];
 	}
 	
 	return true;
@@ -1526,10 +1539,15 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	if (ioregName == nil)
 		return @"";
 	
-	NSRange periodRange = [ioregName rangeOfString:@"." options:NSBackwardsSearch];
+	NSRange periodRange = [ioregName rangeOfString:@"/" options:NSBackwardsSearch];
 	
 	if (periodRange.location != NSNotFound)
 		ioregName = [ioregName substringFromIndex:periodRange.location + 1];
+	
+	NSRange atRange = [ioregName rangeOfString:@"@" options:NSBackwardsSearch];
+	
+	if (atRange.location != NSNotFound)
+		ioregName = [ioregName substringToIndex:atRange.location];
 	
 	return ioregName;
 }
@@ -6514,6 +6532,8 @@ NSInteger usbSort(id a, id b, void *context)
 
 		if([identifier isEqualToString:@"View"])
 			button.enabled = ([pciDeviceDictionary objectForKey:@"BundleID"] != nil);
+		else if([identifier isEqualToString:@"PCIDebug"])
+			result.textField.stringValue = [pciDeviceDictionary objectForKey:@"PCIDebug"];
 		else if([identifier isEqualToString:@"VendorID"])
 			result.textField.stringValue = [NSString stringWithFormat:@"0x%04X", [[pciDeviceDictionary objectForKey:@"VendorID"] unsignedIntValue]];
 		else if([identifier isEqualToString:@"DeviceID"])
@@ -9385,18 +9405,23 @@ NSInteger usbSort(id a, id b, void *context)
 	
 	[_toolsOutputTextView setString:@""];
 	
+	NSString *extensionsPath = [self getExtensionsPath];
 	bool rebuildKextCacheAndRepairPermissions = NO;
+	
+	if ([[openPanel URLs] count] == 0)
+		return NO;
+	
+	if (![self showSavePanelWithDirectory:extensionsPath nameField:[[openPanel URLs][0] lastPathComponent] fileTypes:@[@"kext"] path:&extensionsPath])
+		return NO;
 	
 	for (NSURL *url in [openPanel URLs])
 	{
-		if ([self installKext:_toolsOutputTextView kextPath:url.path useSavePanel:YES])
+		if ([self installKext:_toolsOutputTextView kextPath:url.path extensionsPath:extensionsPath])
 			rebuildKextCacheAndRepairPermissions = YES;
 	}
 
-	if (!rebuildKextCacheAndRepairPermissions)
-		return NO;
-	
-	[self rebuildKextCacheAndRepairPermissions:_toolsOutputTextView];
+	if (rebuildKextCacheAndRepairPermissions)
+		[self rebuildKextCacheAndRepairPermissions:_toolsOutputTextView];
 	
 	return YES;
 }
@@ -9460,28 +9485,33 @@ NSInteger usbSort(id a, id b, void *context)
 	return YES;
 }
 
+- (BOOL)showSavePanelWithDirectory:(NSString *)directory nameField:(NSString *)nameField fileTypes:(NSArray *)fileTypes path:(NSString **)path
+{
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	[savePanel setDirectoryURL:[NSURL URLWithString:directory]];
+	[savePanel setNameFieldStringValue:nameField];
+	[savePanel setAllowedFileTypes:fileTypes];
+	[savePanel setPrompt:GetLocalizedString(@"Select")];
+	
+	[savePanel beginSheetModalForWindow:_window completionHandler:^(NSModalResponse returnCode)
+	 {
+		 [NSApp stopModalWithCode:returnCode];
+	 }];
+	
+	if ([NSApp runModalForWindow:_window] != NSOKButton)
+		return NO;
+	
+	*path = [savePanel URL].path;
+	
+	return YES;
+}
+
 - (BOOL)installKext:(NSTextView *)textView kextPath:(NSString *)kextPath useSavePanel:(BOOL)useSavePanel
 {
 	NSString *extensionsPath = [self getExtensionsPath];
 	
 	if (useSavePanel)
-	{
-		NSSavePanel *savePanel = [NSSavePanel savePanel];
-		[savePanel setDirectoryURL:[NSURL URLWithString:extensionsPath]];
-		[savePanel setNameFieldStringValue:[kextPath lastPathComponent]];
-		[savePanel setAllowedFileTypes:@[@"kext"]];
-		[savePanel setPrompt:GetLocalizedString(@"Select")];
-		
-		[savePanel beginSheetModalForWindow:_window completionHandler:^(NSModalResponse returnCode)
-		 {
-			 [NSApp stopModalWithCode:returnCode];
-		 }];
-		
-		if ([NSApp runModalForWindow:_window] != NSOKButton)
-			return NO;
-		
-		extensionsPath = [savePanel URL].path;
-	}
+		[self showSavePanelWithDirectory:extensionsPath nameField:[kextPath lastPathComponent] fileTypes:@[@"kext"] path:&extensionsPath];
 	
 	[self installKext:textView kextPath:kextPath extensionsPath:extensionsPath];
 	
