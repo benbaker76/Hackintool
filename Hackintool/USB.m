@@ -198,23 +198,23 @@ NSString *getUSBConnectorType(UsbConnector usbConnector)
 {
 	switch (usbConnector)
 	{
-		case TypeA:
-		case MiniAB:
+		case kTypeA:
+		case kMiniAB:
 			return @"USB2";
-		case ExpressCard:
+		case kExpressCard:
 			return @"ExpressCard";
-		case USB3StandardA:
-		case USB3StandardB:
-		case USB3MicroB:
-		case USB3MicroAB:
-		case USB3PowerB:
+		case kUSB3StandardA:
+		case kUSB3StandardB:
+		case kUSB3MicroB:
+		case kUSB3MicroAB:
+		case kUSB3PowerB:
 			return @"USB3";
-		case TypeCUSB2Only:
-		case TypeCSSSw:
+		case kTypeCUSB2Only:
+		case kTypeCSSSw:
 			return @"TypeC+Sw";
-		case TypeCSS:
+		case kTypeCSS:
 			return @"TypeC";
-		case Internal:
+		case kInternal:
 			return @"Internal";
 		default:
 			return @"Reserved";
@@ -339,8 +339,20 @@ void injectUSBControllerProperties(AppDelegate *appDelegate, NSMutableDictionary
 	}
 }
 
-int checkEC(AppDelegate *appDelegate)
+ECType checkEC(AppDelegate *appDelegate)
 {
+	// An EC device is needed so AppleBusPowerController attaches to it and injects
+	// correct power properties to XHC/EHCx in Mojave and older. In Catalina
+	// (as of now and probably higher), an EC device is needed for booting,
+	// and AppleBusPowerController loads if IORTC is found and then attaches to IOResources.
+	// - whatnameisit
+	
+	NSOperatingSystemVersion minimumSupportedOSVersion = { .majorVersion = 10, .minorVersion = 15, .patchVersion = 0 };
+	BOOL isOSAtLeastCatalina = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:minimumSupportedOSVersion];
+	
+	if (isOSAtLeastCatalina)
+		return kECNoSSDTRequired;
+	
 	// https://github.com/corpnewt/USBMap/blob/master/USBMap.command
 	//
 	// Let's look for a couple of things
@@ -353,7 +365,10 @@ int checkEC(AppDelegate *appDelegate)
 	//    We match that against the PNP0C09 name in ioreg
 	
 	if (hasIORegEntry(@"IOService:/AppleACPIPlatformExpert/EC/AppleBusPowerController"))
-		return 4;
+		return kECNoSSDTRequired;
+	
+	if (hasIORegEntry(@"IOService:/IOResources/AppleBusPowerController"))
+		return kECNoSSDTRequired;
 	
 	// At this point - we know AppleBusPowerController isn't loaded - let's look at renames and such
 	// Check for ECDT in ACPI - if this is present, all bets are off
@@ -367,7 +382,7 @@ int checkEC(AppDelegate *appDelegate)
 		NSString *acpiString = [appDelegate.bootLog substringWithRange:stringRange];
 		
 		if ([acpiString containsString:@"ECDT"])
-			return 0;
+			return kECSSDTRequired;
 	}
 	
 	NSArray *usbACPIArray = @[@"EC", @"EC0", @"H_EC", @"ECDV"];
@@ -384,14 +399,14 @@ int checkEC(AppDelegate *appDelegate)
 		NSNumber *_sta = [acpiDictionary objectForKey:@"_STA"];
 		
 		if ([name isEqualToString:@"PNP0C09"] && [_sta unsignedIntValue] == 0)
-			return 0;
+			return kECSSDTRequired;
 		
-		return i;
+		return (ECType)i;
 	}
 	
 	// If we got here, then we didn't find EC, and didn't need to rename it
 	// so we return 0 to prompt for an EC fake SSDT to be made
-	return 0;
+	return kECSSDTRequired;
 }
 
 void validateUSBPower(AppDelegate *appDelegate)
@@ -402,18 +417,18 @@ void validateUSBPower(AppDelegate *appDelegate)
 	NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 	NSString *stdoutString = nil;
 	
-	int retVal = checkEC(appDelegate);
+	ECType retVal = checkEC(appDelegate);
 	
 	switch(retVal)
 	{
-		case 0:
+		case kECSSDTRequired:
 			if ([appDelegate showAlert:@"SSDT-EC Required" text:@"Generating SSDT-EC..."])
 			{
 				launchCommand(iaslPath, @[@"-p", [NSString stringWithFormat:@"%@/SSDT-EC.aml", desktopPath], ssdtECPath], &stdoutString);
 				//NSLog(@"%@", stdoutString);
 			}
 			break;
-		case 1:
+		case kECRenameEC0toEC:
 		{
 			if ([appDelegate showAlert:@"Rename Required" text:@"Renaming EC0 to EC..."])
 			{
@@ -438,7 +453,7 @@ void validateUSBPower(AppDelegate *appDelegate)
 			}
 			break;
 		}
-		case 2:
+		case kECRenameH_ECtoEC:
 		{
 			if ([appDelegate showAlert:@"Rename Required" text:@"Renaming H_EC to EC..."])
 			{
@@ -463,7 +478,7 @@ void validateUSBPower(AppDelegate *appDelegate)
 			}
 			break;
 		}
-		case 3:
+		case kECRenameECDVtoEC:
 		{
 			if ([appDelegate showAlert:@"Rename Required" text:@"Renaming ECDV to EC..."])
 			{
@@ -488,7 +503,7 @@ void validateUSBPower(AppDelegate *appDelegate)
 			}
 			break;
 		}
-		case 4:
+		case kECNoSSDTRequired:
 			NSLog(@"No SSDT-EC Required");
 			break;
 	}
@@ -497,7 +512,6 @@ void validateUSBPower(AppDelegate *appDelegate)
 void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPersonalities)
 {
 	NSMutableDictionary *maxPortDictionary = [NSMutableDictionary dictionary];
-	bool hasInjectedUSBPowerProperties = NO;
 	
 	for (NSMutableDictionary *usbEntryDictionary in appDelegate.usbPortsArray)
 	{
@@ -537,23 +551,25 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 				[modelEntryDictionary setObject:@"AppleUSBHostMergeProperties" forKey:@"IOClass"];
 				[modelEntryDictionary setObject:providerClass forKey:@"IOProviderClass"];
 				
-				NSMutableDictionary *platformDictionary;
+				// Inject model instead
+				/* NSMutableDictionary *platformDictionary;
 				
 				if (getIORegProperties(@"IODeviceTree:/", &platformDictionary))
-					[modelEntryDictionary setObject:properyToString([platformDictionary objectForKey:@"board-id"]) forKey:@"board-id"];
+					[modelEntryDictionary setObject:properyToString([platformDictionary objectForKey:@"board-id"]) forKey:@"board-id"]; */
 				
 				[modelEntryDictionary setObject:hubLocation forKey:@"locationID"];
 			}
 			else
 			{
+				injectUSBPowerProperties(appDelegate, ioProviderMergePropertiesDictionary);
 				
 				[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBMergeNub" forKey:@"CFBundleIdentifier"];
 				[modelEntryDictionary setObject:@"AppleUSBMergeNub" forKey:@"IOClass"];
 				[modelEntryDictionary setObject:usbController forKey:@"IONameMatch"];
 				[modelEntryDictionary setObject:providerClass forKey:@"IOProviderClass"];
-				[modelEntryDictionary setObject:appDelegate.modelIdentifier forKey:@"model"];
 			}
 			
+			[modelEntryDictionary setObject:appDelegate.modelIdentifier forKey:@"model"];
 			[modelEntryDictionary setObject:@(5000) forKey:@"IOProbeScore"];
 			
 			[modelEntryDictionary setObject:usbController forKey:@"UsbController"];
@@ -565,13 +581,6 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		{
 			ioProviderMergePropertiesDictionary = [modelEntryDictionary objectForKey:@"IOProviderMergeProperties"];
 			portsDictionary = [ioProviderMergePropertiesDictionary objectForKey:@"ports"];
-		}
-		
-		if (!hasInjectedUSBPowerProperties)
-		{
-			injectUSBPowerProperties(appDelegate, ioProviderMergePropertiesDictionary);
-			
-			hasInjectedUSBPowerProperties = YES;
 		}
 		
 		uint32_t maxPort = [maxPortDictionary[modelEntryName] unsignedIntValue];
@@ -761,7 +770,9 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			hasExportedUSBPowerSSDT = YES;
 		}
 		
-		// EH01, EH02, HUB1, HUB2, XHC
+		if ([usbController hasPrefix:@"EH"] || [usbController isEqualToString:@"XHC"])
+			name = usbController;
+		
 		if (locationID != nil)
 		{
 			if ([locationID unsignedIntValue] == 0x1D100000)

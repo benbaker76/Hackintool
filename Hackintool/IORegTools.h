@@ -49,5 +49,6 @@ bool getIORegPCIDeviceNSData(NSString *pciName, NSString *propertyName, NSData *
 bool getPlatformTableNative(NSData **nativePlatformTable);
 bool getPlatformTablePatched(NSData **patchedPlatformTable);
 bool getPlatformID(uint32_t *platformID);
+NSString *getASPMString(NSNumber *aspm);
 
 #endif /* IORegTools_hpp */

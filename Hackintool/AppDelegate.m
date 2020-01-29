@@ -1311,6 +1311,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 {
 	NSMutableString *outputString = [NSMutableString string];
 
+	//[outputString appendString:@"VID  DID  SVID SDID ASPM   Vendor Name                    Device Name                                        Class Name           SubClass Name        IOReg Name      IOReg IOName    Device Path\n"];
+	//[outputString appendString:@"--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"];
 	[outputString appendString:@"VID  DID  SVID SDID ASPM Vendor Name                    Device Name                                        Class Name           SubClass Name        IOReg Name      IOReg IOName    Device Path\n"];
 	[outputString appendString:@"------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"];
 	
@@ -1321,7 +1323,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSNumber *deviceID = [pciDeviceDictionary objectForKey:@"DeviceID"];
 		NSNumber *subVendorID = [pciDeviceDictionary objectForKey:@"SubVendorID"];
 		NSNumber *subDeviceID = [pciDeviceDictionary objectForKey:@"SubDeviceID"];
-		NSNumber *aspm = [pciDeviceDictionary objectForKey:@"ASPM"];
+		NSString *aspm = [pciDeviceDictionary objectForKey:@"ASPM"];
+		//NSNumber *aspm = [pciDeviceDictionary objectForKey:@"ASPM"];
 		NSString *vendorName = [pciDeviceDictionary objectForKey:@"VendorName"];
 		NSString *deviceName = [pciDeviceDictionary objectForKey:@"DeviceName"];
 		NSString *className = [pciDeviceDictionary objectForKey:@"ClassName"];
@@ -1331,6 +1334,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSString *devicePath = [pciDeviceDictionary objectForKey:@"DevicePath"];
 		//NSString *bundleID = [pciDeviceDictionary objectForKey:@"BundleID"];
 		
+		aspm = [aspm substringToIndex:min((int)aspm.length, 6)];
 		vendorName = [vendorName substringToIndex:min((int)vendorName.length, 30)];
 		deviceName = [deviceName substringToIndex:min((int)deviceName.length, 50)];
 		className = [className substringToIndex:min((int)className.length, 20)];
@@ -1342,7 +1346,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		[outputString appendString:[NSString stringWithFormat:@"%04X ", [deviceID unsignedIntValue]]];
 		[outputString appendString:[NSString stringWithFormat:@"%04X ", [subVendorID unsignedIntValue]]];
 		[outputString appendString:[NSString stringWithFormat:@"%04X ", [subDeviceID unsignedIntValue]]];
-		[outputString appendString:[NSString stringWithFormat:@"%04X ", [aspm unsignedIntValue]]];
+		[outputString appendString:[NSString stringWithFormat:@"%-6s ", [aspm UTF8String]]];
+		//[outputString appendString:[NSString stringWithFormat:@"%04X ", [aspm unsignedIntValue]]];
 		[outputString appendString:[NSString stringWithFormat:@"%-30s ", [vendorName UTF8String]]];
 		[outputString appendString:[NSString stringWithFormat:@"%-50s ", [deviceName UTF8String]]];
 		[outputString appendString:[NSString stringWithFormat:@"%-20s ", [className UTF8String]]];
@@ -2960,6 +2965,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSNumber *usbControllerID = [propertyDictionary objectForKey:@"UsbControllerID"];
 		NSString *hubName = [propertyDictionary objectForKey:@"HubName"];
 		NSNumber *hubLocation = [propertyDictionary objectForKey:@"HubLocation"];
+		//NSNumber *hubIsInternal = [propertyDictionary objectForKey:@"HubIsInternal"];
 		uint32_t index = 0;
 		
 		// Is the port already in the list?
@@ -2980,9 +2986,12 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		if (hubName != nil)
 		{
-			// Only accept AppleUSB20InternalHub
-			if (![hubName isEqualToString:@"AppleUSB20InternalHub"])
-				 continue;
+			//if (![hubIsInternal boolValue])
+			//	 continue;
+			
+			if (![hubName isEqualToString:@"AppleUSB20InternalHub"] &&
+				![hubName isEqualToString:@"AppleUSB20InternalIntelHub"])
+				continue;
 		}
 		
 		[usbPortsDictionary setObject:name forKey:@"name"];
@@ -2990,7 +2999,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		[usbPortsDictionary setObject:port forKey:@"port"];
 		if (portType != nil)
 			[usbPortsDictionary setObject:portType forKey:@"portType"];
-		else
+		if (usbConnector != nil)
 			[usbPortsDictionary setObject:usbConnector forKey:@"UsbConnector"];
 		[usbPortsDictionary setObject:@"" forKey:@"Device"];
 		[usbPortsDictionary setObject:usbController forKey:@"UsbController"];
@@ -3001,7 +3010,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			[usbPortsDictionary setObject:hubLocation forKey:@"HubLocation"];
 		[usbPortsDictionary setObject:[NSNumber numberWithBool:NO] forKey:@"IsActive"];
 		
-		//NSLog(@"Port Name: %@ Location ID: 0x%08x UsbController: %@ Hub: %@ (0x%08x)", name, [locationID intValue], usbController, hubName, [hubLocation unsignedIntValue]);
+		//NSLog(@"Port Name: %@ Location ID: 0x%08x UsbController: %@ Hub: %@ (0x%08x)", name, [locationID unsignedIntValue], usbController, hubName, [hubLocation unsignedIntValue]);
 		
 		[_usbPortsArray addObject:usbPortsDictionary];
 	}
@@ -3322,7 +3331,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			
 			if ([ioKitKey hasSuffix:@"-internal-hub"])
 			{
-				[usbEntryDictionary setObject:@"AppleUSB20InternalHub" forKey:@"HubName"];
+				[usbEntryDictionary setObject:@"AppleUSB20InternalIntelHub" forKey:@"HubName"];
 				[usbEntryDictionary setObject:locationID forKey:@"HubLocation"];
 			}
 			
@@ -6526,7 +6535,8 @@ NSInteger usbSort(id a, id b, void *context)
 		else if([identifier isEqualToString:@"IORegIOName"])
 			result.textField.stringValue = [pciDeviceDictionary objectForKey:@"IORegIOName"];
 		else if([identifier isEqualToString:@"ASPM"])
-			result.textField.stringValue = [NSString stringWithFormat:@"0x%04X", [[pciDeviceDictionary objectForKey:@"ASPM"] unsignedIntValue]];
+			//result.textField.stringValue = [NSString stringWithFormat:@"0x%04X", [[pciDeviceDictionary objectForKey:@"ASPM"] unsignedIntValue]];
+			result.textField.stringValue = [pciDeviceDictionary objectForKey:@"ASPM"];
 		else if([identifier isEqualToString:@"DevicePath"])
 			result.textField.stringValue =  [pciDeviceDictionary objectForKey:@"DevicePath"];
 	}
@@ -9353,7 +9363,7 @@ NSInteger usbSort(id a, id b, void *context)
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
 }
 
-- (void)installKexts
+- (BOOL)installKexts
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	[openPanel setCanChooseFiles:YES];
@@ -9368,17 +9378,27 @@ NSInteger usbSort(id a, id b, void *context)
 	 }];
 	
 	if ([NSApp runModalForWindow:_window] != NSOKButton)
-		return;
+		return NO;
 	
 	if (requestAdministratorRights() != 0)
-		return;
+		return NO;
 	
 	[_toolsOutputTextView setString:@""];
 	
+	bool rebuildKextCacheAndRepairPermissions = NO;
+	
 	for (NSURL *url in [openPanel URLs])
-		[self installKext:_toolsOutputTextView kextPath:url.path];
+	{
+		if ([self installKext:_toolsOutputTextView kextPath:url.path useSavePanel:YES])
+			rebuildKextCacheAndRepairPermissions = YES;
+	}
+
+	if (!rebuildKextCacheAndRepairPermissions)
+		return NO;
 	
 	[self rebuildKextCacheAndRepairPermissions:_toolsOutputTextView];
+	
+	return YES;
 }
 
 - (NSString *)getExtensionsPath
@@ -9440,17 +9460,38 @@ NSInteger usbSort(id a, id b, void *context)
 	return YES;
 }
 
-- (void)installKext:(NSTextView *)textView kextPath:(NSString *)kextPath
+- (BOOL)installKext:(NSTextView *)textView kextPath:(NSString *)kextPath useSavePanel:(BOOL)useSavePanel
 {
 	NSString *extensionsPath = [self getExtensionsPath];
 	
+	if (useSavePanel)
+	{
+		NSSavePanel *savePanel = [NSSavePanel savePanel];
+		[savePanel setDirectoryURL:[NSURL URLWithString:extensionsPath]];
+		[savePanel setNameFieldStringValue:[kextPath lastPathComponent]];
+		[savePanel setAllowedFileTypes:@[@"kext"]];
+		[savePanel setPrompt:GetLocalizedString(@"Select")];
+		
+		[savePanel beginSheetModalForWindow:_window completionHandler:^(NSModalResponse returnCode)
+		 {
+			 [NSApp stopModalWithCode:returnCode];
+		 }];
+		
+		if ([NSApp runModalForWindow:_window] != NSOKButton)
+			return NO;
+		
+		extensionsPath = [savePanel URL].path;
+	}
+	
 	[self installKext:textView kextPath:kextPath extensionsPath:extensionsPath];
+	
+	return YES;
 }
 
-- (void)installKext:(NSTextView *)textView kextPath:(NSString *)kextPath extensionsPath:(NSString *)extensionsPath
+- (BOOL)installKext:(NSTextView *)textView kextPath:(NSString *)kextPath extensionsPath:(NSString *)extensionsPath
 {
 	if (requestAdministratorRights() != 0)
-		return;
+		return NO;
 	
 	[self disableGatekeeperAndMountDiskReadWrite:textView forced:NO];
 	
@@ -9460,9 +9501,11 @@ NSInteger usbSort(id a, id b, void *context)
 	
 	[self launchCommandAsAdmin:textView launchPath:@"rm" arguments:@[@"-Rf", [extensionsPath stringByAppendingPathComponent:fileName]]];
 	[self launchCommandAsAdmin:textView launchPath:@"cp" arguments: @[@"-R", kextPath, extensionsPath]];
+	
+	return YES;
 }
 
-- (void)installAtherosKext
+- (BOOL)installAtherosKext
 {
 	// https://www.insanelymac.com/forum/files/file/956-atheros-installer-for-macos-mojave-and-catalina/
 	// For macOS Catalina:
@@ -9481,27 +9524,29 @@ NSInteger usbSort(id a, id b, void *context)
 	if (isOSAtLeastCatalina)
 	{
 		if (requestAdministratorRights() != 0)
-			return;
+			return NO;
 		
 		if (!(kextPath = [mainBundle pathForResource:@"IO80211Family" ofType:@"kext" inDirectory:@"Kexts"]))
-			return;
+			return NO;
 		
 		NSString *srcKextPath = @"/System/Library/Extensions/IO80211Family.kext";
 		NSString *dstKextPath = [desktopPath stringByAppendingPathComponent:@"IO80211Family.kext"];
 		
 		launchCommandAsAdmin(@"/bin/cp", @[@"-r", srcKextPath, dstKextPath], &stdoutString);
 		
-		[self installKext:_toolsOutputTextView kextPath:kextPath extensionsPath:@"/System/Library/Extensions"];
-		[self rebuildKextCacheAndRepairPermissions:_toolsOutputTextView];
+		if ([self installKext:_toolsOutputTextView kextPath:kextPath extensionsPath:@"/System/Library/Extensions"])
+			[self rebuildKextCacheAndRepairPermissions:_toolsOutputTextView];
 	}
 	else
 	{
 		if (!(kextPath = [mainBundle pathForResource:@"AirPortAtheros40" ofType:@"kext" inDirectory:@"Kexts"]))
-			return;
+			return NO;
 		
-		[self installKext:_toolsOutputTextView kextPath:kextPath];
-		[self rebuildKextCacheAndRepairPermissions:_toolsOutputTextView];
+		if ([self installKext:_toolsOutputTextView kextPath:kextPath useSavePanel:NO])
+			[self rebuildKextCacheAndRepairPermissions:_toolsOutputTextView];
 	}
+	
+	return YES;
 }
 
 - (void)installSATAHotplugFixKext
@@ -9512,14 +9557,14 @@ NSInteger usbSort(id a, id b, void *context)
 	if (!(kextPath = [mainBundle pathForResource:@"AppleAHCIPortHotplug" ofType:@"kext" inDirectory:@"Kexts"]))
 		return;
 	
-	[self installKext:_toolsOutputTextView kextPath:kextPath];
-	[self rebuildKextCacheAndRepairPermissions:_toolsOutputTextView];
+	if ([self installKext:_toolsOutputTextView kextPath:kextPath useSavePanel:YES])
+		[self rebuildKextCacheAndRepairPermissions:_toolsOutputTextView];
 }
 
-- (void)rebuildKextCacheAndRepairPermissions:(NSTextView *)textView
+- (BOOL)rebuildKextCacheAndRepairPermissions:(NSTextView *)textView
 {
 	if (requestAdministratorRights() != 0)
-		return;
+		return NO;
 	
 	[self disableGatekeeperAndMountDiskReadWrite:textView forced:NO];
 	
@@ -9573,13 +9618,13 @@ NSInteger usbSort(id a, id b, void *context)
 		 [NSApp stopModalWithCode:returnCode];
 	 }];
 	
-	[NSApp runModalForWindow:_window];
+	return ([NSApp runModalForWindow:_window] == NSOKButton);
 }
 
-- (void)createWindowsBluetoothRegistryFile
+- (BOOL)createWindowsBluetoothRegistryFile
 {
 	if (requestAdministratorRights() != 0)
-		return;
+		return NO;
 	
 	NSError *error = nil;
 	NSString *stdoutString = nil;
@@ -9588,7 +9633,7 @@ NSInteger usbSort(id a, id b, void *context)
 		launchCommandAsAdmin(@"/usr/bin/defaults", @[@"read", BluetoothPath2, @"LinkKeys"], &stdoutString);
 
 	if (stdoutString == nil)
-		return;
+		return NO;
 	
 	// Convert new NSData to old format
 	NSRegularExpression *regEx = [NSRegularExpression regularExpressionWithPattern:@"\\{length = \\d+, bytes = 0x([0-9a-fA-F .]*)\\}" options:0 error:&error];
@@ -9597,7 +9642,7 @@ NSInteger usbSort(id a, id b, void *context)
 	NSDictionary *linkKeysDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
 	
 	if (linkKeysDictionary == nil)
-		return;
+		return NO;
 	
 	NSMutableString *outputString = [NSMutableString string];
 	
@@ -9630,6 +9675,8 @@ NSInteger usbSort(id a, id b, void *context)
 	
 	NSArray *fileURLs = [NSArray arrayWithObjects:[NSURL fileURLWithPath:outputFilePath], nil];
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
+	
+	return YES;
 }
 
 - (void)createWindowsUTCRegistryFiles
@@ -9699,10 +9746,10 @@ NSInteger usbSort(id a, id b, void *context)
 	[_powerSettingsTableView reloadData];
 }
 
-- (void)fixSleepImage
+- (BOOL)fixSleepImage
 {
 	if (requestAdministratorRights() != 0)
-		return;
+		return NO;
 	
 	// sudo pmset -a standby 0
 	// sudo pmset -a womp 0
@@ -9744,6 +9791,8 @@ NSInteger usbSort(id a, id b, void *context)
 	//launchCommandAsAdmin(@"/bin/mkdir", @[hibernatefile], &stdoutString);
 	
 	[self getPowerSettings];
+	
+	return YES;
 }
 
 - (IBAction)progressCancelButtonClicked:(id)sender
@@ -9850,10 +9899,10 @@ NSInteger usbSort(id a, id b, void *context)
 	[NSApp runModalForWindow:_window];
 }
 
-- (void)getAppleIntelInfo
+- (BOOL)getAppleIntelInfo
 {
 	if (requestAdministratorRights() != 0)
-		return;
+		return NO;
 	
 	[_toolsOutputTextView setString:@""];
 	
@@ -9861,7 +9910,7 @@ NSInteger usbSort(id a, id b, void *context)
 	NSString *srcKextPath = nil;
 	
 	if (!(srcKextPath = [mainBundle pathForResource:@"AppleIntelInfo" ofType:@"kext" inDirectory:@"Kexts"]))
-		return;
+		return NO;
 	
 	NSString *stdoutString = nil;
 	NSError *error;
@@ -9908,6 +9957,8 @@ NSInteger usbSort(id a, id b, void *context)
 		[_toolsOutputTextView setString:appleIntelInfoDat];
 	
 	launchCommandAsAdmin(@"/bin/rm", @[@"-r", tempPath], &stdoutString);
+	
+	return YES;
 }
 
 - (bool)setNVRAMValue:(NSString *)name value:(NSString *)value
