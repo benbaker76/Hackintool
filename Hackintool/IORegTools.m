@@ -516,11 +516,11 @@ uint32_t propertyToUInt32(id value)
 	else if ([value isKindOfClass:[NSData class]])
 	{
 		NSData *data = (NSData *)value;
+		uint32_t retVal = 0;
 		
-		if (data.length != 4)
-			return 0;
+		memcpy(&retVal, data.bytes, MIN(data.length, 4));
 		
-		return (uint32_t)*((uint32_t *)data.bytes);
+		return retVal;
 	}
 	
 	return 0;
