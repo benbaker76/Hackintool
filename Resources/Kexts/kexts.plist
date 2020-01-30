@@ -510,7 +510,7 @@
 		<key>ProjectUrl</key>
 		<string>https://github.com/acidanthera/NVMeFix</string>
 		<key>Type</key>
-		<string>Kext</string>
+		<string>Lilu</string>
 	</dict>	
 	<dict>
 		<key>Name</key>
