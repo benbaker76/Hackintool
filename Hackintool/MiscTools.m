@@ -16,6 +16,7 @@
 #include <objc/runtime.h>
 #include <objc/message.h>
 #include <libxml/tree.h>
+#include "IORegTools.h"
 #include "Authorization.h"
 
 #define WEXISTATUS(status) (((status) & 0xff00) >> 8)
@@ -504,12 +505,12 @@ string replaceAll(string& str, const string& from, const string& to)
 
 bool getUInt32PropertyValue(AppDelegate *appDelegate, NSDictionary *propertyDictionary, NSString *propertyName, uint32_t *propertyValue)
 {
-	NSData *propertyData = [propertyDictionary objectForKey:propertyName];
+	id property = [propertyDictionary objectForKey:propertyName];
 	
-	if (propertyData == nil)
+	if (property == nil)
 		return false;
 	
-	*propertyValue = getUInt32FromData(propertyData);
+	*propertyValue = propertyToUInt32(property);
 	
 	return true;
 }
@@ -788,17 +789,6 @@ NSString *appendSuffixToPath(NSString *path, NSString *suffix)
 	NSString *newFullFileName = [newFileName stringByAppendingPathExtension:fileExtension];
 	
 	return [containingFolder stringByAppendingPathComponent:newFullFileName];
-}
-
-uint32_t getUInt32FromData(NSData *data)
-{
-	if (data == nil)
-		return 0;
-	
-	if ([data length] != 4)
-		return 0;
-	
-	return *(const uint32_t *)[data bytes];
 }
 
 NSColor *getColorAlpha(NSColor *color, float alpha)

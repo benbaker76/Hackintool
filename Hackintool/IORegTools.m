@@ -308,8 +308,8 @@ bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray
 						
 						NSString *portName = [propertyDictionary objectForKey:@"name"];
 						//NSNumber *locationID = [propertyDictionary objectForKey:@"locationID"];
-						NSData *deviceID = [parentPropertyDictionary objectForKey:@"device-id"];
-						NSData *vendorID = [parentPropertyDictionary objectForKey:@"vendor-id"];
+						uint32_t deviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
+						uint32_t vendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
 						
 						if (portName == nil)
 						{
@@ -317,11 +317,8 @@ bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray
 							[propertyDictionary setValue:portName forKey:@"name"];
 						}
 						
-						uint32_t deviceIDInt = getUInt32FromData(deviceID);
-						uint32_t vendorIDInt = getUInt32FromData(vendorID);
-						
 						[propertyDictionary setValue:[NSString stringWithUTF8String:parentName] forKey:@"UsbController"];
-						[propertyDictionary setValue:[NSNumber numberWithInt:(deviceIDInt << 16) | vendorIDInt] forKey:@"UsbControllerID"];
+						[propertyDictionary setValue:[NSNumber numberWithInt:(deviceID << 16) | vendorID] forKey:@"UsbControllerID"];
 						
 						io_service_t hubDevice;
 						io_name_t hubClassName {};
@@ -422,12 +419,12 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 					{
 						NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
 						
-						NSData *deviceID = [parentPropertyDictionary objectForKey:@"device-id"];
-						NSData *vendorID = [parentPropertyDictionary objectForKey:@"vendor-id"];
-						NSData *revisionID = [parentPropertyDictionary objectForKey:@"revision-id"];
-						NSData *alcLayoutID = [parentPropertyDictionary objectForKey:@"alc-layout-id"];
-						NSData *subSystemID = [parentPropertyDictionary objectForKey:@"subsystem-id"];
-						NSData *subSystemVendorID = [parentPropertyDictionary objectForKey:@"subsystem-vendor-id"];
+						uint32_t deviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
+						uint32_t vendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
+						uint32_t revisionID = propertyToUInt32([parentPropertyDictionary objectForKey:@"revision-id"]);
+						uint32_t alcLayoutID = propertyToUInt32([parentPropertyDictionary objectForKey:@"alc-layout-id"]);
+						uint32_t subSystemID = propertyToUInt32([parentPropertyDictionary objectForKey:@"subsystem-id"]);
+						uint32_t subSystemVendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"subsystem-vendor-id"]);
 						NSData *pinConfigurations = [parentPropertyDictionary objectForKey:@"PinConfigurations"];
 						
 						NSDictionary *digitalAudioCapabilities = [propertyDictionary objectForKey:@"DigitalAudioCapabilities"];
@@ -435,17 +432,10 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 						NSNumber *venderProductIDNumber = [propertyDictionary objectForKey:@"IOHDACodecVendorID"];
 						NSNumber *revisionIDNumber = [propertyDictionary objectForKey:@"IOHDACodecRevisionID"];
 						
-						uint32_t deviceIDInt = getUInt32FromData(deviceID);
-						uint32_t vendorIDInt = getUInt32FromData(vendorID);
-						uint32_t revisionIDInt = getUInt32FromData(revisionID);
-						uint32_t alcLayoutIDInt = getUInt32FromData(alcLayoutID);
-						uint32_t subSystemIDInt = getUInt32FromData(subSystemID);
-						uint32_t subSystemVendorIDInt = getUInt32FromData(subSystemVendorID);
+						uint32_t deviceIDNew = (vendorID << 16) | deviceID;
+						uint32_t subDeviceIDNew = (subSystemVendorID << 16) | subSystemID;
 						
-						uint32_t deviceIDNew = (vendorIDInt << 16) | deviceIDInt;
-						uint32_t subDeviceIDNew = (subSystemVendorIDInt << 16) | subSystemIDInt;
-						
-						AudioDevice *audioDevice = [[AudioDevice alloc] initWithDeviceClass:[NSString stringWithUTF8String:parentName] deviceID:deviceIDNew revisionID:revisionIDInt alcLayoutID:alcLayoutIDInt subDeviceID:subDeviceIDNew codecAddress:[codecAddressNumber unsignedIntValue] codecID:[venderProductIDNumber unsignedIntValue] codecRevisionID:[revisionIDNumber unsignedIntValue] pinConfigurations:pinConfigurations digitalAudioCapabilities:digitalAudioCapabilities];
+						AudioDevice *audioDevice = [[AudioDevice alloc] initWithDeviceClass:[NSString stringWithUTF8String:parentName] deviceID:deviceIDNew revisionID:revisionID alcLayoutID:alcLayoutID subDeviceID:subDeviceIDNew codecAddress:[codecAddressNumber unsignedIntValue] codecID:[venderProductIDNumber unsignedIntValue] codecRevisionID:[revisionIDNumber unsignedIntValue] pinConfigurations:pinConfigurations digitalAudioCapabilities:digitalAudioCapabilities];
 						
 						[*audioDeviceArray addObject:audioDevice];
 						
@@ -500,7 +490,7 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 	return ([*audioDeviceArray count] > 0);
 }
 
-NSString *properyToString(id value)
+NSString *propertyToString(id value)
 {
 	if (value == nil)
 		return @"???";
@@ -516,7 +506,7 @@ NSString *properyToString(id value)
 	return @"???";
 }
 
-uint32_t properyToUInt32(id value)
+uint32_t propertyToUInt32(id value)
 {
 	if (value == nil)
 		return 0;
@@ -526,11 +516,11 @@ uint32_t properyToUInt32(id value)
 	else if ([value isKindOfClass:[NSData class]])
 	{
 		NSData *data = (NSData *)value;
-		uint32_t retValue = 0;
-		memcpy(&retValue, data.bytes, MIN(data.length, 4));
-		//return CFSwapInt32LittleToHost(retValue);
-		//return CFSwapInt32BigToHost(retValue);
-		return retValue;
+		
+		if (data.length != 4)
+			return 0;
+		
+		return (uint32_t)*((uint32_t *)data.bytes);
 	}
 	
 	return 0;
@@ -628,24 +618,18 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 		if (kr == KERN_SUCCESS)
 		{
 			NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
-			NSData *vendorID = [propertyDictionary objectForKey:@"vendor-id"];
-			NSData *deviceID = [propertyDictionary objectForKey:@"device-id"];
-			NSData *subVendorID = [propertyDictionary objectForKey:@"subsystem-vendor-id"];
-			NSData *subDeviceID = [propertyDictionary objectForKey:@"subsystem-id"];
-			NSNumber *aspm = [NSNumber numberWithUnsignedInt:properyToUInt32([propertyDictionary objectForKey:@"pci-aspm-default"])];
-			NSData *classCode = [propertyDictionary objectForKey:@"class-code"];
-			NSString *_name = properyToString([propertyDictionary objectForKey:@"name"]);
-			NSString *model = properyToString([propertyDictionary objectForKey:@"model"]);
-			NSString *ioName = properyToString([propertyDictionary objectForKey:@"IOName"]);
+			uint32_t vendorID = propertyToUInt32([propertyDictionary objectForKey:@"vendor-id"]);
+			uint32_t deviceID = propertyToUInt32([propertyDictionary objectForKey:@"device-id"]);
+			uint32_t subVendorID = propertyToUInt32([propertyDictionary objectForKey:@"subsystem-vendor-id"]);
+			uint32_t subDeviceID = propertyToUInt32([propertyDictionary objectForKey:@"subsystem-id"]);
+			uint32_t aspm = propertyToUInt32([propertyDictionary objectForKey:@"pci-aspm-default"]);
+			uint32_t classCode = propertyToUInt32([propertyDictionary objectForKey:@"class-code"]);
+			NSString *_name = propertyToString([propertyDictionary objectForKey:@"name"]);
+			NSString *model = propertyToString([propertyDictionary objectForKey:@"model"]);
+			NSString *ioName = propertyToString([propertyDictionary objectForKey:@"IOName"]);
 			NSString *pciDebug = [propertyDictionary objectForKey:@"pcidebug"];
 			//NSString *uid = [propertyDictionary objectForKey:@"_UID"];
 			NSString *deviceName = (ioName != nil ? ioName : _name != nil ? _name : @"???");
-			
-			uint32_t vendorIDInt = getUInt32FromData(vendorID);
-			uint32_t deviceIDInt = getUInt32FromData(deviceID);
-			uint32_t subVendorIDInt = getUInt32FromData(subVendorID);
-			uint32_t subDeviceIDInt = getUInt32FromData(subDeviceID);
-			uint32_t classCodeInt = getUInt32FromData(classCode);
 			
 			uint32_t busNum = 0, deviceNum = 0, functionNum = 0, secBridgeNum = 0, subBridgeNum = 0;
 			
@@ -654,19 +638,19 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			NSMutableDictionary *pciDictionary = [NSMutableDictionary dictionary];
 		
 			uint32_t shadowID = nameToUInt32(deviceName);
-			[pciDictionary setObject:!shadowID ? @(vendorIDInt) : @(shadowID & 0xFFFF) forKey:@"ShadowVendor"];
-			[pciDictionary setObject:!shadowID ? @(deviceIDInt) : @(shadowID >> 16) forKey:@"ShadowDevice"];
+			[pciDictionary setObject:!shadowID ? @(vendorID) : @(shadowID & 0xFFFF) forKey:@"ShadowVendor"];
+			[pciDictionary setObject:!shadowID ? @(deviceID) : @(shadowID >> 16) forKey:@"ShadowDevice"];
 			
 			//[pciDictionary setObject:[NSString stringWithUTF8String:name] forKey:@"IORegName"];
 			[pciDictionary setObject:deviceName forKey:@"IORegIOName"];
 			[pciDictionary setObject:[NSString stringWithUTF8String:path] forKey:@"IORegPath"];
-			[pciDictionary setObject:[NSNumber numberWithInt:vendorIDInt] forKey:@"VendorID"];
-			[pciDictionary setObject:[NSNumber numberWithInt:deviceIDInt] forKey:@"DeviceID"];
-			[pciDictionary setObject:[NSNumber numberWithInt:subVendorIDInt] forKey:@"SubVendorID"];
-			[pciDictionary setObject:[NSNumber numberWithInt:subDeviceIDInt] forKey:@"SubDeviceID"];
+			[pciDictionary setObject:[NSNumber numberWithInt:vendorID] forKey:@"VendorID"];
+			[pciDictionary setObject:[NSNumber numberWithInt:deviceID] forKey:@"DeviceID"];
+			[pciDictionary setObject:[NSNumber numberWithInt:subVendorID] forKey:@"SubVendorID"];
+			[pciDictionary setObject:[NSNumber numberWithInt:subDeviceID] forKey:@"SubDeviceID"];
 			//[pciDictionary setObject:aspm forKey:@"ASPM"];
 			[pciDictionary setObject:getASPMString(aspm) forKey:@"ASPM"];
-			[pciDictionary setObject:[NSNumber numberWithInt:classCodeInt] forKey:@"ClassCode"];
+			[pciDictionary setObject:[NSNumber numberWithInt:classCode] forKey:@"ClassCode"];
 			//[pciDictionary setObject:@"Internal" forKey:@"SlotName"];
 			//[pciDictionary setObject:@"???" forKey:@"DevicePath"];
 			[pciDictionary setObject:model forKey:@"Model"];
@@ -811,18 +795,15 @@ bool getIORegNetworkArray(NSMutableArray **networkInterfacesArray)
 				{
 					NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
 					
-					NSData *deviceID = [parentPropertyDictionary objectForKey:@"device-id"];
-					NSData *vendorID = [parentPropertyDictionary objectForKey:@"vendor-id"];
+					uint32_t deviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
+					uint32_t vendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
 					NSString *bsdName = [propertyDictionary objectForKey:@"BSD Name"];
 					NSNumber *builtIn = [propertyDictionary objectForKey:@"IOBuiltin"];
 					
-					uint32_t vendorIDInt = getUInt32FromData(vendorID);
-					uint32_t deviceIDInt = getUInt32FromData(deviceID);
-					
 					NSMutableDictionary *networkInterfacesDictionary = [NSMutableDictionary dictionary];
 					
-					[networkInterfacesDictionary setObject:[NSNumber numberWithInteger:deviceIDInt] forKey:@"DeviceID"];
-					[networkInterfacesDictionary setObject:[NSNumber numberWithInteger:vendorIDInt] forKey:@"VendorID"];
+					[networkInterfacesDictionary setObject:[NSNumber numberWithInteger:deviceID] forKey:@"DeviceID"];
+					[networkInterfacesDictionary setObject:[NSNumber numberWithInteger:vendorID] forKey:@"VendorID"];
 					[networkInterfacesDictionary setObject:bsdName forKey:@"BSD Name"];
 					[networkInterfacesDictionary setObject:builtIn forKey:@"Builtin"];
 					
@@ -890,12 +871,10 @@ bool getIORegGraphicsArray(NSMutableArray **graphicsArray)
 				
 				NSData *modelData = [parentPropertyDictionary objectForKey:@"model"];
 				NSString *modelString = [[[NSString alloc] initWithData:modelData encoding:NSASCIIStringEncoding] autorelease];
-				NSData *platformID = [parentPropertyDictionary objectForKey:@"AAPL,snb-platform-id"];
+				uint32_t platformID = propertyToUInt32([parentPropertyDictionary objectForKey:@"AAPL,snb-platform-id"]);
 				
 				if (!platformID)
-					platformID = [parentPropertyDictionary objectForKey:@"AAPL,ig-platform-id"];
-				
-				uint32_t platformIDInt = getUInt32FromData(platformID);
+					platformID = propertyToUInt32([parentPropertyDictionary objectForKey:@"AAPL,ig-platform-id"]);
 				
 				NSMutableDictionary *graphicsDictionary = [graphicsDictionaryDictionary objectForKey:modelString];
 				
@@ -906,8 +885,8 @@ bool getIORegGraphicsArray(NSMutableArray **graphicsArray)
 					[graphicsDictionary setObject:modelString forKey:@"Model"];
 					[graphicsDictionary setObject:[NSString stringWithUTF8String:name] forKey:@"Framebuffer"];
 					
-					if (platformID != nil)
-						[graphicsDictionary setObject:[NSString stringWithFormat:@"0x%08X", platformIDInt] forKey:@"Framebuffer"];
+					if (platformID != 0)
+						[graphicsDictionary setObject:[NSString stringWithFormat:@"0x%08X", platformID] forKey:@"Framebuffer"];
 					
 					NSString *bundleID = (__bridge NSString *)IORegistryEntrySearchCFProperty(parentDevice, kIOServicePlane, CFSTR("CFBundleIdentifier"), kCFAllocatorDefault, kIORegistryIterateRecursively);
 					
@@ -1560,7 +1539,7 @@ bool getScreenNumberForDisplay(SInt32 myVendorID, SInt32 myProductID, SInt32 myS
 	return retval;
 }
 
-void getScreenInfoForDisplay(io_service_t service, NSString **displayName, SInt32 *vendorID, SInt32 *productID, SInt32 *serialNumber, NSData **edid, NSString **prefsKey)
+void getScreenInfoForDisplay(io_service_t service, NSString **displayName, uint32_t *vendorID, uint32_t *productID, uint32_t *serialNumber, NSData **edid, NSString **prefsKey)
 {
 	*displayName = GetLocalizedString(@"Unknown");
 	
@@ -1663,7 +1642,7 @@ bool getDisplayArray(NSMutableArray **displayArray)
 			{
 				NSDictionary *framebufferProperties = (__bridge NSDictionary *)framebufferPropertiesRef;
 				
-				port = properyToUInt32([framebufferProperties objectForKey:@"port-number"]);
+				port = propertyToUInt32([framebufferProperties objectForKey:@"port-number"]);
 				
 				CFRelease(framebufferPropertiesRef);
 			}
@@ -1675,11 +1654,9 @@ bool getDisplayArray(NSMutableArray **displayArray)
 			{
 				NSDictionary *videoDeviceProperties = (__bridge NSDictionary *)videoDevicePropertiesRef;
 				
-				NSData *deviceID = [videoDeviceProperties objectForKey:@"device-id"];
-				NSData *vendorID = [videoDeviceProperties objectForKey:@"vendor-id"];
+				videoDeviceID = propertyToUInt32([videoDeviceProperties objectForKey:@"device-id"]);
+				videoVendorID = propertyToUInt32([videoDeviceProperties objectForKey:@"vendor-id"]);
 				
-				videoVendorID = getUInt32FromData(vendorID);
-				videoDeviceID = getUInt32FromData(deviceID);
 				videoID = (videoDeviceID << 16) | videoVendorID;
 				
 				CFRelease(videoDevicePropertiesRef);
@@ -1687,7 +1664,7 @@ bool getDisplayArray(NSMutableArray **displayArray)
 			
 			NSString *screenName = [NSString string];
 			bool isInternal = [[NSString stringWithUTF8String:name] isEqualToString:@"AppleBacklightDisplay"];
-			SInt32 vendorID = 0, productID = 0, serialNumber = 0;
+			uint32_t vendorID = 0, productID = 0, serialNumber = 0;
 			NSData *edid = nil;
 			NSString *prefsKey = nil;
 			NSMutableArray *resolutionsArray = [NSMutableArray array];
@@ -1890,7 +1867,7 @@ bool getPlatformID(uint32_t *platformID)
 	return true;
 }
 
-NSString *getASPMString(NSNumber *aspm)
+NSString *getASPMString(uint32_t aspm)
 {
 	// Hex  Binary  Meaning
 	// -------------------------
@@ -1901,5 +1878,5 @@ NSString *getASPMString(NSNumber *aspm)
 	
 	NSArray *aspmArray = @[@"L0", @"L0s", @"L1", @"L1+L0s"];
 	
-	return [aspmArray objectAtIndex:aspm.unsignedIntValue & 0x3];
+	return [aspmArray objectAtIndex:aspm & 0x3];
 }

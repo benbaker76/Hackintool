@@ -367,17 +367,17 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	if (getIORegProperties(@"IODeviceTree:/", &platformDictionary))
 	{
-		_serialNumber = properyToString([platformDictionary objectForKey:@"IOPlatformSerialNumber"]);
+		_serialNumber = propertyToString([platformDictionary objectForKey:@"IOPlatformSerialNumber"]);
 		
-		[self addToList:_systemInfoArray name:@"Board ID" value:properyToString([platformDictionary objectForKey:@"board-id"])];
+		[self addToList:_systemInfoArray name:@"Board ID" value:propertyToString([platformDictionary objectForKey:@"board-id"])];
 		
 		NSMutableDictionary *romDictionary;
 		
 		if (getIORegProperties(@"IODeviceTree:/rom", &romDictionary))
-			[self addToList:_systemInfoArray name:@"FW Version" value:properyToString([romDictionary objectForKey:@"version"])];
+			[self addToList:_systemInfoArray name:@"FW Version" value:propertyToString([romDictionary objectForKey:@"version"])];
 		
 		[self addToList:_systemInfoArray name:@"Serial Number" value:_serialNumber];
-		[self addToList:_systemInfoArray name:@"Hardware UUID" value:properyToString([platformDictionary objectForKey:@"IOPlatformUUID"])];
+		[self addToList:_systemInfoArray name:@"Hardware UUID" value:propertyToString([platformDictionary objectForKey:@"IOPlatformUUID"])];
 
 		[self getSerialInfo:_serialNumber serialInfoArray:_serialInfoArray];
 	}
@@ -1715,11 +1715,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			// PCI device
 			if (productID == nil && vendorID == nil)
 			{
-				NSData *deviceIDData = [deviceDictionary objectForKey:@"device-id"];
-				NSData *vendorIDData = [deviceDictionary objectForKey:@"vendor-id"];
+				uint32_t deviceIDInt = propertyToUInt32([deviceDictionary objectForKey:@"device-id"]);
+				uint32_t vendorIDInt = propertyToUInt32([deviceDictionary objectForKey:@"vendor-id"]);
 				
-				productID = [NSNumber numberWithInt:getUInt32FromData(deviceIDData)];
-				vendorID = [NSNumber numberWithInt:getUInt32FromData(vendorIDData)];
+				productID = [NSNumber numberWithUnsignedInt:deviceIDInt];
+				vendorID = [NSNumber numberWithUnsignedInt:vendorIDInt];
 				
 				[self getPCIDeviceInfo:vendorID deviceID:productID vendorName:&vendorName deviceName:&productName];
 			}

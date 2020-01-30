@@ -20,7 +20,8 @@ bool getDevicePath(NSString *search, NSString **devicePath);
 bool getAPFSPhysicalStoreBSDName(NSString *mediaUUID, NSString **bsdName);
 bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray);
 bool getIORegAudioDeviceArray(NSMutableArray **propertyDictionaryArray);
-NSString *properyToString(id value);
+NSString *propertyToString(id value);
+uint32_t propertyToUInt32(id value);
 uint32_t nameToUInt32(NSString *name);
 bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray);
 bool getIORegNetworkArray(NSMutableArray **networkInterfacesArray);
@@ -49,6 +50,6 @@ bool getIORegPCIDeviceNSData(NSString *pciName, NSString *propertyName, NSData *
 bool getPlatformTableNative(NSData **nativePlatformTable);
 bool getPlatformTablePatched(NSData **patchedPlatformTable);
 bool getPlatformID(uint32_t *platformID);
-NSString *getASPMString(NSNumber *aspm);
+NSString *getASPMString(uint32_t aspm);
 
 #endif /* IORegTools_hpp */

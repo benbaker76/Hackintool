@@ -523,8 +523,7 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		if (usbController == nil || usbControllerID == nil)
 			continue;
 		
-		NSData *portData = [usbEntryDictionary objectForKey:@"port"];
-		uint32_t port = getUInt32FromData(portData);
+		uint32_t port = propertyToUInt32([usbEntryDictionary objectForKey:@"port"]);
 		NSString *hubName = [usbEntryDictionary objectForKey:@"HubName"];
 		NSNumber *hubLocation = [usbEntryDictionary objectForKey:@"HubLocation"];
 		NSString *modelEntryName = [NSString stringWithFormat:@"%@-%@%@", appDelegate.modelIdentifier, usbController, hubName != nil ? @"-internal-hub" : @""];

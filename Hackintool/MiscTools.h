@@ -57,7 +57,6 @@ NSString *getCPUInfo();
 bool getMetalInfo(CGDirectDisplayID directDisplayID, NSString **name, bool &isDefault, bool &isLowPower, bool &isHeadless);
 bool getMetalInfo(NSString **name, bool &isLowPower, bool &isHeadless);
 NSString *appendSuffixToPath(NSString *path, NSString *suffix);
-uint32_t getUInt32FromData(NSData *data);
 NSColor *getColorAlpha(NSColor *color, float alpha);
 bool getRegExArray(NSString *regExPattern, NSString *valueString, uint32_t itemCount, NSMutableArray **itemArray);
 uint32_t getInt(NSString *valueString);
