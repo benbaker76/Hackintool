@@ -1796,6 +1796,24 @@
 	</dict>
 	<dict>
 		<key>CodecID</key>
+		<integer>283902485</integer>
+		<key>CodecName</key>
+		<string>ALC215</string>
+		<key>LayoutIDs</key>
+		<array>
+			<integer>18</integer>
+		</array>
+		<key>MaxKernel</key>
+		<integer>15</integer>
+		<key>MinKernel</key>
+		<integer>13</integer>
+		<key>Revisions</key>
+		<array>
+			<string>0x100002</string>
+		</array>
+	</dict>
+	<dict>
+		<key>CodecID</key>
 		<integer>283903601</integer>
 		<key>CodecName</key>
 		<string>ALC671</string>

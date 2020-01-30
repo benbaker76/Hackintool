@@ -1,8 +1,8 @@
 #
 #	List of PCI ID's
 #
-#	Version: 2020.01.17
-#	Date:    2020-01-17 03:15:04
+#	Version: 2020.01.25
+#	Date:    2020-01-25 03:15:02
 #
 #	Maintained by Albert Pool, Martin Mares, and other volunteers from
 #	the PCI ID Project at https://pci-ids.ucw.cz/.
@@ -1166,6 +1166,7 @@
 		1458 b002  GA-MA770-DS3rev2.0 Motherboard
 		1849 4390  Motherboard (one of many)
 	4391  SB7x0/SB8x0/SB9x0 SATA Controller [AHCI mode]
+		103c 1609  ProLiant MicroServer N36L
 		103c 1611  Pavilion DM1Z-3000
 		1043 82ef  M3A78-EH Motherboard
 		1043 8443  M5A88-V EVO
@@ -1179,6 +1180,7 @@
 	4395  SB8x0/SB9x0 SATA Controller [Storage mode]
 	4396  SB7x0/SB8x0/SB9x0 USB EHCI Controller
 		1019 2120  A785GM-M
+		103c 1609  ProLiant MicroServer N36L
 		103c 1611  Pavilion DM1Z-3000
 		1043 82ef  M3A78-EH Motherboard
 		1043 8443  M5A88-V EVO
@@ -1187,6 +1189,7 @@
 		174b 1001  PURE Fusion Mini
 	4397  SB7x0/SB8x0/SB9x0 USB OHCI0 Controller
 		1019 2120  A785GM-M
+		103c 1609  ProLiant MicroServer N36L
 		103c 1611  Pavilion DM1Z-3000
 		1043 82ef  M3A78-EH Motherboard
 		1043 8443  M5A88-V EVO
@@ -1207,10 +1210,12 @@
 	439c  SB7x0/SB8x0/SB9x0 IDE Controller
 		1002 4392  MSI MS-7713 motherboard
 		1019 2120  A785GM-M
+		103c 1609  ProLiant MicroServer N36L
 		1043 82ef  M3A78-EH Motherboard
 		105b 0e13  N15235/A74MX mainboard / AMD SB700
 	439d  SB7x0/SB8x0/SB9x0 LPC host controller
 		1019 2120  A785GM-M
+		103c 1609  ProLiant MicroServer N36L
 		103c 1611  Pavilion DM1Z-3000
 		1043 82ef  M3A78-EH Motherboard
 		1043 8443  M5A88-V EVO
@@ -3746,6 +3751,7 @@
 		1019 2120  A785GM-M
 		1043 83a2  M4A785TD Motherboard
 	9712  RS880M [Mobility Radeon HD 4225/4250]
+		103c 1609  ProLiant MicroServer N36L
 	9713  RS880M [Mobility Radeon HD 4100]
 	9714  RS880 [Radeon HD 4290]
 	9715  RS880 [Radeon HD 4250]
@@ -4945,13 +4951,16 @@
 		1043 82f1  M3A78-EH Motherboard
 	9601  RS880 Host Bridge
 		1019 2120  A785GM-M
+		103c 1609  ProLiant MicroServer N36L
 		1043 83a2  M4A785-M Mainboard
 		1043 843e  M5A88-V EVO
 	9602  RS780/RS880 PCI to PCI bridge (int gfx)
 	9603  RS780 PCI to PCI bridge (ext gfx port 0)
+		103c 1609  ProLiant MicroServer N36L
 	9604  RS780/RS880 PCI to PCI bridge (PCIE port 0)
 	9605  RS780/RS880 PCI to PCI bridge (PCIE port 1)
 	9606  RS780 PCI to PCI bridge (PCIE port 2)
+		103c 1609  ProLiant MicroServer N36L
 	9607  RS780/RS880 PCI to PCI bridge (PCIE port 3)
 	9608  RS780/RS880 PCI to PCI bridge (PCIE port 4)
 	9609  RS780/RS880 PCI to PCI bridge (PCIE port 5)
@@ -5907,6 +5916,7 @@
 	4031  zx2 I/O Controller
 	4037  PCIe Local Bus Adapter
 	9602  AMD RS780/RS880 PCI to PCI bridge (int gfx)
+		103c 1609  ProLiant MicroServer N36L
 103e  Solliday Engineering
 103f  Synopsys/Logic Modeling Group
 1040  Accelgraphics Inc.
@@ -11820,6 +11830,7 @@
 	1c90  GP107M [GeForce MX150]
 	1c91  GP107M [GeForce GTX 1050 3 GB Max-Q]
 	1c92  GP107M [GeForce GTX 1050 Mobile]
+	1c94  GP107M [GeForce MX350]
 	1ca7  GP107GL
 	1ca8  GP107GL
 	1caa  GP107GL
@@ -11846,6 +11857,7 @@
 	1d12  GP108M [GeForce MX150]
 		1d72 1701  Mi Notebook Pro [GeForce MX150]
 	1d13  GP108M [GeForce MX250]
+	1d16  GP108M [GeForce MX330]
 	1d33  GP108GLM [Quadro P500 Mobile]
 	1d34  GP108GLM [Quadro P520]
 	1d52  GP108BM [GeForce MX250]
@@ -22411,7 +22423,7 @@
 	00a4  FBC4XGG3 Capture 4x10Gb [Livigno]
 	00a5  FBC2XLG Capture 2x40Gb [Livorno]
 	00a6  FBC1CG Capture 1x100Gb
-	00a9  FBC2XGHH Capture 2x10Gb
+	00a9  FBC2XGHH Capture 2x10Gb [Latina]
 	00ad  FBC2CGG3HL Capture 2x100Gb [Padua]
 	00af  Capture slave device
 	00e0  PacketMover 2x100Gb [Savona]
@@ -22455,7 +22467,14 @@
 	1285  PC300 NVMe Solid State Drive 1TB
 	1504  SC300 512GB M.2 2280 SATA Solid State Drive
 1c5f  Beijing Memblaze Technology Co. Ltd.
+	000d  PBlaze5 520/526 AIC
+	003d  PBlaze5 920/926 AIC
+	010d  PBlaze5 520/526 U.2
+	013d  PBlaze5 920/926 U.2
 	0540  PBlaze4 NVMe SSD
+	0550  PBlaze5 700/900
+	0555  PBlaze5 510/516
+	0557  PBlaze5 910/916
 # http://www.nicevt.ru/ (in Russian)
 1c63  Science and Research Centre of Computer Technology (JSC "NICEVT")
 # http://www.radiotec.ru/catalog.php?cat=jr8&art=14109
@@ -22786,7 +22805,8 @@
 # JungleCat VU35P Module
 	1635  JCM35
 1e26  Fujitsu Client Computing Limited
-1e38  Thinci, Inc
+# nee Thinci, Inc
+1e38  Blaize, Inc
 1e3d  Burlywood, Inc
 1e49  Yangtze Memory Technologies Co.,Ltd
 1e4c  GSI Technology
@@ -25635,6 +25655,22 @@
 		1137 0000  Ethernet Network Adapter XXV710
 		1137 0225  Ethernet Network Adapter XXV710
 		1137 02b4  Ethernet Network Adapter XXV710 OCP 2.0
+# UEFI PXE Disabled
+		1374 0230  Single Port 25 Gigabit Ethernet PCI Express Server Adapter (PE325G1I71)
+# With UEFI PXE Enabled
+		1374 0231  Single Port 25 Gigabit Ethernet PCI Express Server Adapter (PE325G1I71EU)
+# UEFI PXE Disabled
+		1374 0234  Dual Port 25 Gigabit Ethernet PCI Express Server Adapter (PE325G2I71)
+# With UEFI PXE Enabled
+		1374 0235  Dual Port 25 Gigabit Ethernet PCI Express Server Adapter (PE325G2I71EU)
+# PCIe x8 Bifurcated as x4x4, UEFI PXE Disabled, low profile
+		1374 0238  Quad Port 25 Gigabit Ethernet PCI Express Server Adapter (PE325G4I71L)
+# PCIe x8 Bifurcated as x4x4, UEFI PXE Enabled, low profile
+		1374 0239  Quad Port 25 Gigabit Ethernet PCI Express Server Adapter (PE325G4I71LEU)
+# PCIe x16 Bifurcated as x8x8, UEFI PXE Disabled, low profile
+		1374 023a  Quad Port 25 Gigabit Ethernet PCI Express Server Adapter (PE31625G4I71L)
+# PCIe x16 Bifurcated as x8x8, UEFI PXE Enabled, low profile
+		1374 023b  Quad Port 25 Gigabit Ethernet PCI Express Server Adapter (PE31625G4I71LEU)
 		1590 0000  Ethernet Network Adapter XXV710-2
 		1590 0253  Ethernet 10/25/Gb 2-port 661SFP28 Adapter
 		8086 0000  Ethernet Network Adapter XXV710
@@ -25739,7 +25775,13 @@
 	15ec  JHL7540 Thunderbolt 3 USB Controller [Titan Ridge 4C 2018]
 	15ef  JHL7540 Thunderbolt 3 Bridge [Titan Ridge DD 2018]
 	15f0  JHL7540 Thunderbolt 3 USB Controller [Titan Ridge DD 2018]
+	15f4  Ethernet Connection (15) I219-LM
+	15f5  Ethernet Connection (15) I219-V
 	15f6  I210 Gigabit Ethernet Connection
+	15f9  Ethernet Connection (14) I219-LM
+	15fa  Ethernet Connection (14) I219-V
+	15fb  Ethernet Connection (13) I219-LM
+	15fc  Ethernet Connection (13) I219-V
 	15ff  Ethernet Controller X710 for 10GBASE-T
 		1137 0000  X710TLG GbE RJ45 PCIe NIC
 		1137 02c1  X710T2LG 2x10 GbE RJ45 PCIe NIC
@@ -25920,6 +25962,10 @@
 	19df  Atom Processor C3000 Series SMBus controller
 	19e0  Atom Processor C3000 Series SPI Controller
 	19e2  Atom Processor C3000 Series QuickAssist Technology
+	1a1c  Ethernet Connection (17) I219-LM
+	1a1d  Ethernet Connection (17) I219-V
+	1a1e  Ethernet Connection (16) I219-LM
+	1a1f  Ethernet Connection (16) I219-V
 	1a21  82840 840 [Carmel] Chipset Host Bridge (Hub A)
 	1a23  82840 840 [Carmel] Chipset AGP Bridge
 	1a24  82840 840 [Carmel] Chipset PCI Bridge (Hub B)
@@ -31952,6 +31998,10 @@ d161  Digium, Inc.
 	8010  Wildcard A4B 4-port analog card (PCI-Express)
 	8013  Wildcard TE236/TE436 quad-span T1/E1/J1 card
 	b410  Wildcard B410 quad-BRI card
+d209  Ultimarc
+	1500  PAC Drive
+	15a2  SpinTrak
+	1601  AimTrak
 d4d4  Dy4 Systems Inc
 	0601  PCI Mezzanine Card
 d531  I+ME ACTIA GmbH
