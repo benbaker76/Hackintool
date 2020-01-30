@@ -3074,7 +3074,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		for (NSMutableDictionary *usbControllersDictionary in _usbControllersArray)
 		{
-			if ([usbControllerID isEqualToNumber:[usbControllersDictionary objectForKey:@"ID"]])
+			if ([usbController isEqualToString:[usbControllersDictionary objectForKey:@"Type"]])
 			{
 				foundController = true;
 				break;
@@ -3084,14 +3084,14 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		if (foundController)
 			continue;
 		
-		NSMutableDictionary *usbControllersDictionary = [NSMutableDictionary dictionary];
 		NSNumber *vendorID = [NSNumber numberWithInt:usbControllerID.intValue & 0xFFFF];
 		NSNumber *deviceID = [NSNumber numberWithInt:(usbControllerID.intValue >> 16) & 0xFFFF];
-		
 		NSString *vendorName = nil, *deviceName = nil;
 		
 		[self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:&vendorName deviceName:&deviceName];
 		
+		NSMutableDictionary *usbControllersDictionary = [NSMutableDictionary dictionary];
+
 		[usbControllersDictionary setObject:usbController forKey:@"Type"];
 		[usbControllersDictionary setObject:deviceName forKey:@"Name"];
 		[usbControllersDictionary setObject:[self getUSBSeries:usbControllerID] forKey:@"Series"];
