@@ -10,20 +10,17 @@
 
 @implementation AudioDevice
 
--(id) initWithDeviceClass:(NSString *)deviceClass deviceID:(uint32_t)deviceID revisionID:(uint32_t)revisionID alcLayoutID:(uint32_t)alcLayoutID subDeviceID:(uint32_t)subDeviceID codecAddress:(uint32_t)codecAddress codecID:(uint32_t)codecID codecRevisionID:(uint32_t)codecRevisionID pinConfigurations:(NSData *)pinConfigurations digitalAudioCapabilities:(NSDictionary *)digitalAudioCapabilities
+-(id) initWithDeviceBundleID:(NSString *)bundleID deviceClass:(NSString *)deviceClass deviceID:(uint32_t)deviceID revisionID:(uint32_t)revisionID alcLayoutID:(uint32_t)alcLayoutID subDeviceID:(uint32_t)subDeviceID pinConfigurations:(NSData *)pinConfigurations
 {
 	if (self = [super init])
 	{
-		_deviceClass = deviceClass;
-		_deviceID = deviceID;
-		_revisionID = revisionID;
-		_alcLayoutID = alcLayoutID;
-		_subDeviceID = subDeviceID;
-		_codecAddress = codecAddress;
-		_codecID = codecID;
-		_codecRevisionID = codecRevisionID;
-		_pinConfigurations = pinConfigurations;
-		_digitalAudioCapabilities = digitalAudioCapabilities;
+		self.bundleID = bundleID;
+		self.deviceClass = deviceClass;
+		self.deviceID = deviceID;
+		self.revisionID = revisionID;
+		self.alcLayoutID = alcLayoutID;
+		self.subDeviceID = subDeviceID;
+		self.pinConfigurations = pinConfigurations;
 	}
 	
 	return self;
@@ -31,14 +28,16 @@
 
 - (void)dealloc
 {
+	[_bundleID release];
 	[_deviceClass release];
-	[_pinConfigurations release];
-	[_digitalAudioCapabilities release];
+	[_vendorName release];
+	[_deviceName release];
+	[_codecVendorName release];
 	[_codecName release];
 	[_layoutIDArray release];
 	[_revisionArray release];
-	[_hdaConfigDefaultDictionary release];
-	[_bundleID release];
+	[_pinConfigurations release];
+	[_digitalAudioCapabilities release];
 	
 	[super dealloc];
 }

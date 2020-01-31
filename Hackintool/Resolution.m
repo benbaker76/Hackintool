@@ -14,9 +14,9 @@
 {
 	if (self = [super init])
 	{
-		_width = width;
-		_height = height;
-		_type = type;
+		self.width = width;
+		self.height = height;
+		self.type = type;
 	}
 	
 	return self;

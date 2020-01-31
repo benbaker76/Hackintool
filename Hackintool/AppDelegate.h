@@ -43,13 +43,6 @@ enum BootloaderType
 
 typedef struct
 {
-	uint32_t Device;
-	NSString *Name;
-	NSString *Vendor;
-} AudioController;
-
-typedef struct
-{
 	NSString *IntelGen;
 	NSString *PlatformID;
 	bool KextsToPatchHex;
@@ -84,7 +77,6 @@ typedef struct
 	bool InjectDeviceID;
 	bool USBPortLimit;
 	bool SpoofAudioDeviceID;
-	uint32_t SelectedAudioDevice;
 	bool ShowInstalledOnly;
 	bool LSPCON_Enable;
 	bool LSPCON_AutoDetect;
@@ -127,7 +119,6 @@ typedef struct
 	
 	NSArray *_tableViewArray;
 	
-	AudioController _audioController;
 	NSMutableArray *_audioDevicesArray;
 	
 	NSMutableArray *_usbControllersArray;
@@ -373,7 +364,7 @@ typedef struct
 @property (readonly) NSString *gpuModel;
 @property (readonly) NSString *bootLog;
 @property (readonly) NSString *bootloaderDirPath;
-@property (readonly) AudioDevice *audioDevice;
+@property (readonly) uint32_t alcLayoutID;
 @property Settings settings;
 
 // Bootloader Download
@@ -405,7 +396,7 @@ typedef struct
 - (bool)showAlert:(NSString *)message text:(NSString *)text;
 - (bool)framebufferHasModified;
 - (uint32_t)getPlatformID;
-- (bool)spoofAudioDeviceID:(uint32_t *)audioDeviceID;
+- (bool)spoofAudioDeviceID:(uint32_t)deviceID newDeviceID:(uint32_t *)newDeviceID;
 - (bool)getDeviceIDArray:(NSMutableArray **)deviceIDArray;
 - (void)appendTextViewWithFormat:(NSTextView *)textView format:(NSString *)format, ...;
 - (void)appendTextView:(NSTextView *)textView text:(NSString *)text;
@@ -425,6 +416,8 @@ typedef struct
 - (bool)tryGetACPIPath:(NSString *)ioregName acpiPath:(NSString **)acpiPath;
 - (bool)tryGetPCIDeviceDictionaryFromIORegName:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
 - (bool)tryGetPCIDeviceDictionaryFromClassCode:(NSNumber *)code pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
+- (bool)tryGetAudioController:(NSNumber *)deviceID vendorID:(NSNumber *)vendorID audioDevice:(AudioDevice *)foundAudioDevice;
+- (bool)isAppleALCAudioDevice:(AudioDevice *)audioDevice;
 - (IBAction)generateAudioCodecsInfo:(id)sender;
 - (IBAction)displaySettingsChanged:(id)sender;
 - (IBAction)platformIDButtonClicked:(id)sender;

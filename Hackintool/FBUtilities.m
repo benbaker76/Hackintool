@@ -207,6 +207,8 @@ bool getAudioProperties(AppDelegate *appDelegate, NSString *name, NSMutableDicti
 	if (![appDelegate tryGetPCIDeviceDictionaryFromIORegName:name pciDeviceDictionary:&pciDeviceDictionary])
 		return false;
 	
+	NSNumber *vendorID = [pciDeviceDictionary objectForKey:@"VendorID"];
+	NSNumber *deviceID = [pciDeviceDictionary objectForKey:@"DeviceID"];
 	NSString *deviceName = [pciDeviceDictionary objectForKey:@"DeviceName"];
 	NSString *className = [pciDeviceDictionary objectForKey:@"ClassName"];
 	NSString *subClassName = [pciDeviceDictionary objectForKey:@"SubClassName"];
@@ -223,13 +225,17 @@ bool getAudioProperties(AppDelegate *appDelegate, NSString *name, NSMutableDicti
 	
 	if (settings.SpoofAudioDeviceID)
 	{
-		uint32_t audioDeviceID = 0;
+		uint32_t currentDeviceID = ([vendorID unsignedIntValue] << 16) | [deviceID unsignedIntValue];
+		uint32_t newDeviceID = 0;
 		
-		if ([appDelegate spoofAudioDeviceID:&audioDeviceID])
-			[audioDictionary setObject:getNSDataUInt32(audioDeviceID) forKey:@"device-id"];
+		if ([appDelegate spoofAudioDeviceID:currentDeviceID newDeviceID:&newDeviceID])
+			[audioDictionary setObject:getNSDataUInt32(newDeviceID) forKey:@"device-id"];
 	}
 	
-	[audioDictionary setObject:getNSDataUInt32(appDelegate.audioDevice.alcLayoutID) forKey:@"layout-id"];
+	AudioDevice *audioDevice = nil;
+	
+	if ([appDelegate tryGetAudioController:deviceID vendorID:vendorID audioDevice:audioDevice])
+		[audioDictionary setObject:getNSDataUInt32(appDelegate.alcLayoutID) forKey:@"layout-id"];
 	
 	return true;
 }

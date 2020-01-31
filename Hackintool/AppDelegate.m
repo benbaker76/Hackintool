@@ -968,6 +968,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 
 - (bool)getAudioCodecName:(uint32_t)deviceID revisionID:(uint16_t)revisionID name:(NSString **)name
 {
+	*name = @"???";
+	
+	if (deviceID == 0)
+		return false;
+	
 	for (NSDictionary *codecDictionary in _audioCodecsArray)
 	{
 		NSNumber *findDeviceID = [codecDictionary objectForKey:@"DeviceID"];
@@ -995,16 +1000,63 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		}
 	}
 	
-	*name = @"???";
-	
 	return false;
 }
 
 - (void)initAudio
 {
+	// https://www.tonymacx86.com/threads/release-intel-fb-patcher-v1-6-4.254559/page-31#post-1849314
+	// https://www.tonymacx86.com/threads/release-intel-fb-patcher-v1-6-4.254559/page-31#post-1849287
+	//
+	// UseIntelHDMI
+	// <key>UseIntelHDMI</key>
+	// <false/>
+	// If TRUE, hda-gfx=onboard-1 will be injected into the GFX0 and HDEF devices. Also, if an ATI or Nvidia HDMI device is present, they'll be assigned to onboard-2. If FALSE, then ATI or Nvidia devices will get onboard-1 as well as the HDAU device if present.
+	//
+	// ------//----------------------------
+	// Yes... and no-controller-patch=1 (to avoid default AppleALC patching for unsupported HDA controllers).
+	// Added ability to disable controller patching by injecting property 'no-controller-patch' (for use of FakePCIID_Intel_HDMI_Audio)
+	
 	_audioInfoArray = [[NSMutableArray array] retain];
 	
-	[self populateAudioInfo];
+	if (!getIORegAudioDeviceArray(&_audioDevicesArray))
+		return;
+	
+	[self updateAudioCodecInfo];
+	
+	int selectedAudioDevice = -1;
+	
+	for (int i = 0; i < [_audioDevicesArray count]; i++)
+	{
+		AudioDevice *audioDevice = _audioDevicesArray[i];
+		
+		NSNumber *vendorID = [NSNumber numberWithInt:audioDevice.subDeviceID >> 16];
+		NSNumber *deviceID = [NSNumber numberWithInt:audioDevice.subDeviceID & 0xFFFF];
+		NSString *vendorName = nil, *deviceName = nil;
+		NSString *codecVendorName = nil, *codecName = nil;
+		
+		[self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:&vendorName deviceName:&deviceName];
+		[self getAudioVendorName:audioDevice.codecID vendorName:&codecVendorName];
+		[self getAudioCodecName:audioDevice.codecID revisionID:audioDevice.codecRevisionID name:&codecName];
+		
+		audioDevice.vendorName = vendorName;
+		audioDevice.deviceName = deviceName;
+		audioDevice.codecVendorName = codecVendorName;
+		audioDevice.codecName = codecName;
+		
+		if ([self isAppleALCAudioDevice:audioDevice])
+		{
+			selectedAudioDevice = i;
+			_alcLayoutID = audioDevice.alcLayoutID;
+		}
+	}
+	
+	[_audioDevicesTableView1 reloadData];
+	
+	NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:selectedAudioDevice];
+	[_audioDevicesTableView1 selectRowIndexes:indexSet byExtendingSelection:NO];
+	
+	[self updateAudioInfo];
 }
 
 - (void)initMenus
@@ -1587,6 +1639,39 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	}
 	
 	return false;
+}
+
+- (bool)tryGetAudioController:(NSNumber *)deviceID vendorID:(NSNumber *)vendorID audioDevice:(AudioDevice *)foundAudioDevice
+{
+	for (int i = 0; i < [_pciDevicesArray count]; i++)
+	{
+		NSMutableDictionary *pciDeviceDictionary = _pciDevicesArray[i];
+		NSNumber *vendorID = [pciDeviceDictionary objectForKey:@"VendorID"];
+		NSNumber *deviceID = [pciDeviceDictionary objectForKey:@"DeviceID"];
+		
+		for (AudioDevice *audioDevice in _audioDevicesArray)
+		{
+			NSNumber *audioVendorID = [NSNumber numberWithInt:audioDevice.deviceID >> 16];
+			NSNumber *audioDeviceID = [NSNumber numberWithInt:audioDevice.deviceID & 0xFFFF];
+			
+			if (![vendorID isEqualToNumber:audioVendorID] ||
+				![deviceID isEqualToNumber:audioDeviceID] ||
+				![self isAppleALCAudioDevice:audioDevice])
+				continue;
+			
+			foundAudioDevice = audioDevice;
+			
+			return true;
+		}
+
+	}
+	
+	return false;
+}
+
+- (bool)isAppleALCAudioDevice:(AudioDevice *)audioDevice
+{
+	return ([audioDevice.deviceClass isEqualToString:@"AppleHDADriver"]);
 }
 
 - (void)writePCIDevicesDSL
@@ -3084,8 +3169,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		if (foundController)
 			continue;
 		
-		NSNumber *vendorID = [NSNumber numberWithInt:usbControllerID.intValue & 0xFFFF];
-		NSNumber *deviceID = [NSNumber numberWithInt:(usbControllerID.intValue >> 16) & 0xFFFF];
+		NSNumber *vendorID = [NSNumber numberWithInt:[usbControllerID unsignedIntValue] & 0xFFFF];
+		NSNumber *deviceID = [NSNumber numberWithInt:([usbControllerID unsignedIntValue] >> 16) & 0xFFFF];
 		NSString *vendorName = nil, *deviceName = nil;
 		
 		[self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:&vendorName deviceName:&deviceName];
@@ -3448,7 +3533,7 @@ NSInteger usbSort(id a, id b, void *context)
 	[_resolutionsTableView reloadData];
 }
 
-- (bool)spoofAudioDeviceID:(uint32_t *)audioDeviceID
+- (bool)spoofAudioDeviceID:(uint32_t)deviceID newDeviceID:(uint32_t *)newDeviceID;
 {
 	// Intel HDMI Audio - Haswell
 	// - 8086:0C0C -> 8086:0A0C
@@ -3484,9 +3569,9 @@ NSInteger usbSort(id a, id b, void *context)
 	if ([@[@"8086:A348", @"8086:9DC8"] containsObject:deviceID])
 		*audioDeviceID = 0xA170; */
 	
-	*audioDeviceID = [[_intelSpoofAudioDictionary objectForKey:[NSString stringWithFormat:@"%08X", _audioDevice.deviceID]] unsignedIntValue];
+	*newDeviceID = [[_intelSpoofAudioDictionary objectForKey:[NSString stringWithFormat:@"%08X", deviceID]] unsignedIntValue];
 	
-	return (*audioDeviceID != 0);
+	return (*newDeviceID != 0);
 }
 
 - (bool)getDeviceIDArray:(NSMutableArray **)deviceIDArray
@@ -3640,43 +3725,6 @@ NSInteger usbSort(id a, id b, void *context)
 			resetAutoPatching<FramebufferICLHP>(self);
 			break;
 	}
-}
-
-- (bool)getAudioController
-{
-	NSLog(@"getAudioController: Searching for Audio Device ID 0x%04X", _audioDevice.deviceID);
-	
-	bool audioFound = false;
-	
-	NSBundle *mainBundle = [NSBundle mainBundle];
-	NSString *filePath = nil;
-	
-	if (!(filePath = [mainBundle pathForResource:@"Controllers" ofType:@"plist" inDirectory:@"Audio"]))
-		return false;
-	
-	NSArray *controllersArray = [NSArray arrayWithContentsOfFile:filePath];
-	
-	for (NSDictionary *controllersDictionary in controllersArray)
-	{
-		uint32_t device = [[controllersDictionary objectForKey:@"Device"] unsignedIntValue];
-		NSString *name = [controllersDictionary objectForKey:@"Name"];
-		NSString *vendor = [controllersDictionary objectForKey:@"Vendor"];
-		
-		// NSLog(@"%@, %@ (0x%04X)", name, vendor, device);
-		
-		if (device == _audioDevice.deviceID)
-		{
-			_audioController.Vendor = vendor;
-			_audioController.Device = device;
-			_audioController.Name = name;
-			
-			audioFound = true;
-			
-			break;
-		}
-	}
-	
-	return audioFound;
 }
 
 - (uint32_t)getGPUDeviceID:(uint32_t)platformID
@@ -4488,7 +4536,7 @@ NSInteger usbSort(id a, id b, void *context)
 				NSMutableDictionary *codecDictionary = [NSMutableDictionary dictionary];
 				
 				[codecDictionary setObject:codecName forKey:@"CodecName"];
-				[codecDictionary setObject:@(([vendorID unsignedIntValue] << 16) | ([codecID unsignedIntValue] & 0xFFFF)) forKey:@"CodecID"];
+				[codecDictionary setObject:[NSNumber numberWithUnsignedInt:(([vendorID unsignedIntValue] << 16) | ([codecID unsignedIntValue] & 0xFFFF))] forKey:@"CodecID"];
 				
 				NSMutableArray *layoutIDArray = [NSMutableArray array];
 				NSMutableArray *revisionArray = [NSMutableArray array];
@@ -4566,80 +4614,51 @@ NSInteger usbSort(id a, id b, void *context)
 	}
 }
 
-- (void) populateAudioInfo
+- (void)updateAudioInfo
 {
-	// https://www.tonymacx86.com/threads/release-intel-fb-patcher-v1-6-4.254559/page-31#post-1849314
-	// https://www.tonymacx86.com/threads/release-intel-fb-patcher-v1-6-4.254559/page-31#post-1849287
-	//
-	// UseIntelHDMI
-	// <key>UseIntelHDMI</key>
-	// <false/>
-	// If TRUE, hda-gfx=onboard-1 will be injected into the GFX0 and HDEF devices. Also, if an ATI or Nvidia HDMI device is present, they'll be assigned to onboard-2. If FALSE, then ATI or Nvidia devices will get onboard-1 as well as the HDAU device if present.
-	//
-	// ------//----------------------------
-	// Yes... and no-controller-patch=1 (to avoid default AppleALC patching for unsupported HDA controllers).
-	// Added ability to disable controller patching by injecting property 'no-controller-patch' (for use of FakePCIID_Intel_HDMI_Audio)
+	NSInteger selectedRow = [_audioDevicesTableView1 selectedRow];
 	
-	if (_settings.SelectedAudioDevice == -1)
-		_settings.SelectedAudioDevice = 0;
-	
-	if (!getIORegAudioDeviceArray(&_audioDevicesArray))
+	if (selectedRow == -1)
 		return;
 	
-	[self updateAudioCodecInfo];
+	AudioDevice *audioDevice = _audioDevicesArray[selectedRow];
 	
-	for (int i = 0; i < [_audioDevicesArray count]; i++)
-	{
-		AudioDevice *audioDevice = _audioDevicesArray[i];
-		NSString *codecVendorName = nil, *codecName = nil;
-		
-		[self getAudioVendorName:audioDevice.codecID vendorName:&codecVendorName];
-		[self getAudioCodecName:audioDevice.codecID revisionID:audioDevice.codecRevisionID name:&codecName];
-		
-		audioDevice.codecVendorName = (codecVendorName != nil ? codecVendorName : @"???");
-		audioDevice.codecName = (codecName != nil ? codecName : @"???");
-		
-		if (_settings.SelectedAudioDevice == i)
-			_audioDevice = audioDevice;
-	}
-	
-	/* if ([self getAudioController])
-	 NSLog(@"getAudioController Success");
-	 else
-	 NSLog(@"getAudioController Fail"); */
-	
-	[self updateAudioInfo];
-	
-	NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:_settings.SelectedAudioDevice];
-	[_audioDevicesTableView1 selectRowIndexes:indexSet byExtendingSelection:NO];
-}
-
-- (void) updateAudioInfo
-{
-	uint32_t audioDeviceID = 0;
-	NSNumber *vendorID = [NSNumber numberWithInt:_audioDevice.deviceID >> 16];
-	NSNumber *deviceID = [NSNumber numberWithInt:_audioDevice.deviceID & 0xFFFF];
+	uint32_t newDeviceID = 0;
+	NSNumber *vendorID = [NSNumber numberWithInt:audioDevice.deviceID >> 16];
+	NSNumber *deviceID = [NSNumber numberWithInt:audioDevice.deviceID & 0xFFFF];
+	NSNumber *subVendorID = [NSNumber numberWithInt:audioDevice.subDeviceID >> 16];
+	NSNumber *subDeviceID = [NSNumber numberWithInt:audioDevice.subDeviceID & 0xFFFF];
 	NSString *vendorName = nil, *deviceName = nil;
 	
 	[self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:&vendorName deviceName:&deviceName];
 	
-	bool needsSpoof = [self spoofAudioDeviceID:&audioDeviceID];
+	bool needsSpoof = [self spoofAudioDeviceID:audioDevice.deviceID newDeviceID:&newDeviceID];
 
 	[_audioInfoArray removeAllObjects];
 	
-	[self addToList:_audioInfoArray name:@"Controller" value:[NSString stringWithFormat:@"%@ (0x%08X)%@", deviceName, _audioDevice.deviceID, needsSpoof ? @"*" : @""]];
+	[self addToList:_audioInfoArray name:@"Class" value:audioDevice.deviceClass];
+	[self addToList:_audioInfoArray name:@"Controller" value:[NSString stringWithFormat:@"%@ (0x%08X)%@", deviceName, audioDevice.deviceID, needsSpoof ? @"*" : @""]];
 
 	if (needsSpoof)
 		[self addToList:_audioInfoArray name:@"" value:[NSString stringWithFormat:@"* %@", GetLocalizedString(@"You may require Spoof Audio Device ID")]];
 
-	[self addToList:_audioInfoArray name:@"Vendor" value:[NSString stringWithFormat:@"%@ (0x%04X)", _audioDevice.codecVendorName, _audioDevice.codecID >> 16]];
-	[self addToList:_audioInfoArray name:@"Codec" value:[NSString stringWithFormat:@"%@ (0x%04X)", _audioDevice.codecName, _audioDevice.codecID & 0xFFFF]];
-	[self addToList:_audioInfoArray name:@"Layout ID" value:[NSString stringWithFormat:@"%d", _audioDevice.alcLayoutID]];
-	[self addToList:_audioInfoArray name:@"Revisions" value:_audioDevice.revisionArray != nil ? [_audioDevice.revisionArray componentsJoinedByString:@" "] : @""];
-	[self addToList:_audioInfoArray name:@"Min Kernel" value:[NSString stringWithFormat:@"%d", _audioDevice.minKernel]];
-	[self addToList:_audioInfoArray name:@"Max Kernel" value:[NSString stringWithFormat:@"%d", _audioDevice.maxKernel]];
+	[self addToList:_audioInfoArray name:@"Vendor" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.vendorName, [subVendorID unsignedIntValue]]];
+	[self addToList:_audioInfoArray name:@"Device" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.deviceName, [subDeviceID unsignedIntValue]]];
 	
-	[_audioDevicesTableView1 reloadData];
+	if (audioDevice.codecID != 0)
+	{
+		[self addToList:_audioInfoArray name:@"Codec Vendor" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.codecVendorName, audioDevice.codecID >> 16]];
+		[self addToList:_audioInfoArray name:@"Codec" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.codecName, audioDevice.codecID & 0xFFFF]];
+		
+		if ([self isAppleALCAudioDevice:audioDevice])
+		{
+			[self addToList:_audioInfoArray name:@"Layout ID" value:[NSString stringWithFormat:@"%d", _alcLayoutID]];
+			[self addToList:_audioInfoArray name:@"Revisions" value:audioDevice.revisionArray != nil ? [audioDevice.revisionArray componentsJoinedByString:@" "] : @""];
+			[self addToList:_audioInfoArray name:@"Min Kernel" value:[NSString stringWithFormat:@"%d", audioDevice.minKernel]];
+			[self addToList:_audioInfoArray name:@"Max Kernel" value:[NSString stringWithFormat:@"%d", audioDevice.maxKernel]];
+		}
+	}
+	
 	[_audioInfoTableView reloadData];
 }
 
@@ -5086,7 +5105,6 @@ NSInteger usbSort(id a, id b, void *context)
 	_settings.SpoofAudioDeviceID = [defaults boolForKey:@"SpoofAudioDeviceID"];
 	_settings.USBPortLimit = [defaults boolForKey:@"USBPortLimit"];
 	_settings.ApplyCurrentPatches = [defaults boolForKey:@"ApplyCurrentPatches"];
-	_settings.SelectedAudioDevice = (uint32_t)[defaults integerForKey:@"SelectedAudioDevice"];
 	_settings.ShowInstalledOnly = [defaults boolForKey:@"ShowInstalledOnly"];
 	_settings.LSPCON_Enable = [defaults boolForKey:@"LSPCON_Enable"];
 	_settings.LSPCON_AutoDetect = [defaults boolForKey:@"LSPCON_AutoDetect"];
@@ -5139,7 +5157,6 @@ NSInteger usbSort(id a, id b, void *context)
 	[defaults setBool:_settings.USBPortLimit forKey:@"USBPortLimit"];
 	[defaults setBool:_settings.SpoofAudioDeviceID forKey:@"SpoofAudioDeviceID"];
 	[defaults setBool:_settings.ApplyCurrentPatches forKey:@"ApplyCurrentPatches"];
-	[defaults setInteger:_settings.SelectedAudioDevice forKey:@"SelectedAudioDevice"];
 	[defaults setBool:_settings.ShowInstalledOnly forKey:@"ShowInstalledOnly"];
 	[defaults setBool:_settings.LSPCON_Enable forKey:@"LSPCON_Enable"];
 	[defaults setBool:_settings.LSPCON_AutoDetect forKey:@"LSPCON_AutoDetect"];
@@ -5184,8 +5201,8 @@ NSInteger usbSort(id a, id b, void *context)
 	else if ([identifier isEqualToString:@"LayoutID"])
 	{
 		NSString *layoutID = [comboBox objectValueOfSelectedItem];
-		
-		_audioDevice.alcLayoutID = [layoutID intValue];
+
+		_alcLayoutID = [layoutID intValue];
 		
 		[self updateAudioInfo];
 	}
@@ -6456,14 +6473,20 @@ NSInteger usbSort(id a, id b, void *context)
 		else if([identifier isEqualToString:@"Sub Device"])
 			result.textField.stringValue = [NSString stringWithFormat:@"0x%08X", audioDevice.subDeviceID];
 		else if([identifier isEqualToString:@"Codec"])
-			result.textField.stringValue = [NSString stringWithFormat:@"0x%08X", audioDevice.codecID];
+			result.textField.stringValue = (audioDevice.codecID != 0 ? [NSString stringWithFormat:@"0x%08X", audioDevice.codecID] : @"-");
 		else if([identifier isEqualToString:@"Revision"])
 			result.textField.stringValue = [NSString stringWithFormat:@"0x%04X", audioDevice.codecRevisionID & 0xFFFF];
 		else if([identifier isEqualToString:@"Name"])
-			result.textField.stringValue = audioDevice.codecName;
+			result.textField.stringValue = (audioDevice.codecID != 0 ? audioDevice.codecName : audioDevice.deviceName);
 	}
 	else if (tableView == _audioInfoTableView)
 	{
+		NSInteger selectedRow = [_audioDevicesTableView1 selectedRow];
+		
+		if (selectedRow == -1)
+			return nil;
+		
+		AudioDevice *audioDevice = _audioDevicesArray[selectedRow];
 		NSDictionary *dictionary = [_audioInfoArray objectAtIndex:row];
 		NSString *name = dictionary[@"Name"];
 		NSString *value = dictionary[[tableColumn identifier]];
@@ -6473,7 +6496,7 @@ NSInteger usbSort(id a, id b, void *context)
 			if ([[tableColumn identifier] isEqualToString:@"Value"])
 			{
 				comboBox = [[[NSComboBox alloc] init] autorelease];
-				[comboBox addItemsWithObjectValues:_audioDevice.layoutIDArray];
+				[comboBox addItemsWithObjectValues:audioDevice.layoutIDArray];
 				[comboBox setIdentifier:@"LayoutID"];
 				[comboBox setStringValue:value];
 				[comboBox setDelegate:self];
@@ -6858,14 +6881,7 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (IBAction)audioTableViewSelected:(id)sender
 {
-	NSInteger row = [sender selectedRow];
-	
-	if(row == -1)
-		return;
-	
-	_settings.SelectedAudioDevice = (uint32_t)row;
-	
-	[self populateAudioInfo];
+	[self updateAudioInfo];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
@@ -8998,9 +9014,8 @@ NSInteger usbSort(id a, id b, void *context)
 	{
 		_settings.ShowInstalledOnly = [_showInstalledOnlyButton state];
 		[_kextsTableView reloadData];
-		[self getKextCurrentVersions];
 	}
-	else if ([identifier isEqualToString:@"Refresh"])
+	else if ([identifier isEqualToString:@"Update"])
 	{
 		[self getKextCurrentVersions];
 	}
@@ -9193,10 +9208,6 @@ NSInteger usbSort(id a, id b, void *context)
 		{
 			[self initBootloaderDownloader:@"forced"];
 		}
-		else if ([identifier isEqualToString:@"Installed"])
-		{
-			[self getKextCurrentVersions];
-		}
 		else if ([identifier isEqualToString:@"Power"])
 		{
 			[self getPowerSettings];
@@ -9230,6 +9241,11 @@ NSInteger usbSort(id a, id b, void *context)
 	{
 		pciDeviceDictionary = _graphicDevicesArray[row];
 		bundleID = [pciDeviceDictionary objectForKey:@"BundleID"];
+	}
+	else if ((row = [_audioDevicesTableView1 rowForView:button]) != -1)
+	{
+		AudioDevice *audioDevice = _audioDevicesArray[row];
+		bundleID = audioDevice.bundleID;
 	}
 	else if ((row = [_audioDevicesTableView2 rowForView:button]) != -1)
 	{

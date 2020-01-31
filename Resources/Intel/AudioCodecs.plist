@@ -4,7 +4,7 @@
 <array>
 	<dict>
 		<key>DeviceID</key>
-		<real>269697542</real>
+		<integer>269697542</integer>
 		<key>RevisionID</key>
 		<integer>0</integer>
 		<key>Name</key>
@@ -116,7 +116,7 @@
 	</dict>
 	<dict>
 		<key>DeviceID</key>
-		<real>283902562</real>
+		<integer>283902562</integer>
 		<key>RevisionID</key>
 		<integer>0</integer>
 		<key>Name</key>
