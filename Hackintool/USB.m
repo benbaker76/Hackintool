@@ -367,9 +367,6 @@ ECType checkEC(AppDelegate *appDelegate)
 	if (hasIORegEntry(@"IOService:/AppleACPIPlatformExpert/EC/AppleBusPowerController"))
 		return kECNoSSDTRequired;
 	
-	if (hasIORegEntry(@"IOService:/IOResources/AppleBusPowerController"))
-		return kECNoSSDTRequired;
-	
 	// At this point - we know AppleBusPowerController isn't loaded - let's look at renames and such
 	// Check for ECDT in ACPI - if this is present, all bets are off
 	// and we need to avoid any EC renames and such

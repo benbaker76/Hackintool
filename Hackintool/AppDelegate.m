@@ -5546,16 +5546,6 @@ NSInteger usbSort(id a, id b, void *context)
 	}
 	else if (tableView == _usbPortsTableView)
 	{
-		NSMutableDictionary *usbPortsDictionary = _usbPortsArray[row];
-		
-		NSString *usbController = [usbPortsDictionary objectForKey:@"UsbController"];
-		NSNumber *usbControllerID = [usbPortsDictionary objectForKey:@"UsbControllerID"];
-		NSString *usbControllerSeries = [self getUSBSeries:usbControllerID];
-		
-		if (usbController == nil || usbControllerID == nil)
-			return nil;
-		
-		return [NSString stringWithFormat:GetLocalizedString(@"%@ %@-series Controller (0x%08X)"), usbController, usbControllerSeries, [usbControllerID unsignedIntValue]];
 	}
 	else if (tableView == _audioDevicesTableView1)
 	{
@@ -6478,7 +6468,13 @@ NSInteger usbSort(id a, id b, void *context)
 	{
 		NSMutableDictionary *usbPortsDictionary = _usbPortsArray[row];
 
-		if([identifier isEqualToString:@"port"])
+		if ([identifier isEqualToString:@"Type"])
+		{
+			NSString *usbController = [usbPortsDictionary objectForKey:@"UsbController"];
+			
+			result.textField.stringValue = usbController;
+		}
+		else if([identifier isEqualToString:@"port"])
 		{
 			int port = 0;
 			
