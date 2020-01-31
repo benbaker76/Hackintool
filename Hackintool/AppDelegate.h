@@ -417,7 +417,8 @@ typedef struct
 - (bool)tryGetPCIDeviceDictionaryFromIORegName:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
 - (bool)tryGetPCIDeviceDictionaryFromClassCode:(NSNumber *)code pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
 - (bool)tryGetAudioController:(NSNumber *)deviceID vendorID:(NSNumber *)vendorID audioDevice:(AudioDevice *)foundAudioDevice;
-- (bool)isAppleALCAudioDevice:(AudioDevice *)audioDevice;
+- (bool)isAppleHDAAudioDevice:(AudioDevice *)audioDevice;
+- (bool)isVoodooHDAAudioDevice:(AudioDevice *)audioDevice;
 - (IBAction)generateAudioCodecsInfo:(id)sender;
 - (IBAction)displaySettingsChanged:(id)sender;
 - (IBAction)platformIDButtonClicked:(id)sender;

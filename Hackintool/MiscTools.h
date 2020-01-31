@@ -38,6 +38,7 @@ NSData *getNSDataUInt32(uint32_t uint32Value);
 NSString *getBase64String(uint32_t uint32Value);
 NSString *getByteString(uint32_t uint32Value);
 NSMutableString *getByteString(NSData *data);
+NSMutableString *getByteString(NSData *data, NSString *prefix);
 NSMutableString *getByteString(NSData *data, NSString *delimiter, NSString *prefix, bool lineBreak, bool upperCase);
 NSMutableString *getByteStringClassic(NSData *data);
 NSData *getReverseData(NSData *data);

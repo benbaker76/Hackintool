@@ -20,6 +20,7 @@
 @property (nonatomic, retain) NSString *deviceClass;
 @property uint32_t deviceID;
 @property uint32_t revisionID;
+@property uint32_t layoutID;
 @property uint32_t alcLayoutID;
 @property uint32_t subDeviceID;
 @property uint32_t codecAddress;
@@ -31,12 +32,12 @@
 @property (nonatomic, retain) NSString *codecName;
 @property (nonatomic, retain) NSMutableArray *layoutIDArray;
 @property (nonatomic, retain) NSMutableArray *revisionArray;
-@property (nonatomic, retain) NSData *pinConfigurations;
 @property (nonatomic, retain) NSData *digitalAudioCapabilities;
+@property (nonatomic, retain) NSMutableDictionary *hdaConfigDefaultDictionary;
 @property uint32_t minKernel;
 @property uint32_t maxKernel;
 
--(id) initWithDeviceBundleID:(NSString *)bundleID deviceClass:(NSString *)deviceClass deviceID:(uint32_t)deviceID revisionID:(uint32_t)revisionID alcLayoutID:(uint32_t)alcLayoutID subDeviceID:(uint32_t)subDeviceID pinConfigurations:(NSData *)pinConfigurations;
+-(id) initWithDeviceBundleID:(NSString *)bundleID deviceClass:(NSString *)deviceClass deviceName:(NSString *)deviceName deviceID:(uint32_t)deviceID revisionID:(uint32_t)revisionID alcLayoutID:(uint32_t)alcLayoutID subDeviceID:(uint32_t)subDeviceID;
 
 @end
 

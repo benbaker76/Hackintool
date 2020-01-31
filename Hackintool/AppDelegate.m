@@ -1023,7 +1023,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		return;
 	
 	[self updateAudioCodecInfo];
-	
+		
 	int selectedAudioDevice = -1;
 	
 	for (int i = 0; i < [_audioDevicesArray count]; i++)
@@ -1035,16 +1035,18 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSString *vendorName = nil, *deviceName = nil;
 		NSString *codecVendorName = nil, *codecName = nil;
 		
-		[self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:&vendorName deviceName:&deviceName];
+		if ([self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:&vendorName deviceName:&deviceName])
+			audioDevice.deviceName = deviceName;
+		
 		[self getAudioVendorName:audioDevice.codecID vendorName:&codecVendorName];
-		[self getAudioCodecName:audioDevice.codecID revisionID:audioDevice.codecRevisionID name:&codecName];
+		
+		if ([self getAudioCodecName:audioDevice.codecID revisionID:audioDevice.codecRevisionID name:&codecName] || audioDevice.codecName == nil)
+			audioDevice.codecName = codecName;
 		
 		audioDevice.vendorName = vendorName;
-		audioDevice.deviceName = deviceName;
 		audioDevice.codecVendorName = codecVendorName;
-		audioDevice.codecName = codecName;
-		
-		if ([self isAppleALCAudioDevice:audioDevice])
+			
+		if ([self isAppleHDAAudioDevice:audioDevice])
 		{
 			selectedAudioDevice = i;
 			_alcLayoutID = audioDevice.alcLayoutID;
@@ -1656,7 +1658,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			
 			if (![vendorID isEqualToNumber:audioVendorID] ||
 				![deviceID isEqualToNumber:audioDeviceID] ||
-				![self isAppleALCAudioDevice:audioDevice])
+				![self isAppleHDAAudioDevice:audioDevice])
 				continue;
 			
 			foundAudioDevice = audioDevice;
@@ -1669,9 +1671,14 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	return false;
 }
 
-- (bool)isAppleALCAudioDevice:(AudioDevice *)audioDevice
+- (bool)isAppleHDAAudioDevice:(AudioDevice *)audioDevice
 {
 	return ([audioDevice.deviceClass isEqualToString:@"AppleHDADriver"]);
+}
+
+- (bool)isVoodooHDAAudioDevice:(AudioDevice *)audioDevice
+{
+	return ([audioDevice.deviceClass isEqualToString:@"VoodooHDADevice"]);
 }
 
 - (void)writePCIDevicesDSL
@@ -4648,17 +4655,57 @@ NSInteger usbSort(id a, id b, void *context)
 	if (audioDevice.codecID != 0)
 	{
 		[self addToList:_audioInfoArray name:@"Codec Vendor" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.codecVendorName, audioDevice.codecID >> 16]];
-		[self addToList:_audioInfoArray name:@"Codec" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.codecName, audioDevice.codecID & 0xFFFF]];
+		[self addToList:_audioInfoArray name:@"Codec Name" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.codecName, audioDevice.codecID & 0xFFFF]];
 		
-		if ([self isAppleALCAudioDevice:audioDevice])
+		if ([self isAppleHDAAudioDevice:audioDevice])
 		{
-			[self addToList:_audioInfoArray name:@"Layout ID" value:[NSString stringWithFormat:@"%d", _alcLayoutID]];
+			[self addToList:_audioInfoArray name:@"ALC Layout ID" value:[NSString stringWithFormat:@"%d", _alcLayoutID]];
 			[self addToList:_audioInfoArray name:@"Revisions" value:audioDevice.revisionArray != nil ? [audioDevice.revisionArray componentsJoinedByString:@" "] : @""];
 			[self addToList:_audioInfoArray name:@"Min Kernel" value:[NSString stringWithFormat:@"%d", audioDevice.minKernel]];
 			[self addToList:_audioInfoArray name:@"Max Kernel" value:[NSString stringWithFormat:@"%d", audioDevice.maxKernel]];
 		}
 	}
 	
+	NSMutableDictionary *hdaConfigDefaultDictionary = audioDevice.hdaConfigDefaultDictionary;
+	
+	// AFGLowPowerState"=<03000000>,"CodecID"=283902517,"ConfigData"=<01470c02>,"FuncGroup"=1,"Codec"="vusun123 - Realtek ALC235 for Lenovo Legion Y520","WakeVerbReinit"=Yes,"LayoutID"=7,"BootConfigData"=<01271c4001271d0001271ea001271fb001471c1001471d0001471e1701471f9001470c0201971c3001971d1001971e8101971f0002171c6002171d1002171e2102171f00>
+	
+	if (hdaConfigDefaultDictionary != nil)
+	{
+		NSData *afgLowPowerState = [hdaConfigDefaultDictionary objectForKey:@"AFGLowPowerState"];
+		NSNumber *codecID = [hdaConfigDefaultDictionary objectForKey:@"CodecID"];
+		NSData *configData = [hdaConfigDefaultDictionary objectForKey:@"ConfigData"];
+		NSNumber *funcGroup = [hdaConfigDefaultDictionary objectForKey:@"FuncGroup"];
+		NSString *codec = [hdaConfigDefaultDictionary objectForKey:@"Codec"];
+		NSNumber *wakeVerbReinit = [hdaConfigDefaultDictionary objectForKey:@"WakeVerbReinit"];
+		NSNumber *layoutID = [hdaConfigDefaultDictionary objectForKey:@"LayoutID"];
+		NSData *bootConfigData = [hdaConfigDefaultDictionary objectForKey:@"BootConfigData"];
+		
+		if (afgLowPowerState != nil)
+			[self addToList:_audioInfoArray name:@"AFG Low Power State" value:getByteStringClassic(afgLowPowerState)];
+		
+		if (codecID != nil)
+			[self addToList:_audioInfoArray name:@"Codec ID" value:[NSString stringWithFormat:@"0x%04X", [codecID unsignedIntValue]]];
+		
+		if (configData != nil)
+			[self addToList:_audioInfoArray name:@"Config Data" value:getByteStringClassic(configData)];
+		
+		if (funcGroup != nil)
+			[self addToList:_audioInfoArray name:@"Func Group" value:[NSString stringWithFormat:@"%d", [funcGroup unsignedIntValue]]];
+		
+		if (codec != nil)
+			[self addToList:_audioInfoArray name:@"Codec" value:codec];
+		
+		if (wakeVerbReinit != nil)
+			[self addToList:_audioInfoArray name:@"Wake Verb Reinit" value:GetLocalizedString([wakeVerbReinit boolValue] ? @"Yes" : @"No")];
+
+		if (layoutID != nil)
+			[self addToList:_audioInfoArray name:@"Layout ID" value:[NSString stringWithFormat:@"%d", [layoutID unsignedIntValue]]];
+		
+		if (bootConfigData != nil)
+			[self addToList:_audioInfoArray name:@"Boot Config Data" value:getByteStringClassic(bootConfigData)];
+	}
+
 	[_audioInfoTableView reloadData];
 }
 
@@ -4704,7 +4751,7 @@ NSInteger usbSort(id a, id b, void *context)
 		[self addToList:_displayInfoArray name:@"Serial No." value:[NSString stringWithFormat:@"0x%04X", display.serialNumber]];
 		[self addToList:_displayInfoArray name:@"Port" value:[NSString stringWithFormat:@"0x%02X", display.port]];
 		[self addToList:_displayInfoArray name:@"Internal" value:display.isInternal ? GetLocalizedString(@"Yes") : GetLocalizedString(@"No")];
-		[self addToList:_displayInfoArray name:@"EDID" value:getByteString(display.eDID)];
+		[self addToList:_displayInfoArray name:@"EDID" value:getByteStringClassic(display.eDID)];
 		[self addToList:_displayInfoArray name:@"GPU Name" value:deviceName];
 		[self addToList:_displayInfoArray name:@"GPU Device ID" value:[NSString stringWithFormat:@"0x%08X", display.videoID]];
 	}
@@ -5198,7 +5245,7 @@ NSInteger usbSort(id a, id b, void *context)
 		[_connectorInfoTableView reloadData];
 		[_connectorFlagsTableView reloadData];
 	}
-	else if ([identifier isEqualToString:@"LayoutID"])
+	else if ([identifier isEqualToString:@"ALCLayoutID"])
 	{
 		NSString *layoutID = [comboBox objectValueOfSelectedItem];
 
@@ -6491,13 +6538,15 @@ NSInteger usbSort(id a, id b, void *context)
 		NSString *name = dictionary[@"Name"];
 		NSString *value = dictionary[[tableColumn identifier]];
 		
-		if ([name isEqualToString:GetLocalizedString(@"Layout ID")])
+		if ([name isEqualToString:GetLocalizedString(@"ALC Layout ID")])
 		{
 			if ([[tableColumn identifier] isEqualToString:@"Value"])
 			{
 				comboBox = [[[NSComboBox alloc] init] autorelease];
+				[comboBox setControlSize:NSSmallControlSize];
+				[comboBox setFont:[NSFont systemFontOfSize:NSFont.smallSystemFontSize]];
 				[comboBox addItemsWithObjectValues:audioDevice.layoutIDArray];
-				[comboBox setIdentifier:@"LayoutID"];
+				[comboBox setIdentifier:@"ALCLayoutID"];
 				[comboBox setStringValue:value];
 				[comboBox setDelegate:self];
 				
