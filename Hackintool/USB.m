@@ -123,10 +123,10 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 	for (; (usbDevice = IOIteratorNext(iterator)); IOObjectRelease(usbDevice))
 	{
 		io_name_t deviceName = { };
-		IOCFPlugInInterface **plugInInterface = 0;
+		//IOCFPlugInInterface **plugInInterface = 0;
 		IOUSBDeviceInterface650 **deviceInterface = 0;
 		//IOUSBDeviceInterface **deviceInterface = 0;
-		SInt32 score = 0;
+		//SInt32 score = 0;
 		uint32_t locationID = 0;
 		uint8_t devSpeed = -1;
 		

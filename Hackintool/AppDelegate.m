@@ -3057,6 +3057,18 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	// Rather, it forces certain values to XUSB2PR (PCI config offset 0xD0) on the Intel XHCI USB3 controller.
 	// The effect is to route any USB2 devices attached to the USB2 pins on the XHC ports to EHC1. In other words,
 	// handle USB2 devices with the USB2 drivers instead of the USB3 drivers (AppleUSBEHCI vs. AppleUSBXHCI).
+	
+	// LocationID
+	// The value (e.g. 0x14320000) is represented as follows: 0xAABCDEFG
+	// AA  — Ctrl number 8 bits (e.g. 0x14, aka XHCI)
+	// B   - Port number 4 bits (e.g. 0x3, aka SS03)
+	// C~F - Bus number  4 bits (e.g. 0x2, aka IOUSBHostHIDDevice)
+	//
+	// C~F are filled as many times as many USB Hubs are there on the port.
+	//
+	// XHCI - 0x14xxxxxx
+	// EHx1 - 0x1Dxxxxxx
+	// EHx2 - 0x1Axxxxxx
 
 	NSMutableArray *usbPropertyDictionaryArray = nil;
 
@@ -6518,7 +6530,7 @@ NSInteger usbSort(id a, id b, void *context)
 		else if([identifier isEqualToString:@"Codec"])
 			result.textField.stringValue = (audioDevice.codecID != 0 ? [NSString stringWithFormat:@"0x%08X", audioDevice.codecID] : @"-");
 		else if([identifier isEqualToString:@"Revision"])
-			result.textField.stringValue = [NSString stringWithFormat:@"0x%04X", audioDevice.codecRevisionID & 0xFFFF];
+			result.textField.stringValue = (audioDevice.codecID != 0 ? [NSString stringWithFormat:@"0x%04X", audioDevice.codecRevisionID & 0xFFFF] : @"-");
 		else if([identifier isEqualToString:@"Name"])
 			result.textField.stringValue = (audioDevice.codecID != 0 ? audioDevice.codecName : audioDevice.deviceName);
 	}

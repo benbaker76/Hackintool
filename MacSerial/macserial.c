@@ -345,13 +345,22 @@ bool get_serial_info(const char *serial, SERIALINFO *info, bool print) {
 
   // Decode production year and week
   if (serial_len == SERIAL_NEW_LEN) {
+    // Since year can be encoded ambiguously, check the model code for 2010/2020 difference.
+    size_t base_new_year = 2010;
+    if (info->model[0] >= 'H') {
+      base_new_year = 2020;
+    }
+
     // These are not exactly year and week, lower year bit is used for week encoding.
     info->year[0] = *serial++;
     info->week[0] = *serial++;
 
     // New encoding started in 2010.
     info->decodedYear = alpha_to_value(info->year[0], AppleTblYear, AppleYearBlacklist);
-    if (info->decodedYear >= 0) {
+    // Since year can be encoded ambiguously, check the model code for 2010/2020 difference.
+    if (info->decodedYear == 0 && info->model[0] >= 'H') {
+      info->decodedYear += 2020;
+    } else if (info->decodedYear >= 0) {
       info->decodedYear += 2010;
     } else {
       printf("WARN: Invalid year symbol '%c'!\n", info->year[0]);
@@ -517,11 +526,16 @@ bool get_serial(SERIALINFO *info) {
     info->week[1] = '0' + (info->decodedWeek) % 10;
   } else {
     if (info->decodedYear < SERIAL_YEAR_NEW_MIN || info->decodedYear > SERIAL_YEAR_NEW_MAX) {
-      printf("ERROR: Year %d is out of valid modern range [%d, %d]!\n", info->decodedYear, SERIAL_YEAR_OLD_MIN, SERIAL_YEAR_OLD_MAX);
+      printf("ERROR: Year %d is out of valid modern range [%d, %d]!\n", info->decodedYear, SERIAL_YEAR_NEW_MIN, SERIAL_YEAR_NEW_MAX);
       return false;
     }
 
-    info->year[0] = AppleYearReverse[(info->decodedYear - 2010) * 2 + (info->decodedWeek >= 27)];
+    size_t base_new_year = 2010;
+    if (info->decodedYear == SERIAL_YEAR_NEW_MAX) {
+      base_new_year = 2020;
+    }
+
+    info->year[0] = AppleYearReverse[(info->decodedYear - base_new_year) * 2 + (info->decodedWeek >= 27)];
     info->week[0] = AppleWeekReverse[info->decodedWeek];
   }
 
@@ -734,7 +748,7 @@ void strfcat(char *src, const char *fmt, ...)
 	strcat(src, buf);
 }
 
-/* static int usage(const char *app) {
+/* int usage(const char *app) {
   printf(
     "%s arguments:\n"
     " --help           (-h)  show this help\n"
