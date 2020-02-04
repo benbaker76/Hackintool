@@ -1853,6 +1853,9 @@ bool getPlatformID(uint32_t *platformID)
 
 NSString *getASPMString(uint32_t aspm)
 {
+	// http://www.lttconn.com/res/lttconn/pdres/201402/20140218105502619.pdf
+	// https://composter.com.ua/documents/PCIe_Protocol_Updates_2011.pdf
+	//
 	// Hex  Binary  Meaning
 	// -------------------------
 	// 0    0b00    L0 only
@@ -1860,7 +1863,7 @@ NSString *getASPMString(uint32_t aspm)
 	// 2    0b10    L1 only
 	// 3    0b11    L1 and L0s
 	
-	NSArray *aspmArray = @[@"L0", @"L0s", @"L1", @"L1+L0s"];
+	NSArray *aspmArray = @[GetLocalizedString(@"Disabled"), @"L0s", @"L1", @"L0s+L1"];
 	
 	return [aspmArray objectAtIndex:aspm & 0x3];
 }

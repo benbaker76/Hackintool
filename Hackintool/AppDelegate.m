@@ -9560,13 +9560,16 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (BOOL)showSavePanelWithDirectory:(NSString *)directory nameField:(NSString *)nameField fileTypes:(NSArray *)fileTypes path:(NSString **)path
 {
-	NSSavePanel *savePanel = [NSSavePanel savePanel];
-	[savePanel setDirectoryURL:[NSURL URLWithString:directory]];
-	[savePanel setNameFieldStringValue:nameField];
-	[savePanel setAllowedFileTypes:fileTypes];
-	[savePanel setPrompt:GetLocalizedString(@"Select")];
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+	[openPanel setDirectoryURL:[NSURL URLWithString:directory]];
+	[openPanel setNameFieldStringValue:nameField];
+	[openPanel setAllowedFileTypes:fileTypes];
+	[openPanel setPrompt:GetLocalizedString(@"Select Destination")];
+	[openPanel setCanChooseDirectories:YES];
+	[openPanel setCanCreateDirectories:YES];
+	[openPanel setCanChooseFiles:NO];
 	
-	[savePanel beginSheetModalForWindow:_window completionHandler:^(NSModalResponse returnCode)
+	[openPanel beginSheetModalForWindow:_window completionHandler:^(NSModalResponse returnCode)
 	 {
 		 [NSApp stopModalWithCode:returnCode];
 	 }];
@@ -9574,7 +9577,7 @@ NSInteger usbSort(id a, id b, void *context)
 	if ([NSApp runModalForWindow:_window] != NSOKButton)
 		return NO;
 	
-	*path = [savePanel URL].path;
+	*path = [openPanel URL].path;
 	
 	return YES;
 }
@@ -9582,7 +9585,7 @@ NSInteger usbSort(id a, id b, void *context)
 - (BOOL)installKext:(NSTextView *)textView kextPath:(NSString *)kextPath useSavePanel:(BOOL)useSavePanel
 {
 	NSString *extensionsPath = [self getExtensionsPath];
-	
+
 	if (useSavePanel)
 		[self showSavePanelWithDirectory:extensionsPath nameField:[kextPath lastPathComponent] fileTypes:@[@"kext"] path:&extensionsPath];
 	
