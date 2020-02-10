@@ -64,6 +64,7 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator);
 //void usbDeviceRemoved(void *refCon, io_iterator_t iterator);
 NSString *getUSBConnectorType(UsbConnector usbConnector);
 NSString *getUSBConnectorSpeed(uint8_t speed);
+NSString *generateUSBPortName(uint32_t locationID, uint32_t portNumber);
 void exportUSBPortsKext(AppDelegate *appDelegate);
 void exportUSBPortsSSDT(AppDelegate *appDelegate);
 void exportUSBPorts(AppDelegate *appDelegate);

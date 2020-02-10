@@ -240,6 +240,43 @@ NSString *getUSBConnectorSpeed(uint8_t speed)
 	}
 }
 
+NSString *generateUSBPortName(uint32_t locationID, uint32_t portNumber)
+{
+	// LocationID
+	// The value (e.g. 0x14320000) is represented as follows: 0xAABCDEFG
+	// AA  — Ctrl number 8 bits (e.g. 0x14, aka XHCI)
+	// B   - Port number 4 bits (e.g. 0x3, aka SS03)
+	// C~F - Bus number  4 bits (e.g. 0x2, aka IOUSBHostHIDDevice)
+	//
+	// C~F are filled as many times as many USB Hubs are there on the port.
+	//
+	// HUB1 = 0x1D100000
+	// HUB2 = 0x1A100000
+	// XHCI - 0x14xxxxxx
+	// EHx1 - 0x1Dxxxxxx
+	// EHx2 - 0x1Axxxxxx
+	
+	uint8_t ctrl = locationID >> 24;
+	uint8_t port = (locationID >> 20) & 0xF;
+	uint8_t bus = locationID & 0xFFFFF;
+	
+	switch(ctrl)
+	{
+		case 0x14: // XHCI
+			return [NSString stringWithFormat:@"XH%02d", portNumber];
+		case 0x1D: // EHx1
+			if (port == 0x1 && bus == 0x0)
+				return @"HUB1";
+			return [NSString stringWithFormat:@"HP%02d", portNumber];
+		case 0x1A: // EHx2
+			if (port == 0x1 && bus == 0x0)
+				return @"HUB2";
+			return [NSString stringWithFormat:@"HP%02d", portNumber];
+		default:
+			return [NSString stringWithFormat:@"??%02d", portNumber];
+	}
+}
+
 void injectDefaultUSBPowerProperties(NSMutableDictionary *ioProviderMergePropertiesDictionary)
 {
 	[ioProviderMergePropertiesDictionary setObject:[NSNumber numberWithInt:2100] forKey:@"kUSBSleepPortCurrentLimit"];

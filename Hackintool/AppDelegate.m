@@ -45,6 +45,25 @@ uint32_t const FIND_AND_REPLACE_COUNT = 20;
 
 #define SWAPSHORT(n)	((n & 0x0000FFFF) << 16 | (n & 0xFFFF0000) >> 16)
 
+@implementation NSData (NSDataEx)
+
+-(NSComparisonResult)compare:(NSData *)otherData
+{
+	uint32_t valueA, valueB;
+	
+	memcpy(&valueA, self.bytes, MIN(self.length, 4));
+	memcpy(&valueB, otherData.bytes, MIN(otherData.length, 4));
+	
+	if (valueA < valueB)
+		return NSOrderedAscending;
+	else if (valueA > valueB)
+		return NSOrderedDescending;
+
+	return NSOrderedSame;
+}
+
+@end
+
 @implementation IntConvert
 
 -(id) init:(uint32_t )index name:(NSString *)name stringValue:(NSString *)stringValue
@@ -100,7 +119,15 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_tableViewArray = [@[_infoOutlineView, _generateSerialInfoTableView, _modelInfoTableView, _selectedFBInfoTableView, _currentFBInfoTableView, _vramInfoTableView, _framebufferInfoTableView, _framebufferFlagsTableView, _connectorInfoTableView, _connectorFlagsTableView, _audioDevicesTableView1, _audioInfoTableView, _usbControllersTableView, _usbPortsTableView, _efiPartitionsTableView, _partitionSchemeTableView, _displaysTableView, _resolutionsTableView, _bootloaderInfoTableView, _bootloaderPatchTableView, _nvramTableView, _kextsTableView, _pciDevicesTableView, _networkInterfacesTableView, _bluetoothDevicesTableView, _graphicDevicesTableView, _audioDevicesTableView2, _storageDevicesTableView, _powerSettingsTableView] retain];
 	
 	for (NSTableView *tableView in _tableViewArray)
+	{
+		for (NSTableColumn *tableColumn in tableView.tableColumns)
+		{
+			NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:tableColumn.identifier ascending:YES selector:@selector(compare:)];
+			[tableColumn setSortDescriptorPrototype:sortDescriptor];
+		}
+		
 		[tableView sizeToFit];
+	}
 	
 	[Localizer localizeView:_window];
 	[Localizer localizeView:_window.menu];
@@ -110,12 +137,6 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[Localizer localizeView:_hasUpdateWindow];
 	[Localizer localizeView:_noUpdatesWindow];
 	[Localizer localizeView:_progressWindow];
-	
-	for (NSTableColumn *tableColumn in _pciDevicesTableView.tableColumns)
-	{
-		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:tableColumn.identifier ascending:YES selector:@selector(compare:)];
-		[tableColumn setSortDescriptorPrototype:sortDescriptor];
-	}
 	
 	for (NSToolbarItem *item in [_toolbar items])
 		[item setMinSize:NSMakeSize(128, 128)];
@@ -3057,18 +3078,6 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	// Rather, it forces certain values to XUSB2PR (PCI config offset 0xD0) on the Intel XHCI USB3 controller.
 	// The effect is to route any USB2 devices attached to the USB2 pins on the XHC ports to EHC1. In other words,
 	// handle USB2 devices with the USB2 drivers instead of the USB3 drivers (AppleUSBEHCI vs. AppleUSBXHCI).
-	
-	// LocationID
-	// The value (e.g. 0x14320000) is represented as follows: 0xAABCDEFG
-	// AA  — Ctrl number 8 bits (e.g. 0x14, aka XHCI)
-	// B   - Port number 4 bits (e.g. 0x3, aka SS03)
-	// C~F - Bus number  4 bits (e.g. 0x2, aka IOUSBHostHIDDevice)
-	//
-	// C~F are filled as many times as many USB Hubs are there on the port.
-	//
-	// XHCI - 0x14xxxxxx
-	// EHx1 - 0x1Dxxxxxx
-	// EHx2 - 0x1Axxxxxx
 
 	NSMutableArray *usbPropertyDictionaryArray = nil;
 
@@ -3080,7 +3089,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	{
 		NSString *name = [propertyDictionary objectForKey:@"name"];
 		NSNumber *locationID = [propertyDictionary objectForKey:@"locationID"];
-		NSNumber *port = [propertyDictionary objectForKey:@"port"];
+		NSData *port = [propertyDictionary objectForKey:@"port"];
 		NSNumber *portType = [propertyDictionary objectForKey:@"portType"];
 		NSNumber *usbConnector = [propertyDictionary objectForKey:@"UsbConnector"];
 		NSString *usbController = [propertyDictionary objectForKey:@"UsbController"];
@@ -3090,15 +3099,23 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		//NSNumber *hubIsInternal = [propertyDictionary objectForKey:@"HubIsInternal"];
 		uint32_t index = 0;
 		
-		// Is the port already in the list?
-		if ([self containsUSBPort:name index:&index])
+		if ([locationID unsignedIntValue] == 0)
 		{
-			// Yes so make sure we set it to the latest locationID
-			[_usbPortsArray[index] setObject:locationID forKey:@"locationID"];
-			[_usbPortsArray[index] setObject:usbController forKey:@"UsbController"];
-			[_usbPortsArray[index] setObject:usbControllerID forKey:@"UsbControllerID"];
-			
-			continue;
+			// See if we have the port already via controller / port
+			if ([self containsUSBPort:usbController port:port index:&index])
+			{
+				NSMutableDictionary *usbEntryDictionary = _usbPortsArray[index];
+				[usbEntryDictionary setObject:locationID forKey:@"locationID"];
+				[usbEntryDictionary setObject:usbControllerID forKey:@"UsbControllerID"];
+
+				continue;
+			}
+		}
+		else
+		{
+			// See if we have the port already via locationID
+			if ([self containsUSBPort:locationID index:&index])
+				continue;
 		}
 		
 		NSMutableDictionary *usbPortsDictionary = [NSMutableDictionary dictionary];
@@ -3215,43 +3232,13 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	for (NSDictionary *usbDictionary in usbPorts)
 	{
 		NSMutableDictionary *usbEntryDictionary = [[usbDictionary mutableCopy] autorelease];
-		NSNumber *portType = [usbEntryDictionary objectForKey:@"portType"];
-		NSNumber *usbConnector = [usbEntryDictionary objectForKey:@"UsbConnector"];
-		id usbControllerID = [usbEntryDictionary objectForKey:@"UsbControllerID"];
-		NSString *name = [usbEntryDictionary objectForKey:@"name"];
+		NSNumber *locationID = [usbEntryDictionary objectForKey:@"locationID"];
 		uint32_t index = 0;
 		
-		// Backward compatibility
-		if (portType != nil && usbConnector != nil)
-		{
-			[usbEntryDictionary setObject:usbConnector forKey:@"portType"];
-			[usbEntryDictionary removeObjectForKey:@"UsbConnector"];
-		}
-		
-		// Backwards compatibility for old version
-		if ([usbControllerID isKindOfClass:[NSString class]])
-		{
-			NSArray *usbControllerIDArray = [usbControllerID componentsSeparatedByString:@":"];
-			
-			if ([usbControllerIDArray count] == 2)
-			{
-				uint32_t vendorID = 0, deviceID = 0;
-				
-				NSScanner *scanner = [NSScanner scannerWithString:[usbControllerIDArray firstObject]];
-				[scanner scanHexInt:&vendorID];
-				
-				scanner = [NSScanner scannerWithString:[usbControllerIDArray lastObject]];
-				[scanner scanHexInt:&deviceID];
-				
-				[usbEntryDictionary setObject:[NSNumber numberWithInt:vendorID << 16 | deviceID] forKey:@"UsbControllerID"];
-			}
-		}
-		
-		if ([self containsUSBPort:name index:&index])
+		if ([self containsUSBPort:locationID index:&index])
 			continue;
 		
 		[usbEntryDictionary setObject:@"" forKey:@"Device"];
-		[usbEntryDictionary setObject:[NSNumber numberWithInteger:0] forKey:@"locationID"];
 		
 		[_usbPortsArray addObject:usbEntryDictionary];
 	}
@@ -3284,14 +3271,36 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	}
 } */
 
-- (bool)containsUSBPort:(NSString *)portName index:(uint32_t *)index
+- (bool)containsUSBPort:(NSNumber *)location index:(uint32_t *)index
+{
+	if ([location unsignedIntValue] == 0)
+		return false;
+	
+	for (int i = 0; i < [_usbPortsArray count]; i++)
+	{
+		NSMutableDictionary *usbPortsDictionary = _usbPortsArray[i];
+		NSNumber *locationID = [usbPortsDictionary objectForKey:@"locationID"];
+		
+		if ([locationID isEqualToNumber:location])
+		{
+			*index = i;
+			
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+- (bool)containsUSBPort:(NSString *)controller port:(NSData *)port index:(uint32_t *)index
 {
 	for (int i = 0; i < [_usbPortsArray count]; i++)
 	{
-		NSMutableDictionary *usbEntryDictionary = _usbPortsArray[i];
-		NSString *name = [usbEntryDictionary objectForKey:@"name"];
+		NSMutableDictionary *usbPortsDictionary = _usbPortsArray[i];
+		NSString *usbController = [usbPortsDictionary objectForKey:@"UsbController"];
+		NSData *usbPort = [usbPortsDictionary objectForKey:@"port"];
 		
-		if ([portName isEqualToString:name])
+		if ([usbController isEqualToString:controller] && [usbPort isEqualToData:port])
 		{
 			*index = i;
 			
@@ -3443,13 +3452,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		{
 			NSMutableDictionary *usbEntryDictionary = [[[portsDictionary objectForKey:portsKey] mutableCopy] autorelease];
 			[usbEntryDictionary setObject:portsKey forKey:@"name"];
+			[usbEntryDictionary setObject:@(0) forKey:@"locationID"];
 			[usbEntryDictionary setObject:@"" forKey:@"Device"];
 			[usbEntryDictionary setObject:usbController forKey:@"UsbController"];
 			[usbEntryDictionary setObject:[NSNumber numberWithBool:NO] forKey:@"IsActive"];
-			uint32_t index = 0;
-			
-			if ([self containsUSBPort:portsKey index:&index])
-				continue;
 			
 			if ([ioKitKey hasSuffix:@"-internal-hub"])
 			{
@@ -6480,11 +6486,23 @@ NSInteger usbSort(id a, id b, void *context)
 	{
 		NSMutableDictionary *usbPortsDictionary = _usbPortsArray[row];
 
-		if ([identifier isEqualToString:@"Type"])
+		if ([identifier isEqualToString:@"name"])
+		{
+			NSString *name = [usbPortsDictionary objectForKey:@"name"];
+			
+			result.textField.stringValue = name; //([name length] > 4 ? @"-" : name);
+		}
+		else if ([identifier isEqualToString:@"Type"])
 		{
 			NSString *usbController = [usbPortsDictionary objectForKey:@"UsbController"];
 			
 			result.textField.stringValue = usbController;
+		}
+		else if([identifier isEqualToString:@"locationID"])
+		{
+			NSNumber *locationID = [usbPortsDictionary objectForKey:@"locationID"];
+			
+			result.textField.stringValue = [NSString stringWithFormat:@"0x%08X", [locationID unsignedIntValue]];
 		}
 		else if([identifier isEqualToString:@"port"])
 		{
@@ -6503,9 +6521,9 @@ NSInteger usbSort(id a, id b, void *context)
 				[comboBox addItemsWithObjectValues:@[@"USB2", @"USB3", @"TypeC+Sw", @"TypeC", @"Internal"]];
 			
 			if (portType != nil)
-				comboBox.stringValue = getUSBConnectorType((UsbConnector)[portType integerValue]);
+				comboBox.stringValue = getUSBConnectorType((UsbConnector)[portType unsignedIntValue]);
 			else
-				comboBox.stringValue = getUSBConnectorType((UsbConnector)[usbConnector integerValue]);
+				comboBox.stringValue = getUSBConnectorType((UsbConnector)[usbConnector unsignedIntValue]);
 		}
 		else if([identifier isEqualToString:@"DevSpeed"])
 		{
@@ -6906,10 +6924,137 @@ NSInteger usbSort(id a, id b, void *context)
 
 - (void)tableView:(NSTableView *)tableView sortDescriptorsDidChange:(NSArray *)oldDescriptors
 {
-	if (tableView == _pciDevicesTableView)
+	if (tableView == _generateSerialInfoTableView)
+	{
+		[_generateSerialInfoArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _modelInfoTableView)
+	{
+		[_modelInfoArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _selectedFBInfoTableView)
+	{
+		[_selectedFBInfoArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _currentFBInfoTableView)
+	{
+		[_currentFBInfoArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _vramInfoTableView)
+	{
+		[_vramInfoArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _framebufferInfoTableView)
+	{
+		[_framebufferInfoArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _framebufferFlagsTableView)
+	{
+		[_framebufferFlagsArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _connectorInfoTableView)
+	{
+	}
+	else if (tableView == _connectorFlagsTableView)
+	{
+		[_connectorFlagsArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _displayInfoTableView)
+	{
+		[_displayInfoArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _bootloaderInfoTableView)
+	{
+		[_bootloaderInfoArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _bootloaderPatchTableView)
+	{
+		[_bootloaderPatchArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _nvramTableView)
+	{
+	}
+	else if (tableView == _kextsTableView)
+	{
+		[(_settings.ShowInstalledOnly ? _installedKextsArray : _kextsArray) sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _usbControllersTableView)
+	{
+		[_usbControllersArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _usbPortsTableView)
+	{
+		[_usbPortsArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _audioDevicesTableView1)
+	{
+	}
+	else if (tableView == _audioInfoTableView)
+	{
+		[_audioInfoArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _efiPartitionsTableView)
+	{
+		NSMutableArray *efiPartitionsArray = getEfiPartitionsArray(_disksArray);
+		[efiPartitionsArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _partitionSchemeTableView)
+	{
+	}
+	else if (tableView == _pciDevicesTableView)
 	{
 		[_pciDevicesArray sortUsingDescriptors:[tableView sortDescriptors]];
 		[tableView reloadData];
+	}
+	else if (tableView == _networkInterfacesTableView)
+	{
+		[_networkInterfacesArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _bluetoothDevicesTableView)
+	{;
+		[_bluetoothDevicesArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _graphicDevicesTableView)
+	{
+		[_graphicDevicesArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _audioDevicesTableView2)
+	{
+	}
+	else if (tableView == _storageDevicesTableView)
+	{
+		[_storageDevicesArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _powerSettingsTableView)
+	{
+	}
+	else if (tableView == _displaysTableView)
+	{
+		[_displaysArray sortUsingDescriptors:[tableView sortDescriptors]];
+		[tableView reloadData];
+	}
+	else if (tableView == _resolutionsTableView)
+	{
 	}
 }
 

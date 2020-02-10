@@ -10,6 +10,7 @@
 #include "MiscTools.h"
 #include "Display.h"
 #include "AudioDevice.h"
+#include "USB.h"
 #include <IOKit/IOBSD.h>
 #include <IOKit/IOKitLib.h>
 #include <IOKit/graphics/IOGraphicsLib.h>
@@ -307,18 +308,21 @@ bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray
 						NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
 						
 						NSString *portName = [propertyDictionary objectForKey:@"name"];
-						//NSNumber *locationID = [propertyDictionary objectForKey:@"locationID"];
+						uint32_t port = propertyToUInt32([propertyDictionary objectForKey:@"port"]);
+						NSNumber *locationID = [propertyDictionary objectForKey:@"locationID"];
 						uint32_t deviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
 						uint32_t vendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
+						NSString *usbController = [NSString stringWithUTF8String:parentName];
+						NSNumber *usbControllerID = [NSNumber numberWithInt:(deviceID << 16) | vendorID];
 						
 						if (portName == nil)
 						{
-							portName = [NSString stringWithUTF8String:name];
+							portName = generateUSBPortName([locationID unsignedIntValue], port);
 							[propertyDictionary setValue:portName forKey:@"name"];
 						}
-						
-						[propertyDictionary setValue:[NSString stringWithUTF8String:parentName] forKey:@"UsbController"];
-						[propertyDictionary setValue:[NSNumber numberWithInt:(deviceID << 16) | vendorID] forKey:@"UsbControllerID"];
+
+						[propertyDictionary setValue:usbController forKey:@"UsbController"];
+						[propertyDictionary setValue:usbControllerID forKey:@"UsbControllerID"];
 						
 						io_service_t hubDevice;
 						io_name_t hubClassName {};
