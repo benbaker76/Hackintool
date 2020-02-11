@@ -221,6 +221,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_audioCodecsArray release];
 	[_audioVendorsDictionary release];
 	[_usbControllersArray release];
+	[_usbConfigurationDictionary release];
 	[_audioInfoArray release];
 	[_usbPortsArray release];
 	[_displaysArray release];
@@ -1111,6 +1112,16 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	// https://github.com/KGP/XHC-USB-Kext-Library
 	
 	NSLog(@"Initializing USB");
+	
+	NSBundle *mainBundle = [NSBundle mainBundle];
+	NSString *filePath = nil;
+	
+	if (!(filePath = [mainBundle pathForResource:@"USBInjectAll-Info" ofType:@"plist" inDirectory:@"USB"]))
+		return;
+	
+	NSDictionary *usbPlist = [NSDictionary dictionaryWithContentsOfFile:filePath];
+	
+	_usbConfigurationDictionary = [[[[usbPlist objectForKey:@"IOKitPersonalities"] objectForKey:@"ConfigurationData"] objectForKey:@"Configuration"] retain];
 	
 	[_usbPortsTableView setAllowsMultipleSelection:true];
 	
@@ -3097,20 +3108,26 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	{
 		NSString *name = [propertyDictionary objectForKey:@"name"];
 		NSNumber *locationID = [propertyDictionary objectForKey:@"locationID"];
-		NSData *port = [propertyDictionary objectForKey:@"port"];
+		NSData *portData = [propertyDictionary objectForKey:@"port"];
 		NSNumber *portType = [propertyDictionary objectForKey:@"portType"];
 		NSNumber *usbConnector = [propertyDictionary objectForKey:@"UsbConnector"];
 		NSString *usbController = [propertyDictionary objectForKey:@"UsbController"];
 		NSNumber *usbControllerID = [propertyDictionary objectForKey:@"UsbControllerID"];
 		NSString *hubName = [propertyDictionary objectForKey:@"HubName"];
-		NSNumber *hubLocation = [propertyDictionary objectForKey:@"HubLocation"];
+		NSNumber *hubLocationID = [propertyDictionary objectForKey:@"HubLocation"];
 		//NSNumber *hubIsInternal = [propertyDictionary objectForKey:@"HubIsInternal"];
 		uint32_t index = 0;
+		
+		if (name == nil)
+		{
+			uint32_t port = propertyToUInt32(portData);
+			name = [self generateUSBPortName:usbControllerID hubLocationID:[hubLocationID unsignedIntValue] locationID:[locationID unsignedIntValue] portNumber:port];
+		}
 		
 		if ([locationID unsignedIntValue] == 0)
 		{
 			// See if we have the port already via controller / port
-			if ([self containsUSBPort:usbController port:port index:&index])
+			if ([self containsUSBPort:usbController port:portData index:&index])
 			{
 				NSMutableDictionary *usbEntryDictionary = _usbPortsArray[index];
 				//[usbEntryDictionary setObject:name forKey:@"name"];
@@ -3148,7 +3165,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		[usbPortsDictionary setObject:name forKey:@"name"];
 		[usbPortsDictionary setObject:locationID forKey:@"locationID"];
-		[usbPortsDictionary setObject:port forKey:@"port"];
+		[usbPortsDictionary setObject:portData forKey:@"port"];
 		if (portType != nil)
 			[usbPortsDictionary setObject:portType forKey:@"portType"];
 		if (usbConnector != nil)
@@ -3158,8 +3175,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		[usbPortsDictionary setObject:usbControllerID forKey:@"UsbControllerID"];
 		if (hubName != nil)
 			[usbPortsDictionary setObject:hubName forKey:@"HubName"];
-		if (hubLocation != nil)
-			[usbPortsDictionary setObject:hubLocation forKey:@"HubLocation"];
+		if (hubLocationID != nil)
+			[usbPortsDictionary setObject:hubLocationID forKey:@"HubLocation"];
 		[usbPortsDictionary setObject:[NSNumber numberWithBool:NO] forKey:@"IsActive"];
 		
 		//NSLog(@"Port Name: %@ Location ID: 0x%08x UsbController: %@ Hub: %@ (0x%08x)", name, [locationID unsignedIntValue], usbController, hubName, [hubLocation unsignedIntValue]);
@@ -3234,6 +3251,56 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	}
 	
 	[_usbControllersTableView reloadData];
+}
+
+- (bool)getUSBPortsWithControllerID:(NSNumber *)usbControllerID portDictionary:(NSMutableDictionary **)usbPortDictionary
+{
+	if (usbControllerID == nil)
+		return false;
+	
+	uint32_t vendorID = [usbControllerID unsignedIntValue] & 0xFFFF;
+	uint32_t productID = [usbControllerID unsignedIntValue] >> 16;
+	
+	if (vendorID != 0x8086)
+		return false;
+	
+	NSString *name = [NSString stringWithFormat:@"%04x_%04x", vendorID, productID];
+	
+	if ([self getUSBPortsWithName:name portDictionary:usbPortDictionary])
+		return true;
+	
+	name = [name stringByReplacingCharactersInRange:NSMakeRange(7, 2) withString:@"xx"];
+	
+	if ([self getUSBPortsWithName:name portDictionary:usbPortDictionary])
+		return true;
+	
+	name = [name stringByReplacingCharactersInRange:NSMakeRange(6, 3) withString:@"xxx"];
+	
+	return [self getUSBPortsWithName:name portDictionary:usbPortDictionary];
+}
+
+- (bool)getUSBPortsWithName:(NSString *)name portDictionary:(NSMutableDictionary **)usbPortDictionary
+{
+	NSDictionary *controllerDictionary = [_usbConfigurationDictionary objectForKey:name];
+	
+	if (controllerDictionary == nil)
+		return false;
+	
+	NSDictionary *portsDictionary = [controllerDictionary objectForKey:@"ports"];
+	
+	*usbPortDictionary = [[NSMutableDictionary dictionary] retain];
+
+	for (NSString *portName in portsDictionary.allKeys)
+	{
+		NSMutableDictionary *propertyDictionary = [[portsDictionary objectForKey:portName] mutableCopy];
+		uint32_t port = propertyToUInt32([propertyDictionary objectForKey:@"port"]);
+		
+		[propertyDictionary setObject:portName forKey:@"name"];
+		
+		[*usbPortDictionary setObject:propertyDictionary forKey:@(port)];
+	}
+	
+	return true;
 }
 
 - (void)loadUSBPorts
@@ -3321,6 +3388,86 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	}
 	
 	return false;
+}
+
+- (NSString *)generateUSBPortName:(NSNumber *)usbControllerID hubLocationID:(uint32_t)hubLocationID locationID:(uint32_t)locationID portNumber:(uint32_t)portNumber
+{
+	// LocationID
+	// The value (e.g. 0x14320000) is represented as follows: 0xAABCDEFG
+	// AA  — Ctrl number 8 bits (e.g. 0x14, aka XHCI)
+	// B   - Port number 4 bits (e.g. 0x3, aka SS03)
+	// C~F - Bus number  4 bits (e.g. 0x2, aka IOUSBHostHIDDevice)
+	//
+	// C~F are filled as many times as many USB Hubs are there on the port.
+	//
+	// PR11 = 0x1D100000 (HUB1)
+	// PR21 = 0x1A100000 (HUB2)
+	// XHCI - 0x14xxxxxx (HSxx, SSxx)
+	// EHx1 - 0x1Dxxxxxx (HPxx)
+	// EHx2 - 0x1Axxxxxx (PRxx)
+	
+	uint8_t ctrl = locationID >> 24;
+	//uint8_t port = (locationID >> 20) & 0xF;
+	//uint8_t bus = locationID & 0xFFFFF;
+
+	NSMutableDictionary *usbPortDictionary = nil;
+	NSString *name = nil;
+
+	switch(ctrl)
+	{
+		case 0x14: // XHCI
+			if ([self getUSBPortsWithControllerID:usbControllerID portDictionary:&usbPortDictionary])
+			{
+				NSMutableDictionary *portDictionary = [usbPortDictionary objectForKey:@(portNumber)];
+				name = [portDictionary objectForKey:@"name"];
+				[usbPortDictionary release];
+			}
+			break;
+		case 0x1D: // EHx1
+			if (hubLocationID == 0x1D100000)
+			{
+				if ([self getUSBPortsWithName:@"HUB1" portDictionary:&usbPortDictionary])
+				{
+					NSMutableDictionary *portDictionary = [usbPortDictionary objectForKey:@(portNumber)];
+					name = [portDictionary objectForKey:@"name"];
+					[usbPortDictionary release];
+				}
+			}
+			else
+			{
+				if ([self getUSBPortsWithName:@"EH01" portDictionary:&usbPortDictionary])
+				{
+					NSMutableDictionary *portDictionary = [usbPortDictionary objectForKey:@(portNumber)];
+					name = [portDictionary objectForKey:@"name"];
+					[usbPortDictionary release];
+				}
+			}
+			break;
+		case 0x1A: // EHx2
+			if (hubLocationID == 0x1A100000)
+			{
+				if ([self getUSBPortsWithName:@"HUB2" portDictionary:&usbPortDictionary])
+				{
+					NSMutableDictionary *portDictionary = [usbPortDictionary objectForKey:@(portNumber)];
+					name = [portDictionary objectForKey:@"name"];
+					[usbPortDictionary release];
+				}
+			}
+			else
+			{
+				if ([self getUSBPortsWithName:@"EH02" portDictionary:&usbPortDictionary])
+				{
+					NSMutableDictionary *portDictionary = [usbPortDictionary objectForKey:@(portNumber)];
+					name = [portDictionary objectForKey:@"name"];
+					[usbPortDictionary release];
+				}
+			}
+			break;
+		default:
+			break;
+	}
+	
+	return (name != nil ? name : [NSString stringWithFormat:@"??%02d", portNumber]);
 }
 
 - (NSString *)getUSBSeries:(NSNumber *)usbControllerID

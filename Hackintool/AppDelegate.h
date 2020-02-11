@@ -122,6 +122,8 @@ typedef struct
 	NSMutableArray *_audioDevicesArray;
 	
 	NSMutableArray *_usbControllersArray;
+	NSDictionary *_usbConfigurationDictionary;
+	
 	//NSMutableArray *_displaysArray;
 	
 	NSString *_intelGenString;
@@ -392,6 +394,7 @@ typedef struct
 - (void)updateSettingsGUI;
 - (void)addUSBDevice:(uint32_t)locationID name:(NSString *)name devSpeed:(uint8_t)devSpeed;
 - (void)removeUSBDevice:(uint32_t)locationID name:(NSString *)name;
+- (bool)getUSBConfigurationPorts:(NSNumber *)usbControllerID portDictionary:(NSMutableDictionary **)usbPortDictionary;
 - (uint32_t)getGPUDeviceID:(uint32_t)platformID;
 - (NSString *)getGPUString:(uint32_t)platformID;
 - (NSString *)getModelString:(uint32_t)platformID;
