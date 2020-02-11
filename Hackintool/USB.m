@@ -771,7 +771,7 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			uint32_t deviceID = [usbControllerID unsignedIntValue] & 0xFFFF;
 			uint32_t productID = [usbControllerID unsignedIntValue] >> 16;
 			
-			if (![usbController hasPrefix:@"EH"] && ![usbController isEqualToString:@"XHC"])
+			if (![usbController hasPrefix:@"EH"] && ![usbController hasPrefix:@"XH"])
 				name = [NSString stringWithFormat:@"%04x_%04x", deviceID, productID];
 		}
 		
