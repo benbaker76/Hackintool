@@ -40,6 +40,7 @@ extern "C" {
 #define PCIIDsUrl					@"https://pci-ids.ucw.cz/pci.ids"
 #define PCIIDsPath					[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"pci.ids"]
 #define GitSubmoduleUpdate          @"/usr/bin/git submodule update --init --recursive"
+#define COLOR_ALPHA					0.3f
 
 uint32_t const FIND_AND_REPLACE_COUNT = 20;
 
@@ -173,6 +174,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		if ([_tabView indexOfTabViewItem:[_tabView selectedTabViewItem]] == [toolbarItem.itemIdentifier intValue])
 			[_toolbar setSelectedItemIdentifier:toolbarItem.itemIdentifier];
 	
+	_greenColor = [getColorAlpha([NSColor systemGreenColor], COLOR_ALPHA) retain];
+	_redColor = [getColorAlpha([NSColor systemGreenColor], COLOR_ALPHA) retain];
+	_orangeColor = [getColorAlpha([NSColor systemOrangeColor], COLOR_ALPHA) retain];
+	
 	NSLog(@"Initialization Done");
 }
 
@@ -243,6 +248,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_pciMonitor release];
 	[_bootloaderDeviceUUID release];
 	[_bootloaderDirPath release];
+	[_greenColor release];
+	[_redColor release];
+	[_orangeColor release];
 	
 	[super dealloc];
 }
@@ -3105,6 +3113,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			if ([self containsUSBPort:usbController port:port index:&index])
 			{
 				NSMutableDictionary *usbEntryDictionary = _usbPortsArray[index];
+				//[usbEntryDictionary setObject:name forKey:@"name"];
 				[usbEntryDictionary setObject:locationID forKey:@"locationID"];
 				[usbEntryDictionary setObject:usbControllerID forKey:@"UsbControllerID"];
 
@@ -3115,7 +3124,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		{
 			// See if we have the port already via locationID
 			if ([self containsUSBPort:locationID index:&index])
+			{
+				//[usbEntryDictionary setObject:name forKey:@"name"];
+				
 				continue;
+			}
 		}
 		
 		NSMutableDictionary *usbPortsDictionary = [NSMutableDictionary dictionary];
@@ -3538,7 +3551,7 @@ NSInteger usbSort(id a, id b, void *context)
 	NSMutableDictionary *first = (NSMutableDictionary *)a;
 	NSMutableDictionary *second = (NSMutableDictionary *)b;
 	
-	return [first[@"name"] compare:second[@"name"]];
+	return [first[@"locationID"] compare:second[@"locationID"]];
 }
 
 - (void)refreshDisplays
@@ -6490,7 +6503,7 @@ NSInteger usbSort(id a, id b, void *context)
 		{
 			NSString *name = [usbPortsDictionary objectForKey:@"name"];
 			
-			result.textField.stringValue = name; //([name length] > 4 ? @"-" : name);
+			result.textField.stringValue = name;
 		}
 		else if ([identifier isEqualToString:@"Type"])
 		{
@@ -6829,7 +6842,7 @@ NSInteger usbSort(id a, id b, void *context)
 				if ((uint32_t)row != display.index)
 					continue;
 			
-			[rowView setBackgroundColor:getColorAlpha(display.isInternal ? [NSColor systemGreenColor] : [NSColor systemRedColor], 0.3f)];
+			[rowView setBackgroundColor:(display.isInternal ? _greenColor : _redColor)];
 		}
 	}
 	else if (tableView == _kextsTableView)
@@ -6847,31 +6860,37 @@ NSInteger usbSort(id a, id b, void *context)
 		bool isNewerThanDownloadVersion = (downloadVersionComparison == NSOrderedSame || downloadVersionComparison == NSOrderedAscending);
 		bool isLatestVersion = (isNewerThanCurrentVersion || isNewerThanDownloadVersion);
 		bool isSuperseded = (superseder != nil && ![superseder isEqualToString:@""]);
+		NSArray *alternatingContentBackgroundColors = [NSColor controlAlternatingRowBackgroundColors];
+		NSColor *alternatingBackgroundColor = alternatingContentBackgroundColors[row % 2];
 		
 		if (isInstalled)
-			[rowView setBackgroundColor:getColorAlpha(isLatestVersion && !isSuperseded ? [NSColor systemGreenColor] : [NSColor systemRedColor], 0.3f)];
+			[rowView setBackgroundColor:(isLatestVersion && !isSuperseded ? _greenColor : _redColor)];
 		else
-			[rowView setBackgroundColor:[NSColor controlBackgroundColor]];
+			[rowView setBackgroundColor:alternatingBackgroundColor];
 	}
 	else if (tableView == _usbPortsTableView)
 	{
 		NSDictionary *usbDictionary = _usbPortsArray[row];
 		NSNumber *isActive = [usbDictionary objectForKey:@"IsActive"];
+		NSArray *alternatingContentBackgroundColors = [NSColor controlAlternatingRowBackgroundColors];
+		NSColor *alternatingBackgroundColor = alternatingContentBackgroundColors[row % 2];
 	
-		[rowView setBackgroundColor:getColorAlpha(isActive && [isActive boolValue] ? [NSColor systemGreenColor] : [NSColor controlBackgroundColor], 0.3f)];
+		[rowView setBackgroundColor:(isActive && [isActive boolValue] ? _greenColor : alternatingBackgroundColor)];
 	}
 	else if (tableView == _efiPartitionsTableView)
 	{
 		NSMutableArray *efiPartitionsArray = getEfiPartitionsArray(_disksArray);
 		Disk *disk = efiPartitionsArray[row];
+		NSArray *alternatingContentBackgroundColors = [NSColor controlAlternatingRowBackgroundColors];
+		NSColor *alternatingBackgroundColor = alternatingContentBackgroundColors[row % 2];
 		
-		[rowView setBackgroundColor:getColorAlpha(disk.isBootableEFI ? [NSColor systemGreenColor] : [NSColor controlBackgroundColor], 0.3f)];
+		[rowView setBackgroundColor:(disk.isBootableEFI ? _greenColor : alternatingBackgroundColor)];
 	}
 	else if (tableView == _partitionSchemeTableView)
 	{
 		Disk *disk = _disksArray[row];
 		
-		[rowView setBackgroundColor:[disk color:0.3f]];
+		[rowView setBackgroundColor:[disk color:COLOR_ALPHA]];
 	}
 	else if (tableView == _powerSettingsTableView)
 	{
@@ -6880,9 +6899,9 @@ NSInteger usbSort(id a, id b, void *context)
 		NSString *powerValue = [_currentPowerSettings objectForKey:powerKey];
 		
 		if ([powerKey isEqualToString:@"hibernatemode"])
-			[rowView setBackgroundColor:getColorAlpha([powerValue isEqualToString:@"0"] ? [NSColor systemGreenColor] : [NSColor systemRedColor], 0.3f)];
+			[rowView setBackgroundColor:([powerValue isEqualToString:@"0"] ? _greenColor : _redColor)];
 		else if ([powerKey isEqualToString:@"proximitywake"])
-			[rowView setBackgroundColor:getColorAlpha([powerValue isEqualToString:@"0"] ? [NSColor systemGreenColor] : [NSColor systemRedColor], 0.3f)];
+			[rowView setBackgroundColor:([powerValue isEqualToString:@"0"] ? _greenColor : _redColor)];
 	}
 }
 
@@ -9748,7 +9767,7 @@ NSInteger usbSort(id a, id b, void *context)
 	
 	NSString *fileName = [kextPath lastPathComponent];
 	
-	[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:getColorAlpha([NSColor systemOrangeColor], 0.3f) text:[NSString stringWithFormat:GetLocalizedString(@"Installing '%@'...\n"), fileName]];
+	[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:_orangeColor text:[NSString stringWithFormat:GetLocalizedString(@"Installing '%@'...\n"), fileName]];
 	
 	[self launchCommandAsAdmin:textView launchPath:@"rm" arguments:@[@"-Rf", [extensionsPath stringByAppendingPathComponent:fileName]]];
 	[self launchCommandAsAdmin:textView launchPath:@"cp" arguments: @[@"-R", kextPath, extensionsPath]];
@@ -9819,7 +9838,7 @@ NSInteger usbSort(id a, id b, void *context)
 	
 	[self disableGatekeeperAndMountDiskReadWrite:textView forced:NO];
 	
-	[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:getColorAlpha([NSColor systemOrangeColor], 0.3f) text:GetLocalizedString(@"Rebuilding KextCache and Repairing Permissions...\n")];
+	[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:_orangeColor text:GetLocalizedString(@"Rebuilding KextCache and Repairing Permissions...\n")];
 	
 	[_progressCancelButton setTag:NO];
 	[_progressCancelButton setAction:@selector(progressCancelButtonClicked:)];
@@ -10072,12 +10091,12 @@ NSInteger usbSort(id a, id b, void *context)
 	NSString *argumentsString = [arguments componentsJoinedByString:@" "];
 	NSString *fullPath = [NSString stringWithFormat:@"%@ %@\n", launchPath, argumentsString];
 	
-	[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:getColorAlpha([NSColor systemOrangeColor], 0.3f) text:fullPath];
+	[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:_orangeColor text:fullPath];
 	
 	bool result = launchCommandAsAdmin(launchPath, arguments, &stdoutString, &stderrString);
 	
 	[self appendTextView:textView text:stdoutString];
-	[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:getColorAlpha([NSColor systemRedColor], 0.3f) text:stderrString];
+	[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:_redColor text:stderrString];
 	
 	return result;
 }
@@ -10089,14 +10108,14 @@ NSInteger usbSort(id a, id b, void *context)
 	NSString *fullPath = [NSString stringWithFormat:@"%@ %@\n", launchPath, argumentsString];
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:getColorAlpha([NSColor systemOrangeColor], 0.3f) text:fullPath];
+		[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:_orangeColor text:fullPath];
 	});
 	
 	bool result = launchCommandAsAdmin(launchPath, arguments, &stdoutString, &stderrString);
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self appendTextView:textView text:stdoutString];
-		[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:getColorAlpha([NSColor systemRedColor], 0.3f) text:stderrString];
+		[self appendTextView:textView foregroundColor:[NSColor textColor] backgroundColor:_redColor text:stderrString];
 		
 		*cancelProgress = [self tryUpdateProgress:progressPercent];
 	});
@@ -10383,7 +10402,7 @@ NSInteger usbSort(id a, id b, void *context)
 	NSData *fileData = [dictionary objectForKey:@"Data"];
 	
 	NSString *stringRead = [[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding];
-	[self appendTextView:_compileOutputTextView foregroundColor:[NSColor textColor] backgroundColor:getColorAlpha([NSColor systemRedColor], 0.3f) text:stringRead];
+	[self appendTextView:_compileOutputTextView foregroundColor:[NSColor textColor] backgroundColor:_redColor text:stringRead];
 	[stringRead release];
 }
 

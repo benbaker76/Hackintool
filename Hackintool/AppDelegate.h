@@ -172,6 +172,10 @@ typedef struct
 	
 	NSString *_bootloaderDeviceUUID;
 	NSString *_bootloaderDirPath;
+	
+	NSColor *_greenColor;
+	NSColor *_redColor;
+	NSColor *_orangeColor;
 }
 
 @property (assign) IBOutlet NSWindow *window;

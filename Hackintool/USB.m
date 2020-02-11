@@ -554,7 +554,7 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		NSString *usbController = [usbEntryDictionary objectForKey:@"UsbController"];
 		NSNumber *usbControllerID = [usbEntryDictionary objectForKey:@"UsbControllerID"];
 		
-		if (usbController == nil || usbControllerID == nil)
+		if (usbController == nil)
 			continue;
 		
 		uint32_t port = propertyToUInt32([usbEntryDictionary objectForKey:@"port"]);
@@ -606,7 +606,9 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 			[modelEntryDictionary setObject:@(5000) forKey:@"IOProbeScore"];
 			
 			[modelEntryDictionary setObject:usbController forKey:@"UsbController"];
-			[modelEntryDictionary setObject:usbControllerID forKey:@"UsbControllerID"];
+			
+			if (usbControllerID != nil)
+				[modelEntryDictionary setObject:usbControllerID forKey:@"UsbControllerID"];
 			
 			//injectUSBControllerProperties(appDelegate, ioKitPersonalities, usbControllerID);
 		}
@@ -788,9 +790,7 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			continue;
 		
 		NSNumber *usbControllerID = [modelEntryDictionary objectForKey:@"UsbControllerID"];
-		uint32_t deviceID = [usbControllerID unsignedIntValue] & 0xFFFF;
-		uint32_t productID = [usbControllerID unsignedIntValue] >> 16;
-		NSString *name = [NSString stringWithFormat:@"%04x_%04x", deviceID, productID]; // "8086_a12f", Package()
+		NSString *name = usbController;
 		NSNumber *locationID = [modelEntryDictionary objectForKey:@"locationID"];
 		NSMutableDictionary *ioProviderMergePropertiesDictionary = [modelEntryDictionary objectForKey:@"IOProviderMergeProperties"];
 		NSData *portCount = [ioProviderMergePropertiesDictionary objectForKey:@"port-count"];
@@ -803,8 +803,14 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			hasExportedUSBPowerSSDT = YES;
 		}
 		
-		if ([usbController hasPrefix:@"EH"] || [usbController isEqualToString:@"XHC"])
-			name = usbController;
+		if (usbControllerID != nil)
+		{
+			uint32_t deviceID = [usbControllerID unsignedIntValue] & 0xFFFF;
+			uint32_t productID = [usbControllerID unsignedIntValue] >> 16;
+			
+			if (![usbController hasPrefix:@"EH"] && ![usbController isEqualToString:@"XHC"])
+				name = [NSString stringWithFormat:@"%04x_%04x", deviceID, productID];
+		}
 		
 		if (locationID != nil)
 		{
