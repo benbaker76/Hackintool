@@ -3264,24 +3264,24 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	if (vendorID != 0x8086)
 		return false;
 	
-	NSString *name = [NSString stringWithFormat:@"%04x_%04x", vendorID, productID];
+	NSString *controllerName = [NSString stringWithFormat:@"%04x_%04x", vendorID, productID];
 	
-	if ([self getUSBPortNameWithName:name portNumber:portNumber portName:portName])
+	if ([self getUSBPortNameWithControllerName:controllerName portNumber:portNumber portName:portName])
 		return true;
 	
-	name = [name stringByReplacingCharactersInRange:NSMakeRange(7, 2) withString:@"xx"];
+	controllerName = [controllerName stringByReplacingCharactersInRange:NSMakeRange(7, 2) withString:@"xx"];
 	
-	if ([self getUSBPortNameWithName:name portNumber:portNumber portName:portName])
+	if ([self getUSBPortNameWithControllerName:controllerName portNumber:portNumber portName:portName])
 		return true;
 	
-	name = [name stringByReplacingCharactersInRange:NSMakeRange(6, 3) withString:@"xxx"];
+	controllerName = [controllerName stringByReplacingCharactersInRange:NSMakeRange(6, 3) withString:@"xxx"];
 	
-	return [self getUSBPortNameWithName:name portNumber:portNumber portName:portName];
+	return [self getUSBPortNameWithControllerName:controllerName portNumber:portNumber portName:portName];
 }
 
-- (bool)getUSBPortNameWithName:(NSString *)name portNumber:(uint32_t)portNumber portName:(NSString **)portName
+- (bool)getUSBPortNameWithControllerName:(NSString *)controllerName portNumber:(uint32_t)portNumber portName:(NSString **)portName
 {
-	NSDictionary *controllerDictionary = [_usbConfigurationDictionary objectForKey:name];
+	NSDictionary *controllerDictionary = [_usbConfigurationDictionary objectForKey:controllerName];
 	
 	if (controllerDictionary == nil)
 		return false;
@@ -3419,15 +3419,15 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			break;
 		case 0x1D: // EHx1
 			if (hubLocationID == 0x1D100000)
-				[self getUSBPortNameWithName:@"HUB1" portNumber:portNumber portName:&portName];
+				[self getUSBPortNameWithControllerName:@"HUB1" portNumber:portNumber portName:&portName];
 			else
-				[self getUSBPortNameWithName:@"EH01" portNumber:portNumber portName:&portName];
+				[self getUSBPortNameWithControllerName:@"EH01" portNumber:portNumber portName:&portName];
 			break;
 		case 0x1A: // EHx2
 			if (hubLocationID == 0x1A100000)
-				[self getUSBPortNameWithName:@"HUB2" portNumber:portNumber portName:&portName];
+				[self getUSBPortNameWithControllerName:@"HUB2" portNumber:portNumber portName:&portName];
 			else
-				[self getUSBPortNameWithName:@"EH02" portNumber:portNumber portName:&portName];
+				[self getUSBPortNameWithControllerName:@"EH02" portNumber:portNumber portName:&portName];
 			break;
 		default:
 			break;
