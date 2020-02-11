@@ -3168,7 +3168,6 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	}
 	
 	[_usbPortsArray sortUsingFunction:usbSort context:nil];
-	
 	[_usbPortsTableView reloadData];
 	
 	usbRegisterEvents(self);
@@ -3551,7 +3550,22 @@ NSInteger usbSort(id a, id b, void *context)
 	NSMutableDictionary *first = (NSMutableDictionary *)a;
 	NSMutableDictionary *second = (NSMutableDictionary *)b;
 	
-	return [first[@"locationID"] compare:second[@"locationID"]];
+	NSComparisonResult result = [first[@"locationID"] compare:second[@"locationID"]];
+	
+	if (result != NSOrderedSame)
+		return result;
+	
+	result = [first[@"UsbController"] compare:second[@"UsbController"]];
+		
+	if (result != NSOrderedSame)
+		return result;
+	
+	result = [first[@"port"] compare:second[@"port"]];
+		
+	if (result != NSOrderedSame)
+		return result;
+	
+	return [first[@"name"] compare:second[@"name"]];
 }
 
 - (void)refreshDisplays
