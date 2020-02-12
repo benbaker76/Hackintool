@@ -6947,8 +6947,10 @@ NSInteger usbSort(id a, id b, void *context)
 		ConnectorType type;
 		ConnectorFlags flags;
 		[self getConnectorInfo:(uint32_t)row Index:&index BusID:&busID Pipe:&pipe Type:&type Flags:&flags];
+		NSArray *alternatingContentBackgroundColors = [NSColor controlAlternatingRowBackgroundColors];
+		NSColor *alternatingBackgroundColor = alternatingContentBackgroundColors[row % 2];
 		
-		[rowView setBackgroundColor:[NSColor controlBackgroundColor]];
+		[rowView setBackgroundColor:alternatingBackgroundColor];
 		
 		if (index == -1)
 			return;
