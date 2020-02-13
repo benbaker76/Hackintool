@@ -3124,28 +3124,15 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			name = [self generateUSBPortName:usbControllerID hubLocationID:[hubLocationID unsignedIntValue] locationID:[locationID unsignedIntValue] portNumber:port];
 		}
 		
-		if ([locationID unsignedIntValue] == 0)
+		// See if we have the port already via controller / port
+		if ([self containsUSBPort:usbController port:portData index:&index])
 		{
-			// See if we have the port already via controller / port
-			if ([self containsUSBPort:usbController port:portData index:&index])
-			{
-				NSMutableDictionary *usbEntryDictionary = _usbPortsArray[index];
-				//[usbEntryDictionary setObject:name forKey:@"name"];
-				[usbEntryDictionary setObject:locationID forKey:@"locationID"];
-				[usbEntryDictionary setObject:usbControllerID forKey:@"UsbControllerID"];
+			NSMutableDictionary *usbEntryDictionary = _usbPortsArray[index];
 
-				continue;
-			}
-		}
-		else
-		{
-			// See if we have the port already via locationID
-			if ([self containsUSBPort:locationID index:&index])
-			{
-				//[usbEntryDictionary setObject:name forKey:@"name"];
-				
-				continue;
-			}
+			for (id key in propertyDictionary.allKeys)
+				[usbEntryDictionary setObject:propertyDictionary[key] forKey:key];
+			
+			continue;
 		}
 		
 		NSMutableDictionary *usbPortsDictionary = [NSMutableDictionary dictionary];
@@ -3163,21 +3150,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 				continue;
 		}
 		
-		[usbPortsDictionary setObject:name forKey:@"name"];
-		[usbPortsDictionary setObject:locationID forKey:@"locationID"];
-		[usbPortsDictionary setObject:portData forKey:@"port"];
-		if (portType != nil)
-			[usbPortsDictionary setObject:portType forKey:@"portType"];
-		if (usbConnector != nil)
-			[usbPortsDictionary setObject:usbConnector forKey:@"UsbConnector"];
+		for (id key in propertyDictionary.allKeys)
+			[usbPortsDictionary setObject:propertyDictionary[key] forKey:key];
+		
 		[usbPortsDictionary setObject:@"" forKey:@"Device"];
-		[usbPortsDictionary setObject:usbController forKey:@"UsbController"];
-		[usbPortsDictionary setObject:usbControllerID forKey:@"UsbControllerID"];
-		if (hubName != nil)
-			[usbPortsDictionary setObject:hubName forKey:@"HubName"];
-		if (hubLocationID != nil)
-			[usbPortsDictionary setObject:hubLocationID forKey:@"HubLocation"];
-		[usbPortsDictionary setObject:[NSNumber numberWithBool:NO] forKey:@"IsActive"];
+		[usbPortsDictionary setObject:@(NO) forKey:@"IsActive"];
 		
 		//NSLog(@"Port Name: %@ Location ID: 0x%08x UsbController: %@ Hub: %@ (0x%08x)", name, [locationID unsignedIntValue], usbController, hubName, [hubLocation unsignedIntValue]);
 		
@@ -3312,10 +3289,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	for (NSDictionary *usbDictionary in usbPorts)
 	{
 		NSMutableDictionary *usbEntryDictionary = [[usbDictionary mutableCopy] autorelease];
-		NSNumber *locationID = [usbEntryDictionary objectForKey:@"locationID"];
+		NSData *portData = [usbEntryDictionary objectForKey:@"port"];
+		NSString *usbController = [usbEntryDictionary objectForKey:@"UsbController"];
 		uint32_t index = 0;
 		
-		if ([self containsUSBPort:locationID index:&index])
+		if ([self containsUSBPort:usbController port:portData index:&index])
 			continue;
 		
 		[usbEntryDictionary setObject:@"" forKey:@"Device"];
@@ -3350,27 +3328,6 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		}
 	}
 } */
-
-- (bool)containsUSBPort:(NSNumber *)location index:(uint32_t *)index
-{
-	if ([location unsignedIntValue] == 0)
-		return false;
-	
-	for (int i = 0; i < [_usbPortsArray count]; i++)
-	{
-		NSMutableDictionary *usbPortsDictionary = _usbPortsArray[i];
-		NSNumber *locationID = [usbPortsDictionary objectForKey:@"locationID"];
-		
-		if ([locationID isEqualToNumber:location])
-		{
-			*index = i;
-			
-			return true;
-		}
-	}
-	
-	return false;
-}
 
 - (bool)containsUSBPort:(NSString *)controller port:(NSData *)port index:(uint32_t *)index
 {
