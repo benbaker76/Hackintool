@@ -2,7 +2,6 @@
 .Trashes
 *.swp
 *.lock
-#profile
 *~.nib
 DerivedData/
 build/
