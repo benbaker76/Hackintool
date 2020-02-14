@@ -18,14 +18,14 @@
 #include "OpenCore.h"
 #include "MiscTools.h"
 
-static NSMutableArray *gDeviceArray = nil;
+//static NSMutableArray *gDeviceArray = nil;
 static CFMutableDictionaryRef gMatchingDict = nil;
 static IONotificationPortRef gNotifyPort = nil;
 static io_iterator_t gAddedIter = 0;
 
 void usbUnRegisterEvents()
 {
-	if (gDeviceArray)
+	/* if (gDeviceArray)
 	{
 		for (NSNumber *privateDataNumber in gDeviceArray)
 		{
@@ -36,7 +36,7 @@ void usbUnRegisterEvents()
 		
 		[gDeviceArray release];
 		gDeviceArray = nil;
-	}
+	} */
 	
 	if (gNotifyPort)
 	{
@@ -65,7 +65,7 @@ void usbRegisterEvents(AppDelegate *appDelegate)
 
 	usbUnRegisterEvents();
 	
-	gDeviceArray = [[NSMutableArray alloc] init];
+	//gDeviceArray = [[NSMutableArray alloc] init];
 	
 	gMatchingDict = IOServiceMatching(kIOUSBDeviceClassName);
 	
@@ -92,11 +92,11 @@ void usbDeviceNotification(void *refCon, io_service_t usbDevice, natural_t messa
 	
 	if (messageType == kIOMessageServiceIsTerminated)
 	{
-		[appDelegate removeUSBDevice:privateDataRef->locationID name:(__bridge NSString *)privateDataRef->deviceName];
+		[appDelegate removeUSBDevice:privateDataRef->controllerID locationID:privateDataRef->locationID port:privateDataRef->port];
 		
 		destroyPrivateData(privateDataRef);
 		
-		[gDeviceArray removeObject:[NSNumber numberWithUnsignedLongLong:(unsigned long long)privateDataRef]];
+		//[gDeviceArray removeObject:[NSNumber numberWithUnsignedLongLong:(unsigned long long)privateDataRef]];
 	}
 }
 
@@ -117,10 +117,9 @@ void destroyPrivateData(MyPrivateData *privateDataRef)
 void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 {
 	kern_return_t kr = KERN_FAILURE;
-	io_object_t usbDevice = 0;
 	AppDelegate *appDelegate = (__bridge AppDelegate *)refCon;
 	
-	for (; (usbDevice = IOIteratorNext(iterator)); IOObjectRelease(usbDevice))
+	for (io_service_t usbDevice; IOIteratorIsValid(iterator) && (usbDevice = IOIteratorNext(iterator)); IOObjectRelease(usbDevice))
 	{
 		io_name_t deviceName = { };
 		//IOCFPlugInInterface **plugInInterface = 0;
@@ -129,6 +128,10 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 		//SInt32 score = 0;
 		uint32_t locationID = 0;
 		uint8_t devSpeed = -1;
+		uint32_t vendorID = 0;
+		uint32_t productID = 0;
+		uint32_t controllerID = 0;
+		uint32_t port = 0;
 		
 		kr = IORegistryEntryGetName(usbDevice, deviceName);
 		
@@ -136,7 +139,7 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 			deviceName[0] = '\0';
 		
 #ifdef USB_USEREGISTRY
-		CFMutableDictionaryRef propertyDictionaryRef = 0;
+		CFMutableDictionaryRef propertyDictionaryRef = nil;
 		
 		kr = IORegistryEntryCreateCFProperties(usbDevice, &propertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
 		
@@ -144,8 +147,14 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 		{
 			NSDictionary *propertyDictionary = (__bridge NSDictionary *)propertyDictionaryRef;
 			
-			locationID = [[propertyDictionary objectForKey:@"locationID"] unsignedIntValue];
-			devSpeed = [[propertyDictionary objectForKey:@"Device Speed"] unsignedIntValue];
+			locationID = propertyToUInt32([propertyDictionary objectForKey:@"locationID"]);
+			devSpeed = propertyToUInt32([propertyDictionary objectForKey:@"Device Speed"]);
+			vendorID = propertyToUInt32([propertyDictionary objectForKey:@"idVendor"]);
+			productID = propertyToUInt32([propertyDictionary objectForKey:@"idProduct"]);
+			
+			getUSBControllerIDAndPortForUSBDevice(locationID, vendorID, productID, &controllerID, &port);
+			
+			//NSLog(@"%@", propertyDictionary);
 		}
 #else
 		kr = IOCreatePlugInInterfaceForService(usbDevice, kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID, &plugInInterface, &score);
@@ -170,20 +179,22 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 		kr = (*deviceInterface)->GetLocationID(deviceInterface, &locationID);
 		kr = (*deviceInterface)->GetDeviceSpeed(deviceInterface, &devSpeed);
 #endif
-			
+		
 		//MyPrivateData *privateDataRef = (MyPrivateData *)calloc(1, sizeof(MyPrivateData));
 		MyPrivateData *privateDataRef = (MyPrivateData *)NSAllocateMemoryPages(sizeof(MyPrivateData));
 		
-		privateDataRef->deviceName = CFStringCreateWithCString(kCFAllocatorDefault, deviceName, kCFStringEncodingASCII);
 		privateDataRef->deviceInterface = deviceInterface;
+		privateDataRef->deviceName = CFStringCreateWithCString(kCFAllocatorDefault, deviceName, kCFStringEncodingASCII);
 		privateDataRef->locationID = locationID;
+		privateDataRef->controllerID = controllerID;
+		privateDataRef->port = port;
 		privateDataRef->appDelegate = appDelegate;
 		
-		[gDeviceArray addObject:[NSNumber numberWithUnsignedLongLong:(unsigned long long)privateDataRef]];
+		//[gDeviceArray addObject:[NSNumber numberWithUnsignedLongLong:(unsigned long long)privateDataRef]];
+
+		//NSLog(@"deviceName: %@ controllerID: 0x%08X locationID: 0x%08X port: 0x%02X devSpeed: %d", privateDataRef->deviceName, controllerID, locationID, port, (uint32_t)devSpeed);
 		
-		// NSLog(@"deviceName: %@ locationID: %d devSpeed: %d", privateDataRef->deviceName, locationID, (uint32_t)devSpeed);
-		
-		[appDelegate addUSBDevice:locationID name:(__bridge NSString *)privateDataRef->deviceName devSpeed:devSpeed];
+		[appDelegate addUSBDevice:controllerID locationID:locationID port:port deviceName:(__bridge NSString *)privateDataRef->deviceName devSpeed:devSpeed];
 		
 		kr = IOServiceAddInterestNotification(gNotifyPort, usbDevice, kIOGeneralInterest, usbDeviceNotification, privateDataRef, &privateDataRef->removedIter);
 	}
@@ -238,6 +249,86 @@ NSString *getUSBConnectorSpeed(uint8_t speed)
 		default:
 			return @"Unknown";
 	}
+}
+
+bool getUSBControllerIDAndPortForUSBDevice(uint32_t idLocation, uint32_t idVendor, uint32_t idProduct, uint32_t *usbControllerID, uint32_t *port)
+{
+	bool retVal = false;
+	io_iterator_t iterator;
+	
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("AppleUSBHostPort"), &iterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
+	{
+		CFMutableDictionaryRef propertyDictionaryRef = 0;
+		
+		kr = IORegistryEntryCreateCFProperties(device, &propertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+		
+		if (kr == KERN_SUCCESS)
+		{
+			NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
+			
+			uint32_t portNum = propertyToUInt32([propertyDictionary objectForKey:@"port"]);
+		
+			io_service_t deviceDevice;
+			uint32_t deviceIndex = -1;
+			
+			if (getIORegChild(device, @[@"IOUSBDevice", @"AppleUSBHub", @"IOPCIDevice", @"AppleUSBHostPort"], &deviceDevice, &deviceIndex, true))
+			{
+				if (deviceIndex == 0)
+				{
+					CFMutableDictionaryRef devicePropertyDictionaryRef = 0;
+						
+					kr = IORegistryEntryCreateCFProperties(deviceDevice, &devicePropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+						
+					if (kr == KERN_SUCCESS)
+					{
+						NSMutableDictionary *devicePropertyDictionary = (__bridge NSMutableDictionary *)devicePropertyDictionaryRef;
+						
+						uint32_t locationID = propertyToUInt32([devicePropertyDictionary objectForKey:@"locationID"]);
+						uint32_t vendorID = propertyToUInt32([devicePropertyDictionary objectForKey:@"idVendor"]);
+						uint32_t productID = propertyToUInt32([devicePropertyDictionary objectForKey:@"idProduct"]);
+						
+						if ((idLocation == locationID) && (idVendor == vendorID) && (idProduct == productID))
+						{
+							io_service_t parentDevice;
+							
+							if (getIORegParent(device, @"IOPCIDevice", &parentDevice, true))
+							{
+								CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
+								
+								kr = IORegistryEntryCreateCFProperties(parentDevice, &parentPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+								
+								if (kr == KERN_SUCCESS)
+								{
+									NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
+									
+									uint32_t controllerDeviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
+									uint32_t controllerVendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
+									
+									*port = portNum;
+									*usbControllerID = (controllerDeviceID << 16) | controllerVendorID;
+									
+									retVal = true;
+								}
+								
+								IOObjectRelease(parentDevice);
+							}
+						}
+					}
+				}
+				
+				IOObjectRelease(deviceDevice);
+			}
+		}
+	}
+	
+	IOObjectRelease(iterator);
+	
+	return retVal;
 }
 
 void injectDefaultUSBPowerProperties(NSMutableDictionary *ioProviderMergePropertiesDictionary)

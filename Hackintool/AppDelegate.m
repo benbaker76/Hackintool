@@ -3009,19 +3009,21 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[self updateStorageDevices];
 }
 
-- (void)addUSBDevice:(uint32_t)locationID name:(NSString *)name devSpeed:(uint8_t)devSpeed
+- (void)addUSBDevice:(uint32_t)controllerID locationID:(uint32_t)locationID port:(uint32_t)port deviceName:(NSString *)deviceName devSpeed:(uint8_t)devSpeed
 {
 	uint32_t foundIndex = -1;
 	
 	for (int i = 0; i < [_usbPortsArray count]; i++)
 	{
 		NSMutableDictionary *usbEntryDictionary = _usbPortsArray[i];
-		NSNumber *usbEntryLocationID = [usbEntryDictionary objectForKey:@"locationID"];
+		uint32_t usbEntryLocationID = propertyToUInt32([usbEntryDictionary objectForKey:@"locationID"]);
+		uint32_t usbEntryUsbControllerID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerID"]);
+		uint32_t usbEntryPort = propertyToUInt32([usbEntryDictionary objectForKey:@"port"]);
 		
-		if ([usbEntryLocationID unsignedIntValue] != locationID)
+		if ((usbEntryLocationID != locationID) || (usbEntryUsbControllerID != controllerID) || (usbEntryPort != port))
 			continue;
 		
-		[usbEntryDictionary setObject:name forKey:@"Device"];
+		[usbEntryDictionary setObject:deviceName forKey:@"Device"];
 		[usbEntryDictionary setObject:@(YES) forKey:@"IsActive"];
 		[usbEntryDictionary setObject:@(devSpeed) forKey:@"DevSpeed"];
 		
@@ -3032,16 +3034,18 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_usbPortsTableView scrollRowToVisible:foundIndex];
 }
 
-- (void)removeUSBDevice:(uint32_t)locationID name:(NSString *)name
+- (void)removeUSBDevice:(uint32_t)controllerID locationID:(uint32_t)locationID port:(uint32_t)port
 {
 	uint32_t foundIndex = -1;
 	
 	for (int i = 0; i < [_usbPortsArray count]; i++)
 	{
 		NSMutableDictionary *usbEntryDictionary = _usbPortsArray[i];
-		NSNumber *usbEntryLocationID = [usbEntryDictionary objectForKey:@"locationID"];
+		uint32_t usbEntryLocationID = propertyToUInt32([usbEntryDictionary objectForKey:@"locationID"]);
+		uint32_t usbEntryUsbControllerID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerID"]);
+		uint32_t usbEntryPort = propertyToUInt32([usbEntryDictionary objectForKey:@"port"]);
 		
-		if ([usbEntryLocationID unsignedIntValue] != locationID)
+		if ((usbEntryLocationID != locationID) || (usbEntryUsbControllerID != controllerID) || (usbEntryPort != port))
 			continue;
 		
 		[usbEntryDictionary setObject:@"" forKey:@"Device"];
@@ -3211,8 +3215,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		if (foundController)
 			continue;
 		
-		NSNumber *vendorID = [NSNumber numberWithInt:[usbControllerID unsignedIntValue] & 0xFFFF];
-		NSNumber *deviceID = [NSNumber numberWithInt:([usbControllerID unsignedIntValue] >> 16) & 0xFFFF];
+		NSNumber *vendorID = [NSNumber numberWithUnsignedInt:[usbControllerID unsignedIntValue] & 0xFFFF];
+		NSNumber *deviceID = [NSNumber numberWithUnsignedInt:([usbControllerID unsignedIntValue] >> 16) & 0xFFFF];
 		NSString *vendorName = nil, *deviceName = nil;
 		
 		[self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:&vendorName deviceName:&deviceName];

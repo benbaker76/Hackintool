@@ -392,8 +392,8 @@ typedef struct
 
 - (void)refreshDisks;
 - (void)updateSettingsGUI;
-- (void)addUSBDevice:(uint32_t)locationID name:(NSString *)name devSpeed:(uint8_t)devSpeed;
-- (void)removeUSBDevice:(uint32_t)locationID name:(NSString *)name;
+- (void)addUSBDevice:(uint32_t)controllerID locationID:(uint32_t)locationID port:(uint32_t)port deviceName:(NSString *)deviceName devSpeed:(uint8_t)devSpeed;
+- (void)removeUSBDevice:(uint32_t)controllerID locationID:(uint32_t)locationID port:(uint32_t)port;
 - (bool)getUSBConfigurationPorts:(NSNumber *)usbControllerID portDictionary:(NSMutableDictionary **)usbPortDictionary;
 - (uint32_t)getGPUDeviceID:(uint32_t)platformID;
 - (NSString *)getGPUString:(uint32_t)platformID;

@@ -73,6 +73,7 @@ bool getIORegChild(io_service_t device, NSString *name, io_service_t *foundDevic
 	
 	for (io_service_t childDevice; IOIteratorIsValid(childIterator) && (childDevice = IOIteratorNext(childIterator)); IOObjectRelease(childDevice))
 	{
+		
 		if (IOObjectConformsTo(childDevice, [name UTF8String]))
 		{
 			*foundDevice = childDevice;
@@ -85,6 +86,41 @@ bool getIORegChild(io_service_t device, NSString *name, io_service_t *foundDevic
 		if (recursive)
 		{
 			if (getIORegChild(childDevice, name, foundDevice, recursive))
+				return true;
+		}
+	}
+	
+	return false;
+}
+
+bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, uint32_t *foundIndex, bool recursive)
+{
+	kern_return_t kr;
+	io_iterator_t childIterator;
+	
+	kr = IORegistryEntryGetChildIterator(device, kIOServicePlane, &childIterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t childDevice; IOIteratorIsValid(childIterator) && (childDevice = IOIteratorNext(childIterator)); IOObjectRelease(childDevice))
+	{
+		for (int i = 0; i < [nameArray count]; i++)
+		{
+			if (IOObjectConformsTo(childDevice, [[nameArray objectAtIndex:i] UTF8String]))
+			{
+				*foundDevice = childDevice;
+				*foundIndex = i;
+				
+				IOObjectRelease(childIterator);
+				
+				return true;
+			}
+		}
+		
+		if (recursive)
+		{
+			if (getIORegChild(childDevice, nameArray, foundDevice, foundIndex, recursive))
 				return true;
 		}
 	}
@@ -309,7 +345,7 @@ bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray
 						uint32_t deviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
 						uint32_t vendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
 						NSString *usbController = [NSString stringWithUTF8String:parentName];
-						NSNumber *usbControllerID = [NSNumber numberWithInt:(deviceID << 16) | vendorID];
+						NSNumber *usbControllerID = [NSNumber numberWithUnsignedInt:(deviceID << 16) | vendorID];
 						
 						[propertyDictionary setValue:usbController forKey:@"UsbController"];
 						[propertyDictionary setValue:usbControllerID forKey:@"UsbControllerID"];
@@ -347,6 +383,43 @@ bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray
 							
 							IOObjectRelease(hubDevice);
 						}
+						
+						/* [propertyDictionary setObject:@"" forKey:@"Device"];
+						[propertyDictionary setObject:@(NO) forKey:@"IsActive"];
+						[propertyDictionary setObject:@(-1) forKey:@"DevSpeed"];
+						
+						io_service_t deviceDevice;
+						uint32_t deviceIndex = -1;
+						
+						if (getIORegChild(device, @[@"IOUSBDevice", @"AppleUSBHub", @"IOPCIDevice", @"AppleUSBHostPort"], &deviceDevice, &deviceIndex, true))
+						{
+							if (deviceIndex == 0)
+							{
+								io_name_t deviceName {};
+								kr = IORegistryEntryGetName(deviceDevice, deviceName);
+								
+								if (kr == KERN_SUCCESS)
+								{
+									CFMutableDictionaryRef devicePropertyDictionaryRef = 0;
+										
+									kr = IORegistryEntryCreateCFProperties(deviceDevice, &devicePropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+										
+									if (kr == KERN_SUCCESS)
+									{
+										NSMutableDictionary *devicePropertyDictionary = (__bridge NSMutableDictionary *)devicePropertyDictionaryRef;
+										
+										//NSString *usbProductName = [devicePropertyDictionary objectForKey:@"USB Product Name"];
+										uint32_t devSpeed = propertyToUInt32([devicePropertyDictionary objectForKey:@"Device Speed"]);
+										
+										[propertyDictionary setObject:[NSString stringWithUTF8String:deviceName] forKey:@"Device"];
+										[propertyDictionary setObject:@(YES) forKey:@"IsActive"];
+										[propertyDictionary setObject:@(devSpeed) forKey:@"DevSpeed"];
+									}
+								}
+							}
+							
+							IOObjectRelease(deviceDevice);
+						} */
 						
 						//NSLog(@"PortName: %@ LocationID: 0x%08X UsbController: %s", portName, [locationID unsignedIntValue], parentName);
 						

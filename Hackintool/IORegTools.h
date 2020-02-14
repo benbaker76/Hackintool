@@ -17,6 +17,11 @@
 #define EISA_ID_TO_NUM(_Id)       ((_Id) >> 16)
 
 bool getDevicePath(NSString *search, NSString **devicePath);
+bool getIORegChild(io_service_t device, NSString *name, io_service_t *foundDevice, bool recursive);
+bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, uint32_t *foundIndex, bool recursive);
+bool getIORegParent(io_service_t device, NSString *name, io_service_t *foundDevice, bool recursive);
+bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, uint32_t *foundIndex, bool useClass, bool recursive);
+bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, bool useClass, bool recursive);
 bool getAPFSPhysicalStoreBSDName(NSString *mediaUUID, NSString **bsdName);
 bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray);
 bool getIORegAudioDeviceArray(NSMutableArray **propertyDictionaryArray);
