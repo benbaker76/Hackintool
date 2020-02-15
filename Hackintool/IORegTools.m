@@ -464,7 +464,30 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 			NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
 			
 			NSString *bundleID = [propertyDictionary objectForKey:@"CFBundleIdentifier"];
-			NSString *deviceName = [propertyDictionary objectForKey:@"IOAudioDeviceName"];
+			NSString *audioDeviceName = [propertyDictionary objectForKey:@"IOAudioDeviceName"];
+			NSString *audioDeviceModelID = [propertyDictionary objectForKey:@"IOAudioDeviceModelID"];
+			NSString *audioDeviceManufacturerName = [propertyDictionary objectForKey:@"IOAudioDeviceManufacturerName"];
+			uint32_t audioDeviceDeviceID = 0, audioDeviceVendorID = 0;
+			uint32_t audioDeviceDeviceIDNew = 0;
+			
+			if (audioDeviceModelID != nil)
+			{
+				NSArray *modelIDArray = [audioDeviceModelID componentsSeparatedByString:@":"];
+				
+				if ([modelIDArray count] == 3)
+				{
+					NSScanner *deviceIDScanner = [NSScanner scannerWithString:[modelIDArray objectAtIndex:1]];
+					NSScanner *productIDScanner = [NSScanner scannerWithString:[modelIDArray objectAtIndex:2]];
+
+					[deviceIDScanner setScanLocation:0];
+					[deviceIDScanner scanHexInt:&audioDeviceVendorID];
+												   
+				    [productIDScanner setScanLocation:0];
+				    [productIDScanner scanHexInt:&audioDeviceDeviceID];
+												   
+					audioDeviceDeviceIDNew = (audioDeviceVendorID << 16) | audioDeviceDeviceID;
+				}
+			}
 			
 			io_service_t parentDevice;
 			
@@ -488,7 +511,7 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 					uint32_t deviceIDNew = (vendorID << 16) | deviceID;
 					uint32_t subDeviceIDNew = (subSystemVendorID << 16) | subSystemID;
 					
-					AudioDevice *audioDevice = [[AudioDevice alloc] initWithDeviceBundleID:bundleID deviceClass:[NSString stringWithUTF8String:className] deviceName:deviceName deviceID:deviceIDNew revisionID:revisionID alcLayoutID:alcLayoutID subDeviceID:subDeviceIDNew];
+					AudioDevice *audioDevice = [[AudioDevice alloc] initWithDeviceBundleID:bundleID deviceClass:[NSString stringWithUTF8String:className] audioDeviceName:audioDeviceName audioDeviceManufacturerName:audioDeviceManufacturerName audioDeviceModelID:audioDeviceDeviceIDNew deviceID:deviceIDNew revisionID:revisionID alcLayoutID:alcLayoutID subDeviceID:subDeviceIDNew];
 
 					io_service_t codecDevice;
 					

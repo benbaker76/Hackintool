@@ -1060,21 +1060,34 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	{
 		AudioDevice *audioDevice = _audioDevicesArray[i];
 		
-		NSNumber *vendorID = [NSNumber numberWithInt:audioDevice.subDeviceID >> 16];
-		NSNumber *deviceID = [NSNumber numberWithInt:audioDevice.subDeviceID & 0xFFFF];
+		NSNumber *vendorID = [NSNumber numberWithInt:audioDevice.deviceID >> 16];
+		NSNumber *deviceID = [NSNumber numberWithInt:audioDevice.deviceID & 0xFFFF];
+		NSNumber *subVendorID = [NSNumber numberWithInt:audioDevice.subDeviceID >> 16];
+		NSNumber *subDeviceID = [NSNumber numberWithInt:audioDevice.subDeviceID & 0xFFFF];
+		//NSNumber *audioVendorID = [NSNumber numberWithInt:audioDevice.audioDeviceModelID >> 16];
+		//NSNumber *audioDeviceID = [NSNumber numberWithInt:audioDevice.audioDeviceModelID & 0xFFFF];
+
 		NSString *vendorName = nil, *deviceName = nil;
+		NSString *subVendorName = nil, *subDeviceName = nil;
 		NSString *codecVendorName = nil, *codecName = nil;
+		//NSString *audioVendorName = nil, *audioDeviceName = nil;
 		
-		if ([self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:&vendorName deviceName:&deviceName])
-			audioDevice.deviceName = deviceName;
+		[self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:&vendorName deviceName:&deviceName];
+		[self getPCIDeviceInfo:subVendorID deviceID:subDeviceID vendorName:&subVendorName deviceName:&subDeviceName];
+		//[self getPCIDeviceInfo:audioVendorID deviceID:audioDeviceID vendorName:&audioVendorName deviceName:&audioDeviceName];
 		
-		[self getAudioVendorName:audioDevice.codecID vendorName:&codecVendorName];
+		audioDevice.deviceName = deviceName;
+		audioDevice.vendorName = vendorName;
+		audioDevice.subDeviceName = subDeviceName;
+		audioDevice.subVendorName = subVendorName;
+		//audioDevice.audioDeviceName = audioDeviceName;
+		//audioDevice.audioVendorName = audioVendorName;
+		
+		if ([self getAudioVendorName:audioDevice.codecID vendorName:&codecVendorName])
+			audioDevice.codecVendorName = codecVendorName;
 		
 		if ([self getAudioCodecName:audioDevice.codecID revisionID:audioDevice.codecRevisionID name:&codecName] || audioDevice.codecName == nil)
 			audioDevice.codecName = codecName;
-		
-		audioDevice.vendorName = vendorName;
-		audioDevice.codecVendorName = codecVendorName;
 			
 		if ([self isAppleHDAAudioDevice:audioDevice])
 		{
@@ -3165,7 +3178,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		[_usbPortsArray addObject:usbPortsDictionary];
 	}
 	
-	[_usbPortsArray sortUsingFunction:usbSort context:nil];
+	[_usbPortsArray sortUsingFunction:usbPortSort context:nil];
 	[_usbPortsTableView reloadData];
 	
 	usbRegisterEvents(self);
@@ -3231,6 +3244,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		[_usbControllersArray addObject:usbControllersDictionary];
 	}
 	
+	[_usbControllersArray sortUsingFunction:usbControllerSort context:nil];
 	[_usbControllersTableView reloadData];
 }
 
@@ -3619,7 +3633,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	return true;
 }
 
-NSInteger usbSort(id a, id b, void *context)
+NSInteger usbPortSort(id a, id b, void *context)
 {
 	NSMutableDictionary *first = (NSMutableDictionary *)a;
 	NSMutableDictionary *second = (NSMutableDictionary *)b;
@@ -3640,6 +3654,14 @@ NSInteger usbSort(id a, id b, void *context)
 		return result;
 	
 	return [first[@"name"] compare:second[@"name"]];
+}
+
+NSInteger usbControllerSort(id a, id b, void *context)
+{
+	NSMutableDictionary *first = (NSMutableDictionary *)a;
+	NSMutableDictionary *second = (NSMutableDictionary *)b;
+	
+	return [first[@"Type"] compare:second[@"Type"]];
 }
 
 - (void)refreshDisplays
@@ -4754,22 +4776,29 @@ NSInteger usbSort(id a, id b, void *context)
 	NSNumber *deviceID = [NSNumber numberWithInt:audioDevice.deviceID & 0xFFFF];
 	NSNumber *subVendorID = [NSNumber numberWithInt:audioDevice.subDeviceID >> 16];
 	NSNumber *subDeviceID = [NSNumber numberWithInt:audioDevice.subDeviceID & 0xFFFF];
-	NSString *vendorName = nil, *deviceName = nil;
-	
-	[self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:&vendorName deviceName:&deviceName];
+	NSNumber *audioVendorID = [NSNumber numberWithInt:audioDevice.audioDeviceModelID >> 16];
+	NSNumber *audioDeviceID = [NSNumber numberWithInt:audioDevice.audioDeviceModelID & 0xFFFF];
 	
 	bool needsSpoof = [self spoofAudioDeviceID:audioDevice.deviceID newDeviceID:&newDeviceID];
 
 	[_audioInfoArray removeAllObjects];
 	
 	[self addToList:_audioInfoArray name:@"Class" value:audioDevice.deviceClass];
-	[self addToList:_audioInfoArray name:@"Controller" value:[NSString stringWithFormat:@"%@ (0x%08X)%@", deviceName, audioDevice.deviceID, needsSpoof ? @"*" : @""]];
-
+	
+	[self addToList:_audioInfoArray name:@"Vendor" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.vendorName, [vendorID unsignedIntValue]]];
+	[self addToList:_audioInfoArray name:@"Device" value:[NSString stringWithFormat:@"%@ (0x%04X)%@", audioDevice.deviceName, [deviceID unsignedIntValue], needsSpoof ? @"*" : @""]];
+	
 	if (needsSpoof)
 		[self addToList:_audioInfoArray name:@"" value:[NSString stringWithFormat:@"* %@", GetLocalizedString(@"You may require Spoof Audio Device ID")]];
-
-	[self addToList:_audioInfoArray name:@"Vendor" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.vendorName, [subVendorID unsignedIntValue]]];
-	[self addToList:_audioInfoArray name:@"Device" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.deviceName, [subDeviceID unsignedIntValue]]];
+	
+	[self addToList:_audioInfoArray name:@"Sub Vendor" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.subVendorName, [subVendorID unsignedIntValue]]];
+	[self addToList:_audioInfoArray name:@"Sub Device" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.subDeviceName, [subDeviceID unsignedIntValue]]];
+	
+	if (audioDevice.audioDeviceModelID != 0)
+	{
+		[self addToList:_audioInfoArray name:@"Audio Vendor" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.audioDeviceManufacturerName, [audioVendorID unsignedIntValue]]];
+		[self addToList:_audioInfoArray name:@"Audio Device" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.audioDeviceName, [audioDeviceID unsignedIntValue]]];
+	}
 	
 	if (audioDevice.codecID != 0)
 	{
@@ -6641,6 +6670,7 @@ NSInteger usbSort(id a, id b, void *context)
 	else if (tableView == _audioDevicesTableView1 || tableView == _audioDevicesTableView2)
 	{
 		AudioDevice *audioDevice = _audioDevicesArray[row];
+		NSString *deviceName = (audioDevice.codecID != 0 ? audioDevice.codecName : audioDevice.deviceName);
 		
 		if([identifier isEqualToString:@"Device"])
 			result.textField.stringValue = [NSString stringWithFormat:@"0x%08X", audioDevice.deviceID];
@@ -6651,7 +6681,7 @@ NSInteger usbSort(id a, id b, void *context)
 		else if([identifier isEqualToString:@"Revision"])
 			result.textField.stringValue = (audioDevice.codecID != 0 ? [NSString stringWithFormat:@"0x%04X", audioDevice.codecRevisionID & 0xFFFF] : @"-");
 		else if([identifier isEqualToString:@"Name"])
-			result.textField.stringValue = (audioDevice.codecID != 0 ? audioDevice.codecName : audioDevice.deviceName);
+			result.textField.stringValue = (audioDevice.audioDeviceModelID != 0 ? audioDevice.audioDeviceName : deviceName);
 	}
 	else if (tableView == _audioInfoTableView)
 	{
