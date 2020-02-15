@@ -175,7 +175,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			[_toolbar setSelectedItemIdentifier:toolbarItem.itemIdentifier];
 	
 	_greenColor = [getColorAlpha([NSColor systemGreenColor], COLOR_ALPHA) retain];
-	_redColor = [getColorAlpha([NSColor systemGreenColor], COLOR_ALPHA) retain];
+	_redColor = [getColorAlpha([NSColor systemRedColor], COLOR_ALPHA) retain];
 	_orangeColor = [getColorAlpha([NSColor systemOrangeColor], COLOR_ALPHA) retain];
 	
 	NSLog(@"Initialization Done");
@@ -6944,17 +6944,15 @@ NSInteger usbSort(id a, id b, void *context)
 		NSString *downloadVersion = [kextDictionary objectForKey:@"DownloadVersion"];
 		NSString *superseder = [kextDictionary objectForKey:@"Superseder"];
 		bool isInstalled = ![installedVersion isEqualToString:@""];
-		NSComparisonResult currentVersionComparison = [self compareVersion:currentVersion toVersion:installedVersion];
-		NSComparisonResult downloadVersionComparison = [self compareVersion:downloadVersion toVersion:installedVersion];
-		bool isNewerThanCurrentVersion = (currentVersionComparison == NSOrderedSame || currentVersionComparison == NSOrderedAscending);
-		bool isNewerThanDownloadVersion = (downloadVersionComparison == NSOrderedSame || downloadVersionComparison == NSOrderedAscending);
-		bool isLatestVersion = (isNewerThanCurrentVersion || isNewerThanDownloadVersion);
+		bool isCurrentVersionNewer = ([self compareVersion:installedVersion otherVersion:currentVersion] == NSOrderedAscending);
+		bool isDownloadVersionNewer = ([self compareVersion:installedVersion otherVersion:downloadVersion] == NSOrderedAscending);
+		bool isNewVersionAvailable = (isCurrentVersionNewer || isDownloadVersionNewer);
 		bool isSuperseded = (superseder != nil && ![superseder isEqualToString:@""]);
 		NSArray *alternatingContentBackgroundColors = [NSColor controlAlternatingRowBackgroundColors];
 		NSColor *alternatingBackgroundColor = alternatingContentBackgroundColors[row % 2];
 		
 		if (isInstalled)
-			[rowView setBackgroundColor:(isLatestVersion && !isSuperseded ? _greenColor : _redColor)];
+			[rowView setBackgroundColor:(isNewVersionAvailable || isSuperseded ? _redColor : _greenColor)];
 		else
 			[rowView setBackgroundColor:alternatingBackgroundColor];
 	}
@@ -9025,20 +9023,20 @@ NSInteger usbSort(id a, id b, void *context)
 
 // -----------------------------------------------------------------------------------------
 
-- (NSComparisonResult)compareVersion:(NSString *)versionOne toVersion:(NSString *)versionTwo
+- (NSComparisonResult)compareVersion:(NSString *)currentVersion otherVersion:(NSString *)otherVersion
 {
-    NSArray *versionOneComp = [versionOne componentsSeparatedByString:@"."];
-	NSArray *versionTwoComp = [versionTwo componentsSeparatedByString:@"."];
+    NSArray *currentVersionArray = [currentVersion componentsSeparatedByString:@"."];
+	NSArray *otherVersionArray = [otherVersion componentsSeparatedByString:@"."];
     NSInteger pos = 0;
 
-    while ([versionOneComp count] > pos || [versionTwoComp count] > pos)
+    while ([currentVersionArray count] > pos || [otherVersionArray count] > pos)
 	{
-        NSInteger v1 = [versionOneComp count] > pos ? [[versionOneComp objectAtIndex:pos] integerValue] : 0;
-        NSInteger v2 = [versionTwoComp count] > pos ? [[versionTwoComp objectAtIndex:pos] integerValue] : 0;
+        NSInteger v1 = [currentVersionArray count] > pos ? [[currentVersionArray objectAtIndex:pos] integerValue] : 0;
+        NSInteger v2 = [otherVersionArray count] > pos ? [[otherVersionArray objectAtIndex:pos] integerValue] : 0;
         
-		if (v1 < v2)
+		if (v2 > v1)
             return NSOrderedAscending;
-        else if (v1 > v2)
+        else if (v2 < v1)
             return NSOrderedDescending;
         
 		pos++;
@@ -9115,7 +9113,7 @@ NSInteger usbSort(id a, id b, void *context)
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSDate *downloadedDate = [defaults objectForKey:_bootloaderInfo->LastDownloadWarned];
 	
-	if (([self compareVersion:_bootloaderInfo->BootedVersion toVersion:_bootloaderInfo->LatestVersion] == NSOrderedAscending) || (downloadedDate && [downloadedDate timeIntervalSinceDate:[NSDate date]] > 60 * 60 * 24))
+	if (([self compareVersion:_bootloaderInfo->BootedVersion otherVersion:_bootloaderInfo->LatestVersion] == NSOrderedAscending) || (downloadedDate && [downloadedDate timeIntervalSinceDate:[NSDate date]] > 60 * 60 * 24))
 	{
 		[_hasUpdateImageView setImage:[NSImage imageNamed:_bootloaderInfo->IconName]];
 		[_hasUpdateTextField setStringValue:[NSString stringWithFormat:GetLocalizedString(@"%@ Version %@ is Available - you have %@. Would you like to download a newer Version?"), _bootloaderInfo->Name, _bootloaderInfo->LatestVersion, _bootloaderInfo->BootedVersion]];
