@@ -844,7 +844,10 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			continue;
 		
 		NSNumber *usbControllerID = [modelEntryDictionary objectForKey:@"UsbControllerID"];
+		uint32_t deviceID = [usbControllerID unsignedIntValue] & 0xFFFF;
+		uint32_t productID = [usbControllerID unsignedIntValue] >> 16;
 		NSString *name = usbController;
+		NSString *deviceName = (usbControllerID != nil ? [NSString stringWithFormat:@"%04x_%04x", deviceID, productID] : @"???");
 		NSNumber *locationID = [modelEntryDictionary objectForKey:@"locationID"];
 		NSMutableDictionary *ioProviderMergePropertiesDictionary = [modelEntryDictionary objectForKey:@"IOProviderMergeProperties"];
 		NSData *portCount = [ioProviderMergePropertiesDictionary objectForKey:@"port-count"];
@@ -859,11 +862,8 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 		
 		if (usbControllerID != nil)
 		{
-			uint32_t deviceID = [usbControllerID unsignedIntValue] & 0xFFFF;
-			uint32_t productID = [usbControllerID unsignedIntValue] >> 16;
-			
 			if (![usbController hasPrefix:@"EH"] && ![usbController hasPrefix:@"XH"])
-				name = [NSString stringWithFormat:@"%04x_%04x", deviceID, productID];
+				name = deviceName;
 		}
 		
 		if (locationID != nil)
@@ -874,6 +874,7 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 				name = @"HUB2";
 		}
 		
+		[ssdtUIACString appendString:[NSString stringWithFormat:@"            // %@ (%@)\n", name, deviceName]];
 		[ssdtUIACString appendString:[NSString stringWithFormat:@"            \"%@\", Package()\n", name]];
 		[ssdtUIACString appendString:@"            {\n"];
 		[ssdtUIACString appendString:[NSString stringWithFormat:@"                \"port-count\", Buffer() { %@ },\n", getByteString(portCount)]];
@@ -909,22 +910,17 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSString *iaslPath = [mainBundle pathForResource:@"iasl" ofType:@"" inDirectory:@"Utilities"];
 	NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	NSString *tempPath = getTempPath();
-	NSString *tempFilePath = [NSString stringWithFormat:@"%@/SSDT-UIAC.dsl", tempPath];
-	NSString *outputFilePath = [NSString stringWithFormat:@"%@/SSDT-UIAC.aml", desktopPath];
+	NSString *outputDslFilePath = [NSString stringWithFormat:@"%@/SSDT-UIAC.dsl", desktopPath];
+	NSString *outputAmlFilePath = [NSString stringWithFormat:@"%@/SSDT-UIAC.aml", desktopPath];
 	NSString *stdoutString = nil;
-	
-	if ([[NSFileManager defaultManager] fileExistsAtPath:tempFilePath])
-		[[NSFileManager defaultManager] removeItemAtPath:tempFilePath error:nil];
-	
 	NSError *error;
-
-	[ssdtUIACString writeToFile:tempFilePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
 	
-	launchCommand(iaslPath, @[@"-p", outputFilePath, tempFilePath], &stdoutString);
+	[ssdtUIACString writeToFile:outputDslFilePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+	
+	launchCommand(iaslPath, @[@"-p", outputAmlFilePath, outputDslFilePath], &stdoutString);
 	//NSLog(@"%@", stdoutString);
 	
-	NSArray *fileURLs = [NSArray arrayWithObjects:[NSURL fileURLWithPath:outputFilePath], nil];
+	NSArray *fileURLs = [NSArray arrayWithObjects:[NSURL fileURLWithPath:outputAmlFilePath], nil];
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
 }
 

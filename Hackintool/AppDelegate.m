@@ -3070,6 +3070,21 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_usbPortsTableView scrollRowToVisible:foundIndex];
 }
 
+- (void)copyUSBPorts:(NSMutableDictionary *)fromUSBPortsDictionary toUSBPorts:(NSMutableDictionary *)toUSBPortsDictionary
+{
+	NSArray *fieldArray = @[@"name", @"locationID", @"port", @"portType", @"UsbConnector", @"UsbController", @"UsbControllerID", @"HubName", @"HubLocation", @"IsActive", @"Device"];
+	
+	for (NSString *key in fromUSBPortsDictionary.allKeys)
+	{
+		if ([fieldArray indexOfObject:key] == NSNotFound)
+			continue;
+		
+		[toUSBPortsDictionary setObject:[fromUSBPortsDictionary objectForKey:key] forKey:key];
+	}
+	
+	[toUSBPortsDictionary setObject:@"" forKey:@"Device"];
+}
+
 - (void)refreshUSBPorts
 {
 	// https://www.tonymacx86.com/threads/guide-creating-a-custom-ssdt-for-usbinjectall-kext.211311/
@@ -3135,25 +3150,6 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		//NSNumber *hubIsInternal = [propertyDictionary objectForKey:@"HubIsInternal"];
 		uint32_t index = 0;
 		
-		if (name == nil)
-		{
-			uint32_t port = propertyToUInt32(portData);
-			name = [self generateUSBPortName:usbControllerID hubLocationID:[hubLocationID unsignedIntValue] locationID:[locationID unsignedIntValue] portNumber:port];
-		}
-		
-		// See if we have the port already via controller / port
-		if ([self containsUSBPort:usbController port:portData index:&index])
-		{
-			NSMutableDictionary *usbEntryDictionary = _usbPortsArray[index];
-
-			for (id key in propertyDictionary.allKeys)
-				[usbEntryDictionary setObject:propertyDictionary[key] forKey:key];
-			
-			continue;
-		}
-		
-		NSMutableDictionary *usbPortsDictionary = [NSMutableDictionary dictionary];
-		
 		if (usbConnector == nil && portType == nil)
 			continue;
 		
@@ -3167,10 +3163,26 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 				continue;
 		}
 		
-		for (id key in propertyDictionary.allKeys)
-			[usbPortsDictionary setObject:propertyDictionary[key] forKey:key];
+		// See if we have the port already via controller / port
+		if ([self containsUSBPort:usbController port:portData index:&index])
+		{
+			NSMutableDictionary *usbEntryDictionary = _usbPortsArray[index];
+			
+			[self copyUSBPorts:propertyDictionary toUSBPorts:usbEntryDictionary];
+			
+			continue;
+		}
 		
-		[usbPortsDictionary setObject:@"" forKey:@"Device"];
+		if (name == nil)
+		{
+			uint32_t port = propertyToUInt32(portData);
+			name = [self generateUSBPortName:usbControllerID hubLocationID:[hubLocationID unsignedIntValue] locationID:[locationID unsignedIntValue] portNumber:port];
+		}
+		
+		NSMutableDictionary *usbPortsDictionary = [NSMutableDictionary dictionary];
+		
+		[self copyUSBPorts:propertyDictionary toUSBPorts:usbPortsDictionary];
+		
 		[usbPortsDictionary setObject:@(NO) forKey:@"IsActive"];
 		
 		//NSLog(@"Port Name: %@ Location ID: 0x%08x UsbController: %@ Hub: %@ (0x%08x)", name, [locationID unsignedIntValue], usbController, hubName, [hubLocation unsignedIntValue]);
@@ -3314,9 +3326,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		if ([self containsUSBPort:usbController port:portData index:&index])
 			continue;
 		
-		[usbEntryDictionary setObject:@"" forKey:@"Device"];
+		NSMutableDictionary *usbPortsDictionary = [NSMutableDictionary dictionary];
 		
-		[_usbPortsArray addObject:usbEntryDictionary];
+		[self copyUSBPorts:usbEntryDictionary toUSBPorts:usbPortsDictionary];
+		
+		[_usbPortsArray addObject:usbPortsDictionary];
 	}
 }
 
@@ -3638,22 +3652,12 @@ NSInteger usbPortSort(id a, id b, void *context)
 	NSMutableDictionary *first = (NSMutableDictionary *)a;
 	NSMutableDictionary *second = (NSMutableDictionary *)b;
 	
-	NSComparisonResult result = [first[@"locationID"] compare:second[@"locationID"]];
+	NSComparisonResult result = [first[@"UsbController"] compare:second[@"UsbController"]];
 	
 	if (result != NSOrderedSame)
 		return result;
 	
-	result = [first[@"UsbController"] compare:second[@"UsbController"]];
-		
-	if (result != NSOrderedSame)
-		return result;
-	
-	result = [first[@"port"] compare:second[@"port"]];
-		
-	if (result != NSOrderedSame)
-		return result;
-	
-	return [first[@"name"] compare:second[@"name"]];
+	return [first[@"port"] compare:second[@"port"]];
 }
 
 NSInteger usbControllerSort(id a, id b, void *context)
