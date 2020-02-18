@@ -375,7 +375,7 @@ void injectUSBPowerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioP
 	[ioProviderMergePropertiesDictionary setObject:wakePowerSupply forKey:@"kUSBWakePowerSupply"];
 }
 
-void injectUSBControllerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioKitPersonalities, NSNumber *usbControllerID)
+void injectUSBControllerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioKitPersonalities, uint32_t usbControllerID)
 {
 	// AppleUSBXHCISPT
 	// AppleUSBXHCISPT1
@@ -411,7 +411,7 @@ void injectUSBControllerProperties(AppDelegate *appDelegate, NSMutableDictionary
 	
 	NSDictionary *ioUSBHostInfoDictionary = [NSDictionary dictionaryWithContentsOfFile:ioUSBHostPlugInsPath];
 	NSDictionary *ioUSBHostIOKitPersonalities = [ioUSBHostInfoDictionary objectForKey:@"IOKitPersonalities"];
-	NSString *usbControllerIDString = [NSString stringWithFormat:@"0x%08x", [usbControllerID unsignedIntValue]];
+	NSString *usbControllerIDString = [NSString stringWithFormat:@"0x%08x", usbControllerID];
 	
 	for (NSString *key in ioUSBHostIOKitPersonalities.allKeys)
 	{
@@ -606,7 +606,7 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		NSMutableDictionary *newUSBEntryDictionary = [[usbEntryDictionary mutableCopy] autorelease];
 		NSString *name = [usbEntryDictionary objectForKey:@"name"];
 		NSString *usbController = [usbEntryDictionary objectForKey:@"UsbController"];
-		NSNumber *usbControllerID = [usbEntryDictionary objectForKey:@"UsbControllerID"];
+		uint32_t usbControllerID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerID"]);
 		
 		if (usbController == nil)
 			continue;
@@ -661,8 +661,8 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 			
 			[modelEntryDictionary setObject:usbController forKey:@"UsbController"];
 			
-			if (usbControllerID != nil)
-				[modelEntryDictionary setObject:usbControllerID forKey:@"UsbControllerID"];
+			if (usbControllerID != 0)
+				[modelEntryDictionary setObject:@(usbControllerID) forKey:@"UsbControllerID"];
 			
 			//injectUSBControllerProperties(appDelegate, ioKitPersonalities, usbControllerID);
 		}
@@ -843,11 +843,11 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 		if (usbController == nil)
 			continue;
 		
-		NSNumber *usbControllerID = [modelEntryDictionary objectForKey:@"UsbControllerID"];
-		uint32_t deviceID = [usbControllerID unsignedIntValue] & 0xFFFF;
-		uint32_t productID = [usbControllerID unsignedIntValue] >> 16;
+		uint32_t usbControllerID = propertyToUInt32([modelEntryDictionary objectForKey:@"UsbControllerID"]);
+		uint32_t deviceID = (usbControllerID & 0xFFFF);
+		uint32_t productID = (usbControllerID >> 16);
 		NSString *name = usbController;
-		NSString *deviceName = (usbControllerID != nil ? [NSString stringWithFormat:@"%04x_%04x", deviceID, productID] : @"???");
+		NSString *deviceName = (usbControllerID != 0 ? [NSString stringWithFormat:@"%04x_%04x", deviceID, productID] : @"???");
 		NSNumber *locationID = [modelEntryDictionary objectForKey:@"locationID"];
 		NSMutableDictionary *ioProviderMergePropertiesDictionary = [modelEntryDictionary objectForKey:@"IOProviderMergeProperties"];
 		NSData *portCount = [ioProviderMergePropertiesDictionary objectForKey:@"port-count"];
@@ -860,7 +860,7 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			hasExportedUSBPowerSSDT = YES;
 		}
 		
-		if (usbControllerID != nil)
+		if (usbControllerID != 0)
 		{
 			if (![usbController hasPrefix:@"EH"] && ![usbController hasPrefix:@"XH"])
 				name = deviceName;
