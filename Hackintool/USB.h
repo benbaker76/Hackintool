@@ -22,6 +22,7 @@ typedef struct
 	uint32_t locationID;
 	uint32_t controllerID;
 	uint32_t port;
+	uint64_t registryID;
 } MyPrivateData;
 
 enum UsbConnector
@@ -66,6 +67,7 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator);
 //void usbDeviceRemoved(void *refCon, io_iterator_t iterator);
 NSString *getUSBConnectorType(UsbConnector usbConnector);
 NSString *getUSBConnectorSpeed(uint8_t speed);
+bool getUSBControllerIDAndPortForUSBDevice(uint64_t idRegistry, uint32_t *usbControllerID, uint32_t *port);
 bool getUSBControllerIDAndPortForUSBDevice(uint32_t idLocation, uint32_t idVendor, uint32_t idProduct, uint32_t *usbControllerID, uint32_t *port);
 void exportUSBPortsKext(AppDelegate *appDelegate);
 void exportUSBPortsSSDT(AppDelegate *appDelegate);

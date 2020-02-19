@@ -3085,6 +3085,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[toUSBPortsDictionary setObject:@"" forKey:@"Device"];
 }
 
+- (bool)isInternalHubPort:(NSString *)hubName
+{
+	return ([hubName isEqualToString:@"AppleUSB20InternalHub"] || [hubName isEqualToString:@"AppleUSB20InternalIntelHub"]);
+}
+
 - (void)refreshUSBPorts
 {
 	// https://www.tonymacx86.com/threads/guide-creating-a-custom-ssdt-for-usbinjectall-kext.211311/
@@ -3158,13 +3163,12 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			//if (![hubIsInternal boolValue])
 			//	 continue;
 			
-			if (![hubName isEqualToString:@"AppleUSB20InternalHub"] &&
-				![hubName isEqualToString:@"AppleUSB20InternalIntelHub"])
+			if (![self isInternalHubPort:hubName])
 				continue;
 		}
 		
 		// See if we have the port already via controller / port
-		if ([self containsUSBPort:usbController port:port index:&index])
+		if ([self containsUSBPort:usbController hub:hubName port:port index:&index])
 		{
 			NSMutableDictionary *usbEntryDictionary = _usbPortsArray[index];
 			
@@ -3173,16 +3177,22 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			continue;
 		}
 		
-		if (name == nil)
-			name = [self generateUSBPortName:usbControllerID hubLocationID:hubLocationID locationID:locationID portNumber:port];
-		
 		NSMutableDictionary *usbPortsDictionary = [NSMutableDictionary dictionary];
 		
 		[self copyUSBPorts:propertyDictionary toUSBPorts:usbPortsDictionary];
 		
+		NSString *newName = name;
+		
+		if (name == nil)
+		{
+			newName = [self generateUSBPortName:usbControllerID hubLocationID:hubLocationID locationID:locationID portNumber:port];
+			
+			[usbPortsDictionary setObject:newName forKey:@"name"];
+		}
+		
 		[usbPortsDictionary setObject:@(NO) forKey:@"IsActive"];
 		
-		//NSLog(@"Port Name: %@ Location ID: 0x%08x UsbController: %@ Hub: %@ (0x%08x)", name, [locationID unsignedIntValue], usbController, hubName, [hubLocation unsignedIntValue]);
+		//NSLog(@"Port Name: %@ LocationID: 0x%08x UsbController: %@ (0x%08x) Hub: %@ (0x%08x)", ![name isEqualToString:newName] ? [NSString stringWithFormat:@"%@->%@", name, newName] : name, locationID, usbController, usbControllerID, hubName, hubLocationID);
 		
 		[_usbPortsArray addObject:usbPortsDictionary];
 	}
@@ -3316,11 +3326,12 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	for (NSDictionary *usbDictionary in usbPorts)
 	{
 		NSMutableDictionary *usbEntryDictionary = [[usbDictionary mutableCopy] autorelease];
-		uint32_t port = propertyToUInt32([usbEntryDictionary objectForKey:@"port"]);
 		NSString *usbController = [usbEntryDictionary objectForKey:@"UsbController"];
+		NSString *hubName = [usbEntryDictionary objectForKey:@"HubName"];
+		uint32_t port = propertyToUInt32([usbEntryDictionary objectForKey:@"port"]);
 		uint32_t index = 0;
 		
-		if ([self containsUSBPort:usbController port:port index:&index])
+		if ([self containsUSBPort:usbController hub:hubName port:port index:&index])
 			continue;
 		
 		NSMutableDictionary *usbPortsDictionary = [NSMutableDictionary dictionary];
@@ -3358,15 +3369,17 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	}
 } */
 
-- (bool)containsUSBPort:(NSString *)controller port:(uint32_t)port index:(uint32_t *)index
+- (bool)containsUSBPort:(NSString *)controller hub:(NSString *)hub port:(uint32_t)port index:(uint32_t *)index
 {
 	for (int i = 0; i < [_usbPortsArray count]; i++)
 	{
 		NSMutableDictionary *usbPortsDictionary = _usbPortsArray[i];
 		NSString *usbController = [usbPortsDictionary objectForKey:@"UsbController"];
+		NSString *hubName = [usbPortsDictionary objectForKey:@"HubName"];
 		uint32_t usbPort = propertyToUInt32([usbPortsDictionary objectForKey:@"port"]);
+		bool isHubEqual = ((hubName == nil && hub == nil) || ([self isInternalHubPort:hubName] && [self isInternalHubPort:hub]) || [hubName isEqualToString:hub]);
 		
-		if ([usbController isEqualToString:controller] && (usbPort == port))
+		if ([usbController isEqualToString:controller] && isHubEqual && (usbPort == port))
 		{
 			*index = i;
 			
