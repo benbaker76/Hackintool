@@ -3135,13 +3135,13 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	// The effect is to route any USB2 devices attached to the USB2 pins on the XHC ports to EHC1. In other words,
 	// handle USB2 devices with the USB2 drivers instead of the USB3 drivers (AppleUSBEHCI vs. AppleUSBXHCI).
 
-	NSMutableArray *usbPropertyDictionaryArray = nil;
+	NSMutableArray *propertyDictionaryArray = nil;
 
-	getIORegUSBPropertyDictionaryArray(&usbPropertyDictionaryArray);
+	getIORegUSBPortsPropertyDictionaryArray(&propertyDictionaryArray);
 	
 	//[_usbPortsArray removeAllObjects];
 	
-	for (NSMutableDictionary *propertyDictionary in usbPropertyDictionaryArray)
+	for (NSMutableDictionary *propertyDictionary in propertyDictionaryArray)
 	{
 		NSString *name = [propertyDictionary objectForKey:@"name"];
 		uint32_t locationID = propertyToUInt32([propertyDictionary objectForKey:@"locationID"]);
@@ -3203,48 +3203,20 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	usbRegisterEvents(self);
 }
 
-- (void)getBootLog
-{
-	CFTypeRef property = nil;
-	
-	// IOService:/boot-log
-	// IODeviceTree:/efi/platform
-	
-	if (!getIORegProperty(@"IOService:/", @"boot-log", &property))
-		if (!getIORegProperty(@"IODeviceTree:/efi/platform", @"boot-log", &property))
-			return;
-	
-	NSData *valueData = (__bridge NSData *)property;
-	_bootLog = [[NSString alloc] initWithData:valueData encoding:NSASCIIStringEncoding];
-	
-	if (property != nil)
-		CFRelease(property);
-}
-
 - (void)refreshUSBControllers
 {
+	NSMutableArray *propertyDictionaryArray = nil;
+
+	getIORegUSBControllersPropertyDictionaryArray(&propertyDictionaryArray);
+	
 	[_usbControllersArray removeAllObjects];
 	
-	for (NSMutableDictionary *usbPortsDictionary in _usbPortsArray)
+	for (NSMutableDictionary *propertyDictionary in propertyDictionaryArray)
 	{
-		NSString *usbController = [usbPortsDictionary objectForKey:@"UsbController"];
-		uint32_t usbControllerID = propertyToUInt32([usbPortsDictionary objectForKey:@"UsbControllerID"]);
+		NSString *usbController = [propertyDictionary objectForKey:@"UsbController"];
+		uint32_t usbControllerID = propertyToUInt32([propertyDictionary objectForKey:@"UsbControllerID"]);
 		
 		if (usbController == nil || usbControllerID == 0)
-			continue;
-		
-		bool foundController = false;
-		
-		for (NSMutableDictionary *usbControllersDictionary in _usbControllersArray)
-		{
-			if ([usbController isEqualToString:[usbControllersDictionary objectForKey:@"Type"]])
-			{
-				foundController = true;
-				break;
-			}
-		}
-		
-		if (foundController)
 			continue;
 		
 		NSNumber *vendorID = [NSNumber numberWithUnsignedInt:(usbControllerID & 0xFFFF)];
@@ -3593,6 +3565,24 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	[self refreshUSBPorts];
 	[self refreshUSBControllers];
+}
+
+- (void)getBootLog
+{
+	CFTypeRef property = nil;
+	
+	// IOService:/boot-log
+	// IODeviceTree:/efi/platform
+	
+	if (!getIORegProperty(@"IOService:/", @"boot-log", &property))
+		if (!getIORegProperty(@"IODeviceTree:/efi/platform", @"boot-log", &property))
+			return;
+	
+	NSData *valueData = (__bridge NSData *)property;
+	_bootLog = [[NSString alloc] initWithData:valueData encoding:NSASCIIStringEncoding];
+	
+	if (property != nil)
+		CFRelease(property);
 }
 
 - (bool)tryGetNearestModel:(NSArray *)modelArray modelIdentifier:(NSString *)modelIdentifier nearestModelIdentifier:(NSString **)nearestModelIdentifier
