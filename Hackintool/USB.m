@@ -152,9 +152,15 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 			devSpeed = propertyToUInt32([propertyDictionary objectForKey:@"Device Speed"]);
 			vendorID = propertyToUInt32([propertyDictionary objectForKey:@"idVendor"]);
 			productID = propertyToUInt32([propertyDictionary objectForKey:@"idProduct"]);
-			registryID = [[propertyDictionary objectForKey:@"AppleUSBAlternateServiceRegistryID"] unsignedLongLongValue];
+			NSNumber *appleUSBAlternateServiceRegistryID = [propertyDictionary objectForKey:@"AppleUSBAlternateServiceRegistryID"];
 			
-			getUSBControllerIDAndPortForUSBDevice(registryID, &controllerID, &port);
+			if (appleUSBAlternateServiceRegistryID != nil)
+			{
+				registryID = [appleUSBAlternateServiceRegistryID unsignedLongLongValue];
+				getUSBControllerIDAndPortForUSBDevice(registryID, &controllerID, &port);
+			}
+			else
+				getUSBControllerIDAndPortForUSBDevice(locationID, vendorID, productID, &controllerID, &port);
 			
 			//NSLog(@"%@", propertyDictionary);
 		}
@@ -383,7 +389,7 @@ bool getUSBControllerIDAndPortForUSBDevice(uint64_t idRegistry, uint32_t *usbCon
 	IOObjectRelease(iterator);
 	
 	return retVal;
-}
+} */
 
 bool getUSBControllerIDAndPortForUSBDevice(uint32_t idLocation, uint32_t idVendor, uint32_t idProduct, uint32_t *usbControllerID, uint32_t *port)
 {
@@ -463,7 +469,7 @@ bool getUSBControllerIDAndPortForUSBDevice(uint32_t idLocation, uint32_t idVendo
 	IOObjectRelease(iterator);
 	
 	return retVal;
-} */
+}
 
 void injectDefaultUSBPowerProperties(NSMutableDictionary *ioProviderMergePropertiesDictionary)
 {
