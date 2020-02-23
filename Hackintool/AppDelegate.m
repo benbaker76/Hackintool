@@ -1142,7 +1142,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_usbPortsArray = [[NSMutableArray array] retain];
 	
 	[self loadUSBPorts];
-	[self refreshUSBPorts];
+	[self refreshUSBPorts:NO];
 	[self refreshUSBControllers];
 	
 	for (NSMutableDictionary *usbControllersDictionary in _usbControllersArray)
@@ -3092,7 +3092,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	return ([hubName isEqualToString:@"AppleUSB20InternalHub"] || [hubName isEqualToString:@"AppleUSB20InternalIntelHub"]);
 }
 
-- (void)refreshUSBPorts
+- (void)refreshUSBPorts:(bool)isImported
 {
 	// https://www.tonymacx86.com/threads/guide-creating-a-custom-ssdt-for-usbinjectall-kext.211311/
 	// https://www.tonymacx86.com/threads/guide-10-11-usb-changes-and-solutions.173616/
@@ -3166,7 +3166,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		}
 		
 		// See if we have the port already via controller / port
-		if ([self containsUSBPort:usbController controllerLocationID:usbControllerLocationID hub:hubName port:port index:&index])
+		bool containsUSBPort = (isImported ? [self containsUSBPort:usbController hub:hubName port:port index:&index] : [self containsUSBPort:usbControllerID controllerLocationID:usbControllerLocationID hub:hubName port:port index:&index]);
+		
+		if (containsUSBPort)
 		{
 			NSMutableDictionary *usbEntryDictionary = _usbPortsArray[index];
 			
@@ -3298,13 +3300,13 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	for (NSDictionary *usbDictionary in usbPorts)
 	{
 		NSMutableDictionary *usbEntryDictionary = [[usbDictionary mutableCopy] autorelease];
-		NSString *usbController = [usbEntryDictionary objectForKey:@"UsbController"];
+		uint32_t usbControllerID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerID"]);
 		uint32_t usbControllerLocationID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerLocationID"]);
 		NSString *hubName = [usbEntryDictionary objectForKey:@"HubName"];
 		uint32_t port = propertyToUInt32([usbEntryDictionary objectForKey:@"port"]);
 		uint32_t index = 0;
 		
-		if ([self containsUSBPort:usbController controllerLocationID:usbControllerLocationID hub:hubName port:port index:&index])
+		if ([self containsUSBPort:usbControllerID controllerLocationID:usbControllerLocationID hub:hubName port:port index:&index])
 			continue;
 		
 		NSMutableDictionary *usbPortsDictionary = [NSMutableDictionary dictionary];
@@ -3324,36 +3326,40 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[defaults synchronize];
 }
 
-/* - (void)removeLocationID:(NSNumber *)removeLocationID withoutName:(NSString *)withoutName
-{
-	for (NSDictionary *usbEntryDictionary in _usbPortsArray)
-	{
-		NSString *name = [usbEntryDictionary objectForKey:@"name"];
-		NSNumber *locationID = [usbEntryDictionary objectForKey:@"locationID"];
-		
-		if ([withoutName isEqualToString:name])
-			continue;
-		
-		if ([removeLocationID isEqual:locationID])
-		{
-			[usbEntryDictionary setObject:[NSNumber numberWithInteger:0] forKey:@"locationID"];
-			[usbEntryDictionary setObject:@"" forKey:@"Device"];
-		}
-	}
-} */
-
-- (bool)containsUSBPort:(NSString *)controller controllerLocationID:(uint32_t)controllerLocationID hub:(NSString *)hub port:(uint32_t)port index:(uint32_t *)index
+- (bool)containsUSBPort:(uint32_t)controllerID controllerLocationID:(uint32_t)controllerLocationID hub:(NSString *)hub port:(uint32_t)port index:(uint32_t *)index
 {
 	for (int i = 0; i < [_usbPortsArray count]; i++)
 	{
 		NSMutableDictionary *usbPortsDictionary = _usbPortsArray[i];
-		NSString *usbController = [usbPortsDictionary objectForKey:@"UsbController"];
+		uint32_t usbControllerID = propertyToUInt32([usbPortsDictionary objectForKey:@"UsbControllerID"]);
 		uint32_t usbControllerLocationID = propertyToUInt32([usbPortsDictionary objectForKey:@"UsbControllerLocationID"]);
 		NSString *hubName = [usbPortsDictionary objectForKey:@"HubName"];
 		uint32_t usbPort = propertyToUInt32([usbPortsDictionary objectForKey:@"port"]);
 		bool isHubEqual = ((hubName == nil && hub == nil) || ([self isInternalHubPort:hubName] && [self isInternalHubPort:hub]) || [hubName isEqualToString:hub]);
 		
-		if ([usbController isEqualToString:controller] && (usbControllerLocationID == controllerLocationID) && isHubEqual && (usbPort == port))
+		if ((usbControllerID == controllerID) && (usbControllerLocationID == controllerLocationID) && isHubEqual && (usbPort == port))
+		{
+			*index = i;
+			
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+
+- (bool)containsUSBPort:(NSString *)controller hub:(NSString *)hub port:(uint32_t)port index:(uint32_t *)index
+{
+	for (int i = 0; i < [_usbPortsArray count]; i++)
+	{
+		NSMutableDictionary *usbPortsDictionary = _usbPortsArray[i];
+		NSString *usbController = [usbPortsDictionary objectForKey:@"UsbController"];
+		NSString *hubName = [usbPortsDictionary objectForKey:@"HubName"];
+		uint32_t usbPort = propertyToUInt32([usbPortsDictionary objectForKey:@"port"]);
+		bool isHubEqual = ((hubName == nil && hub == nil) || ([self isInternalHubPort:hubName] && [self isInternalHubPort:hub]) || [hubName isEqualToString:hub]);
+		
+		if ([usbController isEqualToString:controller] && isHubEqual && (usbPort == port))
 		{
 			*index = i;
 			
@@ -3565,7 +3571,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		}
 	}
 	
-	[self refreshUSBPorts];
+	[self refreshUSBPorts:YES];
 	[self refreshUSBControllers];
 }
 
@@ -8437,7 +8443,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	}
 	else if ([identifier isEqualToString:@"Refresh"])
 	{
-		[self refreshUSBPorts];
+		[self refreshUSBPorts:NO];
 		[self refreshUSBControllers];
 	}
 	else if ([identifier isEqualToString:@"Import"])
