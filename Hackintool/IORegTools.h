@@ -25,8 +25,8 @@ bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *found
 bool getAPFSPhysicalStoreBSDName(NSString *mediaUUID, NSString **bsdName);
 bool getIORegUSBPortsPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray);
 bool getIORegUSBControllersPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray);
-bool getUSBControllerInfoForUSBDevice(uint64_t idRegistry, uint32_t *usbControllerID, uint32_t *port);
-bool getUSBControllerInfoForUSBDevice(uint32_t idLocation, uint32_t idVendor, uint32_t idProduct, uint32_t *usbControllerID, uint32_t *port);
+bool getUSBControllerInfoForUSBDevice(uint64_t idRegistry, uint32_t *usbControllerID, uint32_t *usbControllerLocationID, uint32_t *port);
+bool getUSBControllerInfoForUSBDevice(uint32_t idLocation, uint32_t idVendor, uint32_t idProduct, uint32_t *usbControllerID, uint32_t *usbControllerLocationID, uint32_t *port);
 bool getIORegAudioDeviceArray(NSMutableArray **propertyDictionaryArray);
 NSString *propertyToString(id value);
 uint32_t propertyToUInt32(id value);

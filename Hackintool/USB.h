@@ -21,6 +21,7 @@ typedef struct
 	CFStringRef deviceName;
 	uint32_t locationID;
 	uint32_t controllerID;
+	uint32_t controllerLocationID;
 	uint32_t port;
 	uint64_t registryID;
 } MyPrivateData;

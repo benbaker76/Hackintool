@@ -92,7 +92,7 @@ void usbDeviceNotification(void *refCon, io_service_t usbDevice, natural_t messa
 	
 	if (messageType == kIOMessageServiceIsTerminated)
 	{
-		[appDelegate removeUSBDevice:privateDataRef->controllerID locationID:privateDataRef->locationID port:privateDataRef->port];
+		[appDelegate removeUSBDevice:privateDataRef->controllerID controllerLocationID:privateDataRef->controllerLocationID locationID:privateDataRef->locationID port:privateDataRef->port];
 		
 		destroyPrivateData(privateDataRef);
 		
@@ -131,6 +131,7 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 		uint32_t vendorID = 0;
 		uint32_t productID = 0;
 		uint32_t controllerID = 0;
+		uint32_t controllerLocationID = 0;
 		uint32_t port = 0;
 		uint64_t registryID = 0;
 		
@@ -157,12 +158,10 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 			if (appleUSBAlternateServiceRegistryID != nil)
 			{
 				registryID = [appleUSBAlternateServiceRegistryID unsignedLongLongValue];
-				getUSBControllerInfoForUSBDevice(registryID, &controllerID, &port);
+				getUSBControllerInfoForUSBDevice(registryID, &controllerID, &controllerLocationID, &port);
 			}
 			else
-				getUSBControllerInfoForUSBDevice(locationID, vendorID, productID, &controllerID, &port);
-			
-			//NSLog(@"%@", propertyDictionary);
+				getUSBControllerInfoForUSBDevice(locationID, vendorID, productID, &controllerID, &controllerLocationID, &port);
 		}
 #else
 		kr = IOCreatePlugInInterfaceForService(usbDevice, kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID, &plugInInterface, &score);
@@ -195,6 +194,7 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 		privateDataRef->deviceName = CFStringCreateWithCString(kCFAllocatorDefault, deviceName, kCFStringEncodingASCII);
 		privateDataRef->locationID = locationID;
 		privateDataRef->controllerID = controllerID;
+		privateDataRef->controllerLocationID = controllerLocationID;
 		privateDataRef->port = port;
 		privateDataRef->registryID = registryID;
 		privateDataRef->appDelegate = appDelegate;
@@ -207,7 +207,7 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 
 		//NSLog(@"deviceName: %@ controllerID: 0x%08X locationID: 0x%08X port: 0x%02X devSpeed: %d", privateDataRef->deviceName, controllerID, locationID, port, (uint32_t)devSpeed);
 		
-		[appDelegate addUSBDevice:controllerID locationID:locationID port:port deviceName:(__bridge NSString *)privateDataRef->deviceName devSpeed:devSpeed];
+		[appDelegate addUSBDevice:controllerID controllerLocationID:controllerLocationID locationID:locationID port:port deviceName:(__bridge NSString *)privateDataRef->deviceName devSpeed:devSpeed];
 		
 		kr = IOServiceAddInterestNotification(gNotifyPort, usbDevice, kIOGeneralInterest, usbDeviceNotification, privateDataRef, &privateDataRef->removedIter);
 	}
@@ -540,6 +540,7 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		NSString *name = [usbEntryDictionary objectForKey:@"name"];
 		NSString *usbController = [usbEntryDictionary objectForKey:@"UsbController"];
 		uint32_t usbControllerID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerID"]);
+		//uint32_t usbControllerLocationID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerLocationID"]);
 		
 		if (usbController == nil)
 			continue;
@@ -716,6 +717,7 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 		
 		[modelEntryDictionary removeObjectForKey:@"UsbController"];
 		[modelEntryDictionary removeObjectForKey:@"UsbControllerID"];
+		[modelEntryDictionary removeObjectForKey:@"UsbControllerLocationID"];
 
 		for (NSString *portKey in [portsDictionary allKeys])
 		{
@@ -727,6 +729,7 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 			[usbEntryDictionary removeObjectForKey:@"IsActive"];
 			[usbEntryDictionary removeObjectForKey:@"UsbController"];
 			[usbEntryDictionary removeObjectForKey:@"UsbControllerID"];
+			[usbEntryDictionary removeObjectForKey:@"UsbControllerLocationID"];
 			[usbEntryDictionary removeObjectForKey:@"HubName"];
 			[usbEntryDictionary removeObjectForKey:@"HubLocation"];
 			[usbEntryDictionary removeObjectForKey:@"DevSpeed"];
@@ -826,7 +829,7 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			[ssdtUIACString appendString:@"                      {\n"];
 			if (portType != nil)
 				[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"portType\", %d,\n", [portType unsignedIntValue]]];
-			else
+			else if (usbConnector != nil)
 				[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"UsbConnector\", %d,\n", [usbConnector unsignedIntValue]]];
 			[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"port\", Buffer() { %@ },\n", getByteString(port)]];
 			[ssdtUIACString appendString:@"                      },\n"];
