@@ -52,4 +52,4 @@ You cannot use the Clover's KextsToPatch for framebuffer patching in Mojave for 
 * Model data (everymac.com)
 * Translations: French (Matgen84), German (al6042), Korean (zisqo), Russian / Ukrainian (ctich), Chinese (daliansky, Bat.bat, penghubingzhou)
 * Sparkle framework by Andy Matuschak
-* Icon by ultratiem
+* Icon & UI updates by ultratiem
