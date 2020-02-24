@@ -3074,7 +3074,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 
 - (void)copyUSBPorts:(NSMutableDictionary *)fromUSBPortsDictionary toUSBPorts:(NSMutableDictionary *)toUSBPortsDictionary
 {
-	NSArray *fieldArray = @[@"name", @"locationID", @"port", @"portType", @"UsbConnector", @"UsbController", @"UsbControllerID", @"UsbControllerLocationID", @"HubName", @"HubLocation", @"IsActive", @"Device"];
+	NSArray *fieldArray = @[@"name", @"locationID", @"port", @"portType", @"UsbConnector", @"UsbController", @"UsbControllerID", @"UsbControllerLocationID", @"UsbControllerIOClass", @"HubName", @"HubLocation", @"IsActive", @"Device"];
 	
 	for (NSString *key in fromUSBPortsDictionary.allKeys)
 	{

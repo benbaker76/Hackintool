@@ -351,8 +351,10 @@ bool getIORegUSBPortsPropertyDictionaryArray(NSMutableArray **propertyDictionary
 								uint32_t deviceID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"device-id"]);
 								uint32_t vendorID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"vendor-id"]);
 								uint32_t locationID = propertyToUInt32([controllerPropertyDictionary objectForKey:@"locationID"]);
+								NSString *ioClass = [controllerPropertyDictionary objectForKey:@"IOClass"];
 								
 								[usbPortPropertyDictionary setValue:[NSString stringWithUTF8String:controllerName] forKey:@"UsbController"];
+								[usbPortPropertyDictionary setValue:ioClass forKey:@"UsbControllerIOClass"];
 								[usbPortPropertyDictionary setValue:@((deviceID << 16) | vendorID) forKey:@"UsbControllerID"];
 								[usbPortPropertyDictionary setValue:@(locationID >> 24) forKey:@"UsbControllerLocationID"];
 								

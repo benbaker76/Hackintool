@@ -549,7 +549,11 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		NSString *hubName = [usbEntryDictionary objectForKey:@"HubName"];
 		NSNumber *hubLocation = [usbEntryDictionary objectForKey:@"HubLocation"];
 		NSString *modelEntryName = [NSString stringWithFormat:@"%@-%@%@", appDelegate.modelIdentifier, usbController, hubName != nil ? @"-internal-hub" : @""];
-		NSString *providerClass = (hubName != nil ? hubName : ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI"));
+		NSString *providerClass = (hubName != nil ? hubName : [usbEntryDictionary objectForKey:@"UsbControllerIOClass"]);
+		//NSString *providerClass = (hubName != nil ? hubName : ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI"));
+		
+		if (providerClass == nil)
+			providerClass = ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI");
 		
 		NSMutableDictionary *modelEntryDictionary = [ioKitPersonalities objectForKey:modelEntryName];
 		NSMutableDictionary *ioProviderMergePropertiesDictionary = nil;
@@ -718,6 +722,7 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 		[modelEntryDictionary removeObjectForKey:@"UsbController"];
 		[modelEntryDictionary removeObjectForKey:@"UsbControllerID"];
 		[modelEntryDictionary removeObjectForKey:@"UsbControllerLocationID"];
+		[modelEntryDictionary removeObjectForKey:@"UsbControllerIOClass"];
 
 		for (NSString *portKey in [portsDictionary allKeys])
 		{
@@ -730,6 +735,7 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 			[usbEntryDictionary removeObjectForKey:@"UsbController"];
 			[usbEntryDictionary removeObjectForKey:@"UsbControllerID"];
 			[usbEntryDictionary removeObjectForKey:@"UsbControllerLocationID"];
+			[usbEntryDictionary removeObjectForKey:@"UsbControllerIOClass"];
 			[usbEntryDictionary removeObjectForKey:@"HubName"];
 			[usbEntryDictionary removeObjectForKey:@"HubLocation"];
 			[usbEntryDictionary removeObjectForKey:@"DevSpeed"];
