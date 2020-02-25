@@ -527,7 +527,7 @@
                                                                             <tableColumns>
                                                                                 <tableColumn identifier="Name" width="200" minWidth="200" maxWidth="200" id="1vs-iW-S1I">
                                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Name">
-                                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                                        <font key="font" metaFont="message" size="11"/>
                                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                                     </tableHeaderCell>
@@ -560,7 +560,7 @@
                                                                                 </tableColumn>
                                                                                 <tableColumn identifier="Value" width="330" minWidth="40" maxWidth="1000" id="i7j-gd-3ny">
                                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Value">
-                                                                                        <font key="font" metaFont="controlContent" size="11"/>
+                                                                                        <font key="font" metaFont="message" size="11"/>
                                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                                     </tableHeaderCell>
@@ -2826,7 +2826,7 @@
                                                                                             <rect key="frame" x="260.5" y="1" width="99" height="25"/>
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                             <comboBoxCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" identifier="Type" buttonBordered="NO" completes="NO" numberOfVisibleItems="5" id="JZB-dW-6zH">
-                                                                                                <font key="font" metaFont="controlContent" size="11"/>
+                                                                                                <font key="font" metaFont="message" size="11"/>
                                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                             </comboBoxCell>
@@ -8013,17 +8013,6 @@
                             <action selector="lockButtonClicked:" target="494" id="eTK-a8-3UB"/>
                         </connections>
                     </button>
-                    <button toolTip="Buy me a Beer" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GJ3-Z0-Z16">
-                        <rect key="frame" x="534" y="20" width="98" height="28"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="IconBuyMeABeer" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="lNl-Bw-jon">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="payPalButtonClicked:" target="494" id="A8O-zG-M5k"/>
-                        </connections>
-                    </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oSy-AB-ceM">
                         <rect key="frame" x="225" y="26" width="197" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -8033,6 +8022,17 @@
                         </buttonCell>
                         <connections>
                             <action selector="headsoftLogoButtonClicked:" target="494" id="ewg-rY-GdV"/>
+                        </connections>
+                    </button>
+                    <button toolTip="Buy me a Beer" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GJ3-Z0-Z16">
+                        <rect key="frame" x="568" y="14" width="64" height="28"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="IconBuyMeABeer" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="lNl-Bw-jon">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="payPalButtonClicked:" target="494" id="A8O-zG-M5k"/>
                         </connections>
                     </button>
                 </subviews>
