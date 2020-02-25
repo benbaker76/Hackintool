@@ -359,12 +359,12 @@ bool getIORegUSBPortsPropertyDictionaryArray(NSMutableArray **propertyDictionary
 								[usbPortPropertyDictionary setValue:@(locationID >> 24) forKey:@"UsbControllerLocationID"];
 								
 								io_service_t hubDevice;
-								io_name_t hubClassName {};
-								
+
 								if (getIORegParent(usbPort, @"AppleUSBHub", &hubDevice, true))
 								{
 									//bool hubIsInternal = IOObjectConformsTo(hubDevice, "AppleUSB20InternalHub");
-									
+								
+									io_name_t hubClassName {};
 									kr = IOObjectGetClass(hubDevice, hubClassName);
 									
 									if (kr == KERN_SUCCESS)

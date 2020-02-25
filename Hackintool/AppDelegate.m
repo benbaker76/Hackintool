@@ -44,6 +44,7 @@ extern "C" {
 
 uint32_t const FIND_AND_REPLACE_COUNT = 20;
 
+//#define USE_ALTERNATING_BACKGROUND_COLOR
 #define SWAPSHORT(n)	((n & 0x0000FFFF) << 16 | (n & 0xFFFF0000) >> 16)
 
 @implementation NSData (NSDataEx)
@@ -126,6 +127,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:tableColumn.identifier ascending:YES selector:@selector(compare:)];
 			[tableColumn setSortDescriptorPrototype:sortDescriptor];
 		}
+
+#ifdef USE_ALTERNATING_BACKGROUND_COLOR
+		[tableView setUsesAlternatingRowBackgroundColors:YES];
+#endif
 		
 		[tableView sizeToFit];
 	}
@@ -3148,6 +3153,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSString *name = [propertyDictionary objectForKey:@"name"];
 		uint32_t locationID = propertyToUInt32([propertyDictionary objectForKey:@"locationID"]);
 		uint32_t port = propertyToUInt32([propertyDictionary objectForKey:@"port"]);
+		NSNumber *portType = [propertyDictionary objectForKey:@"portType"];
+		NSNumber *usbConnector = [propertyDictionary objectForKey:@"UsbConnector"];
 		NSString *usbController = [propertyDictionary objectForKey:@"UsbController"];
 		uint32_t usbControllerID = propertyToUInt32([propertyDictionary objectForKey:@"UsbControllerID"]);
 		uint32_t usbControllerLocationID = propertyToUInt32([propertyDictionary objectForKey:@"UsbControllerLocationID"]);
@@ -3156,10 +3163,17 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		//NSNumber *hubIsInternal = [propertyDictionary objectForKey:@"HubIsInternal"];
 		uint32_t index = 0;
 		
+		if (usbConnector == nil && portType == nil)
+			continue;
+		
 		if (hubName != nil)
 		{
 			//if (![hubIsInternal boolValue])
 			//	 continue;
+			
+			// Only include hub ports for EH* controllers
+			//if (![usbController hasPrefix:@"EH"])
+			//	continue;
 			
 			if (![self isInternalHubPort:hubName])
 				continue;
@@ -3333,7 +3347,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		uint32_t usbControllerLocationID = propertyToUInt32([usbPortsDictionary objectForKey:@"UsbControllerLocationID"]);
 		NSString *hubName = [usbPortsDictionary objectForKey:@"HubName"];
 		uint32_t usbPort = propertyToUInt32([usbPortsDictionary objectForKey:@"port"]);
-		bool isUsbControllerLocationIDEqual = (usbControllerLocationID == 0 || controllerLocationID == 0) || (usbControllerLocationID == controllerLocationID);
+		bool isUsbControllerLocationIDEqual = (usbControllerLocationID == -1) || (usbControllerLocationID == controllerLocationID);
 		bool isHubEqual = ((hubName == nil && hub == nil) || ([self isInternalHubPort:hubName] && [self isInternalHubPort:hub]) || [hubName isEqualToString:hub]);
 		
 		if ([usbController isEqualToString:controller] && isUsbControllerLocationIDEqual && isHubEqual && (usbPort == port))
@@ -3536,6 +3550,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			[usbEntryDictionary setObject:@(0) forKey:@"locationID"];
 			[usbEntryDictionary setObject:@"" forKey:@"Device"];
 			[usbEntryDictionary setObject:usbController forKey:@"UsbController"];
+			[usbEntryDictionary setObject:@(-1) forKey:@"UsbControllerLocationID"];
 			[usbEntryDictionary setObject:[NSNumber numberWithBool:NO] forKey:@"IsActive"];
 			
 			if ([ioKitKey hasSuffix:@"-internal-hub"])
@@ -6921,10 +6936,14 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		ConnectorType type;
 		ConnectorFlags flags;
 		[self getConnectorInfo:(uint32_t)row Index:&index BusID:&busID Pipe:&pipe Type:&type Flags:&flags];
+#ifdef USE_ALTERNATING_BACKGROUND_COLOR
 		NSArray *alternatingContentBackgroundColors = [NSColor controlAlternatingRowBackgroundColors];
-		NSColor *alternatingBackgroundColor = alternatingContentBackgroundColors[row % 2];
+		NSColor *backgroundColor = alternatingContentBackgroundColors[row % 2];
+#else
+		NSColor *backgroundColor = [NSColor controlBackgroundColor];
+#endif
 		
-		[rowView setBackgroundColor:alternatingBackgroundColor];
+		[rowView setBackgroundColor:backgroundColor];
 		
 		if (index == -1)
 			return;
@@ -6953,39 +6972,52 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		NSMutableArray *kextsArray = (_settings.ShowInstalledOnly ? _installedKextsArray : _kextsArray);
 		NSMutableDictionary *kextDictionary = kextsArray[row];
 		NSString *installedVersion = [kextDictionary objectForKey:@"InstalledVersion"];
-		NSString *currentVersion = [kextDictionary objectForKey:@"CurrentVersion"];
+		//NSString *currentVersion = [kextDictionary objectForKey:@"CurrentVersion"];
 		NSString *downloadVersion = [kextDictionary objectForKey:@"DownloadVersion"];
 		NSString *superseder = [kextDictionary objectForKey:@"Superseder"];
 		bool isInstalled = ![installedVersion isEqualToString:@""];
-		bool isCurrentVersionNewer = ([self compareVersion:installedVersion otherVersion:currentVersion] == NSOrderedAscending);
+		//bool isCurrentVersionNewer = ([self compareVersion:installedVersion otherVersion:currentVersion] == NSOrderedAscending);
 		bool isDownloadVersionNewer = ([self compareVersion:installedVersion otherVersion:downloadVersion] == NSOrderedAscending);
-		bool isNewVersionAvailable = (isCurrentVersionNewer || isDownloadVersionNewer);
+		//bool isNewVersionAvailable = (isCurrentVersionNewer || isDownloadVersionNewer);
+		bool isNewVersionAvailable = isDownloadVersionNewer;
 		bool isSuperseded = (superseder != nil && ![superseder isEqualToString:@""]);
+#ifdef USE_ALTERNATING_BACKGROUND_COLOR
 		NSArray *alternatingContentBackgroundColors = [NSColor controlAlternatingRowBackgroundColors];
-		NSColor *alternatingBackgroundColor = alternatingContentBackgroundColors[row % 2];
+		NSColor *backgroundColor = alternatingContentBackgroundColors[row % 2];
+#else
+		NSColor *backgroundColor = [NSColor controlBackgroundColor];
+#endif
 		
 		if (isInstalled)
 			[rowView setBackgroundColor:(isNewVersionAvailable || isSuperseded ? _redColor : _greenColor)];
 		else
-			[rowView setBackgroundColor:alternatingBackgroundColor];
+			[rowView setBackgroundColor:backgroundColor];
 	}
 	else if (tableView == _usbPortsTableView)
 	{
 		NSDictionary *usbDictionary = _usbPortsArray[row];
 		NSNumber *isActive = [usbDictionary objectForKey:@"IsActive"];
+#ifdef USE_ALTERNATING_BACKGROUND_COLOR
 		NSArray *alternatingContentBackgroundColors = [NSColor controlAlternatingRowBackgroundColors];
-		NSColor *alternatingBackgroundColor = alternatingContentBackgroundColors[row % 2];
+		NSColor *backgroundColor = alternatingContentBackgroundColors[row % 2];
+#else
+		NSColor *backgroundColor = [NSColor controlBackgroundColor];
+#endif
 	
-		[rowView setBackgroundColor:(isActive && [isActive boolValue] ? _greenColor : alternatingBackgroundColor)];
+		[rowView setBackgroundColor:(isActive && [isActive boolValue] ? _greenColor : backgroundColor)];
 	}
 	else if (tableView == _efiPartitionsTableView)
 	{
 		NSMutableArray *efiPartitionsArray = getEfiPartitionsArray(_disksArray);
 		Disk *disk = efiPartitionsArray[row];
+#ifdef USE_ALTERNATING_BACKGROUND_COLOR
 		NSArray *alternatingContentBackgroundColors = [NSColor controlAlternatingRowBackgroundColors];
-		NSColor *alternatingBackgroundColor = alternatingContentBackgroundColors[row % 2];
+		NSColor *backgroundColor = alternatingContentBackgroundColors[row % 2];
+#else
+		NSColor *backgroundColor = [NSColor controlBackgroundColor];
+#endif
 		
-		[rowView setBackgroundColor:(disk.isBootableEFI ? _greenColor : alternatingBackgroundColor)];
+		[rowView setBackgroundColor:(disk.isBootableEFI ? _greenColor : backgroundColor)];
 	}
 	else if (tableView == _partitionSchemeTableView)
 	{
