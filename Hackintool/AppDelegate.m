@@ -3665,7 +3665,12 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	NSMutableDictionary *first = (NSMutableDictionary *)a;
 	NSMutableDictionary *second = (NSMutableDictionary *)b;
 	
-	return [first[@"Type"] compare:second[@"Type"]];
+	NSComparisonResult result = [first[@"Type"] compare:second[@"Type"]];
+	
+	if (result != NSOrderedSame)
+		return result;
+	
+	return [first[@"ID"] compare:second[@"ID"]];
 }
 
 - (void)refreshDisplays
