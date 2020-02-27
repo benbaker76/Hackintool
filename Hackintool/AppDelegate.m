@@ -489,8 +489,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			break;
 	}
 	
-	[_infoArray addObject:@{@"Parent": @"System Info", @"Children": _systemInfoArray}];
-	[_infoArray addObject:@{@"Parent": @"Serial Info", @"Children": _serialInfoArray}];
+	[_infoArray addObject:@{@"Parent": GetLocalizedString(@"System Info"), @"Children": _systemInfoArray}];
+	[_infoArray addObject:@{@"Parent": GetLocalizedString(@"Serial Info"), @"Children": _serialInfoArray}];
 	
 	// ----------------------------------------------
 	
@@ -605,7 +605,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	else
 		[self addToList:_iMessageKeysArray name:@"abKPld1EcMni" value:@"???"];
 	
-	[_infoArray addObject:@{@"Parent": @"iMessage Keys", @"Children": _iMessageKeysArray}];
+	[_infoArray addObject:@{@"Parent": GetLocalizedString(@"iMessage Keys"), @"Children": _iMessageKeysArray}];
 	
 	// ----------------------------------------------
 	
@@ -6864,7 +6864,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		NSString *bundleID = [storageDeviceDictionary objectForKey:@"BundleID"];
 		NSString *model = [storageDeviceDictionary objectForKey:@"Model"];
 		NSString *type = [storageDeviceDictionary objectForKey:@"Type"];
-		NSString *location = [storageDeviceDictionary objectForKey:@"Location"];
+		NSString *location = GetLocalizedString([storageDeviceDictionary objectForKey:@"Location"]);
 		NSNumber *blockSize = [storageDeviceDictionary objectForKey:@"BlockSize"];
 	
 		if([identifier isEqualToString:@"View"])
