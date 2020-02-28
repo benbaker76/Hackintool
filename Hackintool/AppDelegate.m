@@ -9339,7 +9339,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		
 		[_hasUpdateImageView setImage:[NSImage imageNamed:_bootloaderInfo->IconName]];
 		
-		[savePanel beginSheetModalForWindow:_hasUpdateWindow completionHandler:^(NSInteger result)
+		[savePanel beginSheetModalForWindow:_window completionHandler:^(NSInteger result)
 		 {
 			 if (result == NSFileHandlingPanelOKButton)
 			 {
@@ -9350,11 +9350,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 				 _download = [[NSURLDownload alloc] initWithRequest:request delegate:self];
 				 
 				 if (_download)
-				 {
-					 [_hasUpdateWindow orderOut:self];
-					 
 					 [self showProgressWindow];
-				 }
 			 }
 		 }];
 	}
