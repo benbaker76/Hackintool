@@ -6673,7 +6673,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	else if (tableView == _audioDevicesTableView1 || tableView == _audioDevicesTableView2)
 	{
 		AudioDevice *audioDevice = _audioDevicesArray[row];
-		NSString *deviceName = (audioDevice.codecID != 0 ? audioDevice.codecName : audioDevice.deviceName);
+		NSString *deviceName = (audioDevice.audioDeviceModelID != 0 ? audioDevice.audioDeviceName : (audioDevice.codecID != 0 ? audioDevice.codecName : audioDevice.deviceName));
 		
 		if([identifier isEqualToString:@"Device"])
 			result.textField.stringValue = [NSString stringWithFormat:@"0x%08X", audioDevice.deviceID];
@@ -6684,7 +6684,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		else if([identifier isEqualToString:@"Revision"])
 			result.textField.stringValue = (audioDevice.codecID != 0 ? [NSString stringWithFormat:@"0x%04X", audioDevice.codecRevisionID & 0xFFFF] : @"-");
 		else if([identifier isEqualToString:@"Name"])
-			result.textField.stringValue = (audioDevice.audioDeviceModelID != 0 ? audioDevice.audioDeviceName : deviceName);
+			result.textField.stringValue = (deviceName != nil ? deviceName : @"???");
 	}
 	else if (tableView == _audioInfoTableView)
 	{
