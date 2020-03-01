@@ -465,6 +465,11 @@ NSData *getReverseData(NSData *data)
 	return result;
 }
 
+uint32_t getReverseBytes(uint32_t value)
+{
+	return ((value >> 24) & 0xFF) | ((value << 8) & 0xFF0000) | ((value >> 8) & 0xFF00) | ((value << 24) & 0xFF000000);
+}
+
 NSString *getTempPath()
 {
 	NSBundle *mainBundle = [NSBundle mainBundle];

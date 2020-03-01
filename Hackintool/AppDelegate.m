@@ -17,12 +17,15 @@
 #import "Disk.h"
 #import "FixEDID.h"
 #import "AudioDevice.h"
+#import "AudioNode.h"
 #import "Resolution.h"
 #import "Config.h"
 #import "Clover.h"
 #import "OpenCore.h"
 #import "NVRAMXmlParser.h"
 #import "BarTableRowView.h"
+#import "NSPinCellView.h"
+#import "NSString+Pin.h"
 #import "VDADecoderChecker.h"
 #import <IOKit/graphics/IOGraphicsLib.h>
 #import <IOKit/kext/KextManager.h>
@@ -248,6 +251,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_bluetoothDevicesArray release];
 	[_graphicDevicesArray release];
 	[_audioDevicesArray release];
+	[_nodeArray release];
 	[_storageDevicesArray release];
 	[_connection release];
 	[_download release];
@@ -1053,6 +1057,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	// Added ability to disable controller patching by injecting property 'no-controller-patch' (for use of FakePCIID_Intel_HDMI_Audio)
 	
 	_audioInfoArray = [[NSMutableArray array] retain];
+	_nodeArray = [[NSMutableArray array] retain];
 	
 	if (!getIORegAudioDeviceArray(&_audioDevicesArray))
 		return;
@@ -1107,6 +1112,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_audioDevicesTableView1 selectRowIndexes:indexSet byExtendingSelection:NO];
 	
 	[self updateAudioInfo];
+	[self updatePinConfiguration];
 }
 
 - (void)initMenus
@@ -4866,6 +4872,56 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	[_audioInfoTableView reloadData];
 }
 
+- (void)updatePinConfiguration
+{
+	[_nodeArray removeAllObjects];
+	
+	NSInteger selectedRow = [_audioDevicesTableView1 selectedRow];
+	
+	if (selectedRow == -1)
+		return;
+	
+	AudioDevice *audioDevice = _audioDevicesArray[selectedRow];
+	NSMutableDictionary *hdaConfigDefaultDictionary = audioDevice.hdaConfigDefaultDictionary;
+	
+	if (hdaConfigDefaultDictionary != nil)
+	{
+		NSData *bootConfigData = [hdaConfigDefaultDictionary objectForKey:@"BootConfigData"];
+		uint8_t *configDataBytes = (uint8_t *)[bootConfigData bytes];
+		
+		for (int i = 0; i < [bootConfigData length] / 4; i++)
+		{
+			uint32_t verb = getReverseBytes(*((uint32_t *)(&configDataBytes[i * 4])));
+			//_codecAddress = (verb >> 28) & 0xF;
+			uint8_t nid = (verb >> 20) & 0xFF;
+			uint32_t command = (verb >> 8) & 0xFFF;
+			uint8_t data = verb & 0xFF;
+			
+			AudioNode *audioNode = nil;
+			
+			for (AudioNode *findAudioNode in _nodeArray)
+			{
+				if ([findAudioNode nid] == nid)
+					audioNode = findAudioNode;
+			}
+			
+			if (!audioNode)
+			{
+				audioNode = [[AudioNode alloc] initWithNid:nid];
+				[_nodeArray addObject:audioNode];
+				[audioNode release];
+			}
+			
+			if (command == 0x70C)
+				[audioNode setEapd:data];
+			else if ((command >> 4) == 0x71)
+				[audioNode updatePinCommand:command data:data];
+		}
+	}
+	
+	[_pinConfigurationOutlineView reloadData];
+}
+
 - (void) populateDisplayInfo
 {
 	[_displayInfoArray removeAllObjects];
@@ -5409,6 +5465,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		_alcLayoutID = [layoutID intValue];
 		
 		[self updateAudioInfo];
+		[self updatePinConfiguration];
 	}
 }
 
@@ -7241,6 +7298,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 - (IBAction)audioTableViewSelected:(id)sender
 {
 	[self updateAudioInfo];
+	[self updatePinConfiguration];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
@@ -7272,6 +7330,10 @@ NSInteger usbControllerSort(id a, id b, void *context)
 				return [[item objectForKey:@"Children"] count];
 		}
 	}
+	else if (outlineView == _pinConfigurationOutlineView)
+	{
+		return (item ? 0 : [_nodeArray count]);
+	}
 	
 	return 0;
 }
@@ -7289,6 +7351,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 				return [[item objectForKey:@"Children"] objectAtIndex:index];
 		}
 	}
+	else if (outlineView == _pinConfigurationOutlineView)
+		return (item ? nil : [_nodeArray objectAtIndex:index]);
 	
 	return nil;
 }
@@ -7312,6 +7376,66 @@ NSInteger usbControllerSort(id a, id b, void *context)
 				result.textField.stringValue = @"";
 			else
 				result.textField.stringValue = [item objectForKey:@"Value"] != nil ? [item objectForKey:@"Value"] : item;
+		}
+	}
+	else if (outlineView == _pinConfigurationOutlineView)
+	{
+		NSString *nid = [tableColumn identifier];
+		AudioNode *audioNode = item;
+		
+		if ([nid intValue] == 1)
+		{
+			NSPinCellView *pinCellView = (NSPinCellView *)result;
+			
+			if (pinCellView)
+			{
+				if (item)
+					[pinCellView setItem:item isSelected:NO];
+			}
+		}
+		else
+		{
+			switch ([nid intValue])
+			{
+				case 2:
+					result.textField.stringValue = audioNode.nodeString;
+					break;
+				case 3:
+					result.textField.stringValue = audioNode.pinDefaultString;
+					break;
+				case 4:
+					result.textField.stringValue = audioNode.directionString;
+					break;
+				case 5:
+					result.textField.stringValue = [NSString pinDefaultDevice:audioNode.device];
+					break;
+				case 6:
+					result.textField.stringValue = [NSString pinConnector:audioNode.connector];
+					break;
+				case 7:
+					result.textField.stringValue = [NSString pinPort:audioNode.port];
+					break;
+				case 8:
+					result.textField.stringValue = [NSString pinGrossLocation:audioNode.grossLocation];
+					break;
+				case 9:
+					result.textField.stringValue = [NSString pinLocation:audioNode.grossLocation geometricLocation:audioNode.geometricLocation];
+					break;
+				case 10:
+					result.textField.stringValue = [NSString pinColor:[audioNode color]];
+					break;
+				case 11:
+					result.textField.intValue = audioNode.group;
+					break;
+				case 12:
+					result.textField.intValue = [audioNode index];
+					break;
+				case 13:
+					result.textField.stringValue = (audioNode.eapd & HDA_EAPD_BTL_ENABLE_EAPD ? [NSString stringWithFormat:@"0x%1X", audioNode.eapd] : @"-");
+					break;
+				default:
+					break;
+			}
 		}
 	}
 	

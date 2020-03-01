@@ -120,6 +120,7 @@ typedef struct
 	NSArray *_tableViewArray;
 	
 	NSMutableArray *_audioDevicesArray;
+	NSMutableArray *_nodeArray;
 	
 	NSMutableArray *_usbControllersArray;
 	NSDictionary *_usbConfigurationDictionary;
@@ -241,8 +242,9 @@ typedef struct
 @property (assign) IBOutlet NSPopUpButton *edidPopupButton;
 @property (assign) IBOutlet NSComboBox *iconComboBox;
 @property (assign) IBOutlet NSComboBox *resolutionComboBox;
-// Audio Info
+// Sound
 @property (assign) IBOutlet NSTableView *audioDevicesTableView1;
+@property (assign) IBOutlet NSOutlineView *pinConfigurationOutlineView;
 @property (assign) IBOutlet NSTableView *audioInfoTableView;
 // USB
 @property (assign) IBOutlet NSTableView *usbControllersTableView;

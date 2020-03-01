@@ -42,6 +42,7 @@ NSMutableString *getByteString(NSData *data, NSString *prefix);
 NSMutableString *getByteString(NSData *data, NSString *delimiter, NSString *prefix, bool lineBreak, bool upperCase);
 NSMutableString *getByteStringClassic(NSData *data);
 NSData *getReverseData(NSData *data);
+uint32_t getReverseBytes(uint32_t value);
 NSString *getTempPath();
 string replaceAll(string& str, const string& from, const string& to);
 bool getUInt32PropertyValue(AppDelegate *appDelegate, NSDictionary *propertyDictionary, NSString *propertyName, uint32_t *propertyValue);

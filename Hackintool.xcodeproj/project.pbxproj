@@ -56,6 +56,10 @@
 		E2AB57A02234DA3400DD8F8C /* Kexts in Resources */ = {isa = PBXBuildFile; fileRef = E2AB579F2234DA3400DD8F8C /* Kexts */; };
 		E2AB61FC227A44B100724F32 /* EveryMac in Resources */ = {isa = PBXBuildFile; fileRef = E2AB61FB227A44B100724F32 /* EveryMac */; };
 		E2ABF70820D7369000652F83 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2ABF70720D7369000652F83 /* Media.xcassets */; };
+		E2B848D4240B208800CD051F /* AudioNode.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B848D3240B208800CD051F /* AudioNode.m */; };
+		E2B848D7240B20BC00CD051F /* NSString+Pin.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B848D6240B20BC00CD051F /* NSString+Pin.m */; };
+		E2B848DA240B20E500CD051F /* NSColor+Pin.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B848D9240B20E500CD051F /* NSColor+Pin.m */; };
+		E2B848DD240B235B00CD051F /* NSPinCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B848DC240B235B00CD051F /* NSPinCellView.m */; };
 		E2BD9C1B2200642800E04431 /* USB.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BD9C192200642800E04431 /* USB.m */; };
 		E2BD9C2122006B1C00E04431 /* MiscTools.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BD9C1F22006B1C00E04431 /* MiscTools.m */; };
 		E2C5B2E6226FEBEA009BB776 /* Windows in Resources */ = {isa = PBXBuildFile; fileRef = E2C5B2E5226FEBEA009BB776 /* Windows */; };
@@ -157,6 +161,14 @@
 		E2AB61FB227A44B100724F32 /* EveryMac */ = {isa = PBXFileReference; lastKnownFileType = folder; path = EveryMac; sourceTree = "<group>"; };
 		E2ABF70720D7369000652F83 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		E2B27E19229DE4C1002A8B08 /* DisplayMergeNub.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DisplayMergeNub.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2B848D2240B208800CD051F /* AudioNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioNode.h; sourceTree = "<group>"; };
+		E2B848D3240B208800CD051F /* AudioNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioNode.m; sourceTree = "<group>"; };
+		E2B848D5240B20BC00CD051F /* NSString+Pin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Pin.h"; sourceTree = "<group>"; };
+		E2B848D6240B20BC00CD051F /* NSString+Pin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Pin.m"; sourceTree = "<group>"; };
+		E2B848D8240B20E500CD051F /* NSColor+Pin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+Pin.h"; sourceTree = "<group>"; };
+		E2B848D9240B20E500CD051F /* NSColor+Pin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+Pin.m"; sourceTree = "<group>"; };
+		E2B848DB240B235A00CD051F /* NSPinCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPinCellView.h; sourceTree = "<group>"; };
+		E2B848DC240B235B00CD051F /* NSPinCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPinCellView.m; sourceTree = "<group>"; };
 		E2BD9C192200642800E04431 /* USB.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = USB.m; sourceTree = "<group>"; };
 		E2BD9C1A2200642800E04431 /* USB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = USB.h; sourceTree = "<group>"; };
 		E2BD9C1D220069D800E04431 /* IORegTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IORegTools.h; sourceTree = "<group>"; };
@@ -259,6 +271,8 @@
 				E2493711169D1B2B00384895 /* AppDelegate.m */,
 				E2ED92F6221349F000279FEA /* AudioDevice.h */,
 				E2ED92F7221349FE00279FEA /* AudioDevice.m */,
+				E2B848D2240B208800CD051F /* AudioNode.h */,
+				E2B848D3240B208800CD051F /* AudioNode.m */,
 				E23A52E2220146D4001ECEA6 /* Authorization.h */,
 				E23A52E1220146D4001ECEA6 /* Authorization.m */,
 				E2A397ED2246F2DE00C6D2B1 /* BarTableRowView.h */,
@@ -289,6 +303,12 @@
 				E2493713169D1B2B00384895 /* MainMenu.xib */,
 				E2BD9C2022006B1C00E04431 /* MiscTools.h */,
 				E2BD9C1F22006B1C00E04431 /* MiscTools.m */,
+				E2B848D8240B20E500CD051F /* NSColor+Pin.h */,
+				E2B848D9240B20E500CD051F /* NSColor+Pin.m */,
+				E2B848DB240B235A00CD051F /* NSPinCellView.h */,
+				E2B848DC240B235B00CD051F /* NSPinCellView.m */,
+				E2B848D5240B20BC00CD051F /* NSString+Pin.h */,
+				E2B848D6240B20BC00CD051F /* NSString+Pin.m */,
 				E2489DEC211AE5AD00A48C84 /* NSTabViewImage.h */,
 				E2489DED211AE5AD00A48C84 /* NSTabViewImage.m */,
 				E200EE7821FBD4600082D799 /* NVRAMXmlParser.h */,
@@ -519,14 +539,18 @@
 				E23474D1221330D4006E2A28 /* Disk.m in Sources */,
 				E29F093923241A0E0039D931 /* utils.c in Sources */,
 				E23474CC22132CE6006E2A28 /* Display.m in Sources */,
+				E2B848DA240B20E500CD051F /* NSColor+Pin.m in Sources */,
 				E249370B169D1B2B00384895 /* main.m in Sources */,
+				E2B848D4240B208800CD051F /* AudioNode.m in Sources */,
 				E2DDD8AE2307E3800017F6D7 /* efidevp.c in Sources */,
 				E2ED92F8221349FE00279FEA /* AudioDevice.m in Sources */,
 				E23A52E3220146D4001ECEA6 /* Authorization.m in Sources */,
 				E2804A74220483E700B40C25 /* Localizer.m in Sources */,
+				E2B848D7240B20BC00CD051F /* NSString+Pin.m in Sources */,
 				E2BD9C1B2200642800E04431 /* USB.m in Sources */,
 				E2FB8637210EAB1000D6F0E4 /* FBUtilities.m in Sources */,
 				E2F6B2C522E3FE2B00BEF274 /* IORegTools.m in Sources */,
+				E2B848DD240B235B00CD051F /* NSPinCellView.m in Sources */,
 				E2A397EE2246F2DE00C6D2B1 /* BarTableRowView.m in Sources */,
 				E2BD9C2122006B1C00E04431 /* MiscTools.m in Sources */,
 				E2493712169D1B2B00384895 /* AppDelegate.m in Sources */,
@@ -690,7 +714,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0322;
+				CURRENT_PROJECT_VERSION = 0323;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -704,7 +728,7 @@
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
-				MARKETING_VERSION = 3.2.2;
+				MARKETING_VERSION = 3.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -724,7 +748,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0322;
+				CURRENT_PROJECT_VERSION = 0323;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -738,7 +762,7 @@
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
-				MARKETING_VERSION = 3.2.2;
+				MARKETING_VERSION = 3.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
