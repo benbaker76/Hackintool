@@ -7,6 +7,7 @@
 //
 
 #import "NSString+Pin.h"
+#import "AudioNode.h"
 
 @implementation NSString (Pin)
 
@@ -24,6 +25,18 @@ const char *gPinGrossSpecial7[] = { "Rear Panel", "Riser", "Special", "Mobile Li
 const char *gPinGrossSpecial8[] = { "Drive Bay", "Digital Display", "Special", "Mobile Lid-Outside" };
 const char *gPinGrossSpecial9[] = { "Special", "ATAPI", "Special", "Special" };
 const char *gPinEAPD[] = { "BTL", "EAPD", "L/R Swap" };
+
++ (NSString *)pinDirection:(uint8_t)value;
+{
+	NSString *pinDirection = @"--";
+	
+	if (value <= kHdaConfigDefaultDeviceModemHandset)
+		pinDirection = GetLocalizedString(@"Out");
+	else if (value > kHdaConfigDefaultDeviceModemHandset && value <= kHdaConfigDefaultDeviceOtherDigitalIn)
+		pinDirection = GetLocalizedString(@"In");
+	
+	return pinDirection;
+}
 
 + (NSString *)pinColor:(uint8_t)value
 {

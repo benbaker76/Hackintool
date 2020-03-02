@@ -496,7 +496,7 @@
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Network" identifier="Network" id="ILd-qF-bOi" userLabel="Info">
-                                <view key="view" id="WTX-2n-XTG">
+                                <view key="view" ambiguous="YES" id="WTX-2n-XTG">
                                     <rect key="frame" x="0.0" y="0.0" width="622" height="611"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -506,7 +506,7 @@
                                             <font key="font" metaFont="label" size="12"/>
                                             <tabViewItems>
                                                 <tabViewItem label="System" identifier="" id="riC-3d-mPV">
-                                                    <view key="view" ambiguous="YES" id="r9l-ug-DH3">
+                                                    <view key="view" id="r9l-ug-DH3">
                                                         <rect key="frame" x="10" y="33" width="602" height="562"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -988,7 +988,7 @@
                                                     </view>
                                                 </tabViewItem>
                                                 <tabViewItem label="Peripherals" identifier="" id="3Kk-QY-KTp">
-                                                    <view key="view" id="Vfa-Ys-76x">
+                                                    <view key="view" ambiguous="YES" id="Vfa-Ys-76x">
                                                         <rect key="frame" x="10" y="33" width="602" height="562"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -997,7 +997,7 @@
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                                 <clipView key="contentView" ambiguous="YES" id="fEa-iN-fOK">
                                                                     <rect key="frame" x="1" y="0.0" width="515" height="82"/>
-                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="Uy6-qT-w5r" viewBased="YES" id="bCx-C3-kDc">
                                                                             <rect key="frame" x="0.0" y="0.0" width="515" height="57"/>
@@ -1157,7 +1157,7 @@
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                                 <clipView key="contentView" ambiguous="YES" id="apG-og-kCX">
                                                                     <rect key="frame" x="1" y="0.0" width="515" height="82"/>
-                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="47s-Lb-inD" viewBased="YES" id="jgm-NC-bHc">
                                                                             <rect key="frame" x="0.0" y="0.0" width="515" height="57"/>
@@ -1338,11 +1338,11 @@
                                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                     <prototypeCellViews>
                                                                                         <tableCellView id="8mP-Bz-pj6">
-                                                                                            <rect key="frame" x="388" y="1" width="122.5" height="17"/>
+                                                                                            <rect key="frame" x="388" y="1" width="123" height="17"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <subviews>
                                                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Faw-0a-WnK">
-                                                                                                    <rect key="frame" x="0.0" y="0.0" width="122.5" height="17"/>
+                                                                                                    <rect key="frame" x="0.0" y="0.0" width="123" height="17"/>
                                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="HVT-DW-8Sg">
                                                                                                         <font key="font" metaFont="label" size="12"/>
@@ -1383,7 +1383,7 @@
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                                 <clipView key="contentView" ambiguous="YES" id="PhH-sX-YZs">
                                                                     <rect key="frame" x="1" y="0.0" width="515" height="101"/>
-                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="rGP-bL-FoI" viewBased="YES" id="2jZ-RW-ATb">
                                                                             <rect key="frame" x="0.0" y="0.0" width="515" height="76"/>
@@ -1601,7 +1601,7 @@
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                                                 <clipView key="contentView" ambiguous="YES" id="HmB-a7-v3s">
                                                                     <rect key="frame" x="1" y="0.0" width="515" height="82"/>
-                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="5FL-xs-Wux" viewBased="YES" id="rAo-kW-0EU">
                                                                             <rect key="frame" x="0.0" y="0.0" width="515" height="57"/>
@@ -1716,11 +1716,11 @@
                                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                     <prototypeCellViews>
                                                                                         <tableCellView id="Va4-23-p9p">
-                                                                                            <rect key="frame" x="154" y="1" width="100.5" height="17"/>
+                                                                                            <rect key="frame" x="154" y="1" width="101" height="17"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <subviews>
                                                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NNV-b0-P7X">
-                                                                                                    <rect key="frame" x="0.0" y="0.0" width="101.5" height="17"/>
+                                                                                                    <rect key="frame" x="0.0" y="0.0" width="102" height="17"/>
                                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Table View Cell" id="Quv-Lq-s9l">
                                                                                                         <font key="font" metaFont="label" size="12"/>
@@ -1853,7 +1853,7 @@
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                                 <clipView key="contentView" ambiguous="YES" id="S9i-1p-ZOM">
                                                                     <rect key="frame" x="1" y="0.0" width="515" height="82"/>
-                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="Iso-rC-uwD" viewBased="YES" id="ksY-WG-Lcb">
                                                                             <rect key="frame" x="0.0" y="0.0" width="515" height="57"/>
@@ -5221,7 +5221,7 @@
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="Sound" identifier="Audio" image="IconAudio" id="xCV-MZ-6fj">
-                                <view key="view" ambiguous="YES" id="wfq-45-IKS">
+                                <view key="view" id="wfq-45-IKS">
                                     <rect key="frame" x="0.0" y="0.0" width="622" height="611"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>

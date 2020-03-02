@@ -248,14 +248,7 @@
 
 - (NSString *)directionString
 {
-	NSString *pinDirection = @"--";
-	
-	if ([self isOut])
-		pinDirection = @"Out";
-	else if ([self isIn])
-		pinDirection = @"In";
-	
-	return pinDirection;
+	return [NSString pinDirection:_device];
 }
 
 @end

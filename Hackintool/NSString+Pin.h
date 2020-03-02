@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString (Pin)
 
++ (NSString *)pinDirection:(uint8_t)value;
 + (NSString *)pinColor:(uint8_t)value;
 + (NSString *)pinMisc:(uint8_t)value;
 + (NSString *)pinDefaultDevice:(uint8_t)value;
