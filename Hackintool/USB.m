@@ -18,14 +18,14 @@
 #include "OpenCore.h"
 #include "MiscTools.h"
 
-static NSMutableArray *gDeviceArray = nil;
+//static NSMutableArray *gDeviceArray = nil;
 static CFMutableDictionaryRef gMatchingDict = nil;
 static IONotificationPortRef gNotifyPort = nil;
 static io_iterator_t gAddedIter = 0;
 
 void usbUnRegisterEvents()
 {
-	if (gDeviceArray)
+	/* if (gDeviceArray)
 	{
 		for (NSNumber *privateDataNumber in gDeviceArray)
 		{
@@ -36,7 +36,7 @@ void usbUnRegisterEvents()
 		
 		[gDeviceArray release];
 		gDeviceArray = nil;
-	}
+	} */
 	
 	if (gNotifyPort)
 	{
@@ -65,7 +65,7 @@ void usbRegisterEvents(AppDelegate *appDelegate)
 
 	usbUnRegisterEvents();
 	
-	gDeviceArray = [[NSMutableArray alloc] init];
+	//gDeviceArray = [[NSMutableArray alloc] init];
 	
 	gMatchingDict = IOServiceMatching(kIOUSBDeviceClassName);
 	
@@ -92,11 +92,11 @@ void usbDeviceNotification(void *refCon, io_service_t usbDevice, natural_t messa
 	
 	if (messageType == kIOMessageServiceIsTerminated)
 	{
-		[appDelegate removeUSBDevice:privateDataRef->locationID name:(__bridge NSString *)privateDataRef->deviceName];
+		[appDelegate removeUSBDevice:privateDataRef->controllerID controllerLocationID:privateDataRef->controllerLocationID locationID:privateDataRef->locationID port:privateDataRef->port];
 		
 		destroyPrivateData(privateDataRef);
 		
-		[gDeviceArray removeObject:[NSNumber numberWithUnsignedLongLong:(unsigned long long)privateDataRef]];
+		//[gDeviceArray removeObject:[NSNumber numberWithUnsignedLongLong:(unsigned long long)privateDataRef]];
 	}
 }
 
@@ -117,18 +117,23 @@ void destroyPrivateData(MyPrivateData *privateDataRef)
 void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 {
 	kern_return_t kr = KERN_FAILURE;
-	io_object_t usbDevice = 0;
 	AppDelegate *appDelegate = (__bridge AppDelegate *)refCon;
 	
-	for (; (usbDevice = IOIteratorNext(iterator)); IOObjectRelease(usbDevice))
+	for (io_service_t usbDevice; IOIteratorIsValid(iterator) && (usbDevice = IOIteratorNext(iterator)); IOObjectRelease(usbDevice))
 	{
 		io_name_t deviceName = { };
-		IOCFPlugInInterface **plugInInterface = 0;
+		//IOCFPlugInInterface **plugInInterface = 0;
 		IOUSBDeviceInterface650 **deviceInterface = 0;
 		//IOUSBDeviceInterface **deviceInterface = 0;
-		SInt32 score = 0;
+		//SInt32 score = 0;
 		uint32_t locationID = 0;
 		uint8_t devSpeed = -1;
+		uint32_t vendorID = 0;
+		uint32_t productID = 0;
+		uint32_t controllerID = 0;
+		uint32_t controllerLocationID = 0;
+		uint32_t port = 0;
+		uint64_t registryID = 0;
 		
 		kr = IORegistryEntryGetName(usbDevice, deviceName);
 		
@@ -136,7 +141,7 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 			deviceName[0] = '\0';
 		
 #ifdef USB_USEREGISTRY
-		CFMutableDictionaryRef propertyDictionaryRef = 0;
+		CFMutableDictionaryRef propertyDictionaryRef = nil;
 		
 		kr = IORegistryEntryCreateCFProperties(usbDevice, &propertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
 		
@@ -144,8 +149,19 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 		{
 			NSDictionary *propertyDictionary = (__bridge NSDictionary *)propertyDictionaryRef;
 			
-			locationID = [[propertyDictionary objectForKey:@"locationID"] unsignedIntValue];
-			devSpeed = [[propertyDictionary objectForKey:@"Device Speed"] unsignedIntValue];
+			locationID = propertyToUInt32([propertyDictionary objectForKey:@"locationID"]);
+			devSpeed = propertyToUInt32([propertyDictionary objectForKey:@"Device Speed"]);
+			vendorID = propertyToUInt32([propertyDictionary objectForKey:@"idVendor"]);
+			productID = propertyToUInt32([propertyDictionary objectForKey:@"idProduct"]);
+			NSNumber *appleUSBAlternateServiceRegistryID = [propertyDictionary objectForKey:@"AppleUSBAlternateServiceRegistryID"];
+			
+			if (appleUSBAlternateServiceRegistryID != nil)
+			{
+				registryID = [appleUSBAlternateServiceRegistryID unsignedLongLongValue];
+				getUSBControllerInfoForUSBDevice(registryID, &controllerID, &controllerLocationID, &port);
+			}
+			else
+				getUSBControllerInfoForUSBDevice(locationID, vendorID, productID, &controllerID, &controllerLocationID, &port);
 		}
 #else
 		kr = IOCreatePlugInInterfaceForService(usbDevice, kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID, &plugInInterface, &score);
@@ -170,20 +186,28 @@ void usbDeviceAdded(void *refCon, io_iterator_t iterator)
 		kr = (*deviceInterface)->GetLocationID(deviceInterface, &locationID);
 		kr = (*deviceInterface)->GetDeviceSpeed(deviceInterface, &devSpeed);
 #endif
-			
+		
 		//MyPrivateData *privateDataRef = (MyPrivateData *)calloc(1, sizeof(MyPrivateData));
 		MyPrivateData *privateDataRef = (MyPrivateData *)NSAllocateMemoryPages(sizeof(MyPrivateData));
 		
-		privateDataRef->deviceName = CFStringCreateWithCString(kCFAllocatorDefault, deviceName, kCFStringEncodingASCII);
 		privateDataRef->deviceInterface = deviceInterface;
+		privateDataRef->deviceName = CFStringCreateWithCString(kCFAllocatorDefault, deviceName, kCFStringEncodingASCII);
 		privateDataRef->locationID = locationID;
+		privateDataRef->controllerID = controllerID;
+		privateDataRef->controllerLocationID = controllerLocationID;
+		privateDataRef->port = port;
+		privateDataRef->registryID = registryID;
 		privateDataRef->appDelegate = appDelegate;
 		
-		[gDeviceArray addObject:[NSNumber numberWithUnsignedLongLong:(unsigned long long)privateDataRef]];
+		//NSMutableDictionary *dictionary = (__bridge NSMutableDictionary *)IORegistryEntryIDMatching(registryID);
 		
-		// NSLog(@"deviceName: %@ locationID: %d devSpeed: %d", privateDataRef->deviceName, locationID, (uint32_t)devSpeed);
+		//NSLog(@"%d ==> %@", registryID, dictionary);
 		
-		[appDelegate addUSBDevice:locationID name:(__bridge NSString *)privateDataRef->deviceName devSpeed:devSpeed];
+		//[gDeviceArray addObject:[NSNumber numberWithUnsignedLongLong:(unsigned long long)privateDataRef]];
+
+		//NSLog(@"deviceName: %@ controllerID: 0x%08X locationID: 0x%08X port: 0x%02X devSpeed: %d", privateDataRef->deviceName, controllerID, locationID, port, (uint32_t)devSpeed);
+		
+		[appDelegate addUSBDevice:controllerID controllerLocationID:controllerLocationID locationID:locationID port:port deviceName:(__bridge NSString *)privateDataRef->deviceName devSpeed:devSpeed];
 		
 		kr = IOServiceAddInterestNotification(gNotifyPort, usbDevice, kIOGeneralInterest, usbDeviceNotification, privateDataRef, &privateDataRef->removedIter);
 	}
@@ -198,23 +222,23 @@ NSString *getUSBConnectorType(UsbConnector usbConnector)
 {
 	switch (usbConnector)
 	{
-		case TypeA:
-		case MiniAB:
+		case kTypeA:
+		case kMiniAB:
 			return @"USB2";
-		case ExpressCard:
+		case kExpressCard:
 			return @"ExpressCard";
-		case USB3StandardA:
-		case USB3StandardB:
-		case USB3MicroB:
-		case USB3MicroAB:
-		case USB3PowerB:
+		case kUSB3StandardA:
+		case kUSB3StandardB:
+		case kUSB3MicroB:
+		case kUSB3MicroAB:
+		case kUSB3PowerB:
 			return @"USB3";
-		case TypeCUSB2Only:
-		case TypeCSSSw:
+		case kTypeCUSB2Only:
+		case kTypeCSSSw:
 			return @"TypeC+Sw";
-		case TypeCSS:
+		case kTypeCSS:
 			return @"TypeC";
-		case Internal:
+		case kInternal:
 			return @"Internal";
 		default:
 			return @"Reserved";
@@ -242,10 +266,10 @@ NSString *getUSBConnectorSpeed(uint8_t speed)
 
 void injectDefaultUSBPowerProperties(NSMutableDictionary *ioProviderMergePropertiesDictionary)
 {
-	[ioProviderMergePropertiesDictionary setObject:[NSNumber numberWithInt:2100] forKey:@"kUSBSleepPortCurrentLimit"];
-	[ioProviderMergePropertiesDictionary setObject:[NSNumber numberWithInt:5100] forKey:@"kUSBSleepPowerSupply"];
-	[ioProviderMergePropertiesDictionary setObject:[NSNumber numberWithInt:2100] forKey:@"kUSBWakePortCurrentLimit"];
-	[ioProviderMergePropertiesDictionary setObject:[NSNumber numberWithInt:5100] forKey:@"kUSBWakePowerSupply"];
+	[ioProviderMergePropertiesDictionary setObject:@(2100) forKey:@"kUSBSleepPortCurrentLimit"];
+	[ioProviderMergePropertiesDictionary setObject:@(5100) forKey:@"kUSBSleepPowerSupply"];
+	[ioProviderMergePropertiesDictionary setObject:@(2100) forKey:@"kUSBWakePortCurrentLimit"];
+	[ioProviderMergePropertiesDictionary setObject:@(5100) forKey:@"kUSBWakePowerSupply"];
 }
 
 void injectUSBPowerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioProviderMergePropertiesDictionary)
@@ -284,7 +308,7 @@ void injectUSBPowerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioP
 	[ioProviderMergePropertiesDictionary setObject:wakePowerSupply forKey:@"kUSBWakePowerSupply"];
 }
 
-void injectUSBControllerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioKitPersonalities, NSNumber *usbControllerID)
+void injectUSBControllerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioKitPersonalities, uint32_t usbControllerID)
 {
 	// AppleUSBXHCISPT
 	// AppleUSBXHCISPT1
@@ -320,7 +344,7 @@ void injectUSBControllerProperties(AppDelegate *appDelegate, NSMutableDictionary
 	
 	NSDictionary *ioUSBHostInfoDictionary = [NSDictionary dictionaryWithContentsOfFile:ioUSBHostPlugInsPath];
 	NSDictionary *ioUSBHostIOKitPersonalities = [ioUSBHostInfoDictionary objectForKey:@"IOKitPersonalities"];
-	NSString *usbControllerIDString = [NSString stringWithFormat:@"0x%08x", [usbControllerID unsignedIntValue]];
+	NSString *usbControllerIDString = [NSString stringWithFormat:@"0x%08x", usbControllerID];
 	
 	for (NSString *key in ioUSBHostIOKitPersonalities.allKeys)
 	{
@@ -339,8 +363,20 @@ void injectUSBControllerProperties(AppDelegate *appDelegate, NSMutableDictionary
 	}
 }
 
-int checkEC(AppDelegate *appDelegate)
+ECType checkEC(AppDelegate *appDelegate)
 {
+	// An EC device is needed so AppleBusPowerController attaches to it and injects
+	// correct power properties to XHC/EHCx in Mojave and older. In Catalina
+	// (as of now and probably higher), an EC device is needed for booting,
+	// and AppleBusPowerController loads if IORTC is found and then attaches to IOResources.
+	// - whatnameisit
+	
+	NSOperatingSystemVersion minimumSupportedOSVersion = { .majorVersion = 10, .minorVersion = 15, .patchVersion = 0 };
+	BOOL isOSAtLeastCatalina = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:minimumSupportedOSVersion];
+	
+	if (isOSAtLeastCatalina)
+		return kECNoSSDTRequired;
+	
 	// https://github.com/corpnewt/USBMap/blob/master/USBMap.command
 	//
 	// Let's look for a couple of things
@@ -353,7 +389,7 @@ int checkEC(AppDelegate *appDelegate)
 	//    We match that against the PNP0C09 name in ioreg
 	
 	if (hasIORegEntry(@"IOService:/AppleACPIPlatformExpert/EC/AppleBusPowerController"))
-		return 4;
+		return kECNoSSDTRequired;
 	
 	// At this point - we know AppleBusPowerController isn't loaded - let's look at renames and such
 	// Check for ECDT in ACPI - if this is present, all bets are off
@@ -367,7 +403,7 @@ int checkEC(AppDelegate *appDelegate)
 		NSString *acpiString = [appDelegate.bootLog substringWithRange:stringRange];
 		
 		if ([acpiString containsString:@"ECDT"])
-			return 0;
+			return kECSSDTRequired;
 	}
 	
 	NSArray *usbACPIArray = @[@"EC", @"EC0", @"H_EC", @"ECDV"];
@@ -384,14 +420,14 @@ int checkEC(AppDelegate *appDelegate)
 		NSNumber *_sta = [acpiDictionary objectForKey:@"_STA"];
 		
 		if ([name isEqualToString:@"PNP0C09"] && [_sta unsignedIntValue] == 0)
-			return 0;
+			return kECSSDTRequired;
 		
-		return i;
+		return (ECType)i;
 	}
 	
 	// If we got here, then we didn't find EC, and didn't need to rename it
 	// so we return 0 to prompt for an EC fake SSDT to be made
-	return 0;
+	return kECSSDTRequired;
 }
 
 void validateUSBPower(AppDelegate *appDelegate)
@@ -402,18 +438,18 @@ void validateUSBPower(AppDelegate *appDelegate)
 	NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 	NSString *stdoutString = nil;
 	
-	int retVal = checkEC(appDelegate);
+	ECType retVal = checkEC(appDelegate);
 	
 	switch(retVal)
 	{
-		case 0:
+		case kECSSDTRequired:
 			if ([appDelegate showAlert:@"SSDT-EC Required" text:@"Generating SSDT-EC..."])
 			{
 				launchCommand(iaslPath, @[@"-p", [NSString stringWithFormat:@"%@/SSDT-EC.aml", desktopPath], ssdtECPath], &stdoutString);
 				//NSLog(@"%@", stdoutString);
 			}
 			break;
-		case 1:
+		case kECRenameEC0toEC:
 		{
 			if ([appDelegate showAlert:@"Rename Required" text:@"Renaming EC0 to EC..."])
 			{
@@ -438,7 +474,7 @@ void validateUSBPower(AppDelegate *appDelegate)
 			}
 			break;
 		}
-		case 2:
+		case kECRenameH_ECtoEC:
 		{
 			if ([appDelegate showAlert:@"Rename Required" text:@"Renaming H_EC to EC..."])
 			{
@@ -463,7 +499,7 @@ void validateUSBPower(AppDelegate *appDelegate)
 			}
 			break;
 		}
-		case 3:
+		case kECRenameECDVtoEC:
 		{
 			if ([appDelegate showAlert:@"Rename Required" text:@"Renaming ECDV to EC..."])
 			{
@@ -488,7 +524,7 @@ void validateUSBPower(AppDelegate *appDelegate)
 			}
 			break;
 		}
-		case 4:
+		case kECNoSSDTRequired:
 			NSLog(@"No SSDT-EC Required");
 			break;
 	}
@@ -497,24 +533,27 @@ void validateUSBPower(AppDelegate *appDelegate)
 void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPersonalities)
 {
 	NSMutableDictionary *maxPortDictionary = [NSMutableDictionary dictionary];
-	bool hasInjectedUSBPowerProperties = NO;
 	
 	for (NSMutableDictionary *usbEntryDictionary in appDelegate.usbPortsArray)
 	{
 		NSMutableDictionary *newUSBEntryDictionary = [[usbEntryDictionary mutableCopy] autorelease];
 		NSString *name = [usbEntryDictionary objectForKey:@"name"];
 		NSString *usbController = [usbEntryDictionary objectForKey:@"UsbController"];
-		NSNumber *usbControllerID = [usbEntryDictionary objectForKey:@"UsbControllerID"];
+		uint32_t usbControllerID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerID"]);
+		//uint32_t usbControllerLocationID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerLocationID"]);
 		
-		if (usbController == nil || usbControllerID == nil)
+		if (usbController == nil)
 			continue;
 		
-		NSData *portData = [usbEntryDictionary objectForKey:@"port"];
-		uint32_t port = getUInt32FromData(portData);
+		uint32_t port = propertyToUInt32([usbEntryDictionary objectForKey:@"port"]);
 		NSString *hubName = [usbEntryDictionary objectForKey:@"HubName"];
 		NSNumber *hubLocation = [usbEntryDictionary objectForKey:@"HubLocation"];
 		NSString *modelEntryName = [NSString stringWithFormat:@"%@-%@%@", appDelegate.modelIdentifier, usbController, hubName != nil ? @"-internal-hub" : @""];
-		NSString *providerClass = hubName != nil ? hubName : [usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI"; // IOUSBDevice?
+		NSString *providerClass = (hubName != nil ? hubName : [usbEntryDictionary objectForKey:@"UsbControllerIOClass"]);
+		//NSString *providerClass = (hubName != nil ? hubName : ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI"));
+		
+		if (providerClass == nil)
+			providerClass = ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI");
 		
 		NSMutableDictionary *modelEntryDictionary = [ioKitPersonalities objectForKey:modelEntryName];
 		NSMutableDictionary *ioProviderMergePropertiesDictionary = nil;
@@ -528,23 +567,40 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 			
 			[ioKitPersonalities setObject:modelEntryDictionary forKey:modelEntryName];
 			[modelEntryDictionary setObject:ioProviderMergePropertiesDictionary forKey:@"IOProviderMergeProperties"];
-			[modelEntryDictionary setObject:appDelegate.modelIdentifier forKey:@"model"];
 			[ioProviderMergePropertiesDictionary setObject:portsDictionary forKey:@"ports"];
 			
-			[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBMergeNub" forKey:@"CFBundleIdentifier"];
-			[modelEntryDictionary setObject:@"AppleUSBMergeNub" forKey:@"IOClass"];
+			// For HUB's
+			if (hubName != nil)
+			{
+				[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBHostMergeProperties" forKey:@"CFBundleIdentifier"];
+				[modelEntryDictionary setObject:@"AppleUSBHostMergeProperties" forKey:@"IOClass"];
+				[modelEntryDictionary setObject:providerClass forKey:@"IOProviderClass"];
+				
+				// Inject model instead
+				/* NSMutableDictionary *platformDictionary;
+				
+				if (getIORegProperties(@"IODeviceTree:/", &platformDictionary))
+					[modelEntryDictionary setObject:properyToString([platformDictionary objectForKey:@"board-id"]) forKey:@"board-id"]; */
+				
+				[modelEntryDictionary setObject:hubLocation forKey:@"locationID"];
+			}
+			else
+			{
+				injectUSBPowerProperties(appDelegate, ioProviderMergePropertiesDictionary);
+				
+				[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBMergeNub" forKey:@"CFBundleIdentifier"];
+				[modelEntryDictionary setObject:@"AppleUSBMergeNub" forKey:@"IOClass"];
+				[modelEntryDictionary setObject:usbController forKey:@"IONameMatch"];
+				[modelEntryDictionary setObject:providerClass forKey:@"IOProviderClass"];
+			}
+			
+			[modelEntryDictionary setObject:appDelegate.modelIdentifier forKey:@"model"];
 			[modelEntryDictionary setObject:@(5000) forKey:@"IOProbeScore"];
 			
-			//[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBHostMergeProperties" forKey:@"CFBundleIdentifier"];
-			//[modelEntryDictionary setObject:@"AppleUSBHostMergeProperties" forKey:@"IOClass"];
-			
-			//if (hubName != nil)
-			[modelEntryDictionary setObject:usbController forKey:@"IONameMatch"];
-			
-			[modelEntryDictionary setObject:providerClass forKey:@"IOProviderClass"];
-			
 			[modelEntryDictionary setObject:usbController forKey:@"UsbController"];
-			[modelEntryDictionary setObject:usbControllerID forKey:@"UsbControllerID"];
+			
+			if (usbControllerID != 0)
+				[modelEntryDictionary setObject:@(usbControllerID) forKey:@"UsbControllerID"];
 			
 			//injectUSBControllerProperties(appDelegate, ioKitPersonalities, usbControllerID);
 		}
@@ -554,23 +610,10 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 			portsDictionary = [ioProviderMergePropertiesDictionary objectForKey:@"ports"];
 		}
 		
-		if (!hasInjectedUSBPowerProperties)
-		{
-			injectUSBPowerProperties(appDelegate, ioProviderMergePropertiesDictionary);
-			
-			hasInjectedUSBPowerProperties = YES;
-		}
-		
 		uint32_t maxPort = [maxPortDictionary[modelEntryName] unsignedIntValue];
 		maxPort = MAX(maxPort, port);
 		
 		maxPortDictionary[modelEntryName] = [NSNumber numberWithInt:maxPort];
-		
-		if (hubName != nil)
-		{
-			[modelEntryDictionary setObject:hubLocation forKey:@"locationID"];
-			[modelEntryDictionary setObject:[NSNumber numberWithInt:5000] forKey:@"IOProbeScore"];
-		}
 		
 		NSData *maxPortData = [NSData dataWithBytes:&maxPort length:sizeof(maxPort)];
 		
@@ -678,6 +721,8 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 		
 		[modelEntryDictionary removeObjectForKey:@"UsbController"];
 		[modelEntryDictionary removeObjectForKey:@"UsbControllerID"];
+		[modelEntryDictionary removeObjectForKey:@"UsbControllerLocationID"];
+		[modelEntryDictionary removeObjectForKey:@"UsbControllerIOClass"];
 
 		for (NSString *portKey in [portsDictionary allKeys])
 		{
@@ -689,6 +734,8 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 			[usbEntryDictionary removeObjectForKey:@"IsActive"];
 			[usbEntryDictionary removeObjectForKey:@"UsbController"];
 			[usbEntryDictionary removeObjectForKey:@"UsbControllerID"];
+			[usbEntryDictionary removeObjectForKey:@"UsbControllerLocationID"];
+			[usbEntryDictionary removeObjectForKey:@"UsbControllerIOClass"];
 			[usbEntryDictionary removeObjectForKey:@"HubName"];
 			[usbEntryDictionary removeObjectForKey:@"HubLocation"];
 			[usbEntryDictionary removeObjectForKey:@"DevSpeed"];
@@ -738,10 +785,11 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 		if (usbController == nil)
 			continue;
 		
-		NSNumber *usbControllerID = [modelEntryDictionary objectForKey:@"UsbControllerID"];
-		uint32_t deviceID = [usbControllerID unsignedIntValue] & 0xFFFF;
-		uint32_t productID = [usbControllerID unsignedIntValue] >> 16;
-		NSString *name = [NSString stringWithFormat:@"%04x_%04x", deviceID, productID]; // "8086_a12f", Package()
+		uint32_t usbControllerID = propertyToUInt32([modelEntryDictionary objectForKey:@"UsbControllerID"]);
+		uint32_t deviceID = (usbControllerID & 0xFFFF);
+		uint32_t productID = (usbControllerID >> 16);
+		NSString *name = usbController;
+		NSString *deviceName = (usbControllerID != 0 ? [NSString stringWithFormat:@"%04x_%04x", deviceID, productID] : @"???");
 		NSNumber *locationID = [modelEntryDictionary objectForKey:@"locationID"];
 		NSMutableDictionary *ioProviderMergePropertiesDictionary = [modelEntryDictionary objectForKey:@"IOProviderMergeProperties"];
 		NSData *portCount = [ioProviderMergePropertiesDictionary objectForKey:@"port-count"];
@@ -754,7 +802,12 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			hasExportedUSBPowerSSDT = YES;
 		}
 		
-		// EH01, EH02, HUB1, HUB2, XHC
+		if (usbControllerID != 0)
+		{
+			if (![usbController hasPrefix:@"EH"] && ![usbController hasPrefix:@"XH"])
+				name = deviceName;
+		}
+		
 		if (locationID != nil)
 		{
 			if ([locationID unsignedIntValue] == 0x1D100000)
@@ -763,6 +816,7 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 				name = @"HUB2";
 		}
 		
+		[ssdtUIACString appendString:[NSString stringWithFormat:@"            // %@ (%@)\n", name, deviceName]];
 		[ssdtUIACString appendString:[NSString stringWithFormat:@"            \"%@\", Package()\n", name]];
 		[ssdtUIACString appendString:@"            {\n"];
 		[ssdtUIACString appendString:[NSString stringWithFormat:@"                \"port-count\", Buffer() { %@ },\n", getByteString(portCount)]];
@@ -781,7 +835,7 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			[ssdtUIACString appendString:@"                      {\n"];
 			if (portType != nil)
 				[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"portType\", %d,\n", [portType unsignedIntValue]]];
-			else
+			else if (usbConnector != nil)
 				[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"UsbConnector\", %d,\n", [usbConnector unsignedIntValue]]];
 			[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"port\", Buffer() { %@ },\n", getByteString(port)]];
 			[ssdtUIACString appendString:@"                      },\n"];
@@ -798,22 +852,17 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSString *iaslPath = [mainBundle pathForResource:@"iasl" ofType:@"" inDirectory:@"Utilities"];
 	NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	NSString *tempPath = getTempPath();
-	NSString *tempFilePath = [NSString stringWithFormat:@"%@/SSDT-UIAC.dsl", tempPath];
-	NSString *outputFilePath = [NSString stringWithFormat:@"%@/SSDT-UIAC.aml", desktopPath];
+	NSString *outputDslFilePath = [NSString stringWithFormat:@"%@/SSDT-UIAC.dsl", desktopPath];
+	NSString *outputAmlFilePath = [NSString stringWithFormat:@"%@/SSDT-UIAC.aml", desktopPath];
 	NSString *stdoutString = nil;
-	
-	if ([[NSFileManager defaultManager] fileExistsAtPath:tempFilePath])
-		[[NSFileManager defaultManager] removeItemAtPath:tempFilePath error:nil];
-	
 	NSError *error;
-
-	[ssdtUIACString writeToFile:tempFilePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
 	
-	launchCommand(iaslPath, @[@"-p", outputFilePath, tempFilePath], &stdoutString);
+	[ssdtUIACString writeToFile:outputDslFilePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+	
+	launchCommand(iaslPath, @[@"-p", outputAmlFilePath, outputDslFilePath], &stdoutString);
 	//NSLog(@"%@", stdoutString);
 	
-	NSArray *fileURLs = [NSArray arrayWithObjects:[NSURL fileURLWithPath:outputFilePath], nil];
+	NSArray *fileURLs = [NSArray arrayWithObjects:[NSURL fileURLWithPath:outputAmlFilePath], nil];
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
 }
 

@@ -16,6 +16,7 @@
 #include <objc/runtime.h>
 #include <objc/message.h>
 #include <libxml/tree.h>
+#include "IORegTools.h"
 #include "Authorization.h"
 
 #define WEXISTATUS(status) (((status) & 0xff00) >> 8)
@@ -464,6 +465,11 @@ NSData *getReverseData(NSData *data)
 	return result;
 }
 
+uint32_t getReverseBytes(uint32_t value)
+{
+	return ((value >> 24) & 0xFF) | ((value << 8) & 0xFF0000) | ((value >> 8) & 0xFF00) | ((value << 24) & 0xFF000000);
+}
+
 NSString *getTempPath()
 {
 	NSBundle *mainBundle = [NSBundle mainBundle];
@@ -504,12 +510,12 @@ string replaceAll(string& str, const string& from, const string& to)
 
 bool getUInt32PropertyValue(AppDelegate *appDelegate, NSDictionary *propertyDictionary, NSString *propertyName, uint32_t *propertyValue)
 {
-	NSData *propertyData = [propertyDictionary objectForKey:propertyName];
+	id property = [propertyDictionary objectForKey:propertyName];
 	
-	if (propertyData == nil)
+	if (property == nil)
 		return false;
 	
-	*propertyValue = getUInt32FromData(propertyData);
+	*propertyValue = propertyToUInt32(property);
 	
 	return true;
 }
@@ -790,17 +796,6 @@ NSString *appendSuffixToPath(NSString *path, NSString *suffix)
 	return [containingFolder stringByAppendingPathComponent:newFullFileName];
 }
 
-uint32_t getUInt32FromData(NSData *data)
-{
-	if (data == nil)
-		return 0;
-	
-	if ([data length] != 4)
-		return 0;
-	
-	return *(const uint32_t *)[data bytes];
-}
-
 NSColor *getColorAlpha(NSColor *color, float alpha)
 {
 	NSColor *resultColor = [color colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
@@ -947,4 +942,16 @@ NSString *trimNewLine(NSString *string)
 		return string;
 	
 	return [string substringToIndex:newLineRange.location];
+}
+
+NSString *getUUID()
+{
+	uuid_t binuuid;
+	uuid_generate_random(binuuid);
+	char *uuid = (char *)malloc(37);
+
+	uuid_unparse_upper(binuuid, uuid);
+	uuid_unparse(binuuid, uuid);
+	
+	return [NSString stringWithUTF8String:uuid];
 }

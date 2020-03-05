@@ -160,7 +160,7 @@
 		<key>Description</key>
 		<string>This kext attempts to inject USB ports for each controller, and for hubs as well.</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/RehabMan/OS-X-USB-Inject-All</string>
+		<string>https://github.com/Sniki/OS-X-USB-Inject-All</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
@@ -248,7 +248,7 @@
 		<key>Description</key>
 		<string>Used for updating EAPD (External Amplifier) state on HDA (High Definition Audio) codecs that use given amp on Speaker or Headphone nodes (both, or even extra ones in some cases).</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/Dolnor/EAPD-Codec-Commander</string>
+		<string>https://github.com/Sniki/EAPD-Codec-Commander</string>
 		<key>Type</key>
 		<string>Kext</string>
 		<key>Superseder</key>
@@ -489,6 +489,46 @@
 		<string>A kernel extension which will synchronize the TSC on any Intel CPUs.</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/RehabMan/VoodooTSCSync</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>VoodooInput</string>
+		<key>Description</key>
+		<string>An opensource trackpad aggregator kernel extension providing Magic Trackpad 2 software emulation for arbitrary input sources like VoodooPS2.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/VoodooInput</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>NVMeFix</string>
+		<key>Description</key>
+		<string>NVMeFix is a set of patches for the Apple NVMe storage driver, IONVMeFamily.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/NVMeFix</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>	
+	<dict>
+		<key>Name</key>
+		<string>IntelBluetoothFirmware</string>
+		<key>Description</key>
+		<string>Try to load the Intel Bluetooth driver firmware.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/zxystd/IntelBluetoothFirmware</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>AppleIntelWifiAdapter</string>
+		<key>Description</key>
+		<string>Apple IO80211Controller call. Research on Apple's undisclosed AirPort program. Currently based on 10.15 api.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/zxystd/AppleIntelWifiAdapter</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>

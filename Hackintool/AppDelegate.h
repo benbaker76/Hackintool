@@ -43,13 +43,6 @@ enum BootloaderType
 
 typedef struct
 {
-	uint32_t Device;
-	NSString *Name;
-	NSString *Vendor;
-} AudioController;
-
-typedef struct
-{
 	NSString *IntelGen;
 	NSString *PlatformID;
 	bool KextsToPatchHex;
@@ -84,7 +77,6 @@ typedef struct
 	bool InjectDeviceID;
 	bool USBPortLimit;
 	bool SpoofAudioDeviceID;
-	uint32_t SelectedAudioDevice;
 	bool ShowInstalledOnly;
 	bool LSPCON_Enable;
 	bool LSPCON_AutoDetect;
@@ -120,17 +112,19 @@ typedef struct
 
 @class AudioDevice;
 
-@interface AppDelegate : NSResponder <NSApplicationDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, NSTableViewDataSource, NSTabViewDelegate, NSOutlineViewDelegate, NSWindowDelegate, NSURLConnectionDelegate, NSURLDownloadDelegate, NSMenuDelegate, NSTextFieldDelegate, NSTextViewDelegate, NSComboBoxDelegate, PCIMonitorDelegate>
+@interface AppDelegate : NSResponder <NSApplicationDelegate, NSURLConnectionDelegate, NSURLConnectionDataDelegate, NSTableViewDataSource, NSTabViewDelegate, NSOutlineViewDelegate, NSWindowDelegate, NSURLConnectionDelegate, NSURLDownloadDelegate, NSMenuDelegate, NSTextFieldDelegate, NSTextViewDelegate, NSComboBoxDelegate, NSSplitViewDelegate, PCIMonitorDelegate>
 {
 	NSString *_fileName;
 	BOOL _gatekeeperDisabled;
 	
 	NSArray *_tableViewArray;
 	
-	AudioController _audioController;
 	NSMutableArray *_audioDevicesArray;
+	NSMutableArray *_nodeArray;
 	
 	NSMutableArray *_usbControllersArray;
+	NSDictionary *_usbConfigurationDictionary;
+	
 	//NSMutableArray *_displaysArray;
 	
 	NSString *_intelGenString;
@@ -181,6 +175,10 @@ typedef struct
 	
 	NSString *_bootloaderDeviceUUID;
 	NSString *_bootloaderDirPath;
+	
+	NSColor *_greenColor;
+	NSColor *_redColor;
+	NSColor *_orangeColor;
 }
 
 @property (assign) IBOutlet NSWindow *window;
@@ -244,8 +242,9 @@ typedef struct
 @property (assign) IBOutlet NSPopUpButton *edidPopupButton;
 @property (assign) IBOutlet NSComboBox *iconComboBox;
 @property (assign) IBOutlet NSComboBox *resolutionComboBox;
-// Audio Info
+// Sound
 @property (assign) IBOutlet NSTableView *audioDevicesTableView1;
+@property (assign) IBOutlet NSOutlineView *pinConfigurationOutlineView;
 @property (assign) IBOutlet NSTableView *audioInfoTableView;
 // USB
 @property (assign) IBOutlet NSTableView *usbControllersTableView;
@@ -373,7 +372,7 @@ typedef struct
 @property (readonly) NSString *gpuModel;
 @property (readonly) NSString *bootLog;
 @property (readonly) NSString *bootloaderDirPath;
-@property (readonly) AudioDevice *audioDevice;
+@property (readonly) uint32_t alcLayoutID;
 @property Settings settings;
 
 // Bootloader Download
@@ -395,8 +394,8 @@ typedef struct
 
 - (void)refreshDisks;
 - (void)updateSettingsGUI;
-- (void)addUSBDevice:(uint32_t)locationID name:(NSString *)name devSpeed:(uint8_t)devSpeed;
-- (void)removeUSBDevice:(uint32_t)locationID name:(NSString *)name;
+- (void)addUSBDevice:(uint32_t)controllerID controllerLocationID:(uint32_t)controllerLocationID locationID:(uint32_t)locationID port:(uint32_t)port deviceName:(NSString *)deviceName devSpeed:(uint8_t)devSpeed;
+- (void)removeUSBDevice:(uint32_t)controllerID controllerLocationID:(uint32_t)controllerLocationID locationID:(uint32_t)locationID port:(uint32_t)port;
 - (uint32_t)getGPUDeviceID:(uint32_t)platformID;
 - (NSString *)getGPUString:(uint32_t)platformID;
 - (NSString *)getModelString:(uint32_t)platformID;
@@ -405,7 +404,7 @@ typedef struct
 - (bool)showAlert:(NSString *)message text:(NSString *)text;
 - (bool)framebufferHasModified;
 - (uint32_t)getPlatformID;
-- (bool)spoofAudioDeviceID:(uint32_t *)audioDeviceID;
+- (bool)spoofAudioDeviceID:(uint32_t)deviceID newDeviceID:(uint32_t *)newDeviceID;
 - (bool)getDeviceIDArray:(NSMutableArray **)deviceIDArray;
 - (void)appendTextViewWithFormat:(NSTextView *)textView format:(NSString *)format, ...;
 - (void)appendTextView:(NSTextView *)textView text:(NSString *)text;
@@ -422,8 +421,12 @@ typedef struct
 - (bool)isBootloaderOpenCore;
 - (bool)isConnectorHeadless;
 - (NSString *)getIORegName:(NSString *)ioregName;
-- (bool)isValidACPIEntry:(NSString *)ioregName;
-- (bool)tryGetPCIDeviceDictionary:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
+- (bool)tryGetACPIPath:(NSString *)ioregName acpiPath:(NSString **)acpiPath;
+- (bool)tryGetPCIDeviceDictionaryFromIORegName:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
+- (bool)tryGetPCIDeviceDictionaryFromClassCode:(NSNumber *)code pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
+- (bool)tryGetAudioController:(NSNumber *)deviceID vendorID:(NSNumber *)vendorID audioDevice:(AudioDevice *)foundAudioDevice;
+- (bool)isAppleHDAAudioDevice:(AudioDevice *)audioDevice;
+- (bool)isVoodooHDAAudioDevice:(AudioDevice *)audioDevice;
 - (IBAction)generateAudioCodecsInfo:(id)sender;
 - (IBAction)displaySettingsChanged:(id)sender;
 - (IBAction)platformIDButtonClicked:(id)sender;
@@ -477,7 +480,6 @@ typedef struct
 - (IBAction)cancelButtonClicked:(id)sender;
 - (IBAction)okButtonClicked:(id)sender;
 - (IBAction)payPalButtonClicked:(id)sender;
-- (IBAction)doUpdate:(id)sender;
 - (IBAction)installedButtonClicked:(id)sender;
 - (IBAction)progressCancelButtonClicked:(id)sender;
 - (IBAction)bootloaderButtonClicked:(id)sender;

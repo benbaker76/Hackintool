@@ -1,21 +1,23 @@
 {
   "images" : [
     {
+      "filename" : "IconExport@1x.png",
       "idiom" : "universal",
-      "filename" : "IconExport.png",
       "scale" : "1x"
     },
     {
+      "filename" : "IconExport@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "IconExport@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }

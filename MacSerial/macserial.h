@@ -10,7 +10,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define PROGRAM_VERSION "2.0.7"
+#define PROGRAM_VERSION "2.1.1"
 
 #ifdef __GNUC__
 uint32_t arc4random(void) __attribute__((weak));
@@ -33,7 +33,7 @@ uint32_t arc4random_uniform(uint32_t upper_bound) __attribute__((weak));
 #define SERIAL_YEAR_OLD_MAX 2012
 
 #define SERIAL_YEAR_NEW_MIN 2010
-#define SERIAL_YEAR_NEW_MAX 2019
+#define SERIAL_YEAR_NEW_MAX 2020
 
 #define SERIAL_COPY_MIN 1
 #define SERIAL_COPY_MAX 34
@@ -59,6 +59,12 @@ typedef struct {
 } PLATFORMDATA;
 
 typedef struct {
+  const char *code;
+  const char *name;
+} APPLE_MODEL_DESC;
+
+typedef struct {
+  const char *appleModel;
   char country[4];
   char year[3];
   char week[3];
@@ -79,6 +85,7 @@ typedef enum {
   MODE_SERIAL_INFO,
   MODE_MLB_INFO,
   MODE_LIST_MODELS,
+  MODE_LIST_PRODUCTS,
   MODE_GENERATE_MLB,
   MODE_GENERATE_CURRENT,
   MODE_GENERATE_ALL,

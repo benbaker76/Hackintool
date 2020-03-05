@@ -16,26 +16,33 @@
 {
 }
 
+@property (nonatomic, retain) NSString *bundleID;
 @property (nonatomic, retain) NSString *deviceClass;
 @property uint32_t deviceID;
 @property uint32_t revisionID;
+@property uint32_t layoutID;
 @property uint32_t alcLayoutID;
 @property uint32_t subDeviceID;
 @property uint32_t codecAddress;
 @property uint32_t codecID;
 @property uint32_t codecRevisionID;
-@property (nonatomic, retain) NSData *pinConfigurations;
-@property (nonatomic, retain) NSDictionary *digitalAudioCapabilities;
+@property uint32_t audioDeviceModelID;
+@property (nonatomic, retain) NSString *audioDeviceName;
+@property (nonatomic, retain) NSString *audioDeviceManufacturerName;
+@property (nonatomic, retain) NSString *vendorName;
+@property (nonatomic, retain) NSString *deviceName;
+@property (nonatomic, retain) NSString *subVendorName;
+@property (nonatomic, retain) NSString *subDeviceName;
 @property (nonatomic, retain) NSString *codecVendorName;
 @property (nonatomic, retain) NSString *codecName;
 @property (nonatomic, retain) NSMutableArray *layoutIDArray;
 @property (nonatomic, retain) NSMutableArray *revisionArray;
+@property (nonatomic, retain) NSData *digitalAudioCapabilities;
+@property (nonatomic, retain) NSMutableDictionary *hdaConfigDefaultDictionary;
 @property uint32_t minKernel;
 @property uint32_t maxKernel;
-@property (nonatomic, retain) NSDictionary *hdaConfigDefaultDictionary;
-@property (nonatomic, retain) NSString *bundleID;
 
--(id) initWithDeviceClass:(NSString *)deviceClass deviceID:(uint32_t)deviceID revisionID:(uint32_t)revisionID alcLayoutID:(uint32_t)alcLayoutID subDeviceID:(uint32_t)subDeviceID codecAddress:(uint32_t)codecAddress codecID:(uint32_t)codecID codecRevisionID:(uint32_t)codecRevisionID pinConfigurations:(NSData *)pinConfigurations digitalAudioCapabilities:(NSDictionary *)digitalAudioCapabilities;
+-(id) initWithDeviceBundleID:(NSString *)bundleID deviceClass:(NSString *)deviceClass audioDeviceName:(NSString *)audioDeviceName audioDeviceManufacturerName:(NSString *)audioDeviceManufacturerName audioDeviceModelID:(uint32_t)audioDeviceModelID deviceID:(uint32_t)deviceID revisionID:(uint32_t)revisionID alcLayoutID:(uint32_t)alcLayoutID subDeviceID:(uint32_t)subDeviceID;
 
 @end
 

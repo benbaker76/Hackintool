@@ -38,9 +38,11 @@ NSData *getNSDataUInt32(uint32_t uint32Value);
 NSString *getBase64String(uint32_t uint32Value);
 NSString *getByteString(uint32_t uint32Value);
 NSMutableString *getByteString(NSData *data);
+NSMutableString *getByteString(NSData *data, NSString *prefix);
 NSMutableString *getByteString(NSData *data, NSString *delimiter, NSString *prefix, bool lineBreak, bool upperCase);
 NSMutableString *getByteStringClassic(NSData *data);
 NSData *getReverseData(NSData *data);
+uint32_t getReverseBytes(uint32_t value);
 NSString *getTempPath();
 string replaceAll(string& str, const string& from, const string& to);
 bool getUInt32PropertyValue(AppDelegate *appDelegate, NSDictionary *propertyDictionary, NSString *propertyName, uint32_t *propertyValue);
@@ -57,7 +59,6 @@ NSString *getCPUInfo();
 bool getMetalInfo(CGDirectDisplayID directDisplayID, NSString **name, bool &isDefault, bool &isLowPower, bool &isHeadless);
 bool getMetalInfo(NSString **name, bool &isLowPower, bool &isHeadless);
 NSString *appendSuffixToPath(NSString *path, NSString *suffix);
-uint32_t getUInt32FromData(NSData *data);
 NSColor *getColorAlpha(NSColor *color, float alpha);
 bool getRegExArray(NSString *regExPattern, NSString *valueString, uint32_t itemCount, NSMutableArray **itemArray);
 uint32_t getInt(NSString *valueString);
@@ -67,5 +68,6 @@ bool tryFormatXML(NSString *rawXML, NSString **xmlString, bool formattingAllowed
 NSMutableArray *getHexArrayFromString(NSString *hexString);
 NSArray *translateArray(NSArray *array);
 NSString *trimNewLine(NSString *string);
+NSString *getUUID();
 
 #endif /* MiscTools_hpp */

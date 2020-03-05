@@ -170,6 +170,13 @@
             [self localizeView:[item view]];
         }
     }
+    else if ([view isKindOfClass:[NSBox class]]) {
+		NSString *title = [(id)view title];
+        [view setTitle:GetLocalizedString(title)];
+        for(NSView *subView in [view subviews]) {
+            [self localizeView:subView];
+        }
+    }
     
     // Must be at the end to allow other checks to pass because almost all controls are derived from NSView
     else if ([view isKindOfClass:[NSView class]] ) {

@@ -73,6 +73,7 @@ bool getIORegChild(io_service_t device, NSString *name, io_service_t *foundDevic
 	
 	for (io_service_t childDevice; IOIteratorIsValid(childIterator) && (childDevice = IOIteratorNext(childIterator)); IOObjectRelease(childDevice))
 	{
+		
 		if (IOObjectConformsTo(childDevice, [name UTF8String]))
 		{
 			*foundDevice = childDevice;
@@ -85,6 +86,41 @@ bool getIORegChild(io_service_t device, NSString *name, io_service_t *foundDevic
 		if (recursive)
 		{
 			if (getIORegChild(childDevice, name, foundDevice, recursive))
+				return true;
+		}
+	}
+	
+	return false;
+}
+
+bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, uint32_t *foundIndex, bool recursive)
+{
+	kern_return_t kr;
+	io_iterator_t childIterator;
+	
+	kr = IORegistryEntryGetChildIterator(device, kIOServicePlane, &childIterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t childDevice; IOIteratorIsValid(childIterator) && (childDevice = IOIteratorNext(childIterator)); IOObjectRelease(childDevice))
+	{
+		for (int i = 0; i < [nameArray count]; i++)
+		{
+			if (IOObjectConformsTo(childDevice, [[nameArray objectAtIndex:i] UTF8String]))
+			{
+				*foundDevice = childDevice;
+				*foundIndex = i;
+				
+				IOObjectRelease(childIterator);
+				
+				return true;
+			}
+		}
+		
+		if (recursive)
+		{
+			if (getIORegChild(childDevice, nameArray, foundDevice, foundIndex, recursive))
 				return true;
 		}
 	}
@@ -263,7 +299,7 @@ bool getAPFSPhysicalStoreBSDName(NSString *mediaUUID, NSString **bsdName)
 	return false;
 }
 
-bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray)
+bool getIORegUSBPortsPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray)
 {
 	*propertyDictionaryArray = [NSMutableArray array];
 	io_iterator_t iterator;
@@ -273,103 +309,101 @@ bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray
 	if (kr != KERN_SUCCESS)
 		return false;
 	
-	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
+	for (io_service_t usbPort; IOIteratorIsValid(iterator) && (usbPort = IOIteratorNext(iterator)); IOObjectRelease(usbPort))
 	{
-		io_name_t name {};
-		kr = IORegistryEntryGetName(device, name);
+		CFMutableDictionaryRef usbPortPropertyDictionaryRef = 0;
 		
-		if (kr != KERN_SUCCESS)
-			continue;
+		kr = IORegistryEntryCreateCFProperties(usbPort, &usbPortPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
 		
-		io_name_t className {};
-		kr = IOObjectGetClass(device, className);
-		
-		if (kr != KERN_SUCCESS)
-			continue;
-
-		bool isHubPort = IOObjectConformsTo(device, "AppleUSBHubPort");
-		bool isInternalHubPort = IOObjectConformsTo(device, "AppleUSBInternalHubPort");
-		bool hubDeviceFound = false;
-		uint32_t hubLocationID = 0;
-		io_service_t hubDevice;
-		io_name_t hubName {};
-		
-		if (isHubPort || isInternalHubPort)
+		if (kr == KERN_SUCCESS)
 		{
-			if (getIORegParent(device, @"IOUSBDevice", &hubDevice, true))
-			{
-				kr = IORegistryEntryGetName(hubDevice, hubName);
-				
-				if (kr == KERN_SUCCESS)
-				{
-					CFTypeRef locationID = IORegistryEntrySearchCFProperty(hubDevice, kIOServicePlane, CFSTR("locationID"), kCFAllocatorDefault, kNilOptions);
-					
-					if (locationID)
-					{
-						// HUB1: (locationID == 0x1D100000)
-						// HUB2: (locationID == 0x1A100000)
-						hubLocationID = [(__bridge NSNumber *)locationID unsignedIntValue];
-						
-						CFRelease(locationID);
-						
-						hubDeviceFound = true;
-					}
-				}
-				
-				IOObjectRelease(hubDevice);
-			}
-		}
-		
-		io_service_t parentDevice;
-		
-		if (getIORegParent(device, @"IOPCIDevice", &parentDevice, true))
-		{
-			io_name_t parentName {};
-			kr = IORegistryEntryGetName(parentDevice, parentName);
+			NSMutableDictionary *usbPortPropertyDictionary = (__bridge NSMutableDictionary *)usbPortPropertyDictionaryRef;
+	
+			io_service_t controller;
 			
-			if (kr == KERN_SUCCESS)
+			if (getIORegParent(usbPort, @"AppleUSBHostController", &controller, true))
 			{
-				CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
-				
-				kr = IORegistryEntryCreateCFProperties(parentDevice, &parentPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+				io_name_t controllerName {};
+				kr = IORegistryEntryGetName(controller, controllerName);
 				
 				if (kr == KERN_SUCCESS)
 				{
-					NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
+					CFMutableDictionaryRef controllerPropertyDictionaryRef = 0;
 					
-					CFMutableDictionaryRef propertyDictionaryRef = 0;
-					
-					kr = IORegistryEntryCreateCFProperties(device, &propertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+					kr = IORegistryEntryCreateCFProperties(controller, &controllerPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
 					
 					if (kr == KERN_SUCCESS)
 					{
-						NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
+						NSMutableDictionary *controllerPropertyDictionary = (__bridge NSMutableDictionary *)controllerPropertyDictionaryRef;
 						
-						NSString *portName = [propertyDictionary objectForKey:@"name"];
-						NSData *deviceID = [parentPropertyDictionary objectForKey:@"device-id"];
-						NSData *vendorID = [parentPropertyDictionary objectForKey:@"vendor-id"];
+						io_service_t pciDevice;
 						
-						if (portName == nil)
-							[propertyDictionary setValue:[NSString stringWithUTF8String:name] forKey:@"name"];
-						
-						uint32_t deviceIDInt = getUInt32FromData(deviceID);
-						uint32_t vendorIDInt = getUInt32FromData(vendorID);
-						
-						[propertyDictionary setValue:[NSString stringWithUTF8String:parentName] forKey:@"UsbController"];
-						[propertyDictionary setValue:[NSNumber numberWithInt:(deviceIDInt << 16) | vendorIDInt] forKey:@"UsbControllerID"];
-						
-						if (hubDeviceFound)
+						if (getIORegParent(controller, @"IOPCIDevice", &pciDevice, true))
 						{
-							[propertyDictionary setValue:[NSString stringWithUTF8String:hubName] forKey:@"HubName"];
-							[propertyDictionary setValue:[NSNumber numberWithInt:hubLocationID] forKey:@"HubLocation"];
-						}
+							CFMutableDictionaryRef pciDevicePropertyDictionaryRef = 0;
+							
+							kr = IORegistryEntryCreateCFProperties(pciDevice, &pciDevicePropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+							
+							if (kr == KERN_SUCCESS)
+							{
+								NSMutableDictionary *pciDevicePropertyDictionary = (__bridge NSMutableDictionary *)pciDevicePropertyDictionaryRef;
 						
-						[*propertyDictionaryArray addObject:propertyDictionary];
+								uint32_t deviceID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"device-id"]);
+								uint32_t vendorID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"vendor-id"]);
+								uint32_t locationID = propertyToUInt32([controllerPropertyDictionary objectForKey:@"locationID"]);
+								NSString *ioClass = [controllerPropertyDictionary objectForKey:@"IOClass"];
+								
+								[usbPortPropertyDictionary setValue:[NSString stringWithUTF8String:controllerName] forKey:@"UsbController"];
+								[usbPortPropertyDictionary setValue:ioClass forKey:@"UsbControllerIOClass"];
+								[usbPortPropertyDictionary setValue:@((deviceID << 16) | vendorID) forKey:@"UsbControllerID"];
+								[usbPortPropertyDictionary setValue:@(locationID >> 24) forKey:@"UsbControllerLocationID"];
+								
+								io_service_t hubDevice;
+
+								if (getIORegParent(usbPort, @"AppleUSBHub", &hubDevice, true))
+								{
+									//bool hubIsInternal = IOObjectConformsTo(hubDevice, "AppleUSB20InternalHub");
+								
+									io_name_t hubClassName {};
+									kr = IOObjectGetClass(hubDevice, hubClassName);
+									
+									if (kr == KERN_SUCCESS)
+									{
+										CFMutableDictionaryRef hubPropertyDictionaryRef = 0;
+										
+										kr = IORegistryEntryCreateCFProperties(hubDevice, &hubPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+										
+										if (kr == KERN_SUCCESS)
+										{
+											NSMutableDictionary *hubPropertyDictionary = (__bridge NSMutableDictionary *)hubPropertyDictionaryRef;
+											
+											// HUB1: (locationID == 0x1D100000)
+											// HUB2: (locationID == 0x1A100000)
+											NSNumber *hubLocationID = [hubPropertyDictionary objectForKey:@"locationID"];
+											
+											[usbPortPropertyDictionary setValue:[NSString stringWithUTF8String:hubClassName] forKey:@"HubName"];
+											[usbPortPropertyDictionary setValue:hubLocationID forKey:@"HubLocation"];
+											//[propertyDictionary setValue:[NSNumber numberWithBool:hubIsInternal] forKey:@"HubIsInternal"];
+
+											//NSLog(@"PortName: %s LocationID: 0x%08X HubName: %s HubLocation: 0x%8X HubIsInternal: %d", name, [locationID unsignedIntValue], hubClassName, [hubLocationID unsignedIntValue], hubIsInternal);
+										}
+									}
+									
+									IOObjectRelease(hubDevice);
+								}
+								
+								//NSLog(@"PortName: %@ LocationID: 0x%08X UsbController: %s", portName, [locationID unsignedIntValue], parentName);
+								
+								[*propertyDictionaryArray addObject:usbPortPropertyDictionary];
+							}
+							
+							IOObjectRelease(pciDevice);
+						}
 					}
 				}
+				
+				IOObjectRelease(controller);
 			}
-			
-			IOObjectRelease(parentDevice);
 		}
 	}
 	
@@ -378,38 +412,359 @@ bool getIORegUSBPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray
 	return ([*propertyDictionaryArray count] > 0);
 }
 
-bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
+bool getIORegUSBControllersPropertyDictionaryArray(NSMutableArray **propertyDictionaryArray)
 {
-	*audioDeviceArray = [[NSMutableArray array] retain];
+	*propertyDictionaryArray = [NSMutableArray array];
 	io_iterator_t iterator;
 	
-	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("IOHDACodecDevice"), &iterator);
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("AppleUSBHostController"), &iterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t controller; IOIteratorIsValid(iterator) && (controller = IOIteratorNext(iterator)); IOObjectRelease(controller))
+	{
+		io_name_t controllerName {};
+		kr = IORegistryEntryGetName(controller, controllerName);
+		
+		if (kr == KERN_SUCCESS)
+		{
+			CFMutableDictionaryRef controllerPropertyDictionaryRef = 0;
+			
+			kr = IORegistryEntryCreateCFProperties(controller, &controllerPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+			
+			if (kr == KERN_SUCCESS)
+			{
+				NSMutableDictionary *controllerPropertyDictionary = (__bridge NSMutableDictionary *)controllerPropertyDictionaryRef;
+				
+				io_service_t pciDevice;
+				
+				if (getIORegParent(controller, @"IOPCIDevice", &pciDevice, true))
+				{
+					CFMutableDictionaryRef pciDevicePropertyDictionaryRef = 0;
+					
+					kr = IORegistryEntryCreateCFProperties(pciDevice, &pciDevicePropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+					
+					if (kr == KERN_SUCCESS)
+					{
+						NSMutableDictionary *pciDevicePropertyDictionary = (__bridge NSMutableDictionary *)pciDevicePropertyDictionaryRef;
+
+						uint32_t deviceID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"device-id"]);
+						uint32_t vendorID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"vendor-id"]);
+						uint32_t locationID = propertyToUInt32([controllerPropertyDictionary objectForKey:@"locationID"]);
+						
+						[controllerPropertyDictionary setValue:[NSString stringWithUTF8String:controllerName] forKey:@"Name"];
+						[controllerPropertyDictionary setValue:@((deviceID << 16) | vendorID) forKey:@"DeviceID"];
+						[controllerPropertyDictionary setValue:@(locationID >> 24) forKey:@"ID"];
+						
+						[*propertyDictionaryArray addObject:controllerPropertyDictionary];
+					}
+				
+					IOObjectRelease(pciDevice);
+				}
+			}
+		}
+	}
+	
+	IOObjectRelease(iterator);
+	
+	return ([*propertyDictionaryArray count] > 0);
+}
+
+bool getUSBControllerInfoForUSBDevice(uint64_t idRegistry, uint32_t *usbControllerID, uint32_t *usbControllerLocationID, uint32_t *port)
+{
+	bool retVal = false;
+	io_iterator_t iterator;
+	
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("AppleUSBHostPort"), &iterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t usbPort; IOIteratorIsValid(iterator) && (usbPort = IOIteratorNext(iterator)); IOObjectRelease(usbPort))
+	{
+		CFMutableDictionaryRef usbPortPropertyDictionaryRef = 0;
+		
+		kr = IORegistryEntryCreateCFProperties(usbPort, &usbPortPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+		
+		if (kr == KERN_SUCCESS)
+		{
+			NSMutableDictionary *usbPortPropertyDictionary = (__bridge NSMutableDictionary *)usbPortPropertyDictionaryRef;
+			
+			uint32_t portNum = propertyToUInt32([usbPortPropertyDictionary objectForKey:@"port"]);
+		
+			io_service_t usbDevice;
+			
+			if (getIORegChild(usbPort, @"IOUSBDevice", &usbDevice, true))
+			{
+				uint64_t registryID;
+				
+				kr = IORegistryEntryGetRegistryEntryID(usbDevice, &registryID);
+				
+				if (registryID == idRegistry)
+				{
+					io_service_t controller;
+					
+					if (getIORegParent(usbDevice, @"AppleUSBHostController", &controller, true))
+					{
+						CFMutableDictionaryRef controllerPropertyDictionaryRef = 0;
+							
+						kr = IORegistryEntryCreateCFProperties(controller, &controllerPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+							
+						if (kr == KERN_SUCCESS)
+						{
+							NSMutableDictionary *controllerPropertyDictionary = (__bridge NSMutableDictionary *)controllerPropertyDictionaryRef;
+							
+							io_service_t pciDevice;
+							
+							if (getIORegParent(controller, @"IOPCIDevice", &pciDevice, true))
+							{
+								CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
+								
+								kr = IORegistryEntryCreateCFProperties(pciDevice, &parentPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+								
+								if (kr == KERN_SUCCESS)
+								{
+									NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
+									
+									uint32_t controllerDeviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
+									uint32_t controllerVendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
+									uint32_t locationID = propertyToUInt32([controllerPropertyDictionary objectForKey:@"locationID"]);
+									
+									*usbControllerID = (controllerDeviceID << 16) | controllerVendorID;
+									*usbControllerLocationID = (locationID >> 24);
+									*port = portNum;
+									
+									retVal = true;
+								}
+								
+								IOObjectRelease(pciDevice);
+							}
+						}
+						
+						IOObjectRelease(controller);
+					}
+				}
+				
+				IOObjectRelease(usbDevice);
+			}
+		}
+	}
+	
+	IOObjectRelease(iterator);
+	
+	return retVal;
+}
+
+/* bool getUSBControllerIDInfoForUSBDevice(uint64_t idRegistry, uint32_t *usbControllerID, uint32_t *port)
+{
+	bool retVal = false;
+	io_iterator_t iterator;
+	
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IORegistryEntryIDMatching(idRegistry), &iterator);
 	
 	if (kr != KERN_SUCCESS)
 		return false;
 	
 	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
 	{
-		io_name_t name {};
-		kr = IORegistryEntryGetName(device, name);
+		io_service_t portDevice;
 		
-		if (kr != KERN_SUCCESS)
-			continue;
+		if (getIORegParent(device, @"AppleUSBHostPort", &portDevice, true))
+		{
+			CFMutableDictionaryRef portPropertyDictionaryRef = 0;
+			
+			kr = IORegistryEntryCreateCFProperties(portDevice, &portPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+			
+			if (kr == KERN_SUCCESS)
+			{
+				NSMutableDictionary *portPropertyDictionary = (__bridge NSMutableDictionary *)portPropertyDictionaryRef;
+				
+				uint32_t portNum = propertyToUInt32([portPropertyDictionary objectForKey:@"port"]);
+				
+				io_service_t controllerDevice;
+				
+				if (getIORegParent(device, @"IOPCIDevice", &controllerDevice, true))
+				{
+					CFMutableDictionaryRef controllerPropertyDictionaryRef = 0;
+					
+					kr = IORegistryEntryCreateCFProperties(controllerDevice, &controllerPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+					
+					if (kr == KERN_SUCCESS)
+					{
+						NSMutableDictionary *controllerPropertyDictionary = (__bridge NSMutableDictionary *)controllerPropertyDictionaryRef;
+						
+						uint32_t controllerDeviceID = propertyToUInt32([controllerPropertyDictionary objectForKey:@"device-id"]);
+						uint32_t controllerVendorID = propertyToUInt32([controllerPropertyDictionary objectForKey:@"vendor-id"]);
+						
+						*port = portNum;
+						*usbControllerID = (controllerDeviceID << 16) | controllerVendorID;
+						
+						retVal = true;
+					}
+					
+					IOObjectRelease(controllerDevice);
+				}
+			}
+			
+			IOObjectRelease(portDevice);
+		}
+	}
+	
+	IOObjectRelease(iterator);
+	
+	return retVal;
+} */
+
+bool getUSBControllerInfoForUSBDevice(uint32_t idLocation, uint32_t idVendor, uint32_t idProduct, uint32_t *usbControllerID, uint32_t *usbControllerLocationID, uint32_t *port)
+{
+	bool retVal = false;
+	io_iterator_t iterator;
+	
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("AppleUSBHostPort"), &iterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t usbPort; IOIteratorIsValid(iterator) && (usbPort = IOIteratorNext(iterator)); IOObjectRelease(usbPort))
+	{
+		CFMutableDictionaryRef usbPortPropertyDictionaryRef = 0;
 		
+		kr = IORegistryEntryCreateCFProperties(usbPort, &usbPortPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+		
+		if (kr == KERN_SUCCESS)
+		{
+			NSMutableDictionary *usbPortPropertyDictionary = (__bridge NSMutableDictionary *)usbPortPropertyDictionaryRef;
+			
+			uint32_t portNum = propertyToUInt32([usbPortPropertyDictionary objectForKey:@"port"]);
+		
+			io_service_t usbDevice;
+			
+			if (getIORegChild(usbPort, @"IOUSBDevice", &usbDevice, true))
+			{
+				CFMutableDictionaryRef usbDevicePropertyDictionaryRef = 0;
+					
+				kr = IORegistryEntryCreateCFProperties(usbDevice, &usbDevicePropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+					
+				if (kr == KERN_SUCCESS)
+				{
+					NSMutableDictionary *usbDevicePropertyDictionary = (__bridge NSMutableDictionary *)usbDevicePropertyDictionaryRef;
+					
+					uint32_t locationID = propertyToUInt32([usbDevicePropertyDictionary objectForKey:@"locationID"]);
+					uint32_t vendorID = propertyToUInt32([usbDevicePropertyDictionary objectForKey:@"idVendor"]);
+					uint32_t productID = propertyToUInt32([usbDevicePropertyDictionary objectForKey:@"idProduct"]);
+					
+					if ((idLocation == locationID) && (idVendor == vendorID) && (idProduct == productID))
+					{
+						io_service_t controller;
+						
+						if (getIORegParent(usbDevice, @"AppleUSBHostController", &controller, true))
+						{
+							CFMutableDictionaryRef controllerPropertyDictionaryRef = 0;
+								
+							kr = IORegistryEntryCreateCFProperties(controller, &controllerPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+								
+							if (kr == KERN_SUCCESS)
+							{
+								NSMutableDictionary *controllerPropertyDictionary = (__bridge NSMutableDictionary *)controllerPropertyDictionaryRef;
+								
+								io_service_t pciDevice;
+								
+								if (getIORegParent(controller, @"IOPCIDevice", &pciDevice, true))
+								{
+									CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
+									
+									kr = IORegistryEntryCreateCFProperties(pciDevice, &parentPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+									
+									if (kr == KERN_SUCCESS)
+									{
+										NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
+										
+										uint32_t controllerDeviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
+										uint32_t controllerVendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
+										uint32_t locationID = propertyToUInt32([controllerPropertyDictionary objectForKey:@"locationID"]);
+										
+										*usbControllerID = (controllerDeviceID << 16) | controllerVendorID;
+										*usbControllerLocationID = (locationID >> 24);
+										*port = portNum;
+										
+										retVal = true;
+									}
+									
+									IOObjectRelease(pciDevice);
+								}
+							}
+							
+							IOObjectRelease(controller);
+						}
+					}
+				}
+				
+				IOObjectRelease(usbDevice);
+			}
+		}
+	}
+	
+	IOObjectRelease(iterator);
+	
+	return retVal;
+}
+
+bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
+{
+	*audioDeviceArray = [[NSMutableArray array] retain];
+	io_iterator_t iterator;
+	
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("IOAudioDevice"), &iterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
+	{
 		io_name_t className {};
 		kr = IOObjectGetClass(device, className);
 		
 		if (kr != KERN_SUCCESS)
 			continue;
 		
-		io_service_t parentDevice;
+		CFMutableDictionaryRef propertyDictionaryRef = 0;
 		
-		if (getIORegParent(device, @"IOPCIDevice", &parentDevice, true))
+		kr = IORegistryEntryCreateCFProperties(device, &propertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+		
+		if (kr == KERN_SUCCESS)
 		{
-			io_name_t parentName {};
-			kr = IORegistryEntryGetName(parentDevice, parentName);
+			NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
 			
-			if (kr == KERN_SUCCESS)
+			NSString *bundleID = [propertyDictionary objectForKey:@"CFBundleIdentifier"];
+			NSString *audioDeviceName = [propertyDictionary objectForKey:@"IOAudioDeviceName"];
+			NSString *audioDeviceModelID = [propertyDictionary objectForKey:@"IOAudioDeviceModelID"];
+			NSString *audioDeviceManufacturerName = [propertyDictionary objectForKey:@"IOAudioDeviceManufacturerName"];
+			uint32_t audioDeviceDeviceID = 0, audioDeviceVendorID = 0;
+			uint32_t audioDeviceDeviceIDNew = 0;
+			
+			if (audioDeviceModelID != nil)
+			{
+				NSArray *modelIDArray = [audioDeviceModelID componentsSeparatedByString:@":"];
+				
+				if ([modelIDArray count] == 3)
+				{
+					NSScanner *deviceIDScanner = [NSScanner scannerWithString:[modelIDArray objectAtIndex:1]];
+					NSScanner *productIDScanner = [NSScanner scannerWithString:[modelIDArray objectAtIndex:2]];
+
+					[deviceIDScanner setScanLocation:0];
+					[deviceIDScanner scanHexInt:&audioDeviceVendorID];
+												   
+				    [productIDScanner setScanLocation:0];
+				    [productIDScanner scanHexInt:&audioDeviceDeviceID];
+												   
+					audioDeviceDeviceIDNew = (audioDeviceVendorID << 16) | audioDeviceDeviceID;
+				}
+			}
+			
+			io_service_t parentDevice;
+			
+			if (getIORegParent(device, @"IOPCIDevice", &parentDevice, true))
 			{
 				CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
 				
@@ -419,84 +774,61 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 				{
 					NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
 					
-					CFMutableDictionaryRef propertyDictionaryRef = 0;
+					uint32_t deviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
+					uint32_t vendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
+					uint32_t revisionID = propertyToUInt32([parentPropertyDictionary objectForKey:@"revision-id"]);
+					uint32_t alcLayoutID = propertyToUInt32([parentPropertyDictionary objectForKey:@"alc-layout-id"]);
+					uint32_t subSystemID = propertyToUInt32([parentPropertyDictionary objectForKey:@"subsystem-id"]);
+					uint32_t subSystemVendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"subsystem-vendor-id"]);
 					
-					kr = IORegistryEntryCreateCFProperties(device, &propertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+					uint32_t deviceIDNew = (vendorID << 16) | deviceID;
+					uint32_t subDeviceIDNew = (subSystemVendorID << 16) | subSystemID;
 					
-					if (kr == KERN_SUCCESS)
+					AudioDevice *audioDevice = [[AudioDevice alloc] initWithDeviceBundleID:bundleID deviceClass:[NSString stringWithUTF8String:className] audioDeviceName:audioDeviceName audioDeviceManufacturerName:audioDeviceManufacturerName audioDeviceModelID:audioDeviceDeviceIDNew deviceID:deviceIDNew revisionID:revisionID alcLayoutID:alcLayoutID subDeviceID:subDeviceIDNew];
+
+					io_service_t codecDevice;
+					
+					if (getIORegParent(device, @"IOHDACodecDevice", &codecDevice, true))
 					{
-						NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
+						CFMutableDictionaryRef codecPropertyDictionaryRef = 0;
 						
-						NSData *deviceID = [parentPropertyDictionary objectForKey:@"device-id"];
-						NSData *vendorID = [parentPropertyDictionary objectForKey:@"vendor-id"];
-						NSData *revisionID = [parentPropertyDictionary objectForKey:@"revision-id"];
-						NSData *alcLayoutID = [parentPropertyDictionary objectForKey:@"alc-layout-id"];
-						NSData *subSystemID = [parentPropertyDictionary objectForKey:@"subsystem-id"];
-						NSData *subSystemVendorID = [parentPropertyDictionary objectForKey:@"subsystem-vendor-id"];
-						NSData *pinConfigurations = [parentPropertyDictionary objectForKey:@"PinConfigurations"];
+						kr = IORegistryEntryCreateCFProperties(codecDevice, &codecPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
 						
-						NSDictionary *digitalAudioCapabilities = [propertyDictionary objectForKey:@"DigitalAudioCapabilities"];
-						NSNumber *codecAddressNumber = [propertyDictionary objectForKey:@"IOHDACodecAddress"];
-						NSNumber *venderProductIDNumber = [propertyDictionary objectForKey:@"IOHDACodecVendorID"];
-						NSNumber *revisionIDNumber = [propertyDictionary objectForKey:@"IOHDACodecRevisionID"];
-						
-						uint32_t deviceIDInt = getUInt32FromData(deviceID);
-						uint32_t vendorIDInt = getUInt32FromData(vendorID);
-						uint32_t revisionIDInt = getUInt32FromData(revisionID);
-						uint32_t alcLayoutIDInt = getUInt32FromData(alcLayoutID);
-						uint32_t subSystemIDInt = getUInt32FromData(subSystemID);
-						uint32_t subSystemVendorIDInt = getUInt32FromData(subSystemVendorID);
-						
-						uint32_t deviceIDNew = (vendorIDInt << 16) | deviceIDInt;
-						uint32_t subDeviceIDNew = (subSystemVendorIDInt << 16) | subSystemIDInt;
-						
-						AudioDevice *audioDevice = [[AudioDevice alloc] initWithDeviceClass:[NSString stringWithUTF8String:parentName] deviceID:deviceIDNew revisionID:revisionIDInt alcLayoutID:alcLayoutIDInt subDeviceID:subDeviceIDNew codecAddress:[codecAddressNumber unsignedIntValue] codecID:[venderProductIDNumber unsignedIntValue] codecRevisionID:[revisionIDNumber unsignedIntValue] pinConfigurations:pinConfigurations digitalAudioCapabilities:digitalAudioCapabilities];
-						
-						[*audioDeviceArray addObject:audioDevice];
-						
-						io_service_t childDevice;
-						
-						if (getIORegChild(device, @"AppleHDACodec", &childDevice, true))
+						if (kr == KERN_SUCCESS)
 						{
-							io_name_t childName {};
-							kr = IORegistryEntryGetName(childDevice, childName);
+							NSMutableDictionary *codecPropertyDictionary = (__bridge NSMutableDictionary *)codecPropertyDictionaryRef;
 							
-							if (kr == KERN_SUCCESS)
-							{
-								CFMutableDictionaryRef childPropertyDictionaryRef = 0;
-								
-								kr = IORegistryEntryCreateCFProperties(childDevice, &childPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
-								
-								if (kr == KERN_SUCCESS)
-								{
-									// +-o AppleHDACodecGeneric  <class AppleHDACodecGeneric, id 0x10000044d, registered, matched, active, busy 0 (14 ms), retain 6>
-									//   | {
-									//   |   "IOProbeScore" = 1
-									//   |   "CFBundleIdentifier" = "com.apple.driver.AppleHDA"
-									//   |   "IOProviderClass" = "IOHDACodecFunction"
-									//   |   "IOClass" = "AppleHDACodecGeneric"
-									//   |   "IOMatchCategory" = "IODefaultMatchCategory"
-									//   |   "alc-pinconfig-status" = Yes
-									//   |   "vendorcodecID" = 282984514
-									//   |   "alc-sleep-status" = No
-									//   |   "HDMIDPAudioCapabilities" = Yes
-									//   |   "IOHDACodecFunctionGroupType" = 1
-									//   |   "HDAConfigDefault" = ({"AFGLowPowerState"=<03000000>,"CodecID"=283904146,"Comment"="ALC892, Toleda","ConfigData"=<01470c02>,"FuncGroup"=1,"BootConfigData"=<21471c1021471d4021471e1121471f9021470c0221571c2021571d1021571e0121571f0121671c3021671d6021671e0121671f0121771cf021771d0021771e0021771f4021871c4021871d9021871ea021871f9021971c6021971d9021971e8121971f0221a71c5021a71d3021a71e8121a71f0121b71c7021b71d4021b71e2121b71f0221b70c0221e71c9021e71d6121e71e4b21e71f0121f71cf021f71d0021f71e0021f71f4021171cf021171d0021171e0021171f40>,"WakeVerbReinit"=Yes,"LayoutID"=7})
-									//   | }
-									
-									NSMutableDictionary *childPropertyDictionary = (__bridge NSMutableDictionary *)childPropertyDictionaryRef;
-									audioDevice.hdaConfigDefaultDictionary = [childPropertyDictionary objectForKey:@"HDAConfigDefault"];
-									audioDevice.bundleID = [childPropertyDictionary objectForKey:@"CFBundleIdentifier"];
-								}
-							}
+							audioDevice.digitalAudioCapabilities = [codecPropertyDictionary objectForKey:@"DigitalAudioCapabilities"];
+							audioDevice.codecAddress = propertyToUInt32([codecPropertyDictionary objectForKey:@"IOHDACodecAddress"]);
+							audioDevice.codecID = propertyToUInt32([codecPropertyDictionary objectForKey:@"IOHDACodecVendorID"]);
+							audioDevice.revisionID = propertyToUInt32([codecPropertyDictionary objectForKey:@"IOHDACodecRevisionID"]);
 						}
-						
-						[audioDevice release];
 					}
+					
+					if (getIORegParent(device, @"AppleHDACodec", &codecDevice, true))
+					{
+						CFMutableDictionaryRef codecPropertyDictionaryRef = 0;
+						
+						kr = IORegistryEntryCreateCFProperties(codecDevice, &codecPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+						
+						if (kr == KERN_SUCCESS)
+						{
+							NSMutableDictionary *codecPropertyDictionary = (__bridge NSMutableDictionary *)codecPropertyDictionaryRef;
+							
+							NSArray *hdaConfigDefaultArray = [codecPropertyDictionary objectForKey:@"HDAConfigDefault"];
+							
+							if (hdaConfigDefaultArray != nil && [hdaConfigDefaultArray count] > 0)
+								audioDevice.hdaConfigDefaultDictionary = [hdaConfigDefaultArray objectAtIndex:0];
+						}
+					}
+					
+					[*audioDeviceArray addObject:audioDevice];
+					
+					[audioDevice release];
 				}
+				
+				IOObjectRelease(parentDevice);
 			}
-			
-			IOObjectRelease(parentDevice);
 		}
 	}
 	
@@ -505,7 +837,7 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 	return ([*audioDeviceArray count] > 0);
 }
 
-NSString *properyToString(id value)
+NSString *propertyToString(id value)
 {
 	if (value == nil)
 		return @"???";
@@ -521,13 +853,22 @@ NSString *properyToString(id value)
 	return @"???";
 }
 
-uint32_t properyToUInt32(id value)
+uint32_t propertyToUInt32(id value)
 {
 	if (value == nil)
 		return 0;
 	
 	if ([value isKindOfClass:[NSNumber class]])
 		return [value unsignedIntValue];
+	else if ([value isKindOfClass:[NSData class]])
+	{
+		NSData *data = (NSData *)value;
+		uint32_t retVal = 0;
+		
+		memcpy(&retVal, data.bytes, MIN(data.length, 4));
+		
+		return retVal;
+	}
 	
 	return 0;
 }
@@ -542,8 +883,12 @@ uint32_t nameToUInt32(NSString *name)
 	return (uint32_t)(strHexDec([nameArray objectAtIndex:1]) << 16 | strHexDec([nameArray objectAtIndex:0]));
 }
 
-bool getDeviceLocation(io_service_t device, uint32_t *deviceNum, uint32_t *functionNum)
+bool getDeviceLocation(io_service_t device, uint32_t *deviceNum, uint32_t *functionNum, bool *hasFunction)
 {
+	*deviceNum = 0;
+	*functionNum = 0;
+	*hasFunction = false;
+	
 	io_name_t locationInPlane {};
 	kern_return_t kr = IORegistryEntryGetLocationInPlane(device, kIOServicePlane, locationInPlane);
 	
@@ -551,10 +896,19 @@ bool getDeviceLocation(io_service_t device, uint32_t *deviceNum, uint32_t *funct
 		return false;
 	
 	NSArray *locationArray = [[NSString stringWithUTF8String:locationInPlane] componentsSeparatedByString:@","];
-	NSScanner *deviceScanner = [NSScanner scannerWithString:([locationArray count] > 0 ? locationArray[0] : @"")];
-	NSScanner *functionScanner = [NSScanner scannerWithString:([locationArray count] > 1 ? locationArray[1] : @"")];
-	[deviceScanner scanHexInt:deviceNum];
-	[functionScanner scanHexInt:functionNum];
+	
+	if ([locationArray count] > 0)
+	{
+		NSScanner *deviceScanner = [NSScanner scannerWithString:locationArray[0]];
+		[deviceScanner scanHexInt:deviceNum];
+	}
+	
+	if ([locationArray count] > 1)
+	{
+		NSScanner *functionScanner = [NSScanner scannerWithString:locationArray[1]];
+		[functionScanner scanHexInt:functionNum];
+		*hasFunction = true;
+	}
 	
 	return true;
 }
@@ -597,7 +951,7 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 
 		if (kr != KERN_SUCCESS)
 			continue;
-		
+			
 		io_string_t path {};
 		kr = IORegistryEntryGetPath(device, kIOServicePlane, path);
 		
@@ -611,42 +965,44 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 		if (kr == KERN_SUCCESS)
 		{
 			NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
-			NSData *vendorID = [propertyDictionary objectForKey:@"vendor-id"];
-			NSData *deviceID = [propertyDictionary objectForKey:@"device-id"];
-			NSData *subVendorID = [propertyDictionary objectForKey:@"subsystem-vendor-id"];
-			NSData *subDeviceID = [propertyDictionary objectForKey:@"subsystem-id"];
-			NSData *classCode = [propertyDictionary objectForKey:@"class-code"];
-			NSString *_name = properyToString([propertyDictionary objectForKey:@"name"]);
-			NSString *model = properyToString([propertyDictionary objectForKey:@"model"]);
-			NSString *ioName = properyToString([propertyDictionary objectForKey:@"IOName"]);
-			//NSString *pciDebug = [propertyDictionary objectForKey:@"pcidebug"];
+			uint32_t vendorID = propertyToUInt32([propertyDictionary objectForKey:@"vendor-id"]);
+			uint32_t deviceID = propertyToUInt32([propertyDictionary objectForKey:@"device-id"]);
+			uint32_t subVendorID = propertyToUInt32([propertyDictionary objectForKey:@"subsystem-vendor-id"]);
+			uint32_t subDeviceID = propertyToUInt32([propertyDictionary objectForKey:@"subsystem-id"]);
+			uint32_t aspm = propertyToUInt32([propertyDictionary objectForKey:@"pci-aspm-default"]);
+			uint32_t classCode = propertyToUInt32([propertyDictionary objectForKey:@"class-code"]);
+			NSString *_name = propertyToString([propertyDictionary objectForKey:@"name"]);
+			NSString *model = propertyToString([propertyDictionary objectForKey:@"model"]);
+			NSString *ioName = propertyToString([propertyDictionary objectForKey:@"IOName"]);
+			NSString *pciDebug = [propertyDictionary objectForKey:@"pcidebug"];
 			//NSString *uid = [propertyDictionary objectForKey:@"_UID"];
 			NSString *deviceName = (ioName != nil ? ioName : _name != nil ? _name : @"???");
 			
-			uint32_t vendorIDInt = getUInt32FromData(vendorID);
-			uint32_t deviceIDInt = getUInt32FromData(deviceID);
-			uint32_t subVendorIDInt = getUInt32FromData(subVendorID);
-			uint32_t subDeviceIDInt = getUInt32FromData(subDeviceID);
-			uint32_t classCodeInt = getUInt32FromData(classCode);
+			uint32_t busNum = 0, deviceNum = 0, functionNum = 0, secBridgeNum = 0, subBridgeNum = 0;
+			
+			getBusID(pciDebug, &busNum, &deviceNum, &functionNum, &secBridgeNum, &subBridgeNum);
 			
 			NSMutableDictionary *pciDictionary = [NSMutableDictionary dictionary];
 		
 			uint32_t shadowID = nameToUInt32(deviceName);
-			[pciDictionary setObject:!shadowID ? @(vendorIDInt) : @(shadowID & 0xFFFF) forKey:@"ShadowVendor"];
-			[pciDictionary setObject:!shadowID ? @(deviceIDInt) : @(shadowID >> 16) forKey:@"ShadowDevice"];
+			[pciDictionary setObject:!shadowID ? @(vendorID) : @(shadowID & 0xFFFF) forKey:@"ShadowVendor"];
+			[pciDictionary setObject:!shadowID ? @(deviceID) : @(shadowID >> 16) forKey:@"ShadowDevice"];
 			
 			//[pciDictionary setObject:[NSString stringWithUTF8String:name] forKey:@"IORegName"];
 			[pciDictionary setObject:deviceName forKey:@"IORegIOName"];
 			[pciDictionary setObject:[NSString stringWithUTF8String:path] forKey:@"IORegPath"];
-			[pciDictionary setObject:[NSNumber numberWithInt:vendorIDInt] forKey:@"VendorID"];
-			[pciDictionary setObject:[NSNumber numberWithInt:deviceIDInt] forKey:@"DeviceID"];
-			[pciDictionary setObject:[NSNumber numberWithInt:subVendorIDInt] forKey:@"SubVendorID"];
-			[pciDictionary setObject:[NSNumber numberWithInt:subDeviceIDInt] forKey:@"SubDeviceID"];
-			[pciDictionary setObject:[NSNumber numberWithInt:classCodeInt] forKey:@"ClassCode"];
+			[pciDictionary setObject:[NSNumber numberWithInt:vendorID] forKey:@"VendorID"];
+			[pciDictionary setObject:[NSNumber numberWithInt:deviceID] forKey:@"DeviceID"];
+			[pciDictionary setObject:[NSNumber numberWithInt:subVendorID] forKey:@"SubVendorID"];
+			[pciDictionary setObject:[NSNumber numberWithInt:subDeviceID] forKey:@"SubDeviceID"];
+			//[pciDictionary setObject:aspm forKey:@"ASPM"];
+			[pciDictionary setObject:getASPMString(aspm) forKey:@"ASPM"];
+			[pciDictionary setObject:[NSNumber numberWithInt:classCode] forKey:@"ClassCode"];
 			//[pciDictionary setObject:@"Internal" forKey:@"SlotName"];
 			//[pciDictionary setObject:@"???" forKey:@"DevicePath"];
 			[pciDictionary setObject:model forKey:@"Model"];
 			//[pciDictionary setObject:uid forKey:@"UID"];
+			[pciDictionary setObject:[NSString stringWithFormat:@"%02X:%02X.%X", busNum, deviceNum, functionNum] forKey:@"PCIDebug"];
 			
 			NSString *bundleID = (__bridge NSString *)IORegistryEntrySearchCFProperty(device, kIOServicePlane, CFSTR("CFBundleIdentifier"), kCFAllocatorDefault, kIORegistryIterateRecursively);
 			
@@ -661,12 +1017,13 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			}
 			
 			NSString *devicePath = @"", *slotName = @"", *ioregName = @"";
-			uint32_t deviceNum = 0, functionNum = 0;
+			bool hasFunction = false;
 			
-			getDeviceLocation(device, &deviceNum, &functionNum);
+			getDeviceLocation(device, &deviceNum, &functionNum, &hasFunction);
 			
-			ioregName = [NSString stringWithFormat:@"%s", name];
-			devicePath = [NSString stringWithFormat:@"Pci(0x%x,0x%x)", deviceNum, functionNum];
+			ioregName = (hasFunction ? [NSString stringWithFormat:@"%s@%X,%X", name, deviceNum, functionNum] : [NSString stringWithFormat:@"%s@%X", name, deviceNum]);
+			//devicePath = (hasFunction ? [NSString stringWithFormat:@"Pci(0x%X,0x%X)", deviceNum, functionNum] : [NSString stringWithFormat:@"Pci(0x%X)", deviceNum]);
+			devicePath = [NSString stringWithFormat:@"Pci(0x%X,0x%X)", deviceNum, functionNum];
 			slotName = [NSString stringWithFormat:@"%d,%d", deviceNum, functionNum];
 			
 			[pciDictionary setObject:@(deviceNum << 16 | functionNum) forKey:@"Address"];
@@ -679,15 +1036,18 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 				{
 					io_service_t parentDevice = [parentNumber unsignedIntValue];
 					io_name_t parentName {};
-					uint32_t deviceNum = 0, functionNum = 0;
 					
 					kr = IORegistryEntryGetName(parentDevice, parentName);
 					
-					getDeviceLocation(parentDevice, &deviceNum, &functionNum);
-					
-					ioregName = [NSString stringWithFormat:@"%s.%@", parentName, ioregName];
-					devicePath = [NSString stringWithFormat:@"Pci(0x%x,0x%x)/%@", deviceNum, functionNum, devicePath];
-					slotName = [NSString stringWithFormat:@"%d,%d/%@", deviceNum, functionNum, slotName];
+					if (kr == KERN_SUCCESS)
+					{
+						getDeviceLocation(parentDevice, &deviceNum, &functionNum, &hasFunction);
+						
+						ioregName = (hasFunction ? [NSString stringWithFormat:@"%s@%X,%X/%@", parentName, deviceNum, functionNum, ioregName] : [NSString stringWithFormat:@"%s@%X/%@", parentName, deviceNum, ioregName]);
+						//devicePath = (hasFunction ? [NSString stringWithFormat:@"Pci(0x%X,0x%X)/%@", deviceNum, functionNum, devicePath] : [NSString stringWithFormat:@"Pci(0x%X)/%@", deviceNum, devicePath]);
+						devicePath = [NSString stringWithFormat:@"Pci(0x%X,0x%X)/%@", deviceNum, functionNum, devicePath];
+						slotName = [NSString stringWithFormat:@"%d,%d/%@", deviceNum, functionNum, slotName];
+					}
 					
 					IOObjectRelease(parentDevice);
 				}
@@ -723,18 +1083,18 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 				{
 					switch (EISA_ID_TO_NUM(eisaId))
 					{
-						case 0x0a03:
-							devicePath = [NSString stringWithFormat:@"PciRoot(0x%x)/%@", [uidNumber unsignedIntValue], devicePath];
+						case 0x0A03:
+							devicePath = [NSString stringWithFormat:@"PciRoot(0x%X)/%@", [uidNumber unsignedIntValue], devicePath];
 							break;
 						default:
-							devicePath = [NSString stringWithFormat:@"Acpi(PNP%04x,0x%x)/%@", EISA_ID_TO_NUM(eisaId), [uidNumber unsignedIntValue], devicePath];
+							devicePath = [NSString stringWithFormat:@"Acpi(PNP%04X,0x%X)/%@", EISA_ID_TO_NUM(eisaId), [uidNumber unsignedIntValue], devicePath];
 							break;
 					}
 				}
 				else
-					devicePath = [NSString stringWithFormat:@"Acpi(0x%08x,0x%x)/%@", eisaId, [uidNumber unsignedIntValue], devicePath];
+					devicePath = [NSString stringWithFormat:@"Acpi(0x%08X,0x%X)/%@", eisaId, [uidNumber unsignedIntValue], devicePath];
 				
-				ioregName = [NSString stringWithFormat:@"%s.%@", rootName, ioregName];
+				ioregName = [NSString stringWithFormat:@"/%s@%d/%@", rootName, [uidNumber unsignedIntValue], ioregName];
 				slotName = [NSString stringWithFormat:@"Internal@%d,%@", [uidNumber unsignedIntValue], slotName];
 				
 				IOObjectRelease(rootDevice);
@@ -785,18 +1145,15 @@ bool getIORegNetworkArray(NSMutableArray **networkInterfacesArray)
 				{
 					NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
 					
-					NSData *deviceID = [parentPropertyDictionary objectForKey:@"device-id"];
-					NSData *vendorID = [parentPropertyDictionary objectForKey:@"vendor-id"];
+					uint32_t deviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
+					uint32_t vendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
 					NSString *bsdName = [propertyDictionary objectForKey:@"BSD Name"];
 					NSNumber *builtIn = [propertyDictionary objectForKey:@"IOBuiltin"];
 					
-					uint32_t vendorIDInt = getUInt32FromData(vendorID);
-					uint32_t deviceIDInt = getUInt32FromData(deviceID);
-					
 					NSMutableDictionary *networkInterfacesDictionary = [NSMutableDictionary dictionary];
 					
-					[networkInterfacesDictionary setObject:[NSNumber numberWithInteger:deviceIDInt] forKey:@"DeviceID"];
-					[networkInterfacesDictionary setObject:[NSNumber numberWithInteger:vendorIDInt] forKey:@"VendorID"];
+					[networkInterfacesDictionary setObject:[NSNumber numberWithInteger:deviceID] forKey:@"DeviceID"];
+					[networkInterfacesDictionary setObject:[NSNumber numberWithInteger:vendorID] forKey:@"VendorID"];
 					[networkInterfacesDictionary setObject:bsdName forKey:@"BSD Name"];
 					[networkInterfacesDictionary setObject:builtIn forKey:@"Builtin"];
 					
@@ -864,12 +1221,10 @@ bool getIORegGraphicsArray(NSMutableArray **graphicsArray)
 				
 				NSData *modelData = [parentPropertyDictionary objectForKey:@"model"];
 				NSString *modelString = [[[NSString alloc] initWithData:modelData encoding:NSASCIIStringEncoding] autorelease];
-				NSData *platformID = [parentPropertyDictionary objectForKey:@"AAPL,snb-platform-id"];
+				uint32_t platformID = propertyToUInt32([parentPropertyDictionary objectForKey:@"AAPL,snb-platform-id"]);
 				
 				if (!platformID)
-					platformID = [parentPropertyDictionary objectForKey:@"AAPL,ig-platform-id"];
-				
-				uint32_t platformIDInt = getUInt32FromData(platformID);
+					platformID = propertyToUInt32([parentPropertyDictionary objectForKey:@"AAPL,ig-platform-id"]);
 				
 				NSMutableDictionary *graphicsDictionary = [graphicsDictionaryDictionary objectForKey:modelString];
 				
@@ -880,8 +1235,8 @@ bool getIORegGraphicsArray(NSMutableArray **graphicsArray)
 					[graphicsDictionary setObject:modelString forKey:@"Model"];
 					[graphicsDictionary setObject:[NSString stringWithUTF8String:name] forKey:@"Framebuffer"];
 					
-					if (platformID != nil)
-						[graphicsDictionary setObject:[NSString stringWithFormat:@"0x%08X", platformIDInt] forKey:@"Framebuffer"];
+					if (platformID != 0)
+						[graphicsDictionary setObject:[NSString stringWithFormat:@"0x%08X", platformID] forKey:@"Framebuffer"];
 					
 					NSString *bundleID = (__bridge NSString *)IORegistryEntrySearchCFProperty(parentDevice, kIOServicePlane, CFSTR("CFBundleIdentifier"), kCFAllocatorDefault, kIORegistryIterateRecursively);
 					
@@ -1534,7 +1889,7 @@ bool getScreenNumberForDisplay(SInt32 myVendorID, SInt32 myProductID, SInt32 myS
 	return retval;
 }
 
-void getScreenInfoForDisplay(io_service_t service, NSString **displayName, SInt32 *vendorID, SInt32 *productID, SInt32 *serialNumber, NSData **edid, NSString **prefsKey)
+void getScreenInfoForDisplay(io_service_t service, NSString **displayName, uint32_t *vendorID, uint32_t *productID, uint32_t *serialNumber, NSData **edid, NSString **prefsKey)
 {
 	*displayName = GetLocalizedString(@"Unknown");
 	
@@ -1637,7 +1992,7 @@ bool getDisplayArray(NSMutableArray **displayArray)
 			{
 				NSDictionary *framebufferProperties = (__bridge NSDictionary *)framebufferPropertiesRef;
 				
-				port = properyToUInt32([framebufferProperties objectForKey:@"port-number"]);
+				port = propertyToUInt32([framebufferProperties objectForKey:@"port-number"]);
 				
 				CFRelease(framebufferPropertiesRef);
 			}
@@ -1649,11 +2004,9 @@ bool getDisplayArray(NSMutableArray **displayArray)
 			{
 				NSDictionary *videoDeviceProperties = (__bridge NSDictionary *)videoDevicePropertiesRef;
 				
-				NSData *deviceID = [videoDeviceProperties objectForKey:@"device-id"];
-				NSData *vendorID = [videoDeviceProperties objectForKey:@"vendor-id"];
+				videoDeviceID = propertyToUInt32([videoDeviceProperties objectForKey:@"device-id"]);
+				videoVendorID = propertyToUInt32([videoDeviceProperties objectForKey:@"vendor-id"]);
 				
-				videoVendorID = getUInt32FromData(vendorID);
-				videoDeviceID = getUInt32FromData(deviceID);
 				videoID = (videoDeviceID << 16) | videoVendorID;
 				
 				CFRelease(videoDevicePropertiesRef);
@@ -1661,7 +2014,7 @@ bool getDisplayArray(NSMutableArray **displayArray)
 			
 			NSString *screenName = [NSString string];
 			bool isInternal = [[NSString stringWithUTF8String:name] isEqualToString:@"AppleBacklightDisplay"];
-			SInt32 vendorID = 0, productID = 0, serialNumber = 0;
+			uint32_t vendorID = 0, productID = 0, serialNumber = 0;
 			NSData *edid = nil;
 			NSString *prefsKey = nil;
 			NSMutableArray *resolutionsArray = [NSMutableArray array];
@@ -1864,3 +2217,19 @@ bool getPlatformID(uint32_t *platformID)
 	return true;
 }
 
+NSString *getASPMString(uint32_t aspm)
+{
+	// http://www.lttconn.com/res/lttconn/pdres/201402/20140218105502619.pdf
+	// https://composter.com.ua/documents/PCIe_Protocol_Updates_2011.pdf
+	//
+	// Hex  Binary  Meaning
+	// -------------------------
+	// 0    0b00    L0 only
+	// 1    0b01    L0s only
+	// 2    0b10    L1 only
+	// 3    0b11    L1 and L0s
+	
+	NSArray *aspmArray = @[GetLocalizedString(@"Disabled"), @"L0s", @"L1", @"L0s+L1"];
+	
+	return [aspmArray objectAtIndex:aspm & 0x3];
+}

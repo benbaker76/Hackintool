@@ -1,21 +1,23 @@
 {
   "images" : [
     {
+      "filename" : "IconAtheros@1x.png",
       "idiom" : "universal",
-      "filename" : "IconAtheros.png",
       "scale" : "1x"
     },
     {
+      "filename" : "IconAtheros@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "IconAtheros@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }
