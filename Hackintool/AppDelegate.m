@@ -760,7 +760,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_cloverInfo.ScheduledCheckInterval = kCloverScheduledCheckInterval;
 	_cloverInfo.LatestReleaseURL = kCloverLatestReleaseURL;
 	_cloverInfo.IconName = @"IconClover";
-	_cloverInfo.DownloadExtensions = [@[@"pkg", @"pkg.zip"] retain];
+	_cloverInfo.FileNameMatch = @"Clover_";
 	
 	_openCoreInfo.Name = @"OpenCore";
 	_openCoreInfo.LastVersionDownloaded = kOpenCoreLastVersionDownloaded;
@@ -769,7 +769,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_openCoreInfo.ScheduledCheckInterval = kOpenCoreScheduledCheckInterval;
 	_openCoreInfo.LatestReleaseURL = kOpenCoreLatestReleaseURL;
 	_openCoreInfo.IconName = @"IconOpenCore";
-	_openCoreInfo.DownloadExtensions = [@[@"zip"] retain];
+	_openCoreInfo.FileNameMatch = @"OpenCore";
 	
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSString *filePath = nil;
@@ -2357,7 +2357,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	return true;
 }
 
-- (Boolean)getGithubLatestDownloadInfo:(NSString *)url extensions:(NSArray *)extensions browserDownloadUrl:(NSString **)downloadUrl downloadVersion:(NSString **)downloadVersion
+- (Boolean)getGithubLatestDownloadInfo:(NSString *)url fileNameMatch:(NSString *)fileNameMatch browserDownloadUrl:(NSString **)downloadUrl downloadVersion:(NSString **)downloadVersion
 {
 	NSError *error;
 	NSURL *gitHubAPIUrl = [NSURL URLWithString:url];
@@ -2384,21 +2384,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		if ([fileName rangeOfString:@"debug" options:NSCaseInsensitiveSearch].location != NSNotFound)
 			continue;
 		
-		bool extensionFound = false;
-		
-		if (extensions != nil)
+		if (fileNameMatch != nil)
 		{
-			for (NSString *extension in extensions)
-			{
-				if ([browserDownloadUrl hasSuffix:extension])
-				{
-					extensionFound = true;
-					
-					break;
-				}
-			}
-			
-			if (!extensionFound)
+			if ([fileName rangeOfString:fileNameMatch options:NSCaseInsensitiveSearch].location == NSNotFound)
 				continue;
 		}
 		
@@ -2427,7 +2415,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSString *githubUrl = [NSString stringWithFormat:@"https://api.github.com/repos/%@/%@/releases/latest", username, projectName];
 	NSString *browserDownloadUrl = nil, *downloadVersion = nil;
 	
-	if ([self getGithubLatestDownloadInfo:githubUrl extensions:nil browserDownloadUrl:&browserDownloadUrl downloadVersion:&downloadVersion])
+	if ([self getGithubLatestDownloadInfo:githubUrl fileNameMatch:nil browserDownloadUrl:&browserDownloadUrl downloadVersion:&downloadVersion])
 	{
 		[*kextDictionary setObject:browserDownloadUrl forKey:@"DownloadUrl"];
 		
@@ -9294,7 +9282,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 			[defaults setObject:now forKey:_bootloaderInfo->LastCheckTimestamp];
 			[defaults synchronize];
 			
-			if ([self getGithubLatestDownloadInfo:_bootloaderInfo->LatestReleaseURL extensions:_bootloaderInfo->DownloadExtensions browserDownloadUrl:&_bootloaderInfo->LatestDownloadURL downloadVersion:&_bootloaderInfo->LatestVersion])
+			if ([self getGithubLatestDownloadInfo:_bootloaderInfo->LatestReleaseURL fileNameMatch:_bootloaderInfo->FileNameMatch browserDownloadUrl:&_bootloaderInfo->LatestDownloadURL downloadVersion:&_bootloaderInfo->LatestVersion])
 			{
 				NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:_bootloaderInfo->LatestDownloadURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
 				

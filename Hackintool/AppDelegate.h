@@ -105,7 +105,7 @@ typedef struct
 	NSString *BootedVersion;
 	NSString *InstalledVersion;
 	NSString *DownloadPath;
-	NSArray *DownloadExtensions;
+	NSString *FileNameMatch;
 	NSString *SuggestedFileName;
 	NSString *IconName;
 } BootloaderInfo;
