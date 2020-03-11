@@ -105,7 +105,7 @@ typedef struct
 	NSString *BootedVersion;
 	NSString *InstalledVersion;
 	NSString *DownloadPath;
-	NSString *DownloadExtension;
+	NSArray *DownloadExtensions;
 	NSString *SuggestedFileName;
 	NSString *IconName;
 } BootloaderInfo;
@@ -474,6 +474,8 @@ typedef struct
 - (IBAction)dsdtRenameChanged:(id)sender;
 - (IBAction)audioTableViewSelected:(id)sender;
 - (IBAction)connectorFlagsChanged:(id)sender;
+- (IBAction)usbNameChanged:(id)sender;
+- (IBAction)usbCommentChanged:(id)sender;
 - (IBAction)usbConnectorChanged:(id)sender;
 - (IBAction)displaysChanged:(id)sender;
 - (IBAction)resolutionsChanged:(id)sender;

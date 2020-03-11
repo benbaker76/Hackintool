@@ -739,6 +739,7 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 			[usbEntryDictionary removeObjectForKey:@"HubName"];
 			[usbEntryDictionary removeObjectForKey:@"HubLocation"];
 			[usbEntryDictionary removeObjectForKey:@"DevSpeed"];
+			[usbEntryDictionary removeObjectForKey:@"Comment"];
 		}
 	}
 	

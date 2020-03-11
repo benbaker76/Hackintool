@@ -760,7 +760,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_cloverInfo.ScheduledCheckInterval = kCloverScheduledCheckInterval;
 	_cloverInfo.LatestReleaseURL = kCloverLatestReleaseURL;
 	_cloverInfo.IconName = @"IconClover";
-	_cloverInfo.DownloadExtension = @"pkg";
+	_cloverInfo.DownloadExtensions = [@[@"pkg", @"pkg.zip"] retain];
 	
 	_openCoreInfo.Name = @"OpenCore";
 	_openCoreInfo.LastVersionDownloaded = kOpenCoreLastVersionDownloaded;
@@ -769,7 +769,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_openCoreInfo.ScheduledCheckInterval = kOpenCoreScheduledCheckInterval;
 	_openCoreInfo.LatestReleaseURL = kOpenCoreLatestReleaseURL;
 	_openCoreInfo.IconName = @"IconOpenCore";
-	_openCoreInfo.DownloadExtension = @"zip";
+	_openCoreInfo.DownloadExtensions = [@[@"zip"] retain];
 	
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSString *filePath = nil;
@@ -2357,7 +2357,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	return true;
 }
 
-- (Boolean)getGithubLatestDownloadInfo:(NSString *)url extension:(NSString *)extension browserDownloadUrl:(NSString **)downloadUrl downloadVersion:(NSString **)downloadVersion
+- (Boolean)getGithubLatestDownloadInfo:(NSString *)url extensions:(NSArray *)extensions browserDownloadUrl:(NSString **)downloadUrl downloadVersion:(NSString **)downloadVersion
 {
 	NSError *error;
 	NSURL *gitHubAPIUrl = [NSURL URLWithString:url];
@@ -2378,17 +2378,32 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSString *fileName = [browserDownloadUrl lastPathComponent];
 		NSString *version = nil;
 		
+		if (browserDownloadUrl == nil)
+			continue;
+		
 		if ([fileName rangeOfString:@"debug" options:NSCaseInsensitiveSearch].location != NSNotFound)
 			continue;
-
-		if ([assetsDictionary objectForKey:@"browser_download_url"] == nil)
-			continue;
 		
-		if (extension != nil && [[browserDownloadUrl pathExtension] isNotEqualTo:extension])
-			continue;
+		bool extensionFound = false;
+		
+		if (extensions != nil)
+		{
+			for (NSString *extension in extensions)
+			{
+				if ([browserDownloadUrl hasSuffix:extension])
+				{
+					extensionFound = true;
+					
+					break;
+				}
+			}
+			
+			if (!extensionFound)
+				continue;
+		}
 		
 		*downloadUrl = [browserDownloadUrl retain];
-		
+
 		if ([self tryGetGithubDownloadVersion:browserDownloadUrl downloadVersion:&version])
 			*downloadVersion = [version retain];
 		
@@ -2412,7 +2427,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSString *githubUrl = [NSString stringWithFormat:@"https://api.github.com/repos/%@/%@/releases/latest", username, projectName];
 	NSString *browserDownloadUrl = nil, *downloadVersion = nil;
 	
-	if ([self getGithubLatestDownloadInfo:githubUrl extension:nil browserDownloadUrl:&browserDownloadUrl downloadVersion:&downloadVersion])
+	if ([self getGithubLatestDownloadInfo:githubUrl extensions:nil browserDownloadUrl:&browserDownloadUrl downloadVersion:&downloadVersion])
 	{
 		[*kextDictionary setObject:browserDownloadUrl forKey:@"DownloadUrl"];
 		
@@ -3085,7 +3100,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 
 - (void)copyUSBPorts:(NSMutableDictionary *)fromUSBPortsDictionary toUSBPorts:(NSMutableDictionary *)toUSBPortsDictionary
 {
-	NSArray *fieldArray = @[@"name", @"locationID", @"port", @"portType", @"UsbConnector", @"UsbController", @"UsbControllerID", @"UsbControllerLocationID", @"UsbControllerIOClass", @"HubName", @"HubLocation", @"IsActive", @"Device"];
+	NSArray *fieldArray = @[@"name", @"locationID", @"port", @"portType", @"UsbConnector", @"UsbController", @"UsbControllerID", @"UsbControllerLocationID", @"UsbControllerIOClass", @"HubName", @"HubLocation", @"IsActive", @"Device", @"Comment"];
 	
 	for (NSString *key in fromUSBPortsDictionary.allKeys)
 	{
@@ -3190,6 +3205,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		{
 			NSMutableDictionary *usbEntryDictionary = _usbPortsArray[index];
 			
+			NSString *oldName = [usbEntryDictionary objectForKey:@"name"];
+			
+			if (oldName != nil)
+				[propertyDictionary setObject:oldName forKey:@"name"];
+			
 			[self copyUSBPorts:propertyDictionary toUSBPorts:usbEntryDictionary];
 			
 			continue;
@@ -3199,13 +3219,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		[self copyUSBPorts:propertyDictionary toUSBPorts:usbPortsDictionary];
 		
-		NSString *newName = name;
-		
 		if (name == nil)
 		{
-			newName = [self generateUSBPortName:usbControllerID hubLocationID:hubLocationID locationID:locationID portNumber:port];
+			name = [self generateUSBPortName:usbControllerID hubLocationID:hubLocationID locationID:locationID portNumber:port];
 			
-			[usbPortsDictionary setObject:newName forKey:@"name"];
+			[usbPortsDictionary setObject:name forKey:@"name"];
 		}
 		
 		[usbPortsDictionary setObject:@(NO) forKey:@"IsActive"];
@@ -6214,6 +6232,32 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	NSMutableDictionary *bootloaderPatchDictionary = _bootloaderPatchArray[row];
 	
 	[bootloaderPatchDictionary setObject:[NSNumber numberWithBool:!value] forKey:@"Disabled"];
+}
+
+- (IBAction)usbNameChanged:(id)sender
+{
+	NSInteger row = [_usbPortsTableView rowForView:sender];
+	NSString *value = [sender stringValue];
+	
+	if (row == -1)
+		return;
+	
+	NSMutableDictionary *usbPortsDictionary = _usbPortsArray[row];
+	
+	usbPortsDictionary[@"name"] = value;
+}
+
+- (IBAction)usbCommentChanged:(id)sender
+{
+	NSInteger row = [_usbPortsTableView rowForView:sender];
+	NSString *value = [sender stringValue];
+	
+	if (row == -1)
+		return;
+	
+	NSMutableDictionary *usbPortsDictionary = _usbPortsArray[row];
+	
+	usbPortsDictionary[@"Comment"] = value;
 }
 
 - (IBAction)usbConnectorChanged:(id)sender
@@ -9250,14 +9294,17 @@ NSInteger usbControllerSort(id a, id b, void *context)
 			[defaults setObject:now forKey:_bootloaderInfo->LastCheckTimestamp];
 			[defaults synchronize];
 			
-			if ([self getGithubLatestDownloadInfo:_bootloaderInfo->LatestReleaseURL extension:_bootloaderInfo->DownloadExtension browserDownloadUrl:&_bootloaderInfo->LatestDownloadURL downloadVersion:&_bootloaderInfo->LatestVersion])
+			if ([self getGithubLatestDownloadInfo:_bootloaderInfo->LatestReleaseURL extensions:_bootloaderInfo->DownloadExtensions browserDownloadUrl:&_bootloaderInfo->LatestDownloadURL downloadVersion:&_bootloaderInfo->LatestVersion])
 			{
 				NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:_bootloaderInfo->LatestDownloadURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
 				
 				_connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 				
 				if (!_connection)
+				{
+					NSLog(@"Connection request failed!");
 					return false;
+				}
 			}
 		}
 		else
