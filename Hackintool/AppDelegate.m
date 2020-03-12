@@ -8783,6 +8783,27 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		if ([disk convertToAPFS:&stdoutString stderrString:&stderrString])
 			sendNotificationTitle(self, @"MountEFI", trimNewLine(![stderrString isEqualToString:@""] ? stderrString : stdoutString), nil, nil, nil, NO);
 	}
+	else if ([menuItem.identifier isEqualToString:@"VolumeUUID"])
+	{
+		Disk *disk = _disksArray[row];
+		
+		[[NSPasteboard generalPasteboard] clearContents];
+		[[NSPasteboard generalPasteboard] setString:disk.volumeUUID forType:NSStringPboardType];
+	}
+	else if ([menuItem.identifier isEqualToString:@"VolumePath"])
+	{
+		Disk *disk = _disksArray[row];
+		
+		[[NSPasteboard generalPasteboard] clearContents];
+		[[NSPasteboard generalPasteboard] setString:(disk.volumePath != nil ? [disk.volumePath path] : @"") forType:NSStringPboardType];
+	}
+	else if ([menuItem.identifier isEqualToString:@"MediaUUID"])
+	{
+		Disk *disk = _disksArray[row];
+		
+		[[NSPasteboard generalPasteboard] clearContents];
+		[[NSPasteboard generalPasteboard] setString:disk.mediaUUID forType:NSStringPboardType];
+	}
 	else if ([menuItem.identifier isEqualToString:@"BootEFI"])
 	{
 		Disk *disk = _disksArray[row];
@@ -9848,6 +9869,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		return 5;
 	else if ([menu.identifier isEqualToString:@"Tools"])
 		return 2;
+	else if ([menu.identifier isEqualToString:@"CopyToClipboard"])
+		return 3;
 	else if ([menu.identifier isEqualToString:@"Install"])
 		return 1;
 	else if ([menu.identifier isEqualToString:@"PCI"])
