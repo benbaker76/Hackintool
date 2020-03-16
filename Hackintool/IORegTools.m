@@ -713,73 +713,81 @@ bool getUSBControllerInfoForUSBDevice(uint32_t idLocation, uint32_t idVendor, ui
 bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 {
 	*audioDeviceArray = [[NSMutableArray array] retain];
-	io_iterator_t iterator;
+	io_iterator_t pciIterator;
 	
-	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("IOAudioDevice"), &iterator);
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("IOPCIDevice"), &pciIterator);
 	
 	if (kr != KERN_SUCCESS)
 		return false;
 	
-	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
+	io_iterator_t iterator;
+	
+	for (io_service_t pciDevice; IOIteratorIsValid(pciIterator) && (pciDevice = IOIteratorNext(pciIterator)); IOObjectRelease(pciDevice))
 	{
-		io_name_t className {};
-		kr = IOObjectGetClass(device, className);
+		kern_return_t kr = IORegistryEntryCreateIterator(pciDevice, kIOServicePlane, kIORegistryIterateRecursively, &iterator);
 		
 		if (kr != KERN_SUCCESS)
 			continue;
 		
-		CFMutableDictionaryRef propertyDictionaryRef = 0;
-		
-		kr = IORegistryEntryCreateCFProperties(device, &propertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
-		
-		if (kr == KERN_SUCCESS)
+		for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
 		{
-			NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
+			if (!IOObjectConformsTo(device, "IOAudioDevice"))
+				continue;
 			
-			NSString *bundleID = [propertyDictionary objectForKey:@"CFBundleIdentifier"];
-			NSString *audioDeviceName = [propertyDictionary objectForKey:@"IOAudioDeviceName"];
-			NSString *audioDeviceModelID = [propertyDictionary objectForKey:@"IOAudioDeviceModelID"];
-			NSString *audioDeviceManufacturerName = [propertyDictionary objectForKey:@"IOAudioDeviceManufacturerName"];
-			uint32_t audioDeviceDeviceID = 0, audioDeviceVendorID = 0;
-			uint32_t audioDeviceDeviceIDNew = 0;
+			io_name_t className {};
+			kr = IOObjectGetClass(device, className);
 			
-			if (audioDeviceModelID != nil)
+			if (kr != KERN_SUCCESS)
+				continue;
+			
+			CFMutableDictionaryRef propertyDictionaryRef = 0;
+			
+			kr = IORegistryEntryCreateCFProperties(device, &propertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+			
+			if (kr == KERN_SUCCESS)
 			{
-				NSArray *modelIDArray = [audioDeviceModelID componentsSeparatedByString:@":"];
+				NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
 				
-				if ([modelIDArray count] == 3)
+				NSString *bundleID = [propertyDictionary objectForKey:@"CFBundleIdentifier"];
+				NSString *audioDeviceName = [propertyDictionary objectForKey:@"IOAudioDeviceName"];
+				NSString *audioDeviceModelID = [propertyDictionary objectForKey:@"IOAudioDeviceModelID"];
+				NSString *audioDeviceManufacturerName = [propertyDictionary objectForKey:@"IOAudioDeviceManufacturerName"];
+				uint32_t audioDeviceDeviceID = 0, audioDeviceVendorID = 0;
+				uint32_t audioDeviceDeviceIDNew = 0;
+				
+				if (audioDeviceModelID != nil)
 				{
-					NSScanner *deviceIDScanner = [NSScanner scannerWithString:[modelIDArray objectAtIndex:1]];
-					NSScanner *productIDScanner = [NSScanner scannerWithString:[modelIDArray objectAtIndex:2]];
+					NSArray *modelIDArray = [audioDeviceModelID componentsSeparatedByString:@":"];
+					
+					if ([modelIDArray count] == 3)
+					{
+						NSScanner *deviceIDScanner = [NSScanner scannerWithString:[modelIDArray objectAtIndex:1]];
+						NSScanner *productIDScanner = [NSScanner scannerWithString:[modelIDArray objectAtIndex:2]];
 
-					[deviceIDScanner setScanLocation:0];
-					[deviceIDScanner scanHexInt:&audioDeviceVendorID];
-												   
-				    [productIDScanner setScanLocation:0];
-				    [productIDScanner scanHexInt:&audioDeviceDeviceID];
-												   
-					audioDeviceDeviceIDNew = (audioDeviceVendorID << 16) | audioDeviceDeviceID;
+						[deviceIDScanner setScanLocation:0];
+						[deviceIDScanner scanHexInt:&audioDeviceVendorID];
+													   
+						[productIDScanner setScanLocation:0];
+						[productIDScanner scanHexInt:&audioDeviceDeviceID];
+													   
+						audioDeviceDeviceIDNew = (audioDeviceVendorID << 16) | audioDeviceDeviceID;
+					}
 				}
-			}
-			
-			io_service_t parentDevice;
-			
-			if (getIORegParent(device, @"IOPCIDevice", &parentDevice, true))
-			{
-				CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
 				
-				kr = IORegistryEntryCreateCFProperties(parentDevice, &parentPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+				CFMutableDictionaryRef pciDevicePropertyDictionaryRef = 0;
+				
+				kr = IORegistryEntryCreateCFProperties(pciDevice, &pciDevicePropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
 				
 				if (kr == KERN_SUCCESS)
 				{
-					NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
+					NSMutableDictionary *pciDevicePropertyDictionary = (__bridge NSMutableDictionary *)pciDevicePropertyDictionaryRef;
 					
-					uint32_t deviceID = propertyToUInt32([parentPropertyDictionary objectForKey:@"device-id"]);
-					uint32_t vendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"vendor-id"]);
-					uint32_t revisionID = propertyToUInt32([parentPropertyDictionary objectForKey:@"revision-id"]);
-					uint32_t alcLayoutID = propertyToUInt32([parentPropertyDictionary objectForKey:@"alc-layout-id"]);
-					uint32_t subSystemID = propertyToUInt32([parentPropertyDictionary objectForKey:@"subsystem-id"]);
-					uint32_t subSystemVendorID = propertyToUInt32([parentPropertyDictionary objectForKey:@"subsystem-vendor-id"]);
+					uint32_t deviceID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"device-id"]);
+					uint32_t vendorID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"vendor-id"]);
+					uint32_t revisionID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"revision-id"]);
+					uint32_t alcLayoutID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"alc-layout-id"]);
+					uint32_t subSystemID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"subsystem-id"]);
+					uint32_t subSystemVendorID = propertyToUInt32([pciDevicePropertyDictionary objectForKey:@"subsystem-vendor-id"]);
 					
 					uint32_t deviceIDNew = (vendorID << 16) | deviceID;
 					uint32_t subDeviceIDNew = (subSystemVendorID << 16) | subSystemID;
@@ -826,13 +834,13 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 					
 					[audioDevice release];
 				}
-				
-				IOObjectRelease(parentDevice);
 			}
 		}
+		
+		IOObjectRelease(iterator);
 	}
 	
-	IOObjectRelease(iterator);
+	IOObjectRelease(pciIterator);
 	
 	return ([*audioDeviceArray count] > 0);
 }
