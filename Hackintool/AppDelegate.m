@@ -121,6 +121,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 	[_window setTitle:[NSString stringWithFormat:@"Hackintool v%@", version]];
 	
+	NSLog(@"Hackintool v%@", version);
+	
 	_tableViewArray = [@[_infoOutlineView, _generateSerialInfoTableView, _modelInfoTableView, _selectedFBInfoTableView, _currentFBInfoTableView, _vramInfoTableView, _framebufferInfoTableView, _framebufferFlagsTableView, _connectorInfoTableView, _connectorFlagsTableView, _audioDevicesTableView1, _audioInfoTableView, _usbControllersTableView, _usbPortsTableView, _efiPartitionsTableView, _partitionSchemeTableView, _displaysTableView, _resolutionsTableView, _bootloaderInfoTableView, _bootloaderPatchTableView, _nvramTableView, _kextsTableView, _pciDevicesTableView, _networkInterfacesTableView, _bluetoothDevicesTableView, _graphicDevicesTableView, _audioDevicesTableView2, _storageDevicesTableView, _powerSettingsTableView] retain];
 	
 	for (NSTableView *tableView in _tableViewArray)
@@ -1161,7 +1163,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSString *usbControllerType = [usbControllersDictionary objectForKey:@"Type"];
 		NSString *usbControllerName = [usbControllersDictionary objectForKey:@"Name"];
 		NSString *usbControllerSeries = [usbControllersDictionary objectForKey:@"Series"];
-		NSNumber *usbControllerID = [usbControllersDictionary objectForKey:@"ID"];
+		NSNumber *usbControllerID = [usbControllersDictionary objectForKey:@"DeviceID"];
 		
 		NSLog(@"Found USB Controller: %@ %@ (%@-series) Controller (0x%08X)", usbControllerType, usbControllerName, usbControllerSeries, [usbControllerID unsignedIntValue]);
 	}

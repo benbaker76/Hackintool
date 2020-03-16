@@ -40,7 +40,7 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>
-	<string>https://headsoft.com.au/download/mac/appcast.xml</string>
+	<string>https://github.com/headkaze/Hackintool/releases/latest/download/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>Dscj0/VuPnW8QjlmbHewn803JDopcJfwlC+R4FMHU/U=</string>
 </dict>

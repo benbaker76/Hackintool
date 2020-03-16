@@ -540,17 +540,27 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		NSString *name = [usbEntryDictionary objectForKey:@"name"];
 		NSString *usbController = [usbEntryDictionary objectForKey:@"UsbController"];
 		uint32_t usbControllerID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerID"]);
-		//uint32_t usbControllerLocationID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerLocationID"]);
-		
+		uint32_t usbControllerLocationID = propertyToUInt32([usbEntryDictionary objectForKey:@"UsbControllerLocationID"]);
+		uint32_t vendorID = (usbControllerID & 0xFFFF);
+		uint32_t deviceID = (usbControllerID >> 16);
+		NSString *deviceName = (usbControllerID != 0 ? [NSString stringWithFormat:@"%04x_%04x", vendorID, deviceID] : @"???");
+
 		if (usbController == nil)
 			continue;
 		
 		uint32_t port = propertyToUInt32([usbEntryDictionary objectForKey:@"port"]);
 		NSString *hubName = [usbEntryDictionary objectForKey:@"HubName"];
 		NSNumber *hubLocation = [usbEntryDictionary objectForKey:@"HubLocation"];
-		NSString *modelEntryName = [NSString stringWithFormat:@"%@-%@%@", appDelegate.modelIdentifier, usbController, hubName != nil ? @"-internal-hub" : @""];
+		NSString *modelEntryName = [NSString stringWithFormat:@"%@-%@", appDelegate.modelIdentifier, usbController];
 		NSString *providerClass = (hubName != nil ? hubName : [usbEntryDictionary objectForKey:@"UsbControllerIOClass"]);
 		//NSString *providerClass = (hubName != nil ? hubName : ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI"));
+		
+		if (hubName != nil)
+			modelEntryName = [modelEntryName stringByAppendingString:@"-internal-hub"];
+		
+		// For controllers located at 0x00 we'll append VID/PID
+		if (usbControllerLocationID == 0x00)
+			modelEntryName = [modelEntryName stringByAppendingFormat:@"-%@", deviceName];
 		
 		if (providerClass == nil)
 			providerClass = ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI");
@@ -590,17 +600,19 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 				
 				[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBMergeNub" forKey:@"CFBundleIdentifier"];
 				[modelEntryDictionary setObject:@"AppleUSBMergeNub" forKey:@"IOClass"];
+				
+				if (usbControllerID != 0)
+					[modelEntryDictionary setObject:[NSString stringWithFormat:@"0x%08x", usbControllerID] forKey:@"IOPCIPrimaryMatch"];
+				
 				[modelEntryDictionary setObject:usbController forKey:@"IONameMatch"];
 				[modelEntryDictionary setObject:providerClass forKey:@"IOProviderClass"];
 			}
 			
 			[modelEntryDictionary setObject:appDelegate.modelIdentifier forKey:@"model"];
 			[modelEntryDictionary setObject:@(5000) forKey:@"IOProbeScore"];
-			
 			[modelEntryDictionary setObject:usbController forKey:@"UsbController"];
-			
-			if (usbControllerID != 0)
-				[modelEntryDictionary setObject:@(usbControllerID) forKey:@"UsbControllerID"];
+			[modelEntryDictionary setObject:@(usbControllerID) forKey:@"UsbControllerID"];
+			[modelEntryDictionary setObject:@(usbControllerLocationID) forKey:@"UsbControllerLocationID"];
 			
 			//injectUSBControllerProperties(appDelegate, ioKitPersonalities, usbControllerID);
 		}
@@ -699,7 +711,7 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 	NSMutableDictionary *ioKitPersonalities = [NSMutableDictionary dictionary];
 	
 	[infoDictionary setObject:@"English" forKey:@"CFBundleDevelopmentRegion"];
-	[infoDictionary setObject:@"1.0 Copyright © 2018 Headsoft. All rights reserved." forKey:@"CFBundleGetInfoString"];
+	[infoDictionary setObject:@"1.0 Copyright © 2018-2020 Headsoft. All rights reserved." forKey:@"CFBundleGetInfoString"];
 	[infoDictionary setObject:@"com.Headsoft.USBPorts" forKey:@"CFBundleIdentifier"];
 	[infoDictionary setObject:@"6.0" forKey:@"CFBundleInfoDictionaryVersion"];
 	[infoDictionary setObject:@"USBPorts" forKey:@"CFBundleName"];
@@ -787,10 +799,11 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			continue;
 		
 		uint32_t usbControllerID = propertyToUInt32([modelEntryDictionary objectForKey:@"UsbControllerID"]);
-		uint32_t deviceID = (usbControllerID & 0xFFFF);
-		uint32_t productID = (usbControllerID >> 16);
+		uint32_t usbControllerLocationID = propertyToUInt32([modelEntryDictionary objectForKey:@"UsbControllerLocationID"]);
+		uint32_t vendorID = (usbControllerID & 0xFFFF);
+		uint32_t deviceID = (usbControllerID >> 16);
 		NSString *name = usbController;
-		NSString *deviceName = (usbControllerID != 0 ? [NSString stringWithFormat:@"%04x_%04x", deviceID, productID] : @"???");
+		NSString *deviceName = (usbControllerID != 0 ? [NSString stringWithFormat:@"%04x_%04x", vendorID, deviceID] : @"???");
 		NSNumber *locationID = [modelEntryDictionary objectForKey:@"locationID"];
 		NSMutableDictionary *ioProviderMergePropertiesDictionary = [modelEntryDictionary objectForKey:@"IOProviderMergeProperties"];
 		NSData *portCount = [ioProviderMergePropertiesDictionary objectForKey:@"port-count"];
@@ -805,7 +818,7 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 		
 		if (usbControllerID != 0)
 		{
-			if (![usbController hasPrefix:@"EH"] && ![usbController hasPrefix:@"XH"])
+			if ((![usbController hasPrefix:@"EH"] && ![usbController hasPrefix:@"XH"]) || usbControllerLocationID == 0x00)
 				name = deviceName;
 		}
 		
@@ -817,14 +830,17 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 				name = @"HUB2";
 		}
 		
-		[ssdtUIACString appendString:[NSString stringWithFormat:@"            // %@ (%@)\n", name, deviceName]];
+		[ssdtUIACString appendString:[NSString stringWithFormat:@"            // %@ (%@)\n", usbController, deviceName]];
 		[ssdtUIACString appendString:[NSString stringWithFormat:@"            \"%@\", Package()\n", name]];
 		[ssdtUIACString appendString:@"            {\n"];
 		[ssdtUIACString appendString:[NSString stringWithFormat:@"                \"port-count\", Buffer() { %@ },\n", getByteString(portCount)]];
 		[ssdtUIACString appendString:@"                \"ports\", Package()\n"];
 		[ssdtUIACString appendString:@"                {\n"];
 		
-		for (NSString *portKey in [portsDictionary allKeys])
+		NSArray *portKeys = [portsDictionary allKeys];
+		portKeys = [portKeys sortedArrayUsingSelector:@selector(compare:)];
+		
+		for (NSString *portKey in portKeys)
 		{
 			NSMutableDictionary *usbEntryDictionary = [portsDictionary objectForKey:portKey];
 			
