@@ -740,7 +740,7 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 		{
 			NSMutableDictionary *usbEntryDictionary = [portsDictionary objectForKey:portKey];
 			
-			[usbEntryDictionary removeObjectForKey:@"name"];
+			//[usbEntryDictionary removeObjectForKey:@"name"];
 			[usbEntryDictionary removeObjectForKey:@"locationID"];
 			[usbEntryDictionary removeObjectForKey:@"Device"];
 			[usbEntryDictionary removeObjectForKey:@"IsActive"];
