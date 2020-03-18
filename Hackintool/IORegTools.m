@@ -63,17 +63,14 @@ bool getDevicePath(NSString *search, NSString **devicePath)
 
 bool getIORegChild(io_service_t device, NSString *name, io_service_t *foundDevice, bool recursive)
 {
-	kern_return_t kr;
 	io_iterator_t childIterator;
-	
-	kr = IORegistryEntryGetChildIterator(device, kIOServicePlane, &childIterator);
+	kern_return_t kr = IORegistryEntryCreateIterator(device, kIOServicePlane, (recursive ? kIORegistryIterateRecursively : 0), &childIterator);
 	
 	if (kr != KERN_SUCCESS)
 		return false;
 	
 	for (io_service_t childDevice; IOIteratorIsValid(childIterator) && (childDevice = IOIteratorNext(childIterator)); IOObjectRelease(childDevice))
 	{
-		
 		if (IOObjectConformsTo(childDevice, [name UTF8String]))
 		{
 			*foundDevice = childDevice;
@@ -82,12 +79,6 @@ bool getIORegChild(io_service_t device, NSString *name, io_service_t *foundDevic
 			
 			return true;
 		}
-		
-		if (recursive)
-		{
-			if (getIORegChild(childDevice, name, foundDevice, recursive))
-				return true;
-		}
 	}
 	
 	return false;
@@ -95,10 +86,8 @@ bool getIORegChild(io_service_t device, NSString *name, io_service_t *foundDevic
 
 bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, uint32_t *foundIndex, bool recursive)
 {
-	kern_return_t kr;
 	io_iterator_t childIterator;
-	
-	kr = IORegistryEntryGetChildIterator(device, kIOServicePlane, &childIterator);
+	kern_return_t kr = IORegistryEntryCreateIterator(device, kIOServicePlane, (recursive ? kIORegistryIterateRecursively : 0), &childIterator);
 	
 	if (kr != KERN_SUCCESS)
 		return false;
@@ -117,12 +106,6 @@ bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundD
 				return true;
 			}
 		}
-		
-		if (recursive)
-		{
-			if (getIORegChild(childDevice, nameArray, foundDevice, foundIndex, recursive))
-				return true;
-		}
 	}
 	
 	return false;
@@ -131,10 +114,8 @@ bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundD
 bool getIORegParentArray(io_service_t device, NSString *name, NSMutableArray *parentArray, bool recursive)
 {
 	bool retVal = false;
-	kern_return_t kr;
 	io_iterator_t parentIterator;
-	
-	kr = IORegistryEntryGetParentIterator(device, kIOServicePlane, &parentIterator);
+	kern_return_t kr = IORegistryEntryCreateIterator(device, kIOServicePlane, (recursive ? kIORegistryIterateRecursively : 0) | kIORegistryIterateParents, &parentIterator);
 	
 	if (kr != KERN_SUCCESS)
 		return false;
@@ -149,15 +130,6 @@ bool getIORegParentArray(io_service_t device, NSString *name, NSMutableArray *pa
 			
 			retVal = true;
 		}
-		
-		if (recursive)
-		{
-			if (getIORegParentArray(parentDevice, name, parentArray, recursive))
-				retVal = true;
-		}
-		
-		if (![parentArray containsObject:parentObject])
-			IOObjectRelease(parentDevice);
 	}
 	
 	IOObjectRelease(parentIterator);
@@ -167,10 +139,8 @@ bool getIORegParentArray(io_service_t device, NSString *name, NSMutableArray *pa
 
 bool getIORegParent(io_service_t device, NSString *name, io_service_t *foundDevice, bool recursive)
 {
-	kern_return_t kr;
 	io_iterator_t parentIterator;
-	
-	kr = IORegistryEntryGetParentIterator(device, kIOServicePlane, &parentIterator);
+	kern_return_t kr = IORegistryEntryCreateIterator(device, kIOServicePlane, (recursive ? kIORegistryIterateRecursively : 0) | kIORegistryIterateParents, &parentIterator);
 	
 	if (kr != KERN_SUCCESS)
 		return false;
@@ -185,12 +155,6 @@ bool getIORegParent(io_service_t device, NSString *name, io_service_t *foundDevi
 			
 			return true;
 		}
-		
-		if (recursive)
-		{
-			if (getIORegParent(parentDevice, name, foundDevice, recursive))
-				return true;
-		}
 	}
 	
 	return false;
@@ -198,10 +162,8 @@ bool getIORegParent(io_service_t device, NSString *name, io_service_t *foundDevi
 
 bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *foundDevice, uint32_t *foundIndex, bool useClass, bool recursive)
 {
-	kern_return_t kr;
 	io_iterator_t parentIterator;
-	
-	kr = IORegistryEntryGetParentIterator(device, kIOServicePlane, &parentIterator);
+	kern_return_t kr = IORegistryEntryCreateIterator(device, kIOServicePlane, (recursive ? kIORegistryIterateRecursively : 0) | kIORegistryIterateParents, &parentIterator);
 	
 	if (kr != KERN_SUCCESS)
 		return false;
@@ -225,12 +187,6 @@ bool getIORegParent(io_service_t device, NSArray *nameArray, io_service_t *found
 					return true;
 				}
 			}
-		}
-		
-		if (recursive)
-		{
-			if (getIORegParent(parentDevice, nameArray, foundDevice, foundIndex, useClass, recursive))
-				return true;
 		}
 	}
 	
@@ -731,6 +687,13 @@ bool getIORegAudioDeviceArray(NSMutableArray **audioDeviceArray)
 		
 		for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
 		{
+			if (IOObjectConformsTo(device, "IOPCIDevice"))
+			{
+				IOObjectRelease(iterator);
+				IOObjectRelease(device);
+				break;
+			}
+			
 			if (!IOObjectConformsTo(device, "IOAudioDevice"))
 				continue;
 			
