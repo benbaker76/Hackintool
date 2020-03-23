@@ -555,11 +555,15 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		NSString *providerClass = (hubName != nil ? hubName : [usbEntryDictionary objectForKey:@"UsbControllerIOClass"]);
 		//NSString *providerClass = (hubName != nil ? hubName : ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI"));
 		
+		// For hub's we'll append "-internal-hub"
 		if (hubName != nil)
 			modelEntryName = [modelEntryName stringByAppendingString:@"-internal-hub"];
 		
-		// For controllers located at 0x00 we'll append VID/PID
-		if (usbControllerLocationID == 0x00)
+		// For unknown controllers we'll append "-VID_PID"
+		if ([usbController hasPrefix:@"XH"] && usbControllerLocationID != 0x14)
+			modelEntryName = [modelEntryName stringByAppendingFormat:@"-%@", deviceName];
+		
+		if ([usbController hasPrefix:@"EH"] && usbControllerLocationID != 0x1a && usbControllerLocationID != 0x1d)
 			modelEntryName = [modelEntryName stringByAppendingFormat:@"-%@", deviceName];
 		
 		if (providerClass == nil)
@@ -818,7 +822,11 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 		
 		if (usbControllerID != 0)
 		{
-			if ((![usbController hasPrefix:@"EH"] && ![usbController hasPrefix:@"XH"]) || usbControllerLocationID == 0x00)
+			// For unknown controllers we'll append VID/PID
+			if ([usbController hasPrefix:@"XH"] && usbControllerLocationID != 0x14)
+				name = deviceName;
+			
+			if ([usbController hasPrefix:@"EH"] && usbControllerLocationID != 0x1a && usbControllerLocationID != 0x1d)
 				name = deviceName;
 		}
 		
