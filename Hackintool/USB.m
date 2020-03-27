@@ -272,25 +272,31 @@ void injectDefaultUSBPowerProperties(NSMutableDictionary *ioProviderMergePropert
 	[ioProviderMergePropertiesDictionary setObject:@(5100) forKey:@"kUSBWakePowerSupply"];
 }
 
-void injectUSBPowerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioProviderMergePropertiesDictionary)
+bool injectUSBPowerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioProviderMergePropertiesDictionary)
 {
-	NSFileManager *fileManager = [NSFileManager defaultManager];
+	/* NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSString *ioUSBHostPath = @"/System/Library/Extensions/IOUSBHostFamily.kext/Contents/Info.plist";
 	
 	if (![fileManager fileExistsAtPath:ioUSBHostPath])
-		return;
+		return false; */
 	
-	NSDictionary *ioUSBHostInfoDictionary = [NSDictionary dictionaryWithContentsOfFile:ioUSBHostPath];
+	NSBundle *mainBundle = [NSBundle mainBundle];
+	NSString *filePath = nil;
+	
+	if (!(filePath = [mainBundle pathForResource:@"config_patches" ofType:@"plist" inDirectory:@"Clover"]))
+		return false;
+	
+	NSDictionary *ioUSBHostInfoDictionary = [NSDictionary dictionaryWithContentsOfFile:filePath];
 	NSDictionary *ioUSBHostIOKitPersonalities = [ioUSBHostInfoDictionary objectForKey:@"IOKitPersonalities"];
 	NSString *nearestModelIdentifier = nil;
 	
 	// If we already have an entry leave it out
 	if ([[ioUSBHostIOKitPersonalities allKeys] containsObject:appDelegate.modelIdentifier])
-		return;
+		return false;
 	
 	// Get the closest model and use the power entries for it
 	if (![appDelegate tryGetNearestModel:[ioUSBHostIOKitPersonalities allKeys] modelIdentifier:appDelegate.modelIdentifier nearestModelIdentifier:&nearestModelIdentifier])
-		return;
+		return false;
 	
 	//NSLog(@"nearestModelIdentifier: %@", nearestModelIdentifier);
 	
@@ -306,6 +312,8 @@ void injectUSBPowerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioP
 	[ioProviderMergePropertiesDictionary setObject:sleepPowerSupply forKey:@"kUSBSleepPowerSupply"];
 	[ioProviderMergePropertiesDictionary setObject:wakePortCurrentLimit forKey:@"kUSBWakePortCurrentLimit"];
 	[ioProviderMergePropertiesDictionary setObject:wakePowerSupply forKey:@"kUSBWakePowerSupply"];
+	
+	return true;
 }
 
 void injectUSBControllerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioKitPersonalities, uint32_t usbControllerID)
@@ -600,7 +608,8 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 			}
 			else
 			{
-				injectUSBPowerProperties(appDelegate, ioProviderMergePropertiesDictionary);
+				if (!injectUSBPowerProperties(appDelegate, ioProviderMergePropertiesDictionary))
+					injectDefaultUSBPowerProperties(ioProviderMergePropertiesDictionary);
 				
 				[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBMergeNub" forKey:@"CFBundleIdentifier"];
 				[modelEntryDictionary setObject:@"AppleUSBMergeNub" forKey:@"IOClass"];
