@@ -108,7 +108,7 @@ bool appendFramebufferInfoDSL(AppDelegate *appDelegate, uint32_t tab, NSMutableD
 	
 	NSString *ioregName = [pciDeviceDictionary objectForKey:@"IORegName"];
 	NSString *devicePath = [pciDeviceDictionary objectForKey:@"DevicePath"];
-	NSNumber *address = [pciDeviceDictionary objectForKey:@"Address"];
+	uint32_t address = [[pciDeviceDictionary objectForKey:@"Address"] unsignedIntValue];
 	NSString *acpiPath;
 	
 	if (![appDelegate tryGetACPIPath:ioregName acpiPath:&acpiPath])
@@ -117,7 +117,7 @@ bool appendFramebufferInfoDSL(AppDelegate *appDelegate, uint32_t tab, NSMutableD
 	[appDelegate appendDSLString:tab + 0 outputString:*outputString value:[NSString stringWithFormat:@"External (_SB_.%@, DeviceObj)", acpiPath]];
 	[appDelegate appendDSLString:tab + 0 outputString:*outputString value:[NSString stringWithFormat:@"Device (_SB.%@)", acpiPath]];
 	[appDelegate appendDSLString:tab + 0 outputString:*outputString value:@"{"];
-	[appDelegate appendDSLString:tab + 1 outputString:*outputString value:[NSString stringWithFormat:@"Name (_ADR, 0x%08x)", [address unsignedIntValue]]];
+	[appDelegate appendDSLString:tab + 1 outputString:*outputString value:[NSString stringWithFormat:@"Name (_ADR, 0x%08x)", address]];
 	[appDelegate appendDSLString:tab + 1 outputString:*outputString value:@"Method (_DSM, 4, NotSerialized)"];
 	[appDelegate appendDSLString:tab + 1 outputString:*outputString value:@"{"];
 	[appDelegate appendDSLString:tab + 2 outputString:*outputString value:@"If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }"];

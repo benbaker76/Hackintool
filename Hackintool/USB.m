@@ -272,47 +272,116 @@ void injectDefaultUSBPowerProperties(NSMutableDictionary *ioProviderMergePropert
 	[ioProviderMergePropertiesDictionary setObject:@(5100) forKey:@"kUSBWakePowerSupply"];
 }
 
-bool injectUSBPowerProperties(AppDelegate *appDelegate, NSMutableDictionary *ioProviderMergePropertiesDictionary)
+bool injectUSBPowerProperties(AppDelegate *appDelegate, uint32_t controllerLocationID, bool isHub, NSMutableDictionary *ioProviderMergePropertiesDictionary)
 {
-	/* NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSString *ioUSBHostPath = @"/System/Library/Extensions/IOUSBHostFamily.kext/Contents/Info.plist";
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSString *ioUSBHostPath1 = @"/System/Library/Extensions/IOUSBHostFamily.kext/Contents/PlugIns/AppleUSBHostPlatformProperties.kext/Contents/Info.plist";
+	NSString *ioUSBHostPath2 = @"/System/Library/Extensions/IOUSBHostFamily.kext/Contents/Info.plist";
+	NSDictionary *ioUSBHostIOProviderMergePropertiesDictionary = nil;
+
+	if ([fileManager fileExistsAtPath:ioUSBHostPath1])
+	{
+		NSDictionary *ioUSBHostInfoDictionary = [NSDictionary dictionaryWithContentsOfFile:ioUSBHostPath1];
+		NSDictionary *ioUSBHostIOKitPersonalities = [ioUSBHostInfoDictionary objectForKey:@"IOKitPersonalities_x86_64"];
+		NSMutableArray *sortedKeys = [[[ioUSBHostIOKitPersonalities allKeys] mutableCopy] autorelease];
+		NSDictionary *ioUSBHostIOKitPersonalityDictionary = nil;
+		NSString *nearestModelIdentifier = nil;
+		[sortedKeys sortUsingSelector:@selector(compare:)];
+		sortedKeys = [[[[sortedKeys reverseObjectEnumerator] allObjects] mutableCopy] autorelease];
+		
+		for (NSString *key in sortedKeys)
+		{
+			// iMac13,1
+			// iMac13,1-EHC1
+			// iMac13,1-EHC2
+			// iMac13,1-InternalHub-EHC1
+			// iMac13,1-InternalHub-EHC1-InternalHub
+			// iMac13,1-XHC1
+			NSArray *keyArray = [key componentsSeparatedByString:@"-"];
+			NSString *model = nil;
+			NSString *controllerName = nil;
+			bool isControllerHub = false;
+			
+			if ([keyArray count] == 1)
+				model = keyArray[0];
+			else if ([keyArray count] == 2)
+			{
+				model = keyArray[0];
+				controllerName = keyArray[1];
+			}
+			else if ([keyArray count] >= 3)
+			{
+				model = keyArray[0];
+				controllerName = keyArray[2];
+				isControllerHub = true;
+			}
+			
+			bool isHubMatch = (isControllerHub == isHub);
+			bool isModelMatch = [appDelegate.modelIdentifier isEqualToString:model];
+			
+			if (controllerName != nil)
+			{
+				if (isHubMatch && isModelMatch && isControllerLocationXHC(controllerLocationID) && isControllerNameXHC(controllerName))
+				{
+					ioUSBHostIOKitPersonalityDictionary = [ioUSBHostIOKitPersonalities objectForKey:key];
+					break;
+				}
+				else if (isHubMatch && isModelMatch && isControllerLocationEH1(controllerLocationID) && isControllerNameEH1(controllerName))
+				{
+					ioUSBHostIOKitPersonalityDictionary = [ioUSBHostIOKitPersonalities objectForKey:key];
+					break;
+				}
+				else if (isHubMatch && isModelMatch && isControllerLocationEH2(controllerLocationID) && isControllerNameEH2(controllerName))
+				{
+					ioUSBHostIOKitPersonalityDictionary = [ioUSBHostIOKitPersonalities objectForKey:key];
+					break;
+				}
+			}
+			else
+			{
+				if (isModelMatch)
+				{
+					ioUSBHostIOKitPersonalityDictionary = [ioUSBHostIOKitPersonalities objectForKey:key];
+					break;
+				}
+			}
+		}
+		
+		if (ioUSBHostIOKitPersonalityDictionary == nil)
+		{
+			if ([appDelegate tryGetNearestModel:[ioUSBHostIOKitPersonalities allKeys] modelIdentifier:appDelegate.modelIdentifier nearestModelIdentifier:&nearestModelIdentifier])
+				ioUSBHostIOKitPersonalityDictionary = [ioUSBHostIOKitPersonalities objectForKey:nearestModelIdentifier];
+		}
+
+		if (ioUSBHostIOKitPersonalityDictionary != nil)
+			ioUSBHostIOProviderMergePropertiesDictionary = [ioUSBHostIOKitPersonalityDictionary objectForKey:@"IOProviderMergeProperties"];
+	}
+	else if ([fileManager fileExistsAtPath:ioUSBHostPath2])
+	{
+		NSDictionary *ioUSBHostInfoDictionary = [NSDictionary dictionaryWithContentsOfFile:ioUSBHostPath2];
+		NSDictionary *ioUSBHostIOKitPersonalities = [ioUSBHostInfoDictionary objectForKey:@"IOKitPersonalities"];
+		NSString *nearestModelIdentifier = nil;
+		
+		if ([appDelegate tryGetNearestModel:[ioUSBHostIOKitPersonalities allKeys] modelIdentifier:appDelegate.modelIdentifier nearestModelIdentifier:&nearestModelIdentifier])
+		{
+			NSDictionary *ioUSBHostIOKitPersonalityDictionary = [ioUSBHostIOKitPersonalities objectForKey:nearestModelIdentifier];
+			ioUSBHostIOProviderMergePropertiesDictionary = [ioUSBHostIOKitPersonalityDictionary objectForKey:@"IOProviderMergeProperties"];
+		}
+	}
 	
-	if (![fileManager fileExistsAtPath:ioUSBHostPath])
-		return false; */
-	
-	NSBundle *mainBundle = [NSBundle mainBundle];
-	NSString *filePath = nil;
-	
-	if (!(filePath = [mainBundle pathForResource:@"config_patches" ofType:@"plist" inDirectory:@"Clover"]))
+	if (ioUSBHostIOProviderMergePropertiesDictionary == nil)
 		return false;
-	
-	NSDictionary *ioUSBHostInfoDictionary = [NSDictionary dictionaryWithContentsOfFile:filePath];
-	NSDictionary *ioUSBHostIOKitPersonalities = [ioUSBHostInfoDictionary objectForKey:@"IOKitPersonalities"];
-	NSString *nearestModelIdentifier = nil;
-	
-	// If we already have an entry leave it out
-	if ([[ioUSBHostIOKitPersonalities allKeys] containsObject:appDelegate.modelIdentifier])
-		return false;
-	
-	// Get the closest model and use the power entries for it
-	if (![appDelegate tryGetNearestModel:[ioUSBHostIOKitPersonalities allKeys] modelIdentifier:appDelegate.modelIdentifier nearestModelIdentifier:&nearestModelIdentifier])
-		return false;
-	
-	//NSLog(@"nearestModelIdentifier: %@", nearestModelIdentifier);
-	
-	NSDictionary *ioUSBHostIOKitPersonalityDictionary = [ioUSBHostIOKitPersonalities objectForKey:nearestModelIdentifier];
-	NSDictionary *ioUSBHostIOProviderMergePropertiesDictionary = [ioUSBHostIOKitPersonalityDictionary objectForKey:@"IOProviderMergeProperties"];
-	
+
 	NSNumber *sleepPortCurrentLimit = [ioUSBHostIOProviderMergePropertiesDictionary objectForKey:@"kUSBSleepPortCurrentLimit"];
 	NSNumber *sleepPowerSupply = [ioUSBHostIOProviderMergePropertiesDictionary objectForKey:@"kUSBSleepPowerSupply"];
 	NSNumber *wakePortCurrentLimit = [ioUSBHostIOProviderMergePropertiesDictionary objectForKey:@"kUSBWakePortCurrentLimit"];
 	NSNumber *wakePowerSupply = [ioUSBHostIOProviderMergePropertiesDictionary objectForKey:@"kUSBWakePowerSupply"];
-	
+		
 	[ioProviderMergePropertiesDictionary setObject:sleepPortCurrentLimit forKey:@"kUSBSleepPortCurrentLimit"];
 	[ioProviderMergePropertiesDictionary setObject:sleepPowerSupply forKey:@"kUSBSleepPowerSupply"];
 	[ioProviderMergePropertiesDictionary setObject:wakePortCurrentLimit forKey:@"kUSBWakePortCurrentLimit"];
 	[ioProviderMergePropertiesDictionary setObject:wakePowerSupply forKey:@"kUSBWakePowerSupply"];
-	
+		
 	return true;
 }
 
@@ -558,24 +627,29 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 		
 		uint32_t port = propertyToUInt32([usbEntryDictionary objectForKey:@"port"]);
 		NSString *hubName = [usbEntryDictionary objectForKey:@"HubName"];
+		bool isHub = (hubName != nil);
 		NSNumber *hubLocation = [usbEntryDictionary objectForKey:@"HubLocation"];
 		NSString *modelEntryName = [NSString stringWithFormat:@"%@-%@", appDelegate.modelIdentifier, usbController];
-		NSString *providerClass = (hubName != nil ? hubName : [usbEntryDictionary objectForKey:@"UsbControllerIOClass"]);
-		//NSString *providerClass = (hubName != nil ? hubName : ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI"));
+		NSString *providerClass = (isHub ? hubName : [usbEntryDictionary objectForKey:@"UsbControllerIOClass"]);
 		
 		// For hub's we'll append "-internal-hub"
-		if (hubName != nil)
+		if (isHub)
 			modelEntryName = [modelEntryName stringByAppendingString:@"-internal-hub"];
-		
 		// For unknown controllers we'll append "-VID_PID"
-		if ([usbController hasPrefix:@"XH"] && usbControllerLocationID != 0x14)
+		else if (isControllerNameXHC(usbController) && !isControllerLocationXHC(usbControllerLocationID))
 			modelEntryName = [modelEntryName stringByAppendingFormat:@"-%@", deviceName];
-		
-		if ([usbController hasPrefix:@"EH"] && usbControllerLocationID != 0x1a && usbControllerLocationID != 0x1d)
+		else if (isControllerNameEH1(usbController) && !isControllerLocationEH1(usbControllerLocationID))
+			modelEntryName = [modelEntryName stringByAppendingFormat:@"-%@", deviceName];
+		else if (isControllerNameEH2(usbController) && !isControllerLocationEH2(usbControllerLocationID))
 			modelEntryName = [modelEntryName stringByAppendingFormat:@"-%@", deviceName];
 		
 		if (providerClass == nil)
-			providerClass = ([usbController hasPrefix:@"XH"] ? @"AppleUSBXHCIPCI" : @"AppleUSBEHCIPCI");
+		{
+			if (isControllerNameXHC(usbController))
+				providerClass = @"AppleUSBXHCIPCI";
+			else if (isControllerNameEH1(usbController) || isControllerNameEH2(usbController))
+				providerClass = @"AppleUSBEHCIPCI";
+		}
 		
 		NSMutableDictionary *modelEntryDictionary = [ioKitPersonalities objectForKey:modelEntryName];
 		NSMutableDictionary *ioProviderMergePropertiesDictionary = nil;
@@ -592,7 +666,7 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 			[ioProviderMergePropertiesDictionary setObject:portsDictionary forKey:@"ports"];
 			
 			// For HUB's
-			if (hubName != nil)
+			if (isHub)
 			{
 				[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBHostMergeProperties" forKey:@"CFBundleIdentifier"];
 				[modelEntryDictionary setObject:@"AppleUSBHostMergeProperties" forKey:@"IOClass"];
@@ -608,7 +682,7 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 			}
 			else
 			{
-				if (!injectUSBPowerProperties(appDelegate, ioProviderMergePropertiesDictionary))
+				if (!injectUSBPowerProperties(appDelegate, usbControllerLocationID, isHub, ioProviderMergePropertiesDictionary))
 					injectDefaultUSBPowerProperties(ioProviderMergePropertiesDictionary);
 				
 				[modelEntryDictionary setObject:@"com.apple.driver.AppleUSBMergeNub" forKey:@"CFBundleIdentifier"];
@@ -832,18 +906,19 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 		if (usbControllerID != 0)
 		{
 			// For unknown controllers we'll append VID/PID
-			if ([usbController hasPrefix:@"XH"] && usbControllerLocationID != 0x14)
+			if (isControllerNameXHC(usbController) && !isControllerLocationXHC(usbControllerLocationID))
 				name = deviceName;
-			
-			if ([usbController hasPrefix:@"EH"] && usbControllerLocationID != 0x1a && usbControllerLocationID != 0x1d)
+			else if (isControllerNameEH1(usbController) && !isControllerLocationEH1(usbControllerLocationID))
+				name = deviceName;
+			else if (isControllerNameEH2(usbController) && !isControllerLocationEH2(usbControllerLocationID))
 				name = deviceName;
 		}
 		
 		if (locationID != nil)
 		{
-			if ([locationID unsignedIntValue] == 0x1D100000)
+			if (isPortLocationHUB1([locationID unsignedIntValue]))
 				name = @"HUB1";
-			else if ([locationID unsignedIntValue] == 0x1A100000)
+			else if (isPortLocationHUB2([locationID unsignedIntValue]))
 				name = @"HUB2";
 		}
 		
@@ -861,12 +936,14 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 		{
 			NSMutableDictionary *usbEntryDictionary = [portsDictionary objectForKey:portKey];
 			
+			NSString *portName = [usbEntryDictionary objectForKey:@"name"];
 			NSNumber *portType = [usbEntryDictionary objectForKey:@"portType"];
 			NSNumber *usbConnector = [usbEntryDictionary objectForKey:@"UsbConnector"];
 			NSData *port = [usbEntryDictionary objectForKey:@"port"];
 			
 			[ssdtUIACString appendString:[NSString stringWithFormat:@"                      \"%@\", Package()\n", portKey]];
 			[ssdtUIACString appendString:@"                      {\n"];
+			[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"name\", Buffer() { \"%@\" },\n", portName]];
 			if (portType != nil)
 				[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"portType\", %d,\n", [portType unsignedIntValue]]];
 			else if (usbConnector != nil)
@@ -905,4 +982,50 @@ void exportUSBPorts(AppDelegate *appDelegate)
 	validateUSBPower(appDelegate);
 	exportUSBPortsKext(appDelegate);
 	exportUSBPortsSSDT(appDelegate);
+}
+
+bool isControllerLocationXHC(uint32_t usbControllerLocationID)
+{
+	return (usbControllerLocationID == 0x14);
+}
+
+bool isControllerLocationEH1(uint32_t usbControllerLocationID)
+{
+	return (usbControllerLocationID == 0x1D);
+}
+
+bool isControllerLocationEH2(uint32_t usbControllerLocationID)
+{
+	return (usbControllerLocationID == 0x1A);
+}
+
+bool isControllerNameXHC(NSString *controllerName)
+{
+	NSArray *controllerArray =  @[@"XHCI", @"XHC1", @"XHC"];
+	
+	return ([controllerArray indexOfObject:controllerName] != NSNotFound);
+}
+
+bool isControllerNameEH1(NSString *controllerName)
+{
+	NSArray *controllerArray =  @[@"EHC1", @"EH01"];
+	
+	return ([controllerArray indexOfObject:controllerName] != NSNotFound);
+}
+
+bool isControllerNameEH2(NSString *controllerName)
+{
+	NSArray *controllerArray =  @[@"EHC2", @"EH02"];
+	
+	return ([controllerArray indexOfObject:controllerName] != NSNotFound);
+}
+
+bool isPortLocationHUB1(uint32_t locationID)
+{
+	return (locationID == 0x1D100000);
+}
+
+bool isPortLocationHUB2(uint32_t locationID)
+{
+	return (locationID == 0x1A100000);
 }

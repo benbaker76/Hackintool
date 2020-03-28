@@ -71,5 +71,13 @@ NSString *getUSBConnectorSpeed(uint8_t speed);
 void exportUSBPortsKext(AppDelegate *appDelegate);
 void exportUSBPortsSSDT(AppDelegate *appDelegate);
 void exportUSBPorts(AppDelegate *appDelegate);
+bool isControllerLocationXHC(uint32_t usbControllerLocationID);
+bool isControllerLocationEH1(uint32_t usbControllerLocationID);
+bool isControllerLocationEH2(uint32_t usbControllerLocationID);
+bool isControllerNameXHC(NSString *controllerName);
+bool isControllerNameEH1(NSString *controllerName);
+bool isControllerNameEH2(NSString *controllerName);
+bool isPortLocationHUB1(uint32_t locationID);
+bool isPortLocationHUB2(uint32_t locationID);
 
 #endif /* USB_hpp */
