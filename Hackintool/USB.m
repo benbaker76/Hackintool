@@ -376,7 +376,11 @@ bool injectUSBPowerProperties(AppDelegate *appDelegate, uint32_t controllerLocat
 	NSNumber *sleepPowerSupply = [ioUSBHostIOProviderMergePropertiesDictionary objectForKey:@"kUSBSleepPowerSupply"];
 	NSNumber *wakePortCurrentLimit = [ioUSBHostIOProviderMergePropertiesDictionary objectForKey:@"kUSBWakePortCurrentLimit"];
 	NSNumber *wakePowerSupply = [ioUSBHostIOProviderMergePropertiesDictionary objectForKey:@"kUSBWakePowerSupply"];
-		
+	//NSNumber *usbMuxEnabled = [ioUSBHostIOProviderMergePropertiesDictionary objectForKey:@"kUSBMuxEnabled"];
+	
+	if (sleepPortCurrentLimit == nil || sleepPowerSupply == nil || wakePortCurrentLimit == nil || wakePowerSupply == nil)
+		return false;
+	
 	[ioProviderMergePropertiesDictionary setObject:sleepPortCurrentLimit forKey:@"kUSBSleepPortCurrentLimit"];
 	[ioProviderMergePropertiesDictionary setObject:sleepPowerSupply forKey:@"kUSBSleepPowerSupply"];
 	[ioProviderMergePropertiesDictionary setObject:wakePortCurrentLimit forKey:@"kUSBWakePortCurrentLimit"];
