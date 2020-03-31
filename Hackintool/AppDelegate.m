@@ -3515,15 +3515,16 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	uint32_t usbControllerLocationID = propertyToUInt32([propertyDictionary objectForKey:@"UsbControllerLocationID"]);
 	uint32_t hubLocationID = propertyToUInt32([propertyDictionary objectForKey:@"HubLocation"]);
 
-	// PR11, PR21
-	if ((isControllerLocationEH1(usbControllerLocationID) || isControllerLocationEH2(usbControllerLocationID)) && port == 0)
-	{
-		[propertyDictionary setObject:@(kInternal) forKey:@"UsbConnector"];
-	}
-	
 	if (isPortLocationHUB1(hubLocationID) || isPortLocationHUB2(hubLocationID))
 	{
 		[propertyDictionary setObject:@(kTypeA) forKey:@"portType"];
+		
+		return;
+	}
+	else if ((isControllerLocationEH1(usbControllerLocationID) || isControllerLocationEH2(usbControllerLocationID)) && port == 0)
+	{
+		// PR11, PR21
+		[propertyDictionary setObject:@(kInternal) forKey:@"UsbConnector"];
 		
 		return;
 	}
