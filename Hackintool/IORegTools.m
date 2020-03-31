@@ -333,8 +333,6 @@ bool getIORegUSBPortsPropertyDictionaryArray(NSMutableArray **propertyDictionary
 										{
 											NSMutableDictionary *hubPropertyDictionary = (__bridge NSMutableDictionary *)hubPropertyDictionaryRef;
 											
-											// HUB1: (locationID == 0x1D100000)
-											// HUB2: (locationID == 0x1A100000)
 											NSNumber *hubLocationID = [hubPropertyDictionary objectForKey:@"locationID"];
 											
 											[usbPortPropertyDictionary setValue:[NSString stringWithUTF8String:hubClassName] forKey:@"HubName"];

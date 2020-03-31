@@ -3175,7 +3175,11 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		uint32_t index = 0;
 		
 		if (usbConnector == nil && portType == nil)
-			continue;
+		{
+			[self createUSBPortConnector:propertyDictionary];
+
+			//continue;
+		}
 		
 		if (hubName != nil)
 		{
@@ -3229,6 +3233,136 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	usbRegisterEvents(self);
 }
 
+- (void)injectUSBPorts:(NSDictionary *)portsDictionary usbController:(NSString *)usbController usbControllerID:(uint32_t)usbControllerID usbControllerLocationID:(uint32_t)usbControllerLocationID hubName:(NSString *)hubName hubLocationID:(uint32_t)hubLocationID
+{
+	for (NSString *usbPortEntry in portsDictionary.allKeys)
+	{
+		NSMutableDictionary *usbPortDictionary = [[[portsDictionary objectForKey:usbPortEntry] mutableCopy] autorelease];
+		
+		uint32_t port = propertyToUInt32([usbPortDictionary objectForKey:@"port"]);
+		
+		[usbPortDictionary setValue:usbPortEntry forKey:@"name"];
+		[usbPortDictionary setValue:@((usbControllerLocationID << 24) | (port << 16)) forKey:@"locationID"];
+		[usbPortDictionary setValue:usbController forKey:@"UsbController"];
+		[usbPortDictionary setValue:@(usbControllerID) forKey:@"UsbControllerID"];
+		[usbPortDictionary setValue:@(usbControllerLocationID) forKey:@"UsbControllerLocationID"];
+		
+		if (hubName != nil)
+		{
+			[usbPortDictionary setValue:@(hubLocationID | (port << 16)) forKey:@"locationID"];
+			[usbPortDictionary setValue:hubName forKey:@"HubName"];
+			[usbPortDictionary setValue:@(hubLocationID) forKey:@"HubLocation"];
+		}
+		
+		[_usbPortsArray addObject:usbPortDictionary];
+	}
+}
+
+- (void)injectUSBPorts
+{
+	// https://github.com/Sniki/OS-X-USB-Inject-All/blob/master/USBInjectAll/USBInjectAll-Info.plist
+	//
+	// PR11 = 0x1D100000 (HUB1)
+	// PR21 = 0x1A100000 (HUB2)
+	// PR11 = 0x1D1x0000 (HPxx)
+	// PR21 = 0x1A1x0000 (HPxx)
+	// XHCx - 0x14xx0000 (HSxx, SSxx)
+	// EHx1 - 0x1Dxx0000 (PRxx)
+	// EHx2 - 0x1Axx0000 (PRxx)
+	//
+	// 1. Enumerate IOPCIDevice's
+	// - Read device-id, vendor-id
+	//
+	// 2. Intel only
+	// - vendor-id != 0x8086 continue
+	//
+	// 3. device-id == 0x1c26
+	// * EHx1:
+	// - name: PR11, PR12, PR13, PR14, PR15, PR16, PR17, PR18
+	// - port (Data): 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8
+	// - UsbConnector: 255 (PR11), 0 (PR12 - PR18)
+	// - locationID: 0x1Dxx0000
+	// - IOProviderClass: AppleUSBEHCIPCI
+	//
+	// * HUB1:
+	// - name: HP11, HP12, HP13, HP14, HP15, HP16, HP17, HP18
+	// - port (Data): 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8
+	// - portType: 0
+	// - locationID: 0x1D1x0000
+	// - IOProviderClass: AppleUSB20InternalHub
+	//
+	// 4. device-id == 0x1c2d
+	// * EHx2:
+	// - name: PR21, PR22, PR23, PR24, PR25, PR26
+	// - port (Data): 0x1, 0x2, 0x3, 0x4, 0x5, 0x6
+	// - UsbConnector: 255 (PR21), 0 (PR22 - PR26)
+	// - locationID: 0x1Axx0000
+	// - IOProviderClass: AppleUSBEHCIPCI
+	//
+	// * HUB2:
+	// - name: HP21, HP22, HP23, HP24, HP25, HP26, HP27, HP28
+	// - port (Data): 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8
+	// - portType: 0
+	// - locationID: 0x1A1x0000
+	// - IOProviderClass: AppleUSB20InternalHub
+	//
+	// 5. device-id == 0x1e31, 0x8xxx, 0x9cb1, 0x9dxx, 0x9xxx, 0xa12f, 0xa2af, 0xa36d
+	// * XHCx:
+	// - 8086_1e31: HS01, HS02, HS03, HS04, SS01, SS02, SS03, SS04
+	// - 8086_8xxx: HS01, HS02, HS03, HS04, HS05, HS06, HS07, HS08, HS09, HS10, HS11, HS12, HS13, HS14, SS01, SS02, SS03, SS04, SS05, SS06
+	// - 8086_9cb1: HS01, HS02, HS03, HS04, HS05, HS06, HS07, HS08, HS09, HS10, HS11, SS01, SS02, SS03, SS04
+	// - 8086_9dxx: HS01, HS02, HS03, HS04, HS05, HS06, HS07, HS08, HS09, HS10, SS01, SS02, SS03, SS04, SS05, SS06, USR1, USR2
+	// - 8086_9xxx: HS01, HS02, HS03, HS04, HS05, HS06, HS07, HS08, HS09, SS01, SS02, SS03, SS04
+	// - 8086_a12f: HS01, HS02, HS03, HS04, HS05, HS06, HS07, HS08, HS09, HS10, HS11, HS12, HS13, HS14, SS01, SS02, SS03, SS04, SS05, SS06, SS07, SS08, SS09, SS10, USR1, USR2
+	// - 8086_a2af: HS01, HS02, HS03, HS04, HS05, HS06, HS07, HS08, HS09, HS10, HS11, HS12, HS13, HS14, SS01, SS02, SS03, SS04, SS05, SS06, SS07, SS08, SS09, SS10, USR1, USR2
+	// - 8086_a36d: HS01, HS02, HS03, HS04, HS05, HS06, HS07, HS08, HS09, HS10, HS11, HS12, HS13, HS14, SS01, SS02, SS03, SS04, SS05, SS06, SS07, SS08, SS09, SS10, USR1, USR2
+	// - port (Data): 0x1, 0x2, ... n
+	// - UsbConnector: 3
+	// - locationID: 0x14xx0000
+	// - IOProviderClass: AppleUSBXHCIPCI
+	
+	for (NSMutableDictionary *usbControllersDictionary in _usbControllersArray)
+	{
+		//NSString *usbControllerType = [usbControllersDictionary objectForKey:@"Type"];
+		uint32_t usbControllerID = propertyToUInt32([usbControllersDictionary objectForKey:@"DeviceID"]);
+		uint32_t usbControllerLocationID = propertyToUInt32([usbControllersDictionary objectForKey:@"ID"]);
+		uint32_t vendorID = (usbControllerID & 0xFFFF);
+		uint32_t deviceID = (usbControllerID >> 16);
+		
+		for (NSString *usbConfigEntry in _usbConfigurationDictionary.allKeys)
+		{
+			NSMutableDictionary *usbConfigurationDictionary = [_usbConfigurationDictionary objectForKey:usbConfigEntry];
+			NSDictionary *portsDictionary = [usbConfigurationDictionary objectForKey:@"ports"];
+			
+			if ([[NSString stringWithFormat:@"%04x_%04x", vendorID, deviceID] isEqualToString:usbConfigEntry] ||
+				[[NSString stringWithFormat:@"%04x_%02xxx", vendorID, (deviceID & 0xFF00) >> 8] isEqualToString:usbConfigEntry] ||
+				[[NSString stringWithFormat:@"%04x_%01xxxx", vendorID, (deviceID & 0xF000) >> 12] isEqualToString:usbConfigEntry])
+			{
+				[self injectUSBPorts:portsDictionary usbController:@"XHC" usbControllerID:usbControllerID usbControllerLocationID:usbControllerLocationID hubName:nil hubLocationID:0];
+			}
+			else if (isControllerLocationEH1(usbControllerLocationID) && [usbConfigEntry isEqualToString:@"EH01"])
+			{
+				NSMutableDictionary *hub1ConfigurationDictionary = [_usbConfigurationDictionary objectForKey:@"HUB1"];
+				NSDictionary *hub1PortsDictionary = [hub1ConfigurationDictionary objectForKey:@"ports"];
+				
+				[self injectUSBPorts:portsDictionary usbController:@"EH01" usbControllerID:usbControllerID usbControllerLocationID:usbControllerLocationID hubName:nil hubLocationID:0];
+				[self injectUSBPorts:hub1PortsDictionary usbController:@"EH01" usbControllerID:usbControllerID usbControllerLocationID:usbControllerLocationID hubName:@"AppleUSB20InternalHub" hubLocationID:0x1D100000];
+			}
+			else if (isControllerLocationEH2(usbControllerLocationID) && [usbConfigEntry isEqualToString:@"EH02"])
+			{
+				NSMutableDictionary *hub2ConfigurationDictionary = [_usbConfigurationDictionary objectForKey:@"HUB2"];
+				NSDictionary *hub2PortsDictionary = [hub2ConfigurationDictionary objectForKey:@"ports"];
+				
+				[self injectUSBPorts:portsDictionary usbController:@"EH02" usbControllerID:usbControllerID usbControllerLocationID:usbControllerLocationID hubName:nil hubLocationID:0];
+				[self injectUSBPorts:hub2PortsDictionary usbController:@"EH02" usbControllerID:usbControllerID usbControllerLocationID:usbControllerLocationID hubName:@"AppleUSB20InternalHub" hubLocationID:0x1A100000];
+			}
+		}
+	}
+	
+	[_usbPortsArray sortUsingFunction:usbPortSort context:nil];
+	[_usbPortsTableView reloadData];
+}
+
 - (void)refreshUSBControllers
 {
 	NSMutableArray *propertyDictionaryArray = nil;
@@ -3273,12 +3407,12 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		return false;
 
 	uint32_t vendorID = (usbControllerID & 0xFFFF);
-	uint32_t productID = (usbControllerID >> 16);
+	uint32_t deviceID = (usbControllerID >> 16);
 	
 	if (vendorID != 0x8086)
 		return false;
 	
-	NSString *controllerName = [NSString stringWithFormat:@"%04x_%04x", vendorID, productID];
+	NSString *controllerName = [NSString stringWithFormat:@"%04x_%04x", vendorID, deviceID];
 	
 	if ([self getUSBPortNameWithControllerName:controllerName portNumber:portNumber portName:portName])
 		return true;
@@ -3375,6 +3509,28 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	return false;
 }
 
+- (void)createUSBPortConnector:(NSMutableDictionary *)propertyDictionary
+{
+	uint32_t port = propertyToUInt32([propertyDictionary objectForKey:@"port"]);
+	uint32_t usbControllerLocationID = propertyToUInt32([propertyDictionary objectForKey:@"UsbControllerLocationID"]);
+	uint32_t hubLocationID = propertyToUInt32([propertyDictionary objectForKey:@"HubLocation"]);
+
+	// PR11, PR21
+	if ((isControllerLocationEH1(usbControllerLocationID) || isControllerLocationEH2(usbControllerLocationID)) && port == 0)
+	{
+		[propertyDictionary setObject:@(kInternal) forKey:@"UsbConnector"];
+	}
+	
+	if (isPortLocationHUB1(hubLocationID) || isPortLocationHUB2(hubLocationID))
+	{
+		[propertyDictionary setObject:@(kTypeA) forKey:@"portType"];
+		
+		return;
+	}
+	
+	[propertyDictionary setObject:@(kUSB3StandardA) forKey:@"UsbConnector"];
+}
+
 - (NSString *)generateUSBPortName:(uint32_t)usbControllerID hubLocationID:(uint32_t)hubLocationID locationID:(uint32_t)locationID portNumber:(uint32_t)portNumber
 {
 	// LocationID
@@ -3387,10 +3543,12 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	//
 	// PR11 = 0x1D100000 (HUB1)
 	// PR21 = 0x1A100000 (HUB2)
-	// XHCI - 0x14xxxxxx (HSxx, SSxx)
-	// EHx1 - 0x1Dxxxxxx (HPxx)
-	// EHx2 - 0x1Axxxxxx (PRxx)
-	
+	// PR11 = 0x1D1x0000 (HPxx)
+	// PR21 = 0x1A1x0000 (HPxx)
+	// XHCx - 0x14xx0000 (HSxx, SSxx)
+	// EHx1 - 0x1Dxx0000 (PRxx)
+	// EHx2 - 0x1Axx0000 (PRxx)
+
 	uint8_t ctrl = locationID >> 24;
 	//uint8_t port = (locationID >> 20) & 0xF;
 	//uint8_t bus = locationID & 0xFFFFF;
@@ -3402,13 +3560,13 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			[self getUSBPortNameWithControllerID:usbControllerID portNumber:portNumber portName:&portName];
 			break;
 		case 0x1D: // EHx1
-			if (hubLocationID == 0x1D100000)
+			if (isPortLocationHUB1(hubLocationID))
 				[self getUSBPortNameWithControllerName:@"HUB1" portNumber:portNumber portName:&portName];
 			else
 				[self getUSBPortNameWithControllerName:@"EH01" portNumber:portNumber portName:&portName];
 			break;
 		case 0x1A: // EHx2
-			if (hubLocationID == 0x1A100000)
+			if (isPortLocationHUB2(hubLocationID))
 				[self getUSBPortNameWithControllerName:@"HUB2" portNumber:portNumber portName:&portName];
 			else
 				[self getUSBPortNameWithControllerName:@"EH02" portNumber:portNumber portName:&portName];
@@ -3569,7 +3727,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			
 			if ([ioKitKey hasSuffix:@"-internal-hub"])
 			{
-				[usbEntryDictionary setObject:@"AppleUSB20InternalIntelHub" forKey:@"HubName"];
+				[usbEntryDictionary setObject:@"AppleUSB20InternalHub" forKey:@"HubName"];
 				[usbEntryDictionary setObject:locationID forKey:@"HubLocation"];
 			}
 			
@@ -8617,6 +8775,10 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	{
 		[self refreshUSBPorts];
 		[self refreshUSBControllers];
+	}
+	else if ([identifier isEqualToString:@"Inject"])
+	{
+		[self injectUSBPorts];
 	}
 	else if ([identifier isEqualToString:@"Import"])
 	{
