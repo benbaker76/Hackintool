@@ -3176,9 +3176,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		if (usbConnector == nil && portType == nil)
 		{
-			[self createUSBPortConnector:propertyDictionary];
+			//[self createUSBPortConnector:propertyDictionary];
 
-			//continue;
+			continue;
 		}
 		
 		if (hubName != nil)
@@ -3521,7 +3521,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		return;
 	}
-	else if ((isControllerLocationEH1(usbControllerLocationID) || isControllerLocationEH2(usbControllerLocationID)) && port == 0)
+	else if ((isControllerLocationEH1(usbControllerLocationID) || isControllerLocationEH2(usbControllerLocationID)) && port == 0x1)
 	{
 		// PR11, PR21
 		[propertyDictionary setObject:@(kInternal) forKey:@"UsbConnector"];
