@@ -444,6 +444,58 @@ void injectUSBControllerProperties(AppDelegate *appDelegate, NSMutableDictionary
 	}
 }
 
+bool getECName(AppDelegate *appDelegate, NSString **ecName)
+{
+	io_iterator_t iterator;
+	
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("IOACPIPlatformDevice"), &iterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
+	{
+		io_name_t name {};
+		kr = IORegistryEntryGetName(device, name);
+		
+		if (kr != KERN_SUCCESS)
+			continue;
+		
+		if ([[NSString stringWithUTF8String:name] isEqualToString:@"EC"])
+			continue;
+		
+		CFMutableDictionaryRef propertyDictionaryRef = 0;
+		
+		kr = IORegistryEntryCreateCFProperties(device, &propertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+		
+		if (kr != KERN_SUCCESS)
+			continue;
+		
+		NSMutableDictionary *propertyDictionary = (__bridge NSMutableDictionary *)propertyDictionaryRef;
+		
+		NSData *propertyValue = [propertyDictionary objectForKey:@"name"];
+		
+		if (propertyValue == nil)
+			continue;
+		
+		NSString *nameEntry = [NSString stringWithCString:(const char *)[propertyValue bytes] encoding:NSASCIIStringEncoding];
+		
+		if ([nameEntry isEqualToString:@"PNP0C09"])
+		{
+			*ecName = [NSString stringWithUTF8String:name];
+			
+			IOObjectRelease(iterator);
+			IOObjectRelease(device);
+			
+			return true;
+		}
+	}
+	
+	IOObjectRelease(iterator);
+	
+	return false;
+}
+
 ECType checkEC(AppDelegate *appDelegate)
 {
 	// An EC device is needed so AppleBusPowerController attaches to it and injects
@@ -726,33 +778,85 @@ void addUSBDictionary(AppDelegate *appDelegate, NSMutableDictionary *ioKitPerson
 	}
 }
 
-void exportUSBPowerSSDT(AppDelegate *appDelegate, NSMutableDictionary *ioProviderMergePropertiesDictionary)
+void exportUSBPowerSSDT(AppDelegate *appDelegate)
 {
 	NSMutableString *ssdtUSBXString = [NSMutableString string];
 	
-	NSNumber *sleepPortCurrentLimit = [ioProviderMergePropertiesDictionary objectForKey:@"kUSBSleepPortCurrentLimit"];
-	NSNumber *sleepPowerSupply = [ioProviderMergePropertiesDictionary objectForKey:@"kUSBSleepPowerSupply"];
-	NSNumber *wakePortCurrentLimit = [ioProviderMergePropertiesDictionary objectForKey:@"kUSBWakePortCurrentLimit"];
-	NSNumber *wakePowerSupply = [ioProviderMergePropertiesDictionary objectForKey:@"kUSBWakePowerSupply"];
-	
-	if (sleepPortCurrentLimit == nil || sleepPowerSupply == nil || wakePortCurrentLimit == nil || wakePowerSupply == nil)
-		return;
-	
-	[ssdtUSBXString appendString:@"DefinitionBlock (\"\", \"SSDT\", 2, \"hack\", \"_USBX\", 0)\n"];
+	[ssdtUSBXString appendString:@"DefinitionBlock (\"\", \"SSDT\", 2, \"ACDT\", \"SsdtEC\", 0)\n"];
 	[ssdtUSBXString appendString:@"{\n"];
-	[ssdtUSBXString appendString:@"    Device(_SB.USBX)\n"];
+	[ssdtUSBXString appendString:@"    External (_SB_.PCI0.LPCB, DeviceObj)\n"];
+	
+	NSString *ecName = nil;
+	
+	if (getECName(appDelegate, &ecName))
+	{
+		[ssdtUSBXString appendFormat:@"    External (_SB_.PCI0.LPCB.%@, DeviceObj)\n", ecName];
+		[ssdtUSBXString appendString:@"\n"];
+		[ssdtUSBXString appendFormat:@"    Scope (\\_SB.PCI0.LPCB.%@)\n", ecName];
+		[ssdtUSBXString appendString:@"    {\n"];
+		[ssdtUSBXString appendString:@"        Method (_STA, 0, NotSerialized)  // _STA: Status\n"];
+		[ssdtUSBXString appendString:@"        {\n"];
+		[ssdtUSBXString appendString:@"            If (_OSI (\"Darwin\"))\n"];
+		[ssdtUSBXString appendString:@"            {\n"];
+		[ssdtUSBXString appendString:@"                Return (0)\n"];
+		[ssdtUSBXString appendString:@"            }\n"];
+		[ssdtUSBXString appendString:@"            Else\n"];
+		[ssdtUSBXString appendString:@"            {\n"];
+		[ssdtUSBXString appendString:@"                Return (0x0F)\n"];
+		[ssdtUSBXString appendString:@"            }\n"];
+		[ssdtUSBXString appendString:@"        }\n"];
+		[ssdtUSBXString appendString:@"    }\n"];
+	}
+	
+	[ssdtUSBXString appendString:@"\n"];
+	[ssdtUSBXString appendString:@"    Scope (\\_SB)\n"];
 	[ssdtUSBXString appendString:@"    {\n"];
-	[ssdtUSBXString appendString:@"        Name(_ADR, 0)\n"];
-	[ssdtUSBXString appendString:@"        Method (_DSM, 4)\n"];
+	
+	[ssdtUSBXString appendString:@"        Device (USBX)\n"];
 	[ssdtUSBXString appendString:@"        {\n"];
-	[ssdtUSBXString appendString:@"            If (!Arg2) { Return (Buffer() { 0x03 } ) }\n"];
-	[ssdtUSBXString appendString:@"            Return (Package()\n"];
+	[ssdtUSBXString appendString:@"            Name (_ADR, Zero)  // _ADR: Address\n"];
+	[ssdtUSBXString appendString:@"            Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Method\n"];
 	[ssdtUSBXString appendString:@"            {\n"];
-	[ssdtUSBXString appendString:[NSString stringWithFormat:@"                \"kUSBSleepPortCurrentLimit\", %d,\n", [sleepPortCurrentLimit unsignedIntValue]]];
-	[ssdtUSBXString appendString:[NSString stringWithFormat:@"                \"kUSBSleepPowerSupply\", %d,\n", [sleepPowerSupply unsignedIntValue]]];
-	[ssdtUSBXString appendString:[NSString stringWithFormat:@"                \"kUSBWakePortCurrentLimit\", %d,\n", [wakePortCurrentLimit unsignedIntValue]]];
-	[ssdtUSBXString appendString:[NSString stringWithFormat:@"                \"kUSBWakePowerSupply\", %d,\n", [wakePowerSupply unsignedIntValue]]];
-	[ssdtUSBXString appendString:@"            })\n"];
+	[ssdtUSBXString appendString:@"                If ((Arg2 == Zero))\n"];
+	[ssdtUSBXString appendString:@"                {\n"];
+	[ssdtUSBXString appendString:@"                    Return (Buffer (One)\n"];
+	[ssdtUSBXString appendString:@"                    {\n"];
+	[ssdtUSBXString appendString:@"                         0x03                                             // .\n"];
+	[ssdtUSBXString appendString:@"                    })\n"];
+	[ssdtUSBXString appendString:@"                }\n"];
+	[ssdtUSBXString appendString:@"\n"];
+	[ssdtUSBXString appendString:@"                Return (Package (0x08)\n"];
+	[ssdtUSBXString appendString:@"                {\n"];
+	[ssdtUSBXString appendString:@"                    \"kUSBSleepPowerSupply\",\n"];
+	[ssdtUSBXString appendString:@"                    0x13EC,\n"];
+	[ssdtUSBXString appendString:@"                    \"kUSBSleepPortCurrentLimit\",\n"];
+	[ssdtUSBXString appendString:@"                    0x0834,\n"];
+	[ssdtUSBXString appendString:@"                    \"kUSBWakePowerSupply\",\n"];
+	[ssdtUSBXString appendString:@"                    0x13EC,\n"];
+	[ssdtUSBXString appendString:@"                    \"kUSBWakePortCurrentLimit\",\n"];
+	[ssdtUSBXString appendString:@"                    0x0834\n"];
+	[ssdtUSBXString appendString:@"                })\n"];
+	[ssdtUSBXString appendString:@"            }\n"];
+	[ssdtUSBXString appendString:@"        }\n"];
+	
+	[ssdtUSBXString appendString:@"\n"];
+	[ssdtUSBXString appendString:@"        Scope (\\_SB.PCI0.LPCB)\n"];
+	[ssdtUSBXString appendString:@"        {\n"];
+	[ssdtUSBXString appendString:@"            Device (EC)\n"];
+	[ssdtUSBXString appendString:@"            {\n"];
+	[ssdtUSBXString appendString:@"                Name (_HID, \"ACID0001\")  // _HID: Hardware ID\n"];
+	[ssdtUSBXString appendString:@"                Method (_STA, 0, NotSerialized)  // _STA: Status\n"];
+	[ssdtUSBXString appendString:@"                {\n"];
+	[ssdtUSBXString appendString:@"                    If (_OSI (\"Darwin\"))\n"];
+	[ssdtUSBXString appendString:@"                    {\n"];
+	[ssdtUSBXString appendString:@"                        Return (0x0F)\n"];
+	[ssdtUSBXString appendString:@"                    }\n"];
+	[ssdtUSBXString appendString:@"                    Else\n"];
+	[ssdtUSBXString appendString:@"                    {\n"];
+	[ssdtUSBXString appendString:@"                        Return (Zero)\n"];
+	[ssdtUSBXString appendString:@"                    }\n"];
+	[ssdtUSBXString appendString:@"                }\n"];
+	[ssdtUSBXString appendString:@"            }\n"];
 	[ssdtUSBXString appendString:@"        }\n"];
 	[ssdtUSBXString appendString:@"    }\n"];
 	[ssdtUSBXString appendString:@"}\n"];
@@ -760,9 +864,8 @@ void exportUSBPowerSSDT(AppDelegate *appDelegate, NSMutableDictionary *ioProvide
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSString *iaslPath = [mainBundle pathForResource:@"iasl" ofType:@"" inDirectory:@"Utilities"];
 	NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	NSString *tempPath = getTempPath();
-	NSString *tempFilePath = [NSString stringWithFormat:@"%@/SSDT-USBX.dsl", tempPath];
-	NSString *outputFilePath = [NSString stringWithFormat:@"%@/SSDT-USBX.aml", desktopPath];
+	NSString *tempFilePath = [NSString stringWithFormat:@"%@/SSDT-EC-USBX.dsl", desktopPath];
+	NSString *outputFilePath = [NSString stringWithFormat:@"%@/SSDT-EC-USBX.aml", desktopPath];
 	NSString *stdoutString = nil;
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:tempFilePath])
@@ -773,7 +876,6 @@ void exportUSBPowerSSDT(AppDelegate *appDelegate, NSMutableDictionary *ioProvide
 	[ssdtUSBXString writeToFile:tempFilePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
 	
 	launchCommand(iaslPath, @[@"-p", outputFilePath, tempFilePath], &stdoutString);
-	//NSLog(@"%@", stdoutString);
 	
 	NSArray *fileURLs = [NSArray arrayWithObjects:[NSURL fileURLWithPath:outputFilePath], nil];
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
@@ -842,7 +944,7 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 			[usbEntryDictionary removeObjectForKey:@"HubName"];
 			[usbEntryDictionary removeObjectForKey:@"HubLocation"];
 			[usbEntryDictionary removeObjectForKey:@"DevSpeed"];
-			[usbEntryDictionary removeObjectForKey:@"Comment"];
+			//[usbEntryDictionary removeObjectForKey:@"Comment"];
 		}
 	}
 	
@@ -866,13 +968,12 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 
 void exportUSBPortsSSDT(AppDelegate *appDelegate)
 {
-	bool hasExportedUSBPowerSSDT = NO;
 	NSMutableDictionary *ioKitPersonalities = [NSMutableDictionary dictionary];
 	NSMutableString *ssdtUIACString = [NSMutableString string];
 	
 	addUSBDictionary(appDelegate, ioKitPersonalities);
 	
-	[ssdtUIACString appendString:@"DefinitionBlock (\"\", \"SSDT\", 2, \"hack\", \"_UIAC\", 0)\n"];
+	[ssdtUIACString appendString:@"DefinitionBlock (\"\", \"SSDT\", 2, \"ACDT\", \"_UIAC\", 0)\n"];
 	[ssdtUIACString appendString:@"{\n"];
 	[ssdtUIACString appendString:@"    Device(UIAC)\n"];
 	[ssdtUIACString appendString:@"    {\n"];
@@ -899,13 +1000,6 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 		NSMutableDictionary *ioProviderMergePropertiesDictionary = [modelEntryDictionary objectForKey:@"IOProviderMergeProperties"];
 		NSData *portCount = [ioProviderMergePropertiesDictionary objectForKey:@"port-count"];
 		NSMutableDictionary *portsDictionary = [ioProviderMergePropertiesDictionary objectForKey:@"ports"];
-		
-		if (!hasExportedUSBPowerSSDT)
-		{
-			exportUSBPowerSSDT(appDelegate, ioProviderMergePropertiesDictionary);
-			
-			hasExportedUSBPowerSSDT = YES;
-		}
 		
 		if (usbControllerID != 0)
 		{
@@ -944,6 +1038,7 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			NSNumber *portType = [usbEntryDictionary objectForKey:@"portType"];
 			NSNumber *usbConnector = [usbEntryDictionary objectForKey:@"UsbConnector"];
 			NSData *port = [usbEntryDictionary objectForKey:@"port"];
+			NSString *comment = [usbEntryDictionary objectForKey:@"Comment"];
 			
 			[ssdtUIACString appendString:[NSString stringWithFormat:@"                      \"%@\", Package()\n", portKey]];
 			[ssdtUIACString appendString:@"                      {\n"];
@@ -953,6 +1048,8 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 			else if (usbConnector != nil)
 				[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"UsbConnector\", %d,\n", [usbConnector unsignedIntValue]]];
 			[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"port\", Buffer() { %@ },\n", getByteString(port)]];
+			if (comment != nil)
+				[ssdtUIACString appendString:[NSString stringWithFormat:@"                          \"Comment\", Buffer() { \"%@\" },\n", comment]];
 			[ssdtUIACString appendString:@"                      },\n"];
 		}
 		
@@ -983,9 +1080,10 @@ void exportUSBPortsSSDT(AppDelegate *appDelegate)
 
 void exportUSBPorts(AppDelegate *appDelegate)
 {
-	validateUSBPower(appDelegate);
+	//validateUSBPower(appDelegate);
 	exportUSBPortsKext(appDelegate);
 	exportUSBPortsSSDT(appDelegate);
+	exportUSBPowerSSDT(appDelegate);
 }
 
 bool isControllerLocationXHC(uint32_t usbControllerLocationID)
