@@ -36,8 +36,10 @@ NSArray *g_framebufferArray = @[@"FramebufferID", @"ModelNameAddr", @"Mobile", @
 NSArray *g_connectorArray = @[@"Index", @"BusID", @"Pipe", @"Type", @"Flags"];
 NSArray *g_connectorTypeArray = @[@"Zero", @"Dummy", @"LVDS", @"DigitalDVI", @"SVID", @"VGA", @"DP", @"HDMI", @"AnalogDVI"];
 NSArray *g_camelliaArray = @[@"Disabled", @"V1", @"V2", @"V3", @"Unsupported"];
-NSArray *g_fbNameArray = @[@"Sandy Bridge", @"Ivy Bridge", @"Haswell", @"Broadwell", @"Skylake", @"Kaby Lake", @"Coffee Lake", @"Cannon Lake", @"Ice Lake (LP)", @"Ice Lake (HP)", @"Tiger Lake"];
-NSArray *g_fbShortNameArray = @[@"SNB", @"IVB", @"HSW", @"BDW", @"SKL", @"KBL", @"CFL", @"CNL", @"ICLLP", @"ICLHP", @"TGL"];
+//NSArray *g_fbNameArray = @[@"Sandy Bridge", @"Ivy Bridge", @"Haswell", @"Broadwell", @"Skylake", @"Kaby Lake", @"Coffee Lake", @"Cannon Lake", @"Ice Lake (LP)", @"Ice Lake (HP)", @"Tiger Lake"];
+//NSArray *g_fbShortNameArray = @[@"SNB", @"IVB", @"HSW", @"BDW", @"SKL", @"KBL", @"CFL", @"CNL", @"ICLLP", @"ICLHP", @"TGL"];
+NSArray *g_fbNameArray = @[@"Sandy Bridge", @"Ivy Bridge", @"Haswell", @"Broadwell", @"Skylake", @"Kaby Lake", @"Coffee Lake", @"Ice Lake (LP)"];
+NSArray *g_fbShortNameArray = @[@"SNB", @"IVB", @"HSW", @"BDW", @"SKL", @"KBL", @"CFL", @"ICLLP"];
 
 const uint32_t g_fbSandyBridge[] = { 0x00010000, 0x00020000, 0x00030010, 0x00030030, 0x00040000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00030020, 0x00050000 };
 
@@ -410,7 +412,8 @@ bool readFramebuffer(const uint8_t *buffer, size_t bufferSize, IntelGen &intelGe
 				{
 					start = pos;
 					//isLowProfile = findFirst(buffer, 0, "ICLLP", bufferSize);
-					isLowProfile = findFirst(buffer, &pos - &buffer, 0x00090325, MIN(PAGE_SIZE, bufferSize));
+					//isLowProfile = findFirst(buffer, &pos - &buffer, 0x00090325, MIN(PAGE_SIZE, bufferSize));
+					isLowProfile = true;
 				}
 				
 				if (isLowProfile)

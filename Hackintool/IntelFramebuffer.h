@@ -25,7 +25,7 @@ using namespace std;
 
 #define IS_ICELAKE(ig)		(ig == IGIceLakeLP || ig == IGIceLakeHP)
 
-enum IntelGen
+/* enum IntelGen
 {
 	IGUnknown = -1,
 	IGSandyBridge = 0,
@@ -40,6 +40,23 @@ enum IntelGen
 	IGIceLakeHP,
 	IGTigerLake,
 	IGCount = 7
+}; */
+
+enum IntelGen
+{
+	IGUnknown = -1,
+	IGSandyBridge = 0,
+	IGIvyBridge,
+	IGHaswell,
+	IGBroadwell,
+	IGSkylake,
+	IGKabyLake,
+	IGCoffeeLake,
+	IGIceLakeLP,
+	IGIceLakeHP,
+	IGCannonLake,
+	IGTigerLake,
+	IGCount = 8
 };
 
 extern NSArray *g_framebufferArray;
@@ -538,19 +555,22 @@ struct FramebufferICLLP
 	/* This is for boot framebuffer from what I can understand */
 	uint32_t fFramebufferMemorySize;
 	uint32_t fUnifiedMemorySize;
-	uint32_t pad1[2];
-	ConnectorInfoICL connectors[3];
+	ConnectorInfoICL connectors[6];
+	/* Flags are quite different in ICL now */
 	FramebufferFlags flags;
-	FramebufferCNLCurrents currents[8];
-	uint32_t unk2[5];
+	uint32_t unk2;
+	FramebufferCNLCurrents currents[3];
+	uint32_t unk3[2];
 	uint32_t camelliaVersion;
-	uint32_t unk3[6];
-	/* Defaults to 14, used when UseVideoTurbo bit is set */
+	uint32_t unk4[3];
 	uint32_t fNumTransactionsThreshold;
+	/* Defaults to 14, used when UseVideoTurbo bit is set */
 	uint32_t fVideoTurboFreq;
 	uint32_t fSliceCount;
 	uint32_t fEuCount;
-	uint32_t unk4;
+	uint32_t unk5;
+	uint8_t unk6;
+	uint8_t pad[3];
 };
 
 struct FramebufferICLHP

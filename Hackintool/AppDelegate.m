@@ -1462,20 +1462,20 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		ioregName = [ioregName substringFromIndex:ioregName.length - min((int)ioregName.length, 15)];
 		ioregIOName = [ioregIOName substringToIndex:min((int)ioregIOName.length, 15)];
 		
-		[outputString appendString:[NSString stringWithFormat:@"%-7s ", [pciDebug UTF8String]]];
-		[outputString appendString:[NSString stringWithFormat:@"%04X ", [vendorID unsignedIntValue]]];
-		[outputString appendString:[NSString stringWithFormat:@"%04X ", [deviceID unsignedIntValue]]];
-		[outputString appendString:[NSString stringWithFormat:@"%04X ", [subVendorID unsignedIntValue]]];
-		[outputString appendString:[NSString stringWithFormat:@"%04X ", [subDeviceID unsignedIntValue]]];
-		[outputString appendString:[NSString stringWithFormat:@"%-6s ", [aspm UTF8String]]];
-		//[outputString appendString:[NSString stringWithFormat:@"%04X ", [aspm unsignedIntValue]]];
-		[outputString appendString:[NSString stringWithFormat:@"%-30s ", [vendorName UTF8String]]];
-		[outputString appendString:[NSString stringWithFormat:@"%-50s ", [deviceName UTF8String]]];
-		[outputString appendString:[NSString stringWithFormat:@"%-20s ", [className UTF8String]]];
-		[outputString appendString:[NSString stringWithFormat:@"%-20s ", [subclassName UTF8String]]];
-		[outputString appendString:[NSString stringWithFormat:@"%15s ", [ioregName UTF8String]]];
-		[outputString appendString:[NSString stringWithFormat:@"%-15s ", [ioregIOName UTF8String]]];
-		[outputString appendString:[NSString stringWithFormat:@"%@ ", devicePath]];
+		[outputString appendFormat:@"%-7s ", [pciDebug UTF8String]];
+		[outputString appendFormat:@"%04X ", [vendorID unsignedIntValue]];
+		[outputString appendFormat:@"%04X ", [deviceID unsignedIntValue]];
+		[outputString appendFormat:@"%04X ", [subVendorID unsignedIntValue]];
+		[outputString appendFormat:@"%04X ", [subDeviceID unsignedIntValue]];
+		[outputString appendFormat:@"%-6s ", [aspm UTF8String]];
+		//[outputString appendFormat:@"%04X ", [aspm unsignedIntValue]];
+		[outputString appendFormat:@"%-30s ", [vendorName UTF8String]];
+		[outputString appendFormat:@"%-50s ", [deviceName UTF8String]];
+		[outputString appendFormat:@"%-20s ", [className UTF8String]];
+		[outputString appendFormat:@"%-20s ", [subclassName UTF8String]];
+		[outputString appendFormat:@"%15s ", [ioregName UTF8String]];
+		[outputString appendFormat:@"%-15s ", [ioregIOName UTF8String]];
+		[outputString appendFormat:@"%@ ", devicePath];
 		[outputString appendString:@"\n"];
 	}
 	
@@ -1555,26 +1555,26 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 - (void)appendDSLString:(uint32_t)tabCount outputString:(NSMutableString *)outputString value:(NSString *)value
 {
 	[self appendTabCount:tabCount outputString:outputString];
-	[outputString appendString:[NSString stringWithFormat:@"%@\n", value]];
+	[outputString appendFormat:@"%@\n", value];
 }
 
 - (void)appendDSLValue:(uint32_t)tabCount outputString:(NSMutableString *)outputString name:(NSString *)name value:(id)value
 {
 	[self appendTabCount:tabCount outputString:outputString];
-	[outputString appendString:[NSString stringWithFormat:@"\"%@\", ", name]];
+	[outputString appendFormat:@"\"%@\", ", name];
 	
-	[outputString appendString:[NSString stringWithFormat:@"Buffer () { "]];
+	[outputString appendFormat:@"Buffer () { "];
 	
 	if ([value isKindOfClass:[NSString class]])
-		[outputString appendString:[NSString stringWithFormat:@"\"%@\" },\n", value]];
+		[outputString appendFormat:@"\"%@\" },\n", value];
 	else if ([value isKindOfClass:[NSData class]])
-		[outputString appendString:[NSString stringWithFormat:@"%@ },\n", getByteString(value)]];
+		[outputString appendFormat:@"%@ },\n", getByteString(value)];
 }
 
 - (void)appendDSLString:(uint32_t)tabCount outputString:(NSMutableString *)outputString name:(NSString *)name value:(NSString *)value
 {
 	[self appendTabCount:tabCount outputString:outputString];
-	[outputString appendString:[NSString stringWithFormat:@"\"%@\", \"%@\" },\n", name, value]];
+	[outputString appendFormat:@"\"%@\", \"%@\" },\n", name, value];
 }
 
 - (bool)hasNVIDIAGPU
@@ -1777,7 +1777,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 - (void)outputArray:(NSMutableString *)outputString title:(NSString *)title array:(NSMutableArray *)array
 {
 	[outputString appendString:@"-----------------------------------------------------------------------\n"];
-	[outputString appendString:[NSString stringWithFormat:@"%@\n", title]];
+	[outputString appendFormat:@"%@\n", title];
 	[outputString appendString:@"-----------------------------------------------------------------------\n"];
 	
 	for (NSDictionary *dictionary in array)
@@ -5762,7 +5762,17 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		if (intelGen == -1 || platformIDIndex == -1)
 			return 0;
 		
-		return (IS_ICELAKE(intelGen) ? 3 : 4);
+		if (intelGen == IGIceLakeLP)
+		{
+			if (_originalFramebufferList == NULL)
+				return 0;
+			
+			FramebufferICLLP &framebufferICLLP = reinterpret_cast<FramebufferICLLP *>(_originalFramebufferList)[platformIDIndex];
+				
+			return framebufferICLLP.fPortCount;
+		}
+		
+		return 4;
 	}
 	else if (tableView == _connectorFlagsTableView)
 	{
@@ -9233,10 +9243,10 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		
 		NSMutableString *predicateString = [NSMutableString string];
 		
-		[predicateString appendString:[NSString stringWithFormat:@"process == \"%@\"", [_processLogComboBox stringValue]]];
+		[predicateString appendFormat:@"process == \"%@\"", [_processLogComboBox stringValue]];
 		
 		if (![[_containsLogComboBox stringValue] isEqualToString:@""])
-			[predicateString appendString:[NSString stringWithFormat:@"AND (eventMessage CONTAINS[c] \"%@\")", [_containsLogComboBox stringValue]]];
+			[predicateString appendFormat:@"AND (eventMessage CONTAINS[c] \"%@\")", [_containsLogComboBox stringValue]];
 		
 		[args addObject:predicateString];
 		
@@ -10763,12 +10773,12 @@ NSInteger usbControllerSort(id a, id b, void *context)
 			NSScanner *scanner = [NSScanner scannerWithString:hexValue];
 			[scanner setScanLocation:1];
 			[scanner scanHexInt:&result];
-			[retString appendString:[NSString stringWithFormat:@"%02X", (uint16_t)result]];
+			[retString appendFormat:@"%02X", (uint16_t)result];
 			i += 3;
 		}
 		else
 		{
-			[retString appendString:[NSString stringWithFormat:@"%02X", [value characterAtIndex:i]]];
+			[retString appendFormat:@"%02X", [value characterAtIndex:i]];
 			i++;
 		}
 	}

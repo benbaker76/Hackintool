@@ -566,5 +566,11 @@
 	<string>Intel UHD Graphics 617</string>
 	<key>0x3E98</key>
 	<string>Intel UHD Graphics 630</string>
+	<key>0xFF05</key>
+	<string>Intel HD Graphics ICL SIM</string>
+	<key>0x8A70</key>
+	<string>Intel HD Graphics ICL RVP</string>
+	<key>0x8A53</key>
+	<string>Intel HD Graphics ICL RVP</string>
 </dict>
 </plist>
