@@ -1018,7 +1018,7 @@
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                             <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="IconFind" imagePosition="overlaps" alignment="center" controlSize="small" imageScaling="proportionallyDown" inset="2" id="SYW-Yf-0jo">
                                                                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                                                                <font key="font" metaFont="label" size="11"/>
+                                                                                                <font key="font" metaFont="menu" size="11"/>
                                                                                             </buttonCell>
                                                                                             <connections>
                                                                                                 <action selector="pciViewButtonClicked:" target="494" id="aGI-Oj-OHB"/>
@@ -1174,7 +1174,7 @@
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                             <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="IconFind" imagePosition="overlaps" alignment="center" controlSize="small" imageScaling="proportionallyDown" inset="2" id="0tI-PN-WQ3">
                                                                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                                                                <font key="font" metaFont="label" size="11"/>
+                                                                                                <font key="font" metaFont="menu" size="11"/>
                                                                                             </buttonCell>
                                                                                             <connections>
                                                                                                 <action selector="pciViewButtonClicked:" target="494" id="K87-Bv-68L"/>
@@ -1394,7 +1394,7 @@
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                             <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="IconFind" imagePosition="overlaps" alignment="center" controlSize="small" imageScaling="proportionallyDown" inset="2" id="EcU-6a-ng0">
                                                                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                                                                <font key="font" metaFont="label" size="11"/>
+                                                                                                <font key="font" metaFont="menu" size="11"/>
                                                                                             </buttonCell>
                                                                                             <connections>
                                                                                                 <action selector="pciViewButtonClicked:" target="494" id="LZQ-K7-Gf5"/>
@@ -1607,7 +1607,7 @@
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                             <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="IconFind" imagePosition="overlaps" alignment="center" controlSize="small" imageScaling="proportionallyDown" inset="2" id="uBZ-H8-0mW">
                                                                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                                                                <font key="font" metaFont="label" size="11"/>
+                                                                                                <font key="font" metaFont="menu" size="11"/>
                                                                                             </buttonCell>
                                                                                             <connections>
                                                                                                 <action selector="pciViewButtonClicked:" target="494" id="Vj6-j3-lsO"/>
@@ -1852,7 +1852,7 @@
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                             <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="IconFind" imagePosition="overlaps" alignment="center" controlSize="small" imageScaling="proportionallyDown" inset="2" id="wMt-i8-2Mx">
                                                                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                                                                <font key="font" metaFont="label" size="11"/>
+                                                                                                <font key="font" metaFont="menu" size="11"/>
                                                                                             </buttonCell>
                                                                                             <connections>
                                                                                                 <action selector="pciViewButtonClicked:" target="494" id="ZGw-k7-ITe"/>
@@ -2615,7 +2615,7 @@
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                             <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" inset="2" id="LnX-6m-vR5">
                                                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                                                <font key="font" metaFont="label" size="11"/>
+                                                                                                <font key="font" metaFont="menu" size="11"/>
                                                                                             </buttonCell>
                                                                                             <connections>
                                                                                                 <action selector="framebufferFlagsChanged:" target="494" id="eeV-hP-3yX"/>
@@ -2824,7 +2824,7 @@
                                                                                             <rect key="frame" x="261" y="1" width="99" height="25"/>
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                             <comboBoxCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" identifier="Type" buttonBordered="NO" completes="NO" numberOfVisibleItems="5" id="JZB-dW-6zH">
-                                                                                                <font key="font" metaFont="label" size="11"/>
+                                                                                                <font key="font" metaFont="menu" size="11"/>
                                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                             </comboBoxCell>
@@ -2921,7 +2921,7 @@
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                             <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" state="on" inset="2" id="mXo-Q1-JAp">
                                                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                                                <font key="font" metaFont="label" size="11"/>
+                                                                                                <font key="font" metaFont="menu" size="11"/>
                                                                                             </buttonCell>
                                                                                             <connections>
                                                                                                 <action selector="connectorFlagsChanged:" target="494" id="pXi-pS-hIV"/>
@@ -3158,11 +3158,11 @@
                                                             <scrollView fixedFrame="YES" borderType="line" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XbT-Du-6Au">
                                                                 <rect key="frame" x="18" y="87" width="568" height="211"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                <clipView key="contentView" ambiguous="YES" id="XN7-To-dHw">
+                                                                <clipView key="contentView" id="XN7-To-dHw">
                                                                     <rect key="frame" x="1" y="1" width="566" height="209"/>
-                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
-                                                                        <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" horizontallyResizable="YES" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" id="VH5-6M-yrW">
+                                                                        <textView editable="NO" importsGraphics="NO" richText="NO" horizontallyResizable="YES" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" id="VH5-6M-yrW">
                                                                             <rect key="frame" x="0.0" y="0.0" width="566" height="209"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -3453,17 +3453,6 @@
                                                                                         <action selector="patchButtonClicked:" target="494" id="9Rf-Dk-1M7"/>
                                                                                     </connections>
                                                                                 </button>
-                                                                                <button identifier="VRAM2048MB" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PQb-nG-aE2">
-                                                                                    <rect key="frame" x="312" y="178" width="235" height="18"/>
-                                                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                                                                    <buttonCell key="cell" type="check" title="VRAM 2048 MB" bezelStyle="regularSquare" imagePosition="left" inset="2" id="MPG-sh-qmx">
-                                                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                                        <font key="font" metaFont="label" size="12"/>
-                                                                                    </buttonCell>
-                                                                                    <connections>
-                                                                                        <action selector="patchButtonClicked:" target="494" id="5po-bs-X7w"/>
-                                                                                    </connections>
-                                                                                </button>
                                                                                 <button identifier="USBPortLimit" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G20-SK-ffc">
                                                                                     <rect key="frame" x="312" y="106" width="235" height="18"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
@@ -3475,8 +3464,19 @@
                                                                                         <action selector="patchButtonClicked:" target="494" id="cf9-vw-BUs"/>
                                                                                     </connections>
                                                                                 </button>
+                                                                                <button identifier="USBPortLimit" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MgU-a6-Lg6">
+                                                                                    <rect key="frame" x="312" y="33" width="235" height="18"/>
+                                                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                                                                    <buttonCell key="cell" type="check" title="Inject Fake IGPU" bezelStyle="regularSquare" imagePosition="left" inset="2" id="9ou-Ah-R1R">
+                                                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                        <font key="font" metaFont="label" size="12"/>
+                                                                                    </buttonCell>
+                                                                                    <connections>
+                                                                                        <action selector="patchButtonClicked:" target="494" id="Kmb-K4-XJu"/>
+                                                                                    </connections>
+                                                                                </button>
                                                                                 <button identifier="FramebufferPortLimit" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ycK-SA-wHn">
-                                                                                    <rect key="frame" x="312" y="59" width="235" height="18"/>
+                                                                                    <rect key="frame" x="312" y="58" width="235" height="18"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                                                                     <buttonCell key="cell" type="check" title="Framebuffer Port Limit:" bezelStyle="regularSquare" imagePosition="left" inset="2" id="vly-Ag-eJT">
                                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -3500,7 +3500,7 @@
                                                                                     </connections>
                                                                                 </comboBox>
                                                                                 <button identifier="DPCDMaxLinkRate" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xe3-Aj-phj">
-                                                                                    <rect key="frame" x="312" y="83" width="235" height="18"/>
+                                                                                    <rect key="frame" x="312" y="82" width="235" height="18"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                                                                     <buttonCell key="cell" type="check" title="DPCD Max Link Rate:" bezelStyle="regularSquare" imagePosition="left" inset="2" id="QgQ-RY-dCQ">
                                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -3536,6 +3536,17 @@
                                                                                         <outlet property="delegate" destination="494" id="RJB-bl-54z"/>
                                                                                     </connections>
                                                                                 </comboBox>
+                                                                                <button identifier="VRAM2048MB" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PQb-nG-aE2">
+                                                                                    <rect key="frame" x="312" y="178" width="235" height="18"/>
+                                                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                                                                    <buttonCell key="cell" type="check" title="VRAM 2048 MB" bezelStyle="regularSquare" imagePosition="left" inset="2" id="MPG-sh-qmx">
+                                                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                        <font key="font" metaFont="label" size="12"/>
+                                                                                    </buttonCell>
+                                                                                    <connections>
+                                                                                        <action selector="patchButtonClicked:" target="494" id="5po-bs-X7w"/>
+                                                                                    </connections>
+                                                                                </button>
                                                                             </subviews>
                                                                         </view>
                                                                     </tabViewItem>
@@ -8703,6 +8714,7 @@
                 <outlet property="injectAppleInfoButton" destination="wJp-1f-6RX" id="6zq-zK-vx7"/>
                 <outlet property="injectDeviceIDButton" destination="Y3w-nt-I0C" id="vQI-Bi-Ban"/>
                 <outlet property="injectDeviceIDComboBox" destination="aDz-ys-OVr" id="48b-vX-a0m"/>
+                <outlet property="injectFakeIGPUButton" destination="MgU-a6-Lg6" id="uVh-G8-8vK"/>
                 <outlet property="installMenu" destination="dj3-Ln-0B6" id="qGh-Rj-XgG"/>
                 <outlet property="intelGenComboBox" destination="2SY-0O-n58" id="Uac-Td-fmM"/>
                 <outlet property="kextsTableView" destination="IZu-4J-XFd" id="cUD-Zg-nIV"/>

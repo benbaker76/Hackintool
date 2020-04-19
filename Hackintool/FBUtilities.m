@@ -251,7 +251,8 @@ void injectUseIntelHDMI(AppDelegate *appDelegate, NSMutableDictionary *configDic
 	NSMutableDictionary *devicesPropertiesDictionary = ([appDelegate isBootloaderOpenCore] ? [OpenCore getDevicePropertiesDictionaryWith:configDictionary typeName:@"Add"] : [Clover getDevicesPropertiesDictionaryWith:configDictionary]);
 	NSMutableDictionary *igpuDeviceDictionary;
 	
-	[appDelegate getGPUDeviceDictionary:&igpuDeviceDictionary];
+	if (![appDelegate tryGetGPUDeviceDictionary:&igpuDeviceDictionary])
+		return;
 	
 	NSString *devicePath = [igpuDeviceDictionary objectForKey:@"DevicePath"];
 	NSMutableDictionary *deviceDictionary = [devicesPropertiesDictionary objectForKey:devicePath];

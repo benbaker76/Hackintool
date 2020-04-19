@@ -350,9 +350,21 @@
 		<key>BundleID</key>
 		<string>IntelMausi</string>
 		<key>Description</key>
-		<string>OS X driver for Intel onboard LAN</string>
+		<string>OS X driver for Intel onboard LAN (Acidanthera)</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/acidanthera/IntelMausi</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>IntelMausiEthernet</string>
+		<key>BundleID</key>
+		<string>IntelMausiEthernet</string>
+		<key>Description</key>
+		<string>OS X driver for Intel onboard LAN (Mieze)</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/mieze/IntelMausiEthernet</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>

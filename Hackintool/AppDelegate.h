@@ -77,6 +77,7 @@ typedef struct
 	bool InjectDeviceID;
 	bool USBPortLimit;
 	bool SpoofAudioDeviceID;
+	bool InjectFakeIGPU;
 	bool ShowInstalledOnly;
 	bool LSPCON_Enable;
 	bool LSPCON_AutoDetect;
@@ -320,6 +321,7 @@ typedef struct
 @property (assign) IBOutlet NSButton *injectDeviceIDButton;
 @property (assign) IBOutlet NSComboBox *injectDeviceIDComboBox;
 @property (assign) IBOutlet NSButton *spoofAudioDeviceIDButton;
+@property (assign) IBOutlet NSButton *injectFakeIGPUButton;
 @property (assign) IBOutlet NSButton *usbPortLimitButton;
 @property (assign) IBOutlet NSButton *generatePatchButton;
 @property (assign) IBOutlet NSTextView *patchOutputTextView;
@@ -422,7 +424,7 @@ typedef struct
 - (bool)isConnectorHeadless;
 - (NSString *)getIORegName:(NSString *)ioregName;
 - (bool)tryGetACPIPath:(NSString *)ioregName acpiPath:(NSString **)acpiPath;
-- (void)getGPUDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
+- (bool)tryGetGPUDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
 - (bool)tryGetPCIDeviceDictionaryFromIORegName:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
 - (bool)tryGetPCIDeviceDictionaryFromClassCode:(NSNumber *)code pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
 - (bool)tryGetAudioController:(NSNumber *)deviceID vendorID:(NSNumber *)vendorID audioDevice:(AudioDevice *)foundAudioDevice;

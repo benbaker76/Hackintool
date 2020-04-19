@@ -978,6 +978,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_fbPortLimitComboBox selectItemAtIndex:(_settings.FBPortCount > 0 ? _settings.FBPortCount - 1 : 0)];
 	[_injectDeviceIDButton setState:_settings.InjectDeviceID];
 	[_spoofAudioDeviceIDButton setState:_settings.SpoofAudioDeviceID];
+	[_injectFakeIGPUButton setState:_settings.InjectFakeIGPU];
 	[_usbPortLimitButton setState:_settings.USBPortLimit];
 	[_showInstalledOnlyButton setState:_settings.ShowInstalledOnly];
 	[_lspconEnableDriverButton setState:_settings.LSPCON_Enable];
@@ -1699,12 +1700,17 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
     [*pciDeviceDictionary setObject:@"Intel Corporation" forKey:@"VendorName"];
 }
 
-- (void)getGPUDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary
+- (bool)tryGetGPUDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary
 {
 	if ([self tryGetPCIDeviceDictionaryFromIORegName:@"IGPU" pciDeviceDictionary:pciDeviceDictionary])
-		return;
+		return true;
 	
-	return [self getFakeGPUDeviceDictionary:pciDeviceDictionary];
+	if (!_settings.InjectFakeIGPU)
+		return false;
+	
+	[self getFakeGPUDeviceDictionary:pciDeviceDictionary];
+	
+	return true;
 }
 
 - (bool)tryGetPCIDeviceDictionaryFromIORegName:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary
@@ -5511,6 +5517,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 										@(2), @"FBPortCount",
 										@NO, @"InjectDeviceID",
 										@NO, @"SpoofAudioDeviceID",
+										@NO, @"InjectFakeIGPU",
 										@NO, @"USBPortLimit",
 										@NO, @"ApplyCurrentPatches",
 										@(0), @"SelectedAudioDevice",
@@ -5568,6 +5575,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	_settings.FBPortCount = (uint32_t)[defaults integerForKey:@"FBPortCount"];
 	_settings.InjectDeviceID = [defaults boolForKey:@"InjectDeviceID"];
 	_settings.SpoofAudioDeviceID = [defaults boolForKey:@"SpoofAudioDeviceID"];
+	_settings.InjectFakeIGPU = [defaults boolForKey:@"InjectFakeIGPU"];
 	_settings.USBPortLimit = [defaults boolForKey:@"USBPortLimit"];
 	_settings.ApplyCurrentPatches = [defaults boolForKey:@"ApplyCurrentPatches"];
 	_settings.ShowInstalledOnly = [defaults boolForKey:@"ShowInstalledOnly"];
@@ -5621,6 +5629,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	[defaults setBool:_settings.InjectDeviceID forKey:@"InjectDeviceID"];
 	[defaults setBool:_settings.USBPortLimit forKey:@"USBPortLimit"];
 	[defaults setBool:_settings.SpoofAudioDeviceID forKey:@"SpoofAudioDeviceID"];
+	[defaults setBool:_settings.InjectFakeIGPU forKey:@"InjectFakeIGPU"];
 	[defaults setBool:_settings.ApplyCurrentPatches forKey:@"ApplyCurrentPatches"];
 	[defaults setBool:_settings.ShowInstalledOnly forKey:@"ShowInstalledOnly"];
 	[defaults setBool:_settings.LSPCON_Enable forKey:@"LSPCON_Enable"];
@@ -7837,6 +7846,10 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	{
 		_settings.SpoofAudioDeviceID = [_spoofAudioDeviceIDButton state];
 	}
+	else if (sender == _injectFakeIGPUButton)
+	{
+		_settings.InjectFakeIGPU = [_injectFakeIGPUButton state];
+	}
 	else if (sender == _usbPortLimitButton)
 	{
 		_settings.USBPortLimit = [_usbPortLimitButton state];
@@ -8383,7 +8396,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	NSMutableDictionary *propertyDictionary = ([self isBootloaderOpenCore] ? [OpenCore getDevicePropertiesDictionaryWith:configDictionary typeName:@"Add"] : [Clover getDevicesPropertiesDictionaryWith:configDictionary]);
 	NSMutableDictionary *pciDeviceDictionary;
 	
-	[self getGPUDeviceDictionary:&pciDeviceDictionary];
+	if (![self tryGetGPUDeviceDictionary:&pciDeviceDictionary])
+		return NO;
 	
 	NSString *devicePath = [pciDeviceDictionary objectForKey:@"DevicePath"];
 	NSMutableDictionary *gpuProperties = [propertyDictionary objectForKey:devicePath];
