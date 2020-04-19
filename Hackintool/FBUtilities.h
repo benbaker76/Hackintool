@@ -620,8 +620,7 @@ void getIGPUProperties(AppDelegate *appDelegate, NSMutableDictionary *configDict
 	NSMutableDictionary *devicesPropertiesDictionary = ([appDelegate isBootloaderOpenCore] ? [OpenCore getDevicePropertiesDictionaryWith:configDictionary typeName:@"Add"] : [Clover getDevicesPropertiesDictionaryWith:configDictionary]);
 	NSMutableDictionary *pciDeviceDictionary;
 	
-	if (![appDelegate tryGetPCIDeviceDictionaryFromIORegName:@"IGPU" pciDeviceDictionary:&pciDeviceDictionary])
-		return;
+	[appDelegate getGPUDeviceDictionary:&pciDeviceDictionary];
 	
 	NSString *deviceName = [pciDeviceDictionary objectForKey:@"DeviceName"];
 	NSString *className = [pciDeviceDictionary objectForKey:@"ClassName"];

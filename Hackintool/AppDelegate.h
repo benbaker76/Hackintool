@@ -422,6 +422,7 @@ typedef struct
 - (bool)isConnectorHeadless;
 - (NSString *)getIORegName:(NSString *)ioregName;
 - (bool)tryGetACPIPath:(NSString *)ioregName acpiPath:(NSString **)acpiPath;
+- (void)getGPUDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
 - (bool)tryGetPCIDeviceDictionaryFromIORegName:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
 - (bool)tryGetPCIDeviceDictionaryFromClassCode:(NSNumber *)code pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary;
 - (bool)tryGetAudioController:(NSNumber *)deviceID vendorID:(NSNumber *)vendorID audioDevice:(AudioDevice *)foundAudioDevice;

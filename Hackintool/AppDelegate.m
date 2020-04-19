@@ -1672,6 +1672,41 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	return ioregName;
 }
 
+- (void)getFakeGPUDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary
+{
+	*pciDeviceDictionary = [NSMutableDictionary dictionary];
+	
+    [*pciDeviceDictionary setObject:@"Disabled" forKey:@"ASPM"];
+    [*pciDeviceDictionary setObject:@(0x20000) forKey:@"Address"];
+    [*pciDeviceDictionary setObject:@"com.apple.driver.AppleIntelCFLGraphicsFramebuffer" forKey:@"BundleID"];
+    [*pciDeviceDictionary setObject:@(0x30000) forKey:@"ClassCode"];
+    [*pciDeviceDictionary setObject:@"Display controller" forKey:@"ClassName"];
+    [*pciDeviceDictionary setObject:@(0x0000) forKey:@"DeviceID"];
+    [*pciDeviceDictionary setObject:@"Intel Graphics (Unknown)" forKey:@"DeviceName"];
+    [*pciDeviceDictionary setObject:@"PciRoot(0x0)/Pci(0x2,0x0)" forKey:@"DevicePath"];
+    [*pciDeviceDictionary setObject:@"display" forKey:@"IORegIOName"];
+    [*pciDeviceDictionary setObject:@"/PCI0@0/IGPU@2" forKey:@"IORegName"];
+    [*pciDeviceDictionary setObject:@"IOService:/AppleACPIPlatformExpert/PCI0@0/AppleACPIPCI/IGPU@2" forKey:@"IORegPath"];
+    [*pciDeviceDictionary setObject:@"Intel Graphics (Unknown)" forKey:@"Model"];
+    [*pciDeviceDictionary setObject:@"00:02.0" forKey:@"PCIDebug"];
+    [*pciDeviceDictionary setObject:@(0x0000) forKey:@"ShadowDevice"];
+    [*pciDeviceDictionary setObject:@(0x8086) forKey:@"ShadowVendor"];
+    [*pciDeviceDictionary setObject:@"Internal@0,2,0" forKey:@"SlotName"];
+    [*pciDeviceDictionary setObject:@"VGA compatible controller" forKey:@"SubClassName"];
+    [*pciDeviceDictionary setObject:@(0x0000) forKey:@"SubDeviceID"];
+    [*pciDeviceDictionary setObject:@(0x0000) forKey:@"SubVendorID"];
+    [*pciDeviceDictionary setObject:@(0x8086) forKey:@"VendorID"];
+    [*pciDeviceDictionary setObject:@"Intel Corporation" forKey:@"VendorName"];
+}
+
+- (void)getGPUDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary
+{
+	if ([self tryGetPCIDeviceDictionaryFromIORegName:@"IGPU" pciDeviceDictionary:pciDeviceDictionary])
+		return;
+	
+	return [self getFakeGPUDeviceDictionary:pciDeviceDictionary];
+}
+
 - (bool)tryGetPCIDeviceDictionaryFromIORegName:(NSString *)name pciDeviceDictionary:(NSMutableDictionary **)pciDeviceDictionary
 {
 	for (int i = 0; i < [_pciDevicesArray count]; i++)
@@ -5173,8 +5208,11 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		if (_macOS_10_13_6_MenuItem.state)
 		{
 			NSBundle *mainBundle = [NSBundle mainBundle];
-
+			
 			_fileName = [mainBundle pathForResource:intelGenString ofType:@"bin" inDirectory:@"Framebuffer/macOS 10.13.6"];
+			
+			if (intelGen > IGCoffeeLake)
+				_fileName = nil;
 		}
 		else if (_macOS_10_14_MenuItem.state)
 		{
@@ -8345,8 +8383,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	NSMutableDictionary *propertyDictionary = ([self isBootloaderOpenCore] ? [OpenCore getDevicePropertiesDictionaryWith:configDictionary typeName:@"Add"] : [Clover getDevicesPropertiesDictionaryWith:configDictionary]);
 	NSMutableDictionary *pciDeviceDictionary;
 	
-	if (![self tryGetPCIDeviceDictionaryFromIORegName:@"IGPU" pciDeviceDictionary:&pciDeviceDictionary])
-		return NO;
+	[self getGPUDeviceDictionary:&pciDeviceDictionary];
 	
 	NSString *devicePath = [pciDeviceDictionary objectForKey:@"DevicePath"];
 	NSMutableDictionary *gpuProperties = [propertyDictionary objectForKey:devicePath];

@@ -249,19 +249,17 @@ void injectUseIntelHDMI(AppDelegate *appDelegate, NSMutableDictionary *configDic
 	Settings settings = [appDelegate settings];
 	
 	NSMutableDictionary *devicesPropertiesDictionary = ([appDelegate isBootloaderOpenCore] ? [OpenCore getDevicePropertiesDictionaryWith:configDictionary typeName:@"Add"] : [Clover getDevicesPropertiesDictionaryWith:configDictionary]);
-
 	NSMutableDictionary *igpuDeviceDictionary;
 	
-	if ([appDelegate tryGetPCIDeviceDictionaryFromIORegName:@"IGPU" pciDeviceDictionary:&igpuDeviceDictionary])
-	{
-		NSString *devicePath = [igpuDeviceDictionary objectForKey:@"DevicePath"];
-		NSMutableDictionary *deviceDictionary = [devicesPropertiesDictionary objectForKey:devicePath];
-		
-		if (settings.UseIntelHDMI)
-			[deviceDictionary setObject:@"onboard-1" forKey:@"hda-gfx"];
-		else if ([appDelegate hasGFX0])
-			[deviceDictionary setObject:@"onboard-2" forKey:@"hda-gfx"];
-	}
+	[appDelegate getGPUDeviceDictionary:&igpuDeviceDictionary];
+	
+	NSString *devicePath = [igpuDeviceDictionary objectForKey:@"DevicePath"];
+	NSMutableDictionary *deviceDictionary = [devicesPropertiesDictionary objectForKey:devicePath];
+	
+	if (settings.UseIntelHDMI)
+		[deviceDictionary setObject:@"onboard-1" forKey:@"hda-gfx"];
+	else if ([appDelegate hasGFX0])
+		[deviceDictionary setObject:@"onboard-2" forKey:@"hda-gfx"];
 	
 	NSMutableDictionary *hdefDeviceDictionary;
 	

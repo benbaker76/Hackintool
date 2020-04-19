@@ -19,7 +19,7 @@
 	<key>Cannon Lake</key>
 	<string></string>
 	<key>Ice Lake (LP)</key>
-	<string></string>
+	<string>0xFF058086 0x8A708086 0x8A718086 0x8A518086 0x8A5C8086 0x8A5D8086 0x8A528086 0x8A538086 0x8A5A8086 0x8A5B8086</string>
 	<key>Ice Lake (HP)</key>
 	<string></string>
 	<key>Tiger Lake</key>
