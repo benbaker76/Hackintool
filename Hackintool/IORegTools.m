@@ -111,31 +111,40 @@ bool getIORegChild(io_service_t device, NSArray *nameArray, io_service_t *foundD
 	return false;
 }
 
+bool getIORegParentArray(io_service_t device, NSArray *nameArray, NSMutableArray *parentArray, bool recursive)
+{
+    bool retVal = false;
+    io_iterator_t parentIterator;
+    kern_return_t kr = IORegistryEntryCreateIterator(device, kIOServicePlane, (recursive ? kIORegistryIterateRecursively : 0) | kIORegistryIterateParents, &parentIterator);
+    
+    if (kr != KERN_SUCCESS)
+        return false;
+    
+    for (io_service_t parentDevice; IOIteratorIsValid(parentIterator) && (parentDevice = IOIteratorNext(parentIterator));)
+    {
+        id parentObject = @(parentDevice);
+        
+        for (int i = 0; i < [nameArray count]; i++)
+        {
+            if (IOObjectConformsTo(parentDevice, [[nameArray objectAtIndex:i] UTF8String]))
+            {
+                [parentArray addObject:parentObject];
+                
+                retVal = true;
+            }
+        }
+    }
+    
+    IOObjectRelease(parentIterator);
+    
+    return retVal;
+}
+
 bool getIORegParentArray(io_service_t device, NSString *name, NSMutableArray *parentArray, bool recursive)
 {
-	bool retVal = false;
-	io_iterator_t parentIterator;
-	kern_return_t kr = IORegistryEntryCreateIterator(device, kIOServicePlane, (recursive ? kIORegistryIterateRecursively : 0) | kIORegistryIterateParents, &parentIterator);
-	
-	if (kr != KERN_SUCCESS)
-		return false;
-	
-	for (io_service_t parentDevice; IOIteratorIsValid(parentIterator) && (parentDevice = IOIteratorNext(parentIterator));)
-	{
-		id parentObject = @(parentDevice);
-		
-		if (IOObjectConformsTo(parentDevice, [name UTF8String]))
-		{
-			[parentArray addObject:parentObject];
-			
-			retVal = true;
-		}
-	}
-	
-	IOObjectRelease(parentIterator);
-	
-	return retVal;
+    return getIORegParentArray(device, @[name], parentArray, recursive);
 }
+
 
 bool getIORegParent(io_service_t device, NSString *name, io_service_t *foundDevice, bool recursive)
 {
@@ -1006,7 +1015,7 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 			
 			NSMutableArray *parentArray = [NSMutableArray array];
 			
-			if (getIORegParentArray(device, @"IOPCIDevice", parentArray, true))
+			if (getIORegParentArray(device, @"IOPCIDevice", parentArray, true)) // Add IOPCIBridge?
 			{
 				for (NSNumber *parentNumber in parentArray)
 				{
@@ -1017,12 +1026,19 @@ bool getIORegPCIDeviceArray(NSMutableArray **pciDeviceArray)
 					
 					if (kr == KERN_SUCCESS)
 					{
-						getDeviceLocation(parentDevice, &deviceNum, &functionNum, &hasFunction);
-						
-						ioregName = (hasFunction ? [NSString stringWithFormat:@"%s@%X,%X/%@", parentName, deviceNum, functionNum, ioregName] : [NSString stringWithFormat:@"%s@%X/%@", parentName, deviceNum, ioregName]);
-						//devicePath = (hasFunction ? [NSString stringWithFormat:@"Pci(0x%X,0x%X)/%@", deviceNum, functionNum, devicePath] : [NSString stringWithFormat:@"Pci(0x%X)/%@", deviceNum, devicePath]);
-						devicePath = [NSString stringWithFormat:@"Pci(0x%X,0x%X)/%@", deviceNum, functionNum, devicePath];
-						slotName = [NSString stringWithFormat:@"%d,%d/%@", deviceNum, functionNum, slotName];
+                        if (IOObjectConformsTo(parentDevice, "IOPCIDevice"))
+                        {
+                            getDeviceLocation(parentDevice, &deviceNum, &functionNum, &hasFunction);
+                            
+                            ioregName = (hasFunction ? [NSString stringWithFormat:@"%s@%X,%X/%@", parentName, deviceNum, functionNum, ioregName] : [NSString stringWithFormat:@"%s@%X/%@", parentName, deviceNum, ioregName]);
+                            //devicePath = (hasFunction ? [NSString stringWithFormat:@"Pci(0x%X,0x%X)/%@", deviceNum, functionNum, devicePath] : [NSString stringWithFormat:@"Pci(0x%X)/%@", deviceNum, devicePath]);
+                            devicePath = [NSString stringWithFormat:@"Pci(0x%X,0x%X)/%@", deviceNum, functionNum, devicePath];
+                            slotName = [NSString stringWithFormat:@"%d,%d/%@", deviceNum, functionNum, slotName];
+                        }
+                        else
+                        {
+                            ioregName = [NSString stringWithFormat:@"%s/%@", parentName, ioregName];
+                        }
 					}
 					
 					IOObjectRelease(parentDevice);

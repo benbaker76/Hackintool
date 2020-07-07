@@ -284,6 +284,7 @@ typedef struct
 @property (assign) IBOutlet NSTextField *calcOctalValueTextField;
 @property (assign) IBOutlet NSTextField *calcBinaryValueTextField;
 // Logs
+@property (assign) IBOutlet NSTabView *logsTabView;
 @property (assign) IBOutlet NSTextView *bootLogTextView;
 @property (assign) IBOutlet NSTextView *liluLogTextView;
 @property (assign) IBOutlet NSTextView *systemLogTextView;

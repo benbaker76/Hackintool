@@ -149,8 +149,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[Localizer localizeView:_noUpdatesWindow];
 	[Localizer localizeView:_progressWindow];
 	
-	for (NSToolbarItem *item in [_toolbar items])
-		[item setMinSize:NSMakeSize(128, 128)];
+	//for (NSToolbarItem *item in [_toolbar items])
+	//	[item setMinSize:NSMakeSize(128, 128)];
 	
 	[_connectorInfoTableView registerForDraggedTypes:[NSArray arrayWithObject:MyPrivateTableViewDataType]];
 
@@ -351,7 +351,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	else if (info.modernCountryIdx >= 0)
 		[self addToList:serialInfoArray name:@"Country" value:[NSString stringWithUTF8String:AppleLocationNames[info.modernCountryIdx]]];
 	
-	[self addToList:serialInfoArray name:@"Year" value:[NSString stringWithFormat:@"%d", info.decodedYear]];
+	[self addToList:serialInfoArray name:@"Year" value:info.decodedYear != -1 ? [NSString stringWithFormat:@"%d", info.decodedYear] : @"???"];
 	
 	char buffer[512] {};
 	
@@ -368,7 +368,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		{
 			sprintf(buffer, "%02d.%02d.%04d", startd.tm_mon+1, startd.tm_mday, startd.tm_year+1900);
 			if (info.decodedWeek == 53 && startd.tm_mday != 31)
-				strfcat(buffer, "12.31.%04d", startd.tm_year+1900);
+                strfcat(buffer, "12.31.%04d", startd.tm_year+1900);
 			else if (info.decodedWeek < 53)
 			{
 				startd.tm_mday += 6;
@@ -381,7 +381,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		[self addToList:serialInfoArray name:@"Week" value:[NSString stringWithUTF8String:buffer]];
 	}
 	
-	[self addToList:serialInfoArray name:@"Line" value:[NSString stringWithFormat:@"%d (copy %d)", info.decodedLine, (info.decodedCopy >= 0 ? info.decodedCopy + 1 : -1)]];
+	[self addToList:serialInfoArray name:@"Line" value:info.decodedCopy >= 0 ? [NSString stringWithFormat:@"%d (copy %d)", info.decodedLine, info.decodedCopy + 1] : @"???"];
 	[self addToList:serialInfoArray name:@"Model" value:(info.appleModel ? [NSString stringWithUTF8String:info.appleModel] : @"???")];
 	[self addToList:serialInfoArray name:@"Model Identifier" value:(info.modelIndex >= 0 ? [NSString stringWithUTF8String:ApplePlatformData[info.modelIndex].productName] : @"???")];
 	[self addToList:serialInfoArray name:@"Valid" value:(info.valid ? GetLocalizedString(@"Possibly") : GetLocalizedString(@"Unlikely"))];
@@ -686,7 +686,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	for (int32_t i = 0; i < APPLE_MODEL_MAX; i++)
 		[_generateSerialModelInfoComboBox addItemWithObjectValue:[NSString stringWithUTF8String:ApplePlatformData[i].productName]];
 	
-	[_generateSerialModelInfoComboBox selectItemWithObjectValue:_modelIdentifier];
+    if ([_generateSerialModelInfoComboBox indexOfItemWithObjectValue:_modelIdentifier] != NSNotFound)
+        [_generateSerialModelInfoComboBox selectItemWithObjectValue:_modelIdentifier];
+    else
+        [_generateSerialModelInfoComboBox selectItemAtIndex:0];
 }
 
 - (void)updateGenerateSerialInfo
@@ -991,7 +994,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 
 - (bool)getAudioVendorName:(uint32_t)codecID vendorName:(NSString **)vendorName
 {
-	*vendorName = GetLocalizedString(@"Unknown");
+	*vendorName = @"???";
 	
 	for (NSString *key in [_audioVendorsDictionary allKeys])
 	{
@@ -1096,7 +1099,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		//audioDevice.audioDeviceName = audioDeviceName;
 		//audioDevice.audioVendorName = audioVendorName;
 		
-		if ([self getAudioVendorName:audioDevice.codecID vendorName:&codecVendorName])
+		if ([self getAudioVendorName:audioDevice.codecID vendorName:&codecVendorName] || audioDevice.codecVendorName == nil)
 			audioDevice.codecVendorName = codecVendorName;
 		
 		if ([self getAudioCodecName:audioDevice.codecID revisionID:audioDevice.codecRevisionID name:&codecName] || audioDevice.codecName == nil)
@@ -5026,7 +5029,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	if (audioDevice.codecID != 0)
 	{
 		[self addToList:_audioInfoArray name:@"Codec Vendor" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.codecVendorName, audioDevice.codecID >> 16]];
-		[self addToList:_audioInfoArray name:@"Codec Name" value:[NSString stringWithFormat:@"%@ (0x%04X)", audioDevice.codecName, audioDevice.codecID & 0xFFFF]];
+		[self addToList:_audioInfoArray name:@"Codec Name" value:[NSString stringWithFormat:@"%@ (0x%04X)",  audioDevice.codecName, audioDevice.codecID & 0xFFFF]];
 		
 		if ([self isAppleHDAAudioDevice:audioDevice])
 		{
@@ -9272,39 +9275,70 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	NSButton *button = (NSButton *)sender;
 	NSString *identifier = [button identifier];
 	
-	if ([identifier isEqualToString:@"EraseLog"])
+	NSTabViewItem *tabViewItem = [_logsTabView selectedTabViewItem];
+	NSString *tabViewIdentifier = [tabViewItem identifier];
+	
+	if ([tabViewIdentifier isEqualToString:@"Boot"])
 	{
-		[_systemLogTextView setString:@""];
-		
-		[self launchCommandAsAdmin:_systemLogTextView launchPath:@"log" arguments: @[@"erase"]];
-	}
-	else if ([identifier isEqualToString:@"RefreshLog"])
-	{
-		[_systemLogTextView setString:@""];
-
-		NSMutableArray *args = [NSMutableArray array];
-		NSString *stdoutString = nil;
-		
-		[args addObjectsFromArray:@[@"show", @"--style", @"syslog", @"--source"]];
-		
-		if ([_lastBootLogButton state])
-			[args addObjectsFromArray:@[@"--last", @"boot"]];
-		
-		[args addObject:@"--predicate"];
-		
-		NSMutableString *predicateString = [NSMutableString string];
-		
-		[predicateString appendFormat:@"process == \"%@\"", [_processLogComboBox stringValue]];
-		
-		if (![[_containsLogComboBox stringValue] isEqualToString:@""])
-			[predicateString appendFormat:@"AND (eventMessage CONTAINS[c] \"%@\")", [_containsLogComboBox stringValue]];
-		
-		[args addObject:predicateString];
-		
-		if (launchCommand(@"/usr/bin/log", args, &stdoutString))
+		if ([identifier isEqualToString:@"RefreshLog"])
 		{
-			if (stdoutString != nil)
-				[_systemLogTextView setString:stdoutString];
+			[self getBootLog];
+			
+			if (_bootLog != nil)
+			{
+				[_bootLogTextView setString:_bootLog];
+			}
+			else
+			{
+				NSString *stdoutString = nil;
+				
+				if (launchCommandAsAdmin(@"/sbin/dmesg", nil, &stdoutString))
+				{
+					if (stdoutString != nil)
+						[_bootLogTextView setString:stdoutString];
+				}
+			}
+		}
+	}
+	else if ([tabViewIdentifier isEqualToString:@"Lilu"])
+	{
+	}
+	else if ([tabViewIdentifier isEqualToString:@"System"])
+	{
+		if ([identifier isEqualToString:@"EraseLog"])
+		{
+			[_systemLogTextView setString:@""];
+			
+			[self launchCommandAsAdmin:_systemLogTextView launchPath:@"log" arguments: @[@"erase"]];
+		}
+		else if ([identifier isEqualToString:@"RefreshLog"])
+		{
+			[_systemLogTextView setString:@""];
+
+			NSMutableArray *args = [NSMutableArray array];
+			NSString *stdoutString = nil;
+			
+			[args addObjectsFromArray:@[@"show", @"--style", @"syslog", @"--source"]];
+			
+			if ([_lastBootLogButton state])
+				[args addObjectsFromArray:@[@"--last", @"boot"]];
+			
+			[args addObject:@"--predicate"];
+			
+			NSMutableString *predicateString = [NSMutableString string];
+			
+			[predicateString appendFormat:@"process == \"%@\"", [_processLogComboBox stringValue]];
+			
+			if (![[_containsLogComboBox stringValue] isEqualToString:@""])
+				[predicateString appendFormat:@"AND (eventMessage CONTAINS[c] \"%@\")", [_containsLogComboBox stringValue]];
+			
+			[args addObject:predicateString];
+			
+			if (launchCommand(@"/usr/bin/log", args, &stdoutString))
+			{
+				if (stdoutString != nil)
+					[_systemLogTextView setString:stdoutString];
+			}
 		}
 	}
 }

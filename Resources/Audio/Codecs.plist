@@ -309,6 +309,7 @@
 			<integer>12</integer>
 			<integer>13</integer>
 			<integer>21</integer>
+			<integer>22</integer>
 			<integer>28</integer>
 			<integer>66</integer>
 		</array>
@@ -354,6 +355,8 @@
 			<integer>13</integer>
 			<integer>14</integer>
 			<integer>16</integer>
+			<integer>17</integer>
+			<integer>19</integer>
 			<integer>21</integer>
 			<integer>22</integer>
 			<integer>23</integer>
@@ -361,6 +364,7 @@
 			<integer>56</integer>
 			<integer>57</integer>
 			<integer>66</integer>
+			<integer>76</integer>
 			<integer>97</integer>
 		</array>
 		<key>MaxKernel</key>
@@ -400,6 +404,7 @@
 			<integer>19</integer>
 			<integer>20</integer>
 			<integer>21</integer>
+			<integer>22</integer>
 			<integer>27</integer>
 			<integer>28</integer>
 			<integer>29</integer>
@@ -422,6 +427,7 @@
 			<integer>127</integer>
 			<integer>188</integer>
 			<integer>47</integer>
+			<integer>77</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -471,6 +477,7 @@
 			<integer>17</integer>
 			<integer>21</integer>
 			<integer>22</integer>
+			<integer>24</integer>
 			<integer>28</integer>
 		</array>
 		<key>MaxKernel</key>
@@ -505,6 +512,9 @@
 		<array>
 			<integer>11</integer>
 			<integer>18</integer>
+			<integer>86</integer>
+			<integer>99</integer>
+			<integer>100</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -533,6 +543,7 @@
 			<integer>16</integer>
 			<integer>17</integer>
 			<integer>18</integer>
+			<integer>22</integer>
 			<integer>28</integer>
 			<integer>31</integer>
 			<integer>90</integer>
@@ -540,6 +551,7 @@
 			<integer>97</integer>
 			<integer>98</integer>
 			<integer>99</integer>
+			<integer>20</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -833,6 +845,22 @@
 			<string>0x100003</string>
 			<string>0x100103</string>
 		</array>
+	</dict>
+	<dict>
+		<key>CodecID</key>
+		<integer>287143542</integer>
+		<key>CodecName</key>
+		<string>IDT92HD73E1X5</string>
+		<key>LayoutIDs</key>
+		<array>
+			<integer>15</integer>
+		</array>
+		<key>MaxKernel</key>
+		<integer>15</integer>
+		<key>MinKernel</key>
+		<integer>13</integer>
+		<key>Revisions</key>
+		<array/>
 	</dict>
 	<dict>
 		<key>CodecID</key>
@@ -1317,14 +1345,17 @@
 		<key>LayoutIDs</key>
 		<array>
 			<integer>3</integer>
+			<integer>86</integer>
 			<integer>11</integer>
 			<integer>13</integer>
 			<string>15</string>
 			<integer>17</integer>
 			<integer>18</integer>
+			<integer>1</integer>
 			<integer>21</integer>
 			<integer>27</integer>
 			<integer>28</integer>
+			<integer>29</integer>
 			<integer>30</integer>
 			<integer>31</integer>
 			<integer>71</integer>
@@ -1387,6 +1418,7 @@
 			<integer>15</integer>
 			<integer>16</integer>
 			<integer>17</integer>
+			<integer>18</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -1463,6 +1495,7 @@
 		<array>
 			<integer>3</integer>
 			<integer>11</integer>
+			<integer>16</integer>
 			<integer>13</integer>
 			<integer>21</integer>
 			<integer>22</integer>
@@ -1831,6 +1864,7 @@
 		<array>
 			<integer>12</integer>
 			<integer>15</integer>
+			<integer>88</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -1868,6 +1902,7 @@
 			<integer>15</integer>
 			<integer>44</integer>
 			<integer>66</integer>
+			<integer>88</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>

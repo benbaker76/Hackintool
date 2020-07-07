@@ -128,7 +128,7 @@ uint32_t pseudo_random(void) {
       return arc4random();
 #endif
 
-  static uint32_t state;
+  uint32_t state;
 
   if (!state) {
     fprintf(stderr, "Warning: arc4random is not available!\n");
@@ -345,12 +345,6 @@ bool get_serial_info(const char *serial, SERIALINFO *info, bool print) {
 
   // Decode production year and week
   if (serial_len == SERIAL_NEW_LEN) {
-    // Since year can be encoded ambiguously, check the model code for 2010/2020 difference.
-    size_t base_new_year = 2010;
-    if (info->model[0] >= 'H') {
-      base_new_year = 2020;
-    }
-
     // These are not exactly year and week, lower year bit is used for week encoding.
     info->year[0] = *serial++;
     info->week[0] = *serial++;
@@ -736,19 +730,7 @@ void get_system_info(void) {
   printf("Version %s. Use -h argument to see usage options.\n", PROGRAM_VERSION);
 }
 
-void strfcat(char *src, const char *fmt, ...)
-{
-	char buf[2048];
-	va_list args;
-	
-	va_start(args, fmt);
-	vsprintf(buf, fmt, args);
-	va_end(args);
-	
-	strcat(src, buf);
-}
-
-/* int usage(const char *app) {
+int usage(const char *app) {
   printf(
     "%s arguments:\n"
     " --help           (-h)  show this help\n"
@@ -775,7 +757,19 @@ void strfcat(char *src, const char *fmt, ...)
   return EXIT_FAILURE;
 }
 
-int main(int argc, char *argv[]) {
+void strfcat(char *src, const char *fmt, ...)
+{
+    char buf[2048];
+    va_list args;
+    
+    va_start(args, fmt);
+    vsprintf(buf, fmt, args);
+    va_end(args);
+    
+    strcat(src, buf);
+}
+
+/* int main(int argc, char *argv[]) {
   PROGRAMMODE mode = MODE_SYSTEM_INFO;
   const char *passed_serial = NULL;
   SERIALINFO info = {

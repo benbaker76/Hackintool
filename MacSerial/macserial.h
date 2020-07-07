@@ -10,7 +10,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define PROGRAM_VERSION "2.1.1"
+#define PROGRAM_VERSION "2.1.3"
 
 #ifdef __GNUC__
 uint32_t arc4random(void) __attribute__((weak));
@@ -92,10 +92,9 @@ typedef enum {
   MODE_GENERATE_DERIVATIVES
 } PROGRAMMODE;
 
-int32_t get_current_model(void);
+#endif // GENSERIAL_H
+
 bool get_serial_info(const char *serial, SERIALINFO *info, bool print);
 bool get_serial(SERIALINFO *info);
 void get_mlb(SERIALINFO *info, char *dst, size_t sz);
 void strfcat(char *src, const char *fmt, ...);
-
-#endif // GENSERIAL_H
