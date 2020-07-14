@@ -32,7 +32,8 @@
 @property uint32_t iconIndex;
 @property uint32_t resolutionIndex;
 @property bool fixMonitorRanges;
-@property bool injectAppleInfo;
+@property bool injectAppleVID;
+@property bool injectApplePID;
 @property bool forceRGBMode;
 @property bool patchColorProfile;
 @property bool ignoreDisplayPrefs;

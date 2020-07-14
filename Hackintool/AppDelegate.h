@@ -236,7 +236,8 @@ typedef struct
 @property (assign) IBOutlet NSTableView *displaysTableView;
 @property (assign) IBOutlet NSTableView *resolutionsTableView;
 @property (assign) IBOutlet NSButton *fixMonitorRangesButton;
-@property (assign) IBOutlet NSButton *injectAppleInfoButton;
+@property (assign) IBOutlet NSButton *injectAppleVIDButton;
+@property (assign) IBOutlet NSButton *injectApplePIDButton;
 @property (assign) IBOutlet NSButton *forceRGBModeButton;
 @property (assign) IBOutlet NSButton *patchColorProfileButton;
 @property (assign) IBOutlet NSButton *ignoreDisplayPrefsButton;

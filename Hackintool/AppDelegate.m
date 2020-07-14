@@ -6588,7 +6588,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		[_iconComboBox selectItemAtIndex:display.iconIndex];
 		[_resolutionComboBox selectItemAtIndex:display.resolutionIndex];
 		[_fixMonitorRangesButton setState:display.fixMonitorRanges];
-		[_injectAppleInfoButton setState:display.injectAppleInfo];
+		[_injectAppleVIDButton setState:display.injectAppleVID];
+		[_injectApplePIDButton setState:display.injectApplePID];
 		[_forceRGBModeButton setState:display.forceRGBMode];
 		[_patchColorProfileButton setState:display.patchColorProfile];
 		[_ignoreDisplayPrefsButton setState:display.ignoreDisplayPrefs];
@@ -7707,7 +7708,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	display.iconIndex = (int)[_iconComboBox indexOfSelectedItem];
 	display.resolutionIndex = (int)[_resolutionComboBox indexOfSelectedItem];
 	display.fixMonitorRanges = [_fixMonitorRangesButton state];
-	display.injectAppleInfo = [_injectAppleInfoButton state];
+	display.injectAppleVID = [_injectAppleVIDButton state];
+	display.injectApplePID = [_injectApplePIDButton state];
 	display.forceRGBMode = [_forceRGBModeButton state];
 	display.patchColorProfile = [_patchColorProfileButton state];
 	display.ignoreDisplayPrefs = [_ignoreDisplayPrefsButton state];

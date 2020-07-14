@@ -33,7 +33,8 @@
 		self.iconIndex = 0;
 		self.resolutionIndex = 0;
 		self.fixMonitorRanges = false;
-		self.injectAppleInfo = true;
+		self.injectAppleVID = false;
+		self.injectApplePID = true;
 		self.forceRGBMode = true;
 		self.patchColorProfile = true;
 		self.ignoreDisplayPrefs = true;

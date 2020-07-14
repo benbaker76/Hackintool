@@ -24,8 +24,10 @@ const uint8_t Version_1_4[2] = { 0x01, 0x04 };
 // Monitor Ranges Override - fixes some issues
 const uint8_t Monitor_Ranges[18] = { 0x00, 0x00, 0x00, 0xfd, 0x00, 0x38, 0x4c, 0x1e, 0x53, 0x11, 0x00, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 };
 
-// VendorID 0x0610 / ProductID 0xA012
-const uint8_t AppleDisplay_VIDPID[4] = { 0x06, 0x10, 0x7c, 0x9c };
+// VendorID 0x0610
+const uint8_t AppleDisplay_VID[2] = { 0x06, 0x10 };
+// ProductID 0xA012
+const uint8_t AppleDisplay_PID[2] = { 0x7c, 0x9c };
 
 // Apple iMac Display fixes
 const char *iMac_CapabilityString = "model(iMac Cello) vcp(10 8D B6 C8 C9 DF) ver(2.2)";
@@ -578,21 +580,6 @@ uint32_t LEDProductID = 0x9236;
 		*ioProviderMergeProperties = [NSMutableDictionary dictionaryWithObjectsAndKeys:productName, @"DisplayProductName", @(productID), @"DisplayProductID", @(vendorID), @"DisplayVendorID", @(displaySerial), @"DisplaySerialNumber", edidData, @"IODisplayEDID", [NSData dataWithBytes:capabilityString length:strlen(capabilityString)], @"IODisplayCapabilityString", [NSData dataWithBytes:connectFlags length:4], @"IODisplayConnectFlags", [NSData dataWithBytes:controllerID length:4], @"IODisplayControllerID", [NSData dataWithBytes:firmwareLevel length:4], @"IODisplayFirmwareLevel", [NSData dataWithBytes:mccsVersion length:4], @"IODisplayMCCSVersion", [NSData dataWithBytes:technologyType length:4], @"IODisplayTechnologyType", [[display.prefsKey stringByDeletingLastPathComponent] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%x-%x", displayClass, vendorID, productID]], @"IODisplayPrefsKey", displayClass, @"IOClass", nil];
 }
 
-+ (void)getEDIDOrigData:(Display *)display edidOrigData:(NSData **)edidOrigData
-{
-	EDID edid {};
-	
-	if (display.eDID.bytes == nil)
-		return;
-	
-	if (display.eDID.length < sizeof(EDID))
-		return;
-	
-	memcpy(&edid, display.eDID.bytes, sizeof(EDID));
-	
-	*edidOrigData = [NSData dataWithBytes:&edid length:sizeof(EDID)];
-}
-
 + (void)getEDIDData:(Display *)display edidData:(NSData **)edidData
 {
 	EDID edid {};
@@ -620,8 +607,11 @@ uint32_t LEDProductID = 0x9236;
 				edid.SerialInfo.ProductID[1] = display.productIDOverride >> 16;
 			}
 			
-			if (display.injectAppleInfo)
-				memcpy(&edid.SerialInfo, AppleDisplay_VIDPID, sizeof(AppleDisplay_VIDPID));
+			if (display.injectAppleVID)
+				memcpy(&edid.SerialInfo.VendorID, AppleDisplay_VID, sizeof(AppleDisplay_VID));
+			
+			if (display.injectApplePID)
+				memcpy(&edid.SerialInfo.ProductID, AppleDisplay_PID, sizeof(AppleDisplay_PID));
 			
 			if (display.forceRGBMode)
 				edid.BasicParams.Gamma &= ~(0B11000); // Setting Color Support to RGB 4:4:4 Only
@@ -692,7 +682,9 @@ uint32_t LEDProductID = 0x9236;
 			break;
 	}
 	
-	*edidData = [NSData dataWithBytes:&edid length:sizeof(EDID)];
+	*edidData = [NSData dataWithBytes:display.eDID.bytes length:display.eDID.length];
+	
+	memcpy((void *)(*edidData).bytes, &edid, sizeof(EDID));
 }
 
 + (void)makeEDIDFiles:(Display *)display
@@ -703,12 +695,11 @@ uint32_t LEDProductID = 0x9236;
 	NSString *productName = display.name;
 	NSNumber *productIDNumber = @0;
 	NSNumber *vendorIDNumber = @0;
-	NSData *edidOrigData = nil, *edidData = nil;
+	NSData *edidData = nil;
 	
-	[FixEDID getEDIDOrigData:display edidOrigData:&edidOrigData];
 	[FixEDID getEDIDData:display edidData:&edidData];
 	
-	if (edidOrigData == nil || edidData == nil)
+	if (edidData == nil)
 		return;
 	
 	switch(display.eDIDIndex)
@@ -892,7 +883,7 @@ uint32_t LEDProductID = 0x9236;
 	newDisplayOverridePath = [newDisplayOverridePath stringByAppendingPathComponent:[NSString stringWithFormat:@"DisplayProductID-%x", display.productID]];
 	
 	[edidOverride writeToFile:newDisplayOverridePath atomically:YES];
-	[edidOrigData writeToFile:edidOrigBinPath atomically:YES];
+	[display.eDID writeToFile:edidOrigBinPath atomically:YES];
 	[edidData writeToFile:edidBinPath atomically:YES];
 	
 #ifdef USE_USBMERGENUB
