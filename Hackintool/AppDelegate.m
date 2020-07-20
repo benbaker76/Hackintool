@@ -42,6 +42,8 @@ extern "C" {
 #define BluetoothPath2				@"blued.plist"
 #define PCIIDsUrl					@"https://pci-ids.ucw.cz/pci.ids"
 #define PCIIDsPath					[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"pci.ids"]
+#define USBIDsUrl					@"http://www.linux-usb.org/usb.ids"
+#define USBIDsPath					[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"usb.ids"]
 #define GitSubmoduleUpdate          @"/usr/bin/git submodule update --init --recursive"
 #define COLOR_ALPHA					0.3f
 
@@ -247,6 +249,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_pciVendorsDictionary release];
 	[_pciClassesDictionary release];
 	[_pciDevicesArray release];
+	[_usbVendorsDictionary release];
+	[_usbClassesDictionary release];
 	[_systemWidePowerSettings release];
 	[_currentPowerSettings release];
 	[_networkInterfacesArray release];
@@ -1143,6 +1147,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	NSLog(@"Initializing USB");
 	
+	[self initUSBIDs];
+	[self parseUSBIDs];
+	
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSString *filePath = nil;
 	
@@ -1190,6 +1197,22 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	registerDiskCallbacks(self);
 }
 
+- (void)initPCIIDs
+{
+	NSError *error;
+	NSString *pciIDsCachePath = PCIIDsPath;
+	NSBundle *mainBundle = [NSBundle mainBundle];
+	NSString *pciIDsBundlePath = [mainBundle pathForResource:@"pci" ofType:@"ids" inDirectory:@"PCI"];
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	
+	if (![fileManager fileExistsAtPath:pciIDsCachePath])
+	{
+		[fileManager copyItemAtPath:pciIDsBundlePath toPath:pciIDsCachePath error:&error];
+		NSDate *fileModificationDate = [[fileManager attributesOfItemAtPath:pciIDsBundlePath error:&error] fileModificationDate];
+		[fileManager setAttributes:@{ NSFileModificationDate:fileModificationDate } ofItemAtPath:pciIDsCachePath error:&error];
+	}
+}
+
 - (void)parsePCIIDs
 {
 	// https://pci-ids.ucw.cz/
@@ -1197,112 +1220,13 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	//	0576  BCM43224 802.11a/b/g/n
 	//		1028 01c1  Precision 490
 	
-	_pciVendorsDictionary = [[NSMutableDictionary dictionary] retain];
-	_pciClassesDictionary = [[NSMutableDictionary dictionary] retain];
-	
-	NSMutableDictionary *pciDeviceDictionary = nil;
-	NSMutableDictionary *pciSubclassesDictionary = nil;
-	NSMutableDictionary *pciSubsystemsDictionary = nil;
-	NSMutableDictionary *pciProgrammingInterfacesDictionary = nil;
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSString *filePath = nil;
-	bool isReadingDevices = true;
 	
 	if (!(filePath = [mainBundle pathForResource:@"pci" ofType:@"ids" inDirectory:@"PCI"]))
 		return;
 	
-	NSString *pciString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-	NSArray *pciArray = [pciString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-	
-	for (NSString *pciLine in pciArray)
-	{
-		if ([pciLine isEqualToString:@"# List of known device classes, subclasses and programming interfaces"])
-		{
-			isReadingDevices = false;
-			continue;
-		}
-		
-		if ([pciLine isEqualToString:@""] || [pciLine hasPrefix:@"#"])
-			continue;
-		
-		if (isReadingDevices)
-		{
-			if ([pciLine hasPrefix:@"\t\t"])
-			{
-				NSArray *subsystemArray = [pciLine componentsSeparatedByString:@"  "];
-				NSArray *subsystemIDArray = [subsystemArray[0] componentsSeparatedByString:@" "];
-				NSNumber *subsystemID = [NSNumber numberWithInt:(getHexInt(subsystemIDArray[0]) << 16) | getHexInt(subsystemIDArray[1])];
-				NSString *subsystemName = subsystemArray[1];
-				
-				[pciSubsystemsDictionary setObject:subsystemName forKey:subsystemID];
-			}
-			else if ([pciLine hasPrefix:@"\t"])
-			{
-				NSArray *deviceArray = [pciLine componentsSeparatedByString:@"  "];
-				NSNumber *deviceID = [NSNumber numberWithInt:getHexInt(deviceArray[0])];
-				NSString *deviceName = deviceArray[1];
-				
-				[pciDeviceDictionary setObject:deviceName forKey:deviceID];
-			}
-			else
-			{
-				NSArray *vendorArray = [pciLine componentsSeparatedByString:@"  "];
-				NSNumber *vendorID = [NSNumber numberWithInt:getHexInt(vendorArray[0])];
-				NSString *vendorName = vendorArray[1];
-				NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-				[dictionary setObject:vendorID forKey:@"VendorID"];
-				[dictionary setObject:vendorName forKey:@"VendorName"];
-				
-				pciDeviceDictionary = [NSMutableDictionary dictionary];
-				[dictionary setObject:pciDeviceDictionary forKey:@"Devices"];
-				
-				pciSubsystemsDictionary = [NSMutableDictionary dictionary];
-				[dictionary setObject:pciSubsystemsDictionary forKey:@"Subsystems"];
-				
-				[_pciVendorsDictionary setObject:dictionary forKey:vendorID];
-			}
-		}
-		else
-		{
-			if ([pciLine hasPrefix:@"\t\t"])
-			{
-				NSArray *progammingInterfaceArray = [pciLine componentsSeparatedByString:@"  "];
-				NSNumber *progammingInterfaceID = [NSNumber numberWithInt:getHexInt(progammingInterfaceArray[0])];
-				NSString *progammingInterfaceName = progammingInterfaceArray[1];
-				
-				[pciProgrammingInterfacesDictionary setObject:progammingInterfaceName forKey:progammingInterfaceID];
-			}
-			else if ([pciLine hasPrefix:@"\t"])
-			{
-				NSArray *subclassArray = [pciLine componentsSeparatedByString:@"  "];
-				NSNumber *subclassID = [NSNumber numberWithInt:getHexInt(subclassArray[0])];
-				NSString *subclassName = subclassArray[1];
-				
-				[pciSubclassesDictionary setObject:subclassName forKey:subclassID];
-			}
-			else if ([pciLine hasPrefix:@"C "])
-			{
-				pciLine = [pciLine substringFromIndex:1];
-				NSArray *classArray = [pciLine componentsSeparatedByString:@"  "];
-				NSNumber *classID = [NSNumber numberWithInt:getHexInt(classArray[0])];
-				NSString *className = classArray[1];
-				NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-				[dictionary setObject:classID forKey:@"ClassID"];
-				[dictionary setObject:className forKey:@"ClassName"];
-				
-				pciSubclassesDictionary = [NSMutableDictionary dictionary];
-				[dictionary setObject:pciSubclassesDictionary forKey:@"SubClasses"];
-				
-				pciProgrammingInterfacesDictionary = [NSMutableDictionary dictionary];
-				[dictionary setObject:pciProgrammingInterfacesDictionary forKey:@"ProgrammingInterfaces"];
-				
-				[_pciClassesDictionary setObject:dictionary forKey:classID];
-			}
-		}
-	}
-	
-	// NSLog(@"%@", _pciVendorsDictionary);
-	// NSLog(@"%@", _pciClassesDictionary);
+	[self parseIDs:filePath vendorsDictionary:&_pciVendorsDictionary classesDictionary:&_pciClassesDictionary];
 }
 
 - (void)initPCI
@@ -1313,18 +1237,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_pciMonitor.delegate = self;
 	[_pciMonitor registerForPCINotifications];
 	
-	NSError *error;
-	NSString *pciIDsCachePath = PCIIDsPath;
-	NSString *pciIDsBundlePath = [NSBundle.mainBundle pathForResource:@"pci" ofType:@"ids" inDirectory:@"PCI"];
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	
-	if (![fileManager fileExistsAtPath:pciIDsCachePath])
-	{
-		[fileManager copyItemAtPath:pciIDsBundlePath toPath:pciIDsCachePath error:&error];
-		NSDate *fileModificationDate = [[fileManager attributesOfItemAtPath:pciIDsBundlePath error:&error] fileModificationDate];
-		[fileManager setAttributes:@{ NSFileModificationDate:fileModificationDate } ofItemAtPath:pciIDsCachePath error:&error];
-	}
-	
+	[self initPCIIDs];
 	[self parsePCIIDs];
 	[self updatePCIIDs];
 }
@@ -1340,9 +1253,15 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	if (vendorDictionary != nil)
 	{
-		*vendorName = [vendorDictionary objectForKey:@"VendorName"];
+		NSString *vendorNameTemp = [vendorDictionary objectForKey:@"VendorName"];
 		NSMutableDictionary *deviceDictionary = [vendorDictionary objectForKey:@"Devices"];
-		*deviceName = [deviceDictionary objectForKey:deviceID];
+		NSString *deviceNameTemp = [deviceDictionary objectForKey:deviceID];
+		
+		if (vendorNameTemp != nil)
+			*vendorName = vendorNameTemp;
+		
+		if (deviceNameTemp != nil)
+			*deviceName = deviceNameTemp;
 	}
 	
 	bool result = (*deviceName != nil);
@@ -1361,15 +1280,21 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	bool result = [self getPCIDeviceInfo:vendorID deviceID:deviceID vendorName:vendorName deviceName:deviceName];
 	
 	NSNumber *pciClass = @((classCode.intValue >> 16) & 0xFF);
-	NSNumber *pciSubClass = @((classCode.intValue >> 8) & 0xFF);
+	NSNumber *pciSubclass = @((classCode.intValue >> 8) & 0xFF);
 	
 	NSMutableDictionary *classDictionary = [_pciClassesDictionary objectForKey:pciClass];
 	
 	if (classDictionary != nil)
 	{
-		*className = [classDictionary objectForKey:@"ClassName"];
+		NSString *classNameTemp = [classDictionary objectForKey:@"ClassName"];
 		NSMutableDictionary *subclassesDictionary = [classDictionary objectForKey:@"SubClasses"];
-		*subclassName = [subclassesDictionary objectForKey:pciSubClass];
+		NSString *subclassNameTemp = [subclassesDictionary objectForKey:pciSubclass];
+		
+		if (classNameTemp != nil)
+			*className = classNameTemp;
+		
+		if (subclassNameTemp != nil)
+			*subclassName = subclassNameTemp;
 	}
 	
 	if (*className == nil)
@@ -1548,6 +1473,180 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		[devicesPropertiesDictionary setObject:deviceDictionary forKey:devicePath];
 	}
+}
+
+- (bool)downloadUSBIDs
+{
+	NSError *error;
+	NSData *usbIDsData = [NSData dataWithContentsOfURL:[NSURL URLWithString:USBIDsUrl] options:NSDataReadingUncached error:&error];
+	
+	if (usbIDsData == nil)
+		return false;
+	
+	[usbIDsData writeToFile:USBIDsPath atomically:YES];
+	
+	return true;
+}
+
+- (void)initUSBIDs
+{
+	NSError *error;
+	NSString *usbIDsCachePath = USBIDsPath;
+	NSBundle *mainBundle = [NSBundle mainBundle];
+	NSString *pciIDsBundlePath = [mainBundle pathForResource:@"usb" ofType:@"ids" inDirectory:@"USB"];
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	
+	if (![fileManager fileExistsAtPath:usbIDsCachePath])
+	{
+		[fileManager copyItemAtPath:pciIDsBundlePath toPath:usbIDsCachePath error:&error];
+		NSDate *fileModificationDate = [[fileManager attributesOfItemAtPath:pciIDsBundlePath error:&error] fileModificationDate];
+		[fileManager setAttributes:@{ NSFileModificationDate:fileModificationDate } ofItemAtPath:usbIDsCachePath error:&error];
+	}
+}
+
+- (void)parseUSBIDs
+{
+	// https://usb-ids.ucw.cz/
+	NSBundle *mainBundle = [NSBundle mainBundle];
+	NSString *filePath = nil;
+	
+	if (!(filePath = [mainBundle pathForResource:@"usb" ofType:@"ids" inDirectory:@"USB"]))
+		return;
+	
+	[self parseIDs:filePath vendorsDictionary:&_usbVendorsDictionary classesDictionary:&_usbClassesDictionary];
+}
+
+- (bool)getUSBDeviceInfo:(NSNumber *)vendorID deviceID:(NSNumber *)deviceID vendorName:(NSString **)vendorName deviceName:(NSString **)deviceName
+{
+	NSMutableDictionary *vendorDictionary = [_usbVendorsDictionary objectForKey:vendorID];
+	
+	if (vendorDictionary != nil)
+	{
+		NSString *vendorNameTemp = [vendorDictionary objectForKey:@"VendorName"];
+		NSMutableDictionary *deviceDictionary = [vendorDictionary objectForKey:@"Devices"];
+		NSString *deviceNameTemp = [deviceDictionary objectForKey:deviceID];
+		
+		if (vendorNameTemp != nil)
+			*vendorName = vendorNameTemp;
+		
+		if (deviceNameTemp != nil)
+			*deviceName = deviceNameTemp;
+	}
+	
+	bool result = (*deviceName != nil);
+	
+	if (*vendorName == nil)
+		*vendorName = @"???";
+	
+	if (*deviceName == nil)
+		*deviceName = @"???";
+	
+	return result;
+}
+
+- (void)parseIDs:filePath vendorsDictionary:(NSMutableDictionary **)vendorsDictionary classesDictionary:(NSMutableDictionary **)classesDictionary
+{
+	*vendorsDictionary = [[NSMutableDictionary dictionary] retain];
+	*classesDictionary = [[NSMutableDictionary dictionary] retain];
+	
+	NSMutableDictionary *deviceDictionary = nil;
+	NSMutableDictionary *subClassesDictionary = nil;
+	NSMutableDictionary *subSystemsDictionary = nil;
+	NSMutableDictionary *programmingInterfacesDictionary = nil;
+	bool isReadingDevices = true;
+	
+	NSString *lineString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+	NSArray *lineArray = [lineString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+	
+	for (NSString *line in lineArray)
+	{
+		if ([line hasPrefix:@"# List of known device"])
+		{
+			isReadingDevices = false;
+			continue;
+		}
+		
+		if ([line isEqualToString:@""] || [line hasPrefix:@"#"])
+			continue;
+		
+		if (isReadingDevices)
+		{
+			if ([line hasPrefix:@"\t\t"])
+			{
+				NSArray *subsystemArray = [line componentsSeparatedByString:@"  "];
+				NSArray *subsystemIDArray = [subsystemArray[0] componentsSeparatedByString:@" "];
+				NSNumber *subsystemID = [NSNumber numberWithInt:(getHexInt(subsystemIDArray[0]) << 16) | getHexInt(subsystemIDArray[1])];
+				NSString *subsystemName = subsystemArray[1];
+				
+				[subSystemsDictionary setObject:subsystemName forKey:subsystemID];
+			}
+			else if ([line hasPrefix:@"\t"])
+			{
+				NSArray *deviceArray = [line componentsSeparatedByString:@"  "];
+				NSNumber *deviceID = [NSNumber numberWithInt:getHexInt(deviceArray[0])];
+				NSString *deviceName = deviceArray[1];
+				
+				[deviceDictionary setObject:deviceName forKey:deviceID];
+			}
+			else
+			{
+				NSArray *vendorArray = [line componentsSeparatedByString:@"  "];
+				NSNumber *vendorID = [NSNumber numberWithInt:getHexInt(vendorArray[0])];
+				NSString *vendorName = vendorArray[1];
+				NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+				[dictionary setObject:vendorID forKey:@"VendorID"];
+				[dictionary setObject:vendorName forKey:@"VendorName"];
+				
+				deviceDictionary = [NSMutableDictionary dictionary];
+				[dictionary setObject:deviceDictionary forKey:@"Devices"];
+				
+				subSystemsDictionary = [NSMutableDictionary dictionary];
+				[dictionary setObject:subSystemsDictionary forKey:@"Subsystems"];
+				
+				[*vendorsDictionary setObject:dictionary forKey:vendorID];
+			}
+		}
+		else
+		{
+			if ([line hasPrefix:@"\t\t"])
+			{
+				NSArray *progammingInterfaceArray = [line componentsSeparatedByString:@"  "];
+				NSNumber *progammingInterfaceID = [NSNumber numberWithInt:getHexInt(progammingInterfaceArray[0])];
+				NSString *progammingInterfaceName = progammingInterfaceArray[1];
+				
+				[programmingInterfacesDictionary setObject:progammingInterfaceName forKey:progammingInterfaceID];
+			}
+			else if ([line hasPrefix:@"\t"])
+			{
+				NSArray *subclassArray = [line componentsSeparatedByString:@"  "];
+				NSNumber *subclassID = [NSNumber numberWithInt:getHexInt(subclassArray[0])];
+				NSString *subclassName = subclassArray[1];
+				
+				[subClassesDictionary setObject:subclassName forKey:subclassID];
+			}
+			else if ([line hasPrefix:@"C "])
+			{
+				line = [line substringFromIndex:1];
+				NSArray *classArray = [line componentsSeparatedByString:@"  "];
+				NSNumber *classID = [NSNumber numberWithInt:getHexInt(classArray[0])];
+				NSString *className = classArray[1];
+				NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+				[dictionary setObject:classID forKey:@"ClassID"];
+				[dictionary setObject:className forKey:@"ClassName"];
+				
+				subClassesDictionary = [NSMutableDictionary dictionary];
+				[dictionary setObject:subClassesDictionary forKey:@"SubClasses"];
+				
+				programmingInterfacesDictionary = [NSMutableDictionary dictionary];
+				[dictionary setObject:programmingInterfacesDictionary forKey:@"ProgrammingInterfaces"];
+				
+				[*classesDictionary setObject:dictionary forKey:classID];
+			}
+		}
+	}
+	
+	// NSLog(@"%@", *vendorsDictionary);
+	// NSLog(@"%@", *classesDictionary);
 }
 
 - (void)appendTabCount:(uint32_t)tabCount outputString:(NSMutableString *)outputString
@@ -1909,23 +2008,22 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			NSNumber *productID = [deviceDictionary objectForKey:@"idProduct"];
 			NSNumber *vendorID = [deviceDictionary objectForKey:@"idVendor"];
 			NSNumber *fwLoaded = [deviceDictionary objectForKey:@"FirmwareLoaded"];
+			uint32_t deviceIDInt = propertyToUInt32([deviceDictionary objectForKey:@"device-id"]);
+			uint32_t vendorIDInt = propertyToUInt32([deviceDictionary objectForKey:@"vendor-id"]);
+			
+			if (deviceIDInt != 0)
+				productID = [NSNumber numberWithUnsignedInt:deviceIDInt];
+			
+			if (vendorIDInt != 0)
+				vendorID = [NSNumber numberWithUnsignedInt:vendorIDInt];
 			
 			// Try legacy entry
 			if (fwLoaded == nil)
 				fwLoaded = [deviceDictionary objectForKey:@"RM,FirmwareLoaded"];
 			
-			// PCI device
-			if (productID == nil && vendorID == nil)
-			{
-				uint32_t deviceIDInt = propertyToUInt32([deviceDictionary objectForKey:@"device-id"]);
-				uint32_t vendorIDInt = propertyToUInt32([deviceDictionary objectForKey:@"vendor-id"]);
-				
-				productID = [NSNumber numberWithUnsignedInt:deviceIDInt];
-				vendorID = [NSNumber numberWithUnsignedInt:vendorIDInt];
-				
-				[self getPCIDeviceInfo:vendorID deviceID:productID vendorName:&vendorName deviceName:&productName];
-			}
-			
+			if (productName == nil || vendorName == nil)
+				[self getUSBDeviceInfo:vendorID deviceID:productID vendorName:&vendorName deviceName:&productName];
+
 			NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
 			
 			[bluetoothDeviceDictionary setObject:vendorID forKey:@"VendorID"];

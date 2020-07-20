@@ -157,6 +157,9 @@ typedef struct
 	NSMutableArray *_pciDevicesArray;
 	PCIMonitor *_pciMonitor;
 	
+	NSMutableDictionary *_usbVendorsDictionary;
+	NSMutableDictionary *_usbClassesDictionary;
+	
 	NSMutableArray *_networkInterfacesArray;
 	NSMutableArray *_bluetoothDevicesArray;
 	NSMutableArray *_graphicDevicesArray;
