@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>FirmwareName</key>
+		<string></string>
+		<key>Name</key>
+		<string>Bluetooth wireless interface</string>
+		<key>ProductID</key>
+		<integer>2602</integer>
+		<key>VendorID</key>
+		<integer>32903</integer>
+	</dict>
+	<dict>
+		<key>FirmwareName</key>
+		<string></string>
+		<key>Name</key>
+		<string>Bluetooth wireless interface</string>
+		<key>ProductID</key>
+		<integer>2012</integer>
+		<key>VendorID</key>
+		<integer>32903</integer>
+	</dict>
+	<dict>
+		<key>FirmwareName</key>
+		<string></string>
+		<key>Name</key>
+		<string>Wireless-AC 3168 Bluetooth</string>
+		<key>ProductID</key>
+		<integer>2727</integer>
+		<key>VendorID</key>
+		<integer>32903</integer>
+	</dict>
+	<dict>
+		<key>FirmwareName</key>
+		<string></string>
+		<key>Name</key>
+		<string>Wireless-AC 9260 Bluetooth Adapter</string>
+		<key>ProductID</key>
+		<integer>37</integer>
+		<key>VendorID</key>
+		<integer>32903</integer>
+	</dict>
+	<dict>
+		<key>FirmwareName</key>
+		<string></string>
+		<key>Name</key>
+		<string>Bluetooth 9460/9560 Jefferson Peak (JfP)</string>
+		<key>ProductID</key>
+		<integer>2730</integer>
+		<key>VendorID</key>
+		<integer>32903</integer>
+	</dict>
+	<dict>
+		<key>FirmwareName</key>
+		<string></string>
+		<key>Name</key>
+		<string>Bluetooth wireless interface</string>
+		<key>ProductID</key>
+		<integer>38</integer>
+		<key>VendorID</key>
+		<integer>32903</integer>
+	</dict>
+	<dict>
+		<key>FirmwareName</key>
+		<string></string>
+		<key>Name</key>
+		<string>AX200 Bluetooth</string>
+		<key>ProductID</key>
+		<integer>41</integer>
+		<key>VendorID</key>
+		<integer>32903</integer>
+	</dict>
+	<dict>
+		<key>FirmwareName</key>
+		<string></string>
+		<key>Name</key>
+		<string>Bluetooth wireless interface</string>
+		<key>ProductID</key>
+		<integer>2603</integer>
+		<key>VendorID</key>
+		<integer>32903</integer>
+	</dict>
+	<dict>
+		<key>FirmwareName</key>
+		<string></string>
+		<key>Name</key>
+		<string>Bluetooth wireless interface</string>
+		<key>ProductID</key>
+		<integer>50</integer>
+		<key>VendorID</key>
+		<integer>32903</integer>
+	</dict>
+</array>
+</plist>

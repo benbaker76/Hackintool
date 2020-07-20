@@ -530,7 +530,7 @@
 		<key>Description</key>
 		<string>Try to load the Intel Bluetooth driver firmware.</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/zxystd/IntelBluetoothFirmware</string>
+		<string>https://github.com/OpenIntelWireless/IntelBluetoothFirmware</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
@@ -541,6 +541,18 @@
 		<string>Apple IO80211Controller call. Research on Apple's undisclosed AirPort program. Currently based on 10.15 api.</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/zxystd/AppleIntelWifiAdapter</string>
+		<key>Type</key>
+		<string>Kext</string>
+		<key>Superseder</key>
+		<string>itlwm</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>itlwm</string>
+		<key>Description</key>
+		<string>OpenBSD based macOS Intel network card driver.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/OpenIntelWireless/itlwmr</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>

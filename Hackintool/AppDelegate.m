@@ -1946,12 +1946,16 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	NSArray *brcmDeviceArray = nil;
 	NSArray *atherosDeviceArray = nil;
+	NSArray *intelDeviceArray = nil;
 	
 	if ((filePath = [mainBundle pathForResource:@"BRCMDevice" ofType:@"plist" inDirectory:@"BT"]))
 		brcmDeviceArray = [NSArray arrayWithContentsOfFile:filePath];
 	
 	if ((filePath = [mainBundle pathForResource:@"AtherosDevice" ofType:@"plist" inDirectory:@"BT"]))
 		atherosDeviceArray = [NSArray arrayWithContentsOfFile:filePath];
+	
+	if ((filePath = [mainBundle pathForResource:@"IntelDevice" ofType:@"plist" inDirectory:@"BT"]))
+		intelDeviceArray = [NSArray arrayWithContentsOfFile:filePath];
 	
 	NSMutableArray *usbPropertyDictionaryArray = nil;
 	
@@ -2016,6 +2020,30 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			NSString *name = [atherosDeviceDictionary objectForKey:@"Name"];
 			NSNumber *productID = [atherosDeviceDictionary objectForKey:@"ProductID"];
 			NSNumber *vendorID = [atherosDeviceDictionary objectForKey:@"VendorID"];
+			
+			if ([productID isEqualToNumber:idProduct] && [vendorID isEqualToNumber:idVendor])
+			{
+				NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
+				
+				[bluetoothDeviceDictionary setObject:idVendor forKey:@"VendorID"];
+				[bluetoothDeviceDictionary setObject:idProduct forKey:@"DeviceID"];
+				[bluetoothDeviceDictionary setObject:(vendorName != nil ? vendorName : @"???") forKey:@"VendorName"];
+				[bluetoothDeviceDictionary setObject:name forKey:@"DeviceName"];
+				
+				if (fwLoaded)
+					[bluetoothDeviceDictionary setObject:fwLoaded forKey:@"FWLoaded"];
+				
+				[_bluetoothDevicesArray addObject:bluetoothDeviceDictionary];
+				
+				break;
+			}
+		}
+		
+		for (NSDictionary *intelDeviceDictionary in intelDeviceArray)
+		{
+			NSString *name = [intelDeviceDictionary objectForKey:@"Name"];
+			NSNumber *productID = [intelDeviceDictionary objectForKey:@"ProductID"];
+			NSNumber *vendorID = [intelDeviceDictionary objectForKey:@"VendorID"];
 			
 			if ([productID isEqualToNumber:idProduct] && [vendorID isEqualToNumber:idVendor])
 			{
