@@ -549,6 +549,8 @@
 	<dict>
 		<key>Name</key>
 		<string>itlwm</string>
+		<key>BundleID</key>
+		<string>AirportItlwm</string>
 		<key>Description</key>
 		<string>OpenBSD based macOS Intel network card driver.</string>
 		<key>ProjectUrl</key>
