@@ -516,6 +516,26 @@
 	</dict>
 	<dict>
 		<key>Name</key>
+		<string>VoodooRMI</string>
+		<key>Description</key>
+		<string>A port for macOS of Synaptic's RMI code from Linux. RMI4 is used for touchscreens, touchpads, and other sensors.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/VoodooSMBus/VoodooRMI</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>VoodooSMBus</string>
+		<key>Description</key>
+		<string>VoodooSMBus is a project that provides a kernel extension (driver) for macOS that adds support for the SMBus capabilities of Intel I/O Controller Hubs (ICH), also called i801 SMBus.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/VoodooSMBus/VoodooSMBus</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>NVMeFix</string>
 		<key>Description</key>
 		<string>NVMeFix is a set of patches for the Apple NVMe storage driver, IONVMeFamily.</string>

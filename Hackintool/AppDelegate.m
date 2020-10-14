@@ -2888,8 +2888,6 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			NSString *projectUrl = [kextDictionary objectForKey:@"ProjectUrl"];
 			NSString *projectFileUrl = [kextDictionary objectForKey:@"ProjectFileUrl"];
 			NSString *outputPath = [buildPath stringByAppendingPathComponent:name];
-			
-
 			NSString *projectFileName = (projectFileUrl != nil ? [[projectFileUrl lastPathComponent] stringByRemovingPercentEncoding] : [name stringByAppendingString:@".xcodeproj"]);
             NSString *updateGitSubmodules = @"cd $(OUTPUT_PATH) && $(SUBMODULE_UPDATE)";
 			bool isLilu = [name isEqualToString:@"Lilu"];
@@ -2936,7 +2934,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			NSNumber *selectedNumber = selectedArray[i];
 			bool isSelected = [selectedNumber boolValue];
 			bool isLilu = [name isEqualToString:@"Lilu"];
+			bool isLiluPlugin = [type isEqualToString:@"Lilu"];
 			bool isGithub = [projectUrl containsString:@"github.com"];
+			bool isAcidanthera = [projectUrl containsString:@"acidanthera"];
 			bool isSuperseded = (superseder != nil && ![superseder isEqualToString:@""]);
 			
 			if (isLilu || !isSelected)
@@ -2956,10 +2956,13 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
             updateGitSubmodules = [updateGitSubmodules stringByReplacingOccurrencesOfString:@"$(SUBMODULE_UPDATE)" withString:GitSubmoduleUpdate];
             launchCommand(@"/bin/bash", @[@"-c", updateGitSubmodules], self,  @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
 
-			if ([type isEqualToString:@"Lilu"])
+			if (isLiluPlugin || isAcidanthera)
 			{
 				launchCommand(@"/bin/cp", @[@"-r", macKernelSDKPath, outputPath], self, @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
-				
+			}
+			
+			if (isLiluPlugin)
+			{
 				if ([[NSFileManager defaultManager] fileExistsAtPath:outputLiluKextPath])
 					[[NSFileManager defaultManager] removeItemAtPath:outputLiluKextPath error:&error];
 				
