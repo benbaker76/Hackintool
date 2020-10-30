@@ -346,7 +346,7 @@
 	</dict>
 	<dict>
 		<key>Name</key>
-		<string>IntelMausi</string>
+		<string>IntelMausiEthernet</string>
 		<key>BundleID</key>
 		<string>IntelMausi</string>
 		<key>Description</key>
