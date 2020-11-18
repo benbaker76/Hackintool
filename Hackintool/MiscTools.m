@@ -759,10 +759,10 @@ bool getMetalInfo(CGDirectDisplayID directDisplayID, NSString **name, bool &isDe
 	
 	id<MTLDevice> defaultDevice = mtlCreateSystemDefaultDevice();
 	
-	*name = objc_msgSend(device, sel_registerName("name"));
+	*name = reinterpret_cast<id (*)(id, SEL)>(objc_msgSend)(reinterpret_cast<id>(device), sel_registerName("name"));
 	isDefault = (device == defaultDevice);
-	isLowPower = objc_msgSend(device, sel_registerName("isLowPower"));
-	isHeadless = objc_msgSend(device, sel_registerName("isHeadless"));
+	isLowPower = reinterpret_cast<id (*)(id, SEL)>(objc_msgSend)(reinterpret_cast<id>(device), sel_registerName("isLowPower"));
+	isHeadless = reinterpret_cast<id (*)(id, SEL)>(objc_msgSend)(reinterpret_cast<id>(device), sel_registerName("isHeadless"));
 	
 	return true;
 }
@@ -780,9 +780,9 @@ bool getMetalInfo(NSString **name, bool &isLowPower, bool &isHeadless)
 	if (device == nil)
 		return false;
 	
-	*name = objc_msgSend(device, sel_registerName("name"));
-	isLowPower = objc_msgSend(device, sel_registerName("isLowPower"));
-	isHeadless = objc_msgSend(device, sel_registerName("isHeadless"));
+	*name = reinterpret_cast<id (*)(id, SEL)>(objc_msgSend)(reinterpret_cast<id>(device), sel_registerName("name"));
+	isLowPower = reinterpret_cast<id (*)(id, SEL)>(objc_msgSend)(reinterpret_cast<id>(device), sel_registerName("isLowPower"));
+	isHeadless = reinterpret_cast<id (*)(id, SEL)>(objc_msgSend)(reinterpret_cast<id>(device), sel_registerName("isHeadless"));
 	
 	return true;
 }
