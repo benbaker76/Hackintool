@@ -122,6 +122,12 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSDictionary *infoDictionary = [mainBundle infoDictionary];
 	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 	[_window setTitle:[NSString stringWithFormat:@"Hackintool v%@", version]];
+    
+    NSOperatingSystemVersion minimumSupportedOSVersion = { .majorVersion = 11, .minorVersion = 0, .patchVersion = 0 };
+    BOOL isSupported = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:minimumSupportedOSVersion];
+    
+    if (isSupported)
+        [_window setToolbarStyle:NSWindowToolbarStyleExpanded];
 	
 	NSLog(@"Hackintool v%@", version);
 	
@@ -2483,7 +2489,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	// 41    0 0xffffff7f840bb000 0x5000     0x5000     as.lvs1974.HibernationFixup (1.2.4) 605DDBEF-3997-3AF0-9E0F-5D69CBD5AD38 <37 8 6 5 3 2 1>
 
 	// kextstat -l
-	
+
 	_installedKextVersionDictionary = [[NSMutableDictionary dictionary] retain];
 	
 	NSString *stdoutString = nil;
@@ -2505,6 +2511,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSMutableArray *nameArray = [[[name componentsSeparatedByString:@"."] mutableCopy] autorelease];
 		[nameArray removeObject:@"kext"];
 		name = [nameArray lastObject];
+        
+        if (name == nil)
+            continue;
+        
 		NSString *version = [kextArray objectAtIndex:6];
 		NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"()"];
 		version = [version stringByTrimmingCharactersInSet:characterSet];
@@ -3365,9 +3375,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		if (usbConnector == nil && portType == nil)
 		{
-			//[self createUSBPortConnector:propertyDictionary];
-
-			continue;
+            [propertyDictionary setObject:[NSNumber numberWithInt:kTypeA] forKey:hubName != nil ? @"portType" : @"UsbConnector"];
 		}
 		
 		if (hubName != nil)
@@ -3839,9 +3847,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	// 8086:1E31, 8086:8C31, 8086:8CB1, 8086:8D31, 8086:9C31, 8086:9CB1 -> FakePCIID.kext + FakePCIID_XHCIMux.kext
 	
 	// As of 10.11.1 no longer needed
-	NSOperatingSystemVersion minimumSupportedOSVersion = { .majorVersion = 10, .minorVersion = 11, .patchVersion = 1 };
-	BOOL isSupported = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:minimumSupportedOSVersion];
-	
+    NSOperatingSystemVersion minimumSupportedOSVersion = { .majorVersion = 10, .minorVersion = 11, .patchVersion = 1 };
+    BOOL isSupported = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:minimumSupportedOSVersion];
+
 	if (!isSupported)
 	{
 		if ([usbControllerIDString isEqualToString:@"80868CB1"])
@@ -10130,7 +10138,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 
 - (void) updateAuthorization
 {
-	[_authorizationButton setImage:[NSImage imageNamed:@"IconUnlocked.png"]];
+	[_authorizationButton setImage:[NSImage imageNamed:@"IconUnlocked"]];
 }
 
 - (IBAction)toolbarClicked:(id)sender
