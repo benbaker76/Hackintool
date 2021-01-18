@@ -636,17 +636,17 @@ uint32_t LEDProductID = 0x9236;
 		*ioProviderMergeProperties = [NSMutableDictionary dictionaryWithObjectsAndKeys:productName, @"DisplayProductName", @(productID), @"DisplayProductID", @(vendorID), @"DisplayVendorID", @(displaySerial), @"DisplaySerialNumber", edidData, @"IODisplayEDID", [NSData dataWithBytes:capabilityString length:strlen(capabilityString)], @"IODisplayCapabilityString", [NSData dataWithBytes:connectFlags length:4], @"IODisplayConnectFlags", [NSData dataWithBytes:controllerID length:4], @"IODisplayControllerID", [NSData dataWithBytes:firmwareLevel length:4], @"IODisplayFirmwareLevel", [NSData dataWithBytes:mccsVersion length:4], @"IODisplayMCCSVersion", [NSData dataWithBytes:technologyType length:4], @"IODisplayTechnologyType", [[display.prefsKey stringByDeletingLastPathComponent] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%x-%x", displayClass, vendorID, productID]], @"IODisplayPrefsKey", displayClass, @"IOClass", nil];
 }
 
-+ (void)getEDIDData:(Display *)display edidData:(NSData **)edidData
++ (void)getEDIDData:(Display *)display edidOrigData:(NSData *)edidOrigData edidData:(NSData **)edidData
 {
 	EDID edid {};
 	
-	if (display.eDID.bytes == nil)
+	if (edidOrigData.bytes == nil)
 		return;
 	
-	if (display.eDID.length < sizeof(EDID))
+	if (edidOrigData.length < sizeof(EDID))
 		return;
 	
-	memcpy(&edid, display.eDID.bytes, sizeof(EDID));
+	memcpy(&edid, edidOrigData.bytes, sizeof(EDID));
 	
 	switch(display.eDIDIndex)
 	{
@@ -738,7 +738,7 @@ uint32_t LEDProductID = 0x9236;
 			break;
 	}
 	
-	*edidData = [NSData dataWithBytes:display.eDID.bytes length:display.eDID.length];
+	*edidData = [NSData dataWithBytes:edidOrigData.bytes length:edidOrigData.length];
 	
 	memcpy((void *)(*edidData).bytes, &edid, sizeof(EDID));
 }
@@ -751,40 +751,49 @@ uint32_t LEDProductID = 0x9236;
 	NSString *productName = display.name;
 	NSNumber *productIDNumber = @0;
 	NSNumber *vendorIDNumber = @0;
-	NSData *edidData = nil;
-	
-	[FixEDID getEDIDData:display edidData:&edidData];
-	
-	if (edidData == nil)
+    EDID edid {};
+	NSData *edidOrigData = display.eDID, *edidData = nil;
+    
+    if (edidOrigData == nil)
     {
         switch(display.eDIDIndex)
         {
             case 0: // Display
-                edidData = [NSData dataWithBytes:iMacRetina_EDID length:128];
+                memcpy(&edid, iMacRetina_EDID, 128);
                 break;
             case 2: // iMac
-                edidData = [NSData dataWithBytes:iMac_EDID length:128];
+                memcpy(&edid, iMac_EDID, 128);
                 break;
             case 3: // RetinaiMac
-                edidData = [NSData dataWithBytes:iMacRetina_EDID length:128];
+                memcpy(&edid, iMacRetina_EDID, 128);
                 break;
             case 4: // MacbookPro
-                edidData = [NSData dataWithBytes:MBP_EDID length:128];
+                memcpy(&edid, MBP_EDID, 128);
                 break;
             case 5: // MacbookAir
-                edidData = [NSData dataWithBytes:MBA_EDID length:128];
+                memcpy(&edid, MBA_EDID, 128);
                 break;
             case 6: // CinemaHD
-                edidData = [NSData dataWithBytes:CHD_EDID length:128];
+                memcpy(&edid, CHD_EDID, 128);
                 break;
             case 7: // Thunderbolt
-                edidData = [NSData dataWithBytes:TDB_EDID length:128];
+                memcpy(&edid, TDB_EDID, 128);
                 break;
             case 8: // LEDCinema
-                edidData = [NSData dataWithBytes:LED_EDID length:128];
+                memcpy(&edid, LED_EDID, 128);
                 break;
         }
+        
+        edid.SerialInfo.VendorID[0] = display.vendorID >> 16;
+        edid.SerialInfo.VendorID[1] = display.vendorID & 0xFFFF;
+        
+        edid.SerialInfo.ProductID[0] = display.productID & 0xFFFF;
+        edid.SerialInfo.ProductID[1] = display.productID >> 16;
+        
+        edidOrigData = [NSData dataWithBytes:&edid length:128];
     }
+	
+	[FixEDID getEDIDData:display edidOrigData:edidOrigData edidData:&edidData];
 	
 	switch(display.eDIDIndex)
 	{
@@ -967,7 +976,7 @@ uint32_t LEDProductID = 0x9236;
 	newDisplayOverridePath = [newDisplayOverridePath stringByAppendingPathComponent:[NSString stringWithFormat:@"DisplayProductID-%x", display.productID]];
 	
 	[edidOverride writeToFile:newDisplayOverridePath atomically:YES];
-	[display.eDID writeToFile:edidOrigBinPath atomically:YES];
+	[edidOrigData writeToFile:edidOrigBinPath atomically:YES];
 	[edidData writeToFile:edidBinPath atomically:YES];
 	
 #ifdef USE_USBMERGENUB
