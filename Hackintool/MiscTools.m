@@ -662,47 +662,56 @@ NSString *getOSName()
 	NSString *osVersionString = [processInfo operatingSystemVersionString];
 	NSString *codeName = @"";
     
-    switch(version.minorVersion)
+    if (version.majorVersion == 10)
     {
-    case 4:
-        codeName = @"Mac OS X Tiger";
-        break;
-    case 5:
-        codeName = @"Mac OS X Leopard";
-        break;
-    case 6:
-        codeName = @"Mac OS X Snow Leopard";
-        break;
-    case 7:
-        codeName = @"Mac OS X Lion";
-        break;
-    case 8:
-        codeName = @"OS X Mountain Lion";
-        break;
-    case 9:
-        codeName = @"OS X Mavericks";
-        break;
-    case 10:
-        codeName = @"OS X Yosemite";
-        break;
-    case 11:
-        codeName = @"OS X El Capitan";
-        break;
-    case 12:
-        codeName = @"macOS Sierra";
-        break;
-    case 13:
-        codeName = @"macOS High Sierra";
-        break;
-    case 14:
-        codeName = @"macOS Mojave";
-        break;
-    case 15:
-        codeName = @"macOS Catalina";
-        break;
-    case 16:
-        codeName = @"macOS Big Sur";
-        break;
+        switch(version.minorVersion)
+        {
+        case 4:
+            codeName = @"Mac OS X Tiger";
+            break;
+        case 5:
+            codeName = @"Mac OS X Leopard";
+            break;
+        case 6:
+            codeName = @"Mac OS X Snow Leopard";
+            break;
+        case 7:
+            codeName = @"Mac OS X Lion";
+            break;
+        case 8:
+            codeName = @"OS X Mountain Lion";
+            break;
+        case 9:
+            codeName = @"OS X Mavericks";
+            break;
+        case 10:
+            codeName = @"OS X Yosemite";
+            break;
+        case 11:
+            codeName = @"OS X El Capitan";
+            break;
+        case 12:
+            codeName = @"macOS Sierra";
+            break;
+        case 13:
+            codeName = @"macOS High Sierra";
+            break;
+        case 14:
+            codeName = @"macOS Mojave";
+            break;
+        case 15:
+            codeName = @"macOS Catalina";
+            break;
+        }
+    }
+    else if (version.majorVersion == 11)
+    {
+        switch(version.minorVersion)
+        {
+        case 1:
+            codeName = @"macOS Big Sur";
+            break;
+        }
     }
 	
 	return [NSString stringWithFormat:@"%@ %@", codeName, osVersionString];

@@ -3375,7 +3375,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		if (usbConnector == nil && portType == nil)
 		{
-            [propertyDictionary setObject:[NSNumber numberWithInt:kTypeA] forKey:hubName != nil ? @"portType" : @"UsbConnector"];
+            //[propertyDictionary setObject:[NSNumber numberWithInt:kTypeA] forKey:hubName != nil ? @"portType" : @"UsbConnector"];
+            
+            continue;
 		}
 		
 		if (hubName != nil)
