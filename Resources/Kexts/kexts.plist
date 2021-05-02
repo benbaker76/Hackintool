@@ -402,7 +402,7 @@
 		<key>Name</key>
 		<string>NullEthernet</string>
 		<key>Description</key>
-		<string>Enable Mac App Store access even if you don't have a built-in Ethernet (LAN) port with supporting drivers</string>
+		<string>Enable Mac App Store access even if you don&apos;t have a built-in Ethernet (LAN) port with supporting drivers</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/RehabMan/OS-X-Null-Ethernet</string>
 		<key>Type</key>
@@ -518,7 +518,7 @@
 		<key>Name</key>
 		<string>VoodooRMI</string>
 		<key>Description</key>
-		<string>A port for macOS of Synaptic's RMI code from Linux. RMI4 is used for touchscreens, touchpads and other sensors</string>
+		<string>A port for macOS of Synaptic&apos;s RMI code from Linux. RMI4 is used for touchscreens, touchpads and other sensors</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/VoodooSMBus/VoodooRMI</string>
 		<key>Type</key>
@@ -568,13 +568,13 @@
 	</dict>
 	<dict>
 		<key>Name</key>
-		<string>itlwm</string>
+		<string>Brightness</string>
 		<key>BundleID</key>
-		<string>AirportItlwm</string>
+		<string>BrightnessKeys</string>
 		<key>Description</key>
-		<string>An OpenBSD-based macOS Intel wireless card driver for supported devices that behaves like an integrated AirPort card</string>
+		<string>A driver that loads the Brightness Keys</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/OpenIntelWireless/itlwm</string>
+		<string>https://github.com/acidanthera/BrightnessKeys</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
