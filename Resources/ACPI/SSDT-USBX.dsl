@@ -7,20 +7,45 @@
 
 DefinitionBlock ("", "SSDT", 2, "hack", "_USBX", 0)
 {
-    Device(_SB.USBX)
+    Scope (\_SB)
     {
-        Name(_ADR, 0)
-        Method (_DSM, 4)
+        Device (USBX)
         {
-            If (!Arg2) { Return (Buffer() { 0x03 } ) }
-            Return (Package()
+            Name (_ADR, Zero)  // _ADR: Address
+            Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Method
             {
-                // from iMac17,1
-                "kUSBSleepPortCurrentLimit", 2100,
-                "kUSBSleepPowerSupply", 5100,
-                "kUSBWakePortCurrentLimit", 2100,
-                "kUSBWakePowerSupply", 5100,
-            })
+                If ((Arg2 == Zero))
+                {
+                    Return (Buffer (One)
+                    {
+                         0x03                                             // .
+                    })
+                }
+
+                Return (Package (0x08)
+                {
+                    "kUSBSleepPowerSupply", 
+                    0x13EC, 
+                    "kUSBSleepPortCurrentLimit", 
+                    0x0834, 
+                    "kUSBWakePowerSupply", 
+                    0x13EC, 
+                    "kUSBWakePortCurrentLimit", 
+                    0x0834
+                })
+            }
+
+            Method (_STA, 0, NotSerialized)  // _STA: Status
+            {
+                If (_OSI ("Darwin"))
+                {
+                    Return (0x0F)
+                }
+                Else
+                {
+                    Return (Zero)
+                }
+            }
         }
     }
 }

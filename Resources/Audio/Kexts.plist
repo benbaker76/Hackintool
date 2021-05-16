@@ -33,5 +33,14 @@
 			<string>/System/Library/Extensions/AppleHDA.kext/Contents/PlugIns/AppleHDAController.kext/Contents/MacOS/AppleHDAController</string>
 		</array>
 	</dict>
+	<key>IOHDAFamily</key>
+	<dict>
+		<key>Id</key>
+		<string>com.apple.iokit.IOHDAFamily</string>
+		<key>Paths</key>
+		<array>
+			<string>/System/Library/Extensions/AppleHDA.kext/Contents/PlugIns/IOHDAFamily.kext/Contents/MacOS/IOHDAFamily</string>
+		</array>
+	</dict>
 </dict>
 </plist>
