@@ -6456,6 +6456,11 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		if (value != nil)
 			[_nvramValueTextView setString:value];
 	}
+	else if ([value isKindOfClass:[NSNumber class]])
+	{
+		if (value != nil)
+			[_nvramValueTextView setString:[value stringValue]];
+	}
 	else if ([value isKindOfClass:[NSData class]])
 	{
 		NSData *valueData = (NSData *)value;
@@ -6492,6 +6497,13 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	{
 		if ([self setNVRAMValue:name value:newValue])
 			[_nvramDictionary setObject:newValue forKey:name];
+	}
+	else if ([value isKindOfClass:[NSNumber class]])
+	{
+		NSNumber *valueNumber = [NSNumber numberWithInt:[newValue intValue]];
+		
+		if ([self setNVRAMValue:name value:newValue])
+			[_nvramDictionary setObject:valueNumber forKey:name];
 	}
 	else if ([value isKindOfClass:[NSData class]])
 	{
@@ -7037,6 +7049,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		else if([identifier isEqualToString:@"Value"])
 		{
 			if ([value isKindOfClass:[NSString class]])
+				result.textField.stringValue = [NSString stringWithFormat:@"%@", value];
+			else if ([value isKindOfClass:[NSNumber class]])
 				result.textField.stringValue = [NSString stringWithFormat:@"%@", value];
 			else if ([value isKindOfClass:[NSData class]])
 				result.textField.stringValue = [NSString stringWithFormat:@"%@", getByteStringClassic(value)];
@@ -9315,6 +9329,14 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		{
 			if ([self setNVRAMValue:name value:newValue])
 				[_nvramDictionary setObject:newValue forKey:name];
+		}
+		else if ([value isKindOfClass:[NSNumber class]])
+		{
+			if ([self setNVRAMValue:name value:newValue])
+			{
+				NSNumber *newValueNumber = [NSNumber numberWithInt:[newValue intValue]];
+				[_nvramDictionary setObject:newValueNumber forKey:name];
+			}
 		}
 		else if ([value isKindOfClass:[NSData class]])
 		{

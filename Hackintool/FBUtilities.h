@@ -689,8 +689,8 @@ void getIGPUProperties(AppDelegate *appDelegate, NSMutableDictionary *configDict
 		for (int i = 0; i < [appDelegate.displaysArray count]; i++)
 		{
 			Display *display = appDelegate.displaysArray[i];
-			NSData *edidData = nil;
-			[FixEDID getEDIDData:display edidData:&edidData];
+			NSData *edidOrigData = nil, *edidData = nil;
+			[FixEDID getEDIDData:display edidOrigData:&edidOrigData edidData:&edidData];
 			
 			if (edidData != nil)
 				[gpuDictionary setObject:edidData forKey:[NSString stringWithFormat:@"AAPL0%d,override-no-connect", i]];

@@ -706,12 +706,7 @@ NSString *getOSName()
     }
     else if (version.majorVersion == 11)
     {
-        switch(version.minorVersion)
-        {
-        case 1:
-            codeName = @"macOS Big Sur";
-            break;
-        }
+        codeName = @"macOS Big Sur";
     }
 	
 	return [NSString stringWithFormat:@"%@ %@", codeName, osVersionString];

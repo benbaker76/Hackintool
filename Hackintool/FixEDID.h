@@ -184,7 +184,8 @@ struct EDID
 }
 
 + (NSString *)getAspectRatio:(EDID &)edid;
-+ (void)getEDIDData:(Display *)display edidData:(NSData **)edidData;
++ (void)getEDIDOrigData:(Display *)display edidOrigData:(NSData **)edidOrigData;
++ (void)getEDIDData:(Display *)display edidOrigData:(NSData **)edidOrigData edidData:(NSData **)edidData;
 + (void)makeEDIDFiles:(Display *)display;
 + (void)createDisplayIcons:(NSArray *)displaysArray;
 
