@@ -931,6 +931,23 @@ NSMutableArray *getHexArrayFromString(NSString *hexString)
 	return hexValuesArray;
 }
 
+NSString *getHexStringFromArray(NSMutableArray *numberArray)
+{
+	NSMutableString *hexString = [NSMutableString string];
+	
+	for (int i = 0; i < [numberArray count]; i++)
+	{
+		NSNumber *number = numberArray[i];
+		
+		[hexString appendFormat:@"0x%08X", [number intValue]];
+		
+		if (i < [numberArray count] - 1)
+			[hexString appendString:@" "];
+	}
+	
+	return hexString;
+}
+
 NSArray *translateArray(NSArray *array)
 {
 	NSMutableArray *resultArray = [NSMutableArray array];

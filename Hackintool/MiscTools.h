@@ -66,6 +66,7 @@ uint32_t getHexInt(NSString *valueString);
 void sendNotificationTitle(id delegate, NSString *title, NSString *subtitle, NSString *text, NSString *actionButtonTitle, NSString *otherButtonTitle, bool hasActionButton);
 bool tryFormatXML(NSString *rawXML, NSString **xmlString, bool formattingAllowed);
 NSMutableArray *getHexArrayFromString(NSString *hexString);
+NSString *getHexStringFromArray(NSMutableArray *numberArray);
 NSArray *translateArray(NSArray *array);
 NSString *trimNewLine(NSString *string);
 NSString *getUUID();

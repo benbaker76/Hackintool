@@ -4687,6 +4687,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	bool isMobile = false;
 	uint32_t stolenMem = 0, fbMem = 0, unifiedMem = 0;
 	uint32_t maxStolenMem = 0, totalStolenMem = 0, totalCursorMem = 0, maxOverallMem = 0;
+	NSString *intelPlatformIDsString_10_13_6 = getHexStringFromArray([_intelPlatformIDsDictionary_10_13_6 objectForKey:intelGenString]);
+	NSString *intelPlatformIDsString_10_14 = getHexStringFromArray([_intelPlatformIDsDictionary_10_14 objectForKey:intelGenString]);
 	
 	[self getMemoryIsMobile:&isMobile StolenMem:&stolenMem FBMem:&fbMem UnifiedMem:&unifiedMem MaxStolenMem:&maxStolenMem TotalStolenMem:&totalStolenMem TotalCursorMem:&totalCursorMem MaxOverallMem:&maxOverallMem];
 
@@ -4704,6 +4706,10 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	}
 	
 	[self addToList:_selectedFBInfoArray name:@"Mobile" value:isMobile ? GetLocalizedString(@"Yes") : GetLocalizedString(@"No")];
+	if (_macOS_10_13_6_MenuItem.state)
+		[self addToList:_selectedFBInfoArray name:@"Intel Platform ID(s)" value:intelPlatformIDsString_10_13_6];
+	else if (_macOS_10_14_MenuItem.state)
+		[self addToList:_selectedFBInfoArray name:@"Intel Platform ID(s)" value:intelPlatformIDsString_10_14];
 	[self addToList:_selectedFBInfoArray name:@"GPU Device ID(s)" value:deviceIDString];
 	[self addToList:_selectedFBInfoArray name:@"Model(s)" value:[self getModelString:platformID]];
 	
