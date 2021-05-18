@@ -4,6 +4,26 @@
 <array>
 	<dict>
 		<key>Name</key>
+		<string>LucyRTL8125Ethernet</string>
+		<key>Description</key>
+		<string>A macOS driver for Realtek RTL8125 2.5GBit Ethernet Controllers</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/Mieze/LucyRTL8125Ethernet</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>FakeSMC3_with_plugins</string>
+		<key>Description</key>
+		<string>Driver for emulation SMC device with hardware sensors support</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/CloverHackyColor/FakeSMC3_with_plugins</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>SmallTree-I211-AT-patch</string>
 		<key>Description</key>
 		<string>Patching SmallTree to support I211-AT controllers</string>
