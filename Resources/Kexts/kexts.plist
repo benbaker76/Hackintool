@@ -4,6 +4,16 @@
 <array>
 	<dict>
 		<key>Name</key>
+		<string>RestrictEvents</string>
+		<key>Description</key>
+		<string>Lilu Kernel extension for blocking unwanted processes causing compatibility issues on different hardware and unlocking the support for certain features restricted to other hardware.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/RestrictEvents</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>DiskArbitrationFixup</string>
 		<key>Description</key>
 		<string>Lilu plugin for disabling the &quot;The disk you inserted was not readable by this computer&quot; message at boot on 10.9 or later; useful if you have other disks with filesystems unknown to macOS</string>
