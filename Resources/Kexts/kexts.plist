@@ -4,6 +4,28 @@
 <array>
 	<dict>
 		<key>Name</key>
+		<string>NullCPUPowerManagement</string>
+		<key>Description</key>
+		<string>Another problem for OS X running on non-Apple hardware (virtual or otherwise) is the AppleIntelCPUPowerManagement kernel extension which tends to either panic the machine or spew endless debug messages to the console regarding the HPET and its relationship to the CPU</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/corpnewt/NullCPUPowerManagement</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Shiki</string>
+		<key>Description</key>
+		<string>Protected video playback support and hardware video acceleration on various hardware</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/Shiki</string>
+		<key>Type</key>
+		<string>Lilu</string>
+		<key>Superseder</key>
+		<string>WhateverGreen</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>LucyRTL8125Ethernet</string>
 		<key>Description</key>
 		<string>A macOS driver for Realtek RTL8125 2.5GBit Ethernet Controllers</string>
