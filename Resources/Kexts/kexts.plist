@@ -4,6 +4,68 @@
 <array>
 	<dict>
 		<key>Name</key>
+		<string>NullCPUPowerManagement</string>
+		<key>Description</key>
+		<string>Another problem for OS X running on non-Apple hardware (virtual or otherwise) is the AppleIntelCPUPowerManagement kernel extension which tends to either panic the machine or spew endless debug messages to the console regarding the HPET and its relationship to the CPU</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/corpnewt/NullCPUPowerManagement</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>Shiki</string>
+		<key>Description</key>
+		<string>Protected video playback support and hardware video acceleration on various hardware</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/Shiki</string>
+		<key>Type</key>
+		<string>Lilu</string>
+		<key>Superseder</key>
+		<string>WhateverGreen</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>LucyRTL8125Ethernet</string>
+		<key>Description</key>
+		<string>A macOS driver for Realtek RTL8125 2.5GBit Ethernet Controllers</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/Mieze/LucyRTL8125Ethernet</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>FakeSMC3_with_plugins</string>
+		<key>Description</key>
+		<string>Driver for emulation SMC device with hardware sensors support</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/CloverHackyColor/FakeSMC3_with_plugins</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>SmallTree-I211-AT-patch</string>
+		<key>Description</key>
+		<string>Patching SmallTree to support I211-AT controllers</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/khronokernel/SmallTree-I211-AT-patch</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>RestrictEvents</string>
+		<key>Description</key>
+		<string>Lilu Kernel extension for blocking unwanted processes causing compatibility issues on different hardware and unlocking the support for certain features restricted to other hardware.</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/RestrictEvents</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>DiskArbitrationFixup</string>
 		<key>Description</key>
 		<string>Lilu plugin for disabling the &quot;The disk you inserted was not readable by this computer&quot; message at boot on 10.9 or later; useful if you have other disks with filesystems unknown to macOS</string>
@@ -390,16 +452,6 @@
 	</dict>
 	<dict>
 		<key>Name</key>
-		<string>NullCPUPowerManagement</string>
-		<key>Description</key>
-		<string>Another problem for OS X running on non-Apple hardware (virtual or otherwise) is the AppleIntelCPUPowerManagement kernel extension which tends to either panic the machine or spew endless debug messages to the console regarding the HPET and its relationship to the CPU</string>
-		<key>ProjectUrl</key>
-		<string>https://github.com/corpnewt/NullCPUPowerManagement</string>
-		<key>Type</key>
-		<string>Kext</string>
-	</dict>
-	<dict>
-		<key>Name</key>
 		<string>NullEthernet</string>
 		<key>Description</key>
 		<string>Enable Mac App Store access even if you don&apos;t have a built-in Ethernet (LAN) port with supporting drivers</string>
@@ -445,18 +497,6 @@
 		<string>RealtekRTL8111-V2</string>
 		<key>Type</key>
 		<string>Kext</string>
-	</dict>
-	<dict>
-		<key>Name</key>
-		<string>Shiki</string>
-		<key>Description</key>
-		<string>Protected video playback support and hardware video acceleration on various hardware</string>
-		<key>ProjectUrl</key>
-		<string>https://github.com/acidanthera/Shiki</string>
-		<key>Type</key>
-		<string>Lilu</string>
-		<key>Superseder</key>
-		<string>WhateverGreen</string>
 	</dict>
 	<dict>
 		<key>Name</key>
