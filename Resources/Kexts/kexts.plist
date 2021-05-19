@@ -238,6 +238,16 @@
 	</dict>
 	<dict>
 		<key>Name</key>
+		<string>ECEnabler</string>
+		<key>Description</key>
+		<string>Allows reading Embedded Controller fields over 1 byte long, vastly reducing the amount of ACPI modification needed (if any) for working battery status</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/1Revenger1/ECEnabler</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>BrcmWLFixup</string>
 		<key>Description</key>
 		<string>A Lilu plugin that removes whitelist for Wi-Fi under macOS</string>
@@ -267,6 +277,16 @@
 		<string>A VirtualSMC plugin that provides native support for ALS, keyboard backlight and Fn keys for Asus laptops on macOS</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/hieplpvip/AsusSMC</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>YogaSMC</string>
+		<key>Description</key>
+		<string>A VirtualSMC plugin, Allow syncing SMC keys like sensors reading and battery conservation mode for Lenovo laptops on macOS</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/zhen-zen/YogaSMC</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
@@ -543,6 +563,16 @@
 		<string>https://github.com/RehabMan/VoodooTSCSync</string>
 		<key>Type</key>
 		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>CpuTscSync</string>
+		<key>Description</key>
+		<string>Combining functionality of VoodooTSCSync and disabling xcpm_urgency if TSC is not in sync. It should solve some kernel panics after wake</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/CpuTscSync</string>
+		<key>Type</key>
+		<string>Lilu</string>
 	</dict>
 	<dict>
 		<key>Name</key>
