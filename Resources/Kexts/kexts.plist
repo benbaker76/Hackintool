@@ -178,6 +178,16 @@
 	</dict>
 	<dict>
 		<key>Name</key>
+		<string>SidecarFixup</string>
+		<key>Description</key>
+		<string>Lilu Kernel extension for enabling Sidecar support on the unsupported SMBIOS</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/SidecarFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>HibernationFixup</string>
 		<key>Description</key>
 		<string>An open-source kernel extension providing a sync between RTC variables and NVRAM</string>
