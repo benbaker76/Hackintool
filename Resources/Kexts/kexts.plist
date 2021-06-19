@@ -662,6 +662,18 @@
 		<key>Name</key>
 		<string>itlwm</string>
 		<key>BundleID</key>
+		<string>AirportItlwm</string>
+		<key>Description</key>
+		<string>An OpenBSD-based macOS Intel wireless card driver for supported devices that behaves like an integrated AirPort card</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/OpenIntelWireless/itlwm</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Name</key>
+		<string>itlwm</string>
+		<key>BundleID</key>
 		<string>itlwm</string>
 		<key>Description</key>
 		<string>An OpenBSD-based macOS Intel wireless card driver for supported devices that behaves as an Ethernet card; must be accompanied by HeliPort.app to control it</string>
