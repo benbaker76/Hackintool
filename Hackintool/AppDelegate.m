@@ -10311,7 +10311,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 - (NSInteger)numberOfItemsInMenu:(NSMenu *)menu
 {
 	if ([menu.identifier isEqualToString:@"Mount"])
-		return 5;
+		return 6;
 	else if ([menu.identifier isEqualToString:@"Tools"])
 		return 2;
 	else if ([menu.identifier isEqualToString:@"CopyToClipboard"])

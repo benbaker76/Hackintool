@@ -708,6 +708,10 @@ NSString *getOSName()
     {
         codeName = @"macOS Big Sur";
     }
+	else if (version.majorVersion == 12)
+	{
+		codeName = @"macOS Monterey";
+	}
 	
 	return [NSString stringWithFormat:@"%@ %@", codeName, osVersionString];
 }

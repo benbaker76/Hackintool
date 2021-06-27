@@ -133,6 +133,7 @@
 		E2674F9220D6195C007F0F2A /* IntelFramebuffer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = IntelFramebuffer.h; sourceTree = "<group>"; };
 		E2674F9620D61D1A007F0F2A /* IntelFramebuffer.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = IntelFramebuffer.m; sourceTree = "<group>"; };
 		E26BE3DD22520DC0004901D8 /* PCI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PCI; sourceTree = "<group>"; };
+		E26C122426655D6C000AD4D9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E277608C21EBD90D00EA6E44 /* FixEDID.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = FixEDID.m; sourceTree = "<group>"; };
 		E277608D21EBD90D00EA6E44 /* FixEDID.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FixEDID.h; sourceTree = "<group>"; };
 		E27BFB90211BCEE300C75CDB /* Intel */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Intel; path = Resources/Intel; sourceTree = SOURCE_ROOT; };
@@ -249,6 +250,7 @@
 		E24936FD169D1B2B00384895 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E26C122426655D6C000AD4D9 /* QuartzCore.framework */,
 				E22CAB9F226A697D008B4B52 /* VideoDecodeAcceleration.framework */,
 				E22CAB9D226A696A008B4B52 /* CoreVideo.framework */,
 				E2A397EF2246F34500C6D2B1 /* DiskManagement.framework */,
@@ -717,7 +719,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0357;
+				CURRENT_PROJECT_VERSION = 0361;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -732,7 +734,7 @@
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MARKETING_VERSION = 3.5.7;
+				MARKETING_VERSION = 3.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -753,7 +755,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0357;
+				CURRENT_PROJECT_VERSION = 0361;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -768,7 +770,7 @@
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MARKETING_VERSION = 3.5.7;
+				MARKETING_VERSION = 3.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
