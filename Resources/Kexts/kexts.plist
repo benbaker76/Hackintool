@@ -648,7 +648,7 @@
 	</dict>
 	<dict>
 		<key>Name</key>
-		<string>Brightness</string>
+		<string>BrightnessKeys</string>
 		<key>BundleID</key>
 		<string>BrightnessKeys</string>
 		<key>Description</key>
@@ -656,7 +656,7 @@
 		<key>ProjectUrl</key>
 		<string>https://github.com/acidanthera/BrightnessKeys</string>
 		<key>Type</key>
-		<string>Kext</string>
+		<string>Lilu</string>
 	</dict>
 	<dict>
 		<key>Name</key>
