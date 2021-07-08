@@ -3051,7 +3051,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		{
 			*projectVersion = [buildSettingsDictionary objectForKey:@"MODULE_VERSION"];
 			
-			if (*projectVersion == nil || [*projectVersion isEqualToString:@"$(CURRENT_PROJECT_VERSION)"] || [*projectVersion isEqualToString:@"$CURRENT_PROJECT_VERSION"])
+			if (*projectVersion == nil || [*projectVersion isEqualToString:@"$(CURRENT_PROJECT_VERSION)"] || [*projectVersion isEqualToString:@"$CURRENT_PROJECT_VERSION"] || [*projectVersion isEqualToString:@"$(MODULE_VERSION)"] || [*projectVersion isEqualToString:@"$MODULE_VERSION"])
 				continue;
 		}
 		
