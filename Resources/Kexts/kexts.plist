@@ -326,7 +326,7 @@
 		<key>Name</key>
 		<string>BrcmPatchRAM</string>
 		<key>BundleID</key>
-		<string>BrcmPatchRAM3</string>
+		<string>BrcmFirmwareStore</string>
 		<key>Description</key>
 		<string>Broadcom wireless card PatchRAM driver for macOS</string>
 		<key>ProjectUrl</key>
