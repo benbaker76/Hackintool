@@ -182,7 +182,7 @@
 		<key>Description</key>
 		<string>Lilu Kernel extension for enabling Sidecar support on the unsupported SMBIOS</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/acidanthera/SidecarFixup</string>
+		<string>https://github.com/acidanthera/FeatureUnlock</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
