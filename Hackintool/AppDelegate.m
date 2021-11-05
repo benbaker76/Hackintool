@@ -2063,16 +2063,31 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	NSMutableArray *usbPropertyDictionaryArray = nil;
 	
-	if (!getIORegPropertyDictionaryArray(@"IOUSBDevice", &usbPropertyDictionaryArray))
+	if (!getIORegPropertyDictionaryArrayWithParent(@"IOService", @"IOUSBDevice", &usbPropertyDictionaryArray))
 		return;
 	
-	for (NSMutableDictionary *propertyDictionary in usbPropertyDictionaryArray)
+	for (NSMutableDictionary *deviceDictionary in usbPropertyDictionaryArray)
 	{
-		//NSString *productName = [propertyDictionary objectForKey:@"USB Product Name"];
-		NSString *vendorName = [propertyDictionary objectForKey:@"USB Vendor Name"];
-		NSNumber *idProduct = [propertyDictionary objectForKey:@"idProduct"];
-		NSNumber *idVendor = [propertyDictionary objectForKey:@"idVendor"];
-		NSNumber *fwLoaded = [propertyDictionary objectForKey:@"RM,FirmwareLoaded"];
+		NSString *productName = [deviceDictionary objectForKey:@"USB Product Name"];
+		NSString *vendorName = [deviceDictionary objectForKey:@"USB Vendor Name"];
+		NSNumber *idProduct = [deviceDictionary objectForKey:@"idProduct"];
+		NSNumber *idVendor = [deviceDictionary objectForKey:@"idVendor"];
+		NSNumber *fwLoaded = [deviceDictionary objectForKey:@"FirmwareLoaded"];
+		uint32_t deviceIDInt = propertyToUInt32([deviceDictionary objectForKey:@"device-id"]);
+		uint32_t vendorIDInt = propertyToUInt32([deviceDictionary objectForKey:@"vendor-id"]);
+		
+		if (deviceIDInt != 0)
+			idProduct = [NSNumber numberWithUnsignedInt:deviceIDInt];
+		
+		if (vendorIDInt != 0)
+			idVendor = [NSNumber numberWithUnsignedInt:vendorIDInt];
+		
+		// Try legacy entry
+		if (fwLoaded == nil)
+			fwLoaded = [deviceDictionary objectForKey:@"RM,FirmwareLoaded"];
+		
+		if (productName == nil || vendorName == nil)
+			[self getUSBDeviceInfo:idVendor deviceID:idProduct vendorName:&vendorName deviceName:&productName];
 		
 		bool foundMatch = NO;
 		
@@ -2089,6 +2104,23 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 					
 					break;
 				}
+			}
+		}
+
+		for (NSMutableDictionary *bluetoothDeviceDictionary in _bluetoothDevicesArray)
+		{
+			NSNumber *productID = [bluetoothDeviceDictionary objectForKey:@"DeviceID"];
+			NSNumber *vendorID = [bluetoothDeviceDictionary objectForKey:@"VendorID"];
+			NSNumber *loadedFw = [bluetoothDeviceDictionary objectForKey:@"FWLoaded"];
+			
+			if ([productID isEqualToNumber:idProduct] && [vendorID isEqualToNumber:idVendor])
+			{
+				if (!loadedFw && fwLoaded)
+					[bluetoothDeviceDictionary setObject:fwLoaded forKey:@"FWLoaded"];
+				
+				foundMatch = YES;
+				
+				break;
 			}
 		}
 		

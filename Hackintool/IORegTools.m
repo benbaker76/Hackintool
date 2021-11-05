@@ -1814,6 +1814,15 @@ bool getIGPUModelAndVRAM(NSString **gpuModel, uint32_t &gpuDeviceID, uint32_t &g
 			CFRelease(vendorID);
 		}
 		
+		if (((gpuDeviceID << 16) | gpuVendorID) == 0x11111234)
+		{
+			*gpuModel = @"Apple Boch VGA";
+		}
+		else if (((gpuDeviceID << 16) | gpuVendorID) == 0x00001013)
+		{
+			*gpuModel = @"Apple Cirrus GD5446";
+		}
+		
 		getVRAMSize(device, vramSize);
 		getVRAMFreeBytes(vramFree);
 		
@@ -1831,10 +1840,10 @@ bool getIGPUModelAndVRAM(NSString **gpuModel, uint32_t &gpuDeviceID, uint32_t &g
 bool getScreenNumberForDisplay(SInt32 myVendorID, SInt32 myProductID, SInt32 mySerialNumber, CGDirectDisplayID *directDisplayID)
 {
 	bool retval = false;
-	CGDirectDisplayID directDisplayIDArray[10];
+	CGDirectDisplayID directDisplayIDArray[10] { 0 };
 	uint32_t displayCount = 0;
 	CGError err = CGGetActiveDisplayList(10, directDisplayIDArray, &displayCount);
-	
+
 	if (err != kCGErrorSuccess)
 		return false;
 	
@@ -1844,6 +1853,10 @@ bool getScreenNumberForDisplay(SInt32 myVendorID, SInt32 myProductID, SInt32 myS
 	for (uint32_t i = 0; i < displayCount; i++)
 	{
 		io_service_t servicePort = CGDisplayIOServicePort(directDisplayIDArray[i]);
+		
+		if (!servicePort)
+			continue;
+		
 		CFDictionaryRef displayInfo = IODisplayCreateInfoDictionary(servicePort, kIODisplayMatchingInfo);
 		
 		CFNumberRef vendorIDRef = nil;
