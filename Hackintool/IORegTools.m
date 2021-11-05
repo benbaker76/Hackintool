@@ -1814,15 +1814,6 @@ bool getIGPUModelAndVRAM(NSString **gpuModel, uint32_t &gpuDeviceID, uint32_t &g
 			CFRelease(vendorID);
 		}
 		
-		if (((gpuDeviceID << 16) | gpuVendorID) == 0x11111234)
-		{
-			*gpuModel = @"Apple Boch VGA";
-		}
-		else if (((gpuDeviceID << 16) | gpuVendorID) == 0x00001013)
-		{
-			*gpuModel = @"Apple Cirrus GD5446";
-		}
-		
 		getVRAMSize(device, vramSize);
 		getVRAMFreeBytes(vramFree);
 		

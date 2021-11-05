@@ -519,14 +519,25 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSString *ioregIOName = [pciDeviceDictionary objectForKey:@"IORegIOName"];
 		NSNumber *vendorID = [pciDeviceDictionary objectForKey:@"VendorID"];
 		NSNumber *deviceID = [pciDeviceDictionary objectForKey:@"DeviceID"];
-		
+        
 		if (![ioregIOName isEqualToString:@"display"])
 			continue;
-		
+        
+        uint32_t gpuDeviceID = ([deviceID unsignedIntValue] << 16) | [vendorID unsignedIntValue];
+        
+        if (gpuDeviceID == 0x11111234)
+        {
+            deviceName = @"Apple Boch VGA";
+        }
+        else if (gpuDeviceID == 0x00001013)
+        {
+            deviceName = @"Apple Cirrus GD5446";
+        }
+        
 		NSMutableArray *gpuInfoArray = [NSMutableArray array];
 
 		[self addToList:gpuInfoArray name:@"GPU Name" value:deviceName];
-		[self addToList:gpuInfoArray name:@"GPU Device ID" value:[NSString stringWithFormat:@"0x%08X", ([deviceID unsignedIntValue] << 16) | [vendorID unsignedIntValue]]];
+		[self addToList:gpuInfoArray name:@"GPU Device ID" value:[NSString stringWithFormat:@"0x%08X", gpuDeviceID]];
 	
 		for (Display *display in _displaysArray)
 		{
