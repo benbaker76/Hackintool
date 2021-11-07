@@ -554,6 +554,16 @@
 	</dict>
 	<dict>
 		<key>Name</key>
+		<string>AlpsHID</string>
+		<key>Description</key>
+		<string>VoodooI2C HID plugin for add support ALPS touchpad</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/blankmac/AlpsHID</string>
+		<key>Type</key>
+		<string>VoodooI2C</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>VoodooPS2Controller</string>
 		<key>BundleID</key>
 		<string>PS2Controller</string>
