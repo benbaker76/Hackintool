@@ -11,6 +11,7 @@
 #include "Display.h"
 #include "AudioDevice.h"
 #include <IOKit/IOBSD.h>
+#include <IOKit/usb/USBSpec.h>
 #include <IOKit/IOKitLib.h>
 #include <IOKit/graphics/IOGraphicsLib.h>
 
@@ -1170,6 +1171,56 @@ bool getIORegNetworkArray(NSMutableArray **networkInterfacesArray)
 	return ([*networkInterfacesArray count] > 0);
 }
 
+bool getIORegBluetoothArray(NSMutableArray **propertyArray)
+{
+	*propertyArray = [NSMutableArray array];
+	io_iterator_t iterator;
+	
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("IOUSBDevice"), &iterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
+	{
+		CFMutableDictionaryRef properties = NULL;
+		kr = IORegistryEntryCreateCFProperties(device, &properties, kCFAllocatorDefault, kNilOptions);
+		
+		if (kr != KERN_SUCCESS)
+			continue;
+		
+		CFStringRef usbProductString = nil;
+
+		if (CFDictionaryGetValueIfPresent(properties, CFSTR(kUSBProductString), (const void **)&usbProductString))
+		{
+			if (CFStringCompare(usbProductString, CFSTR("Bluetooth USB Host Controller"), 0) == kCFCompareEqualTo)
+			{
+				io_service_t parentDevice;
+				
+				if (getIORegParent(device, @"IOUSBDevice", &parentDevice, true))
+				{
+					CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
+					
+					kr = IORegistryEntryCreateCFProperties(parentDevice, &parentPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+					
+					if (kr == KERN_SUCCESS)
+					{
+						NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
+						
+						[*propertyArray addObject:parentPropertyDictionary];
+					}
+				}
+			}
+			
+			CFRelease(usbProductString);
+		}
+	}
+	
+	IOObjectRelease(iterator);
+	
+	return ([*propertyArray count] > 0);
+}
+
 bool getIORegGraphicsArray(NSMutableArray **graphicsArray)
 {
 	*graphicsArray = [[NSMutableArray array] retain];
@@ -1340,6 +1391,40 @@ bool getIORegPropertyDictionaryArrayWithParent(NSString *serviceName, NSString *
 				NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
 				
 				[*propertyArray addObject:parentPropertyDictionary];
+			}
+		}
+	}
+	
+	IOObjectRelease(iterator);
+	
+	return ([*propertyArray count] > 0);
+}
+
+bool getIORegPropertyDictionaryArrayWithChild(NSString *serviceName, NSString *childName, NSMutableArray **propertyArray)
+{
+	*propertyArray = [NSMutableArray array];
+	io_iterator_t iterator;
+	
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching([serviceName UTF8String]), &iterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
+	{
+		io_service_t childDevice;
+		
+		if (getIORegChild(device, childName, &childDevice, true))
+		{
+			CFMutableDictionaryRef childPropertyDictionaryRef = 0;
+			
+			kr = IORegistryEntryCreateCFProperties(childDevice, &childPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+			
+			if (kr == KERN_SUCCESS)
+			{
+				NSMutableDictionary *childPropertyDictionary = (__bridge NSMutableDictionary *)childPropertyDictionaryRef;
+				
+				[*propertyArray addObject:childPropertyDictionary];
 			}
 		}
 	}
