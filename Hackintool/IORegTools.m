@@ -1176,44 +1176,86 @@ bool getIORegBluetoothArray(NSMutableArray **propertyArray)
 	*propertyArray = [NSMutableArray array];
 	io_iterator_t iterator;
 	
-	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("IOUSBDevice"), &iterator);
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("AppleUSBHostPort"), &iterator);
 	
 	if (kr != KERN_SUCCESS)
 		return false;
 	
 	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
 	{
+		io_service_t childDevice;
+		
+		if (!getIORegChild(device, @"IOUserClient", &childDevice, true))
+			continue;
+		
 		CFMutableDictionaryRef properties = NULL;
-		kr = IORegistryEntryCreateCFProperties(device, &properties, kCFAllocatorDefault, kNilOptions);
+		kr = IORegistryEntryCreateCFProperties(childDevice, &properties, kCFAllocatorDefault, kNilOptions);
 		
 		if (kr != KERN_SUCCESS)
 			continue;
 		
-		CFStringRef usbProductString = nil;
-
-		if (CFDictionaryGetValueIfPresent(properties, CFSTR(kUSBProductString), (const void **)&usbProductString))
+		CFStringRef usbUserClientOwningTaskName = nil;
+		
+		if (!CFDictionaryGetValueIfPresent(properties, CFSTR("UsbUserClientOwningTaskName"), (const void **)&usbUserClientOwningTaskName))
+			continue;
+		
+		if (CFStringCompare(usbUserClientOwningTaskName, CFSTR("bluetoothd"), 0) != kCFCompareEqualTo)
 		{
-			if (CFStringCompare(usbProductString, CFSTR("Bluetooth USB Host Controller"), 0) == kCFCompareEqualTo)
+			CFRelease(usbUserClientOwningTaskName);
+			
+			continue;
+		}
+
+		io_iterator_t parentIterator;
+		kern_return_t kr = IORegistryEntryCreateIterator(childDevice, kIOServicePlane, kIORegistryIterateRecursively | kIORegistryIterateParents, &parentIterator);
+		
+		if (kr != KERN_SUCCESS)
+			continue;
+		
+		for (io_service_t parentDevice; IOIteratorIsValid(parentIterator) && (parentDevice = IOIteratorNext(parentIterator)); IOObjectRelease(parentDevice))
+		{
+			if (!IOObjectConformsTo(parentDevice, "IOUSBDevice"))
+				continue;
+			
+			CFMutableDictionaryRef parentProperties = NULL;
+			kr = IORegistryEntryCreateCFProperties(parentDevice, &parentProperties, kCFAllocatorDefault, kNilOptions);
+			
+			if (kr != KERN_SUCCESS)
+				continue;
+			
+			bool skipDevice = NO;
+			CFStringRef usbProductString = nil;
+
+			if (CFDictionaryGetValueIfPresent(parentProperties, CFSTR(kUSBProductString), (const void **)&usbProductString))
 			{
-				io_service_t parentDevice;
-				
-				if (getIORegParent(device, @"IOUSBDevice", &parentDevice, true))
+				if (CFStringCompare(usbProductString, CFSTR("Bluetooth USB Host Controller"), 0) == kCFCompareEqualTo)
 				{
-					CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
-					
-					kr = IORegistryEntryCreateCFProperties(parentDevice, &parentPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
-					
-					if (kr == KERN_SUCCESS)
-					{
-						NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
-						
-						[*propertyArray addObject:parentPropertyDictionary];
-					}
+					skipDevice = YES;
 				}
+				
+				CFRelease(usbProductString);
 			}
 			
-			CFRelease(usbProductString);
+			if (skipDevice)
+				continue;
+			
+			CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
+			
+			kr = IORegistryEntryCreateCFProperties(parentDevice, &parentPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+			
+			if (kr != KERN_SUCCESS)
+				continue;
+			
+			NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
+			
+			[*propertyArray addObject:parentPropertyDictionary];
+			
+			IOObjectRelease(parentIterator);
+			
+			break;
 		}
+		
+		CFRelease(usbUserClientOwningTaskName);
 	}
 	
 	IOObjectRelease(iterator);

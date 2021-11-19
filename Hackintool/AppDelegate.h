@@ -195,6 +195,11 @@ typedef struct
 @property (assign) IBOutlet NSTableView *connectorInfoTableView;
 @property (assign) IBOutlet NSTableView *connectorFlagsTableView;
 @property (assign) IBOutlet NSButton *headlessButton;
+// Donate Windows
+@property (assign) IBOutlet NSWindow *donateWindow;
+@property (assign) IBOutlet NSTextField *ethereumTextField;
+@property (assign) IBOutlet NSTextField *bitcoinTextField;
+@property (assign) IBOutlet NSTextField *raptoreumTextField;
 // Import KextsToPatch Window
 @property (assign) IBOutlet NSWindow *importKextsToPatchWindow;
 @property (assign) IBOutlet NSTextField *findTextField;
@@ -455,6 +460,11 @@ typedef struct
 - (IBAction)fileExportFramebufferBinary:(id)sender;
 - (IBAction)fileQuit:(id)sender;
 - (IBAction)infoPrint:(id)sender;
+- (IBAction)donateCloseButtonClicked:(id)sender;
+- (IBAction)donatePayPalButtonClicked:(id)sender;
+- (IBAction)donateEthereumButtonClicked:(id)sender;
+- (IBAction)donateBitcoinButtonClicked:(id)sender;
+- (IBAction)donateRaptoreumButtonClicked:(id)sender;
 - (IBAction)framebufferMenuItemClicked:(id)sender;
 - (IBAction)patchMenuItemClicked:(id)sender;
 - (IBAction)audioButtonClicked:(id)sender;
@@ -489,7 +499,7 @@ typedef struct
 - (IBAction)resolutionsChanged:(id)sender;
 - (IBAction)cancelButtonClicked:(id)sender;
 - (IBAction)okButtonClicked:(id)sender;
-- (IBAction)payPalButtonClicked:(id)sender;
+- (IBAction)donateButtonClicked:(id)sender;
 - (IBAction)installedButtonClicked:(id)sender;
 - (IBAction)progressCancelButtonClicked:(id)sender;
 - (IBAction)bootloaderButtonClicked:(id)sender;

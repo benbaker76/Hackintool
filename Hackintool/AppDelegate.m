@@ -8762,9 +8762,42 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	[_window endSheet:superView.window returnCode:NSModalResponseOK];
 }
 
-- (IBAction)payPalButtonClicked:(id)sender
+- (IBAction)donateButtonClicked:(id)sender
+{
+	[_window beginSheet:_donateWindow completionHandler:^(NSModalResponse returnCode)
+	 {
+	 }];
+}
+
+- (IBAction)donateCloseButtonClicked:(id)sender
+{
+	[_window endSheet:_donateWindow];
+}
+
+- (IBAction)donatePayPalButtonClicked:(id)sender
 {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=benbaker@headsoft.com.au&item_name=Hackintool&currency_code=USD"]];
+}
+
+- (IBAction)donateEthereumButtonClicked:(id)sender
+{
+	[_ethereumTextField selectText:self];
+	[[NSPasteboard generalPasteboard] clearContents];
+	[[NSPasteboard generalPasteboard] setString:_ethereumTextField.stringValue forType:NSStringPboardType];
+}
+
+- (IBAction)donateBitcoinButtonClicked:(id)sender
+{
+	[_bitcoinTextField selectText:self];
+	[[NSPasteboard generalPasteboard] clearContents];
+	[[NSPasteboard generalPasteboard] setString:_bitcoinTextField.stringValue forType:NSStringPboardType];
+}
+
+- (IBAction)donateRaptoreumButtonClicked:(id)sender
+{
+	[_raptoreumTextField selectText:self];
+	[[NSPasteboard generalPasteboard] clearContents];
+	[[NSPasteboard generalPasteboard] setString:_raptoreumTextField.stringValue forType:NSStringPboardType];
 }
 
 - (IBAction)framebufferMenuItemClicked:(id)sender
