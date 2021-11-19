@@ -1183,6 +1183,9 @@ bool getIORegBluetoothArray(NSMutableArray **propertyArray)
 	
 	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
 	{
+		if (IOObjectConformsTo(device, "AppleUSBHubPort"))
+			continue;
+		
 		io_service_t childDevice;
 		
 		if (!getIORegChild(device, @"IOUserClient", &childDevice, true))
@@ -1238,7 +1241,7 @@ bool getIORegBluetoothArray(NSMutableArray **propertyArray)
 			
 			if (skipDevice)
 				continue;
-			
+
 			CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
 			
 			kr = IORegistryEntryCreateCFProperties(parentDevice, &parentPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
@@ -1250,11 +1253,12 @@ bool getIORegBluetoothArray(NSMutableArray **propertyArray)
 			
 			[*propertyArray addObject:parentPropertyDictionary];
 			
-			IOObjectRelease(parentIterator);
+			IOObjectRelease(parentDevice);
 			
 			break;
 		}
 		
+		IOObjectRelease(parentIterator);
 		CFRelease(usbUserClientOwningTaskName);
 	}
 	
