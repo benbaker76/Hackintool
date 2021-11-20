@@ -1538,7 +1538,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	bool result = NO;
 	NSMutableDictionary *vendorDictionary = [_usbVendorsDictionary objectForKey:vendorID];
 	
-	if (vendorDictionary == nil)
+	if (vendorDictionary != nil)
 	{
 		NSString *vendorNameTemp = [vendorDictionary objectForKey:@"VendorName"];
 		NSMutableDictionary *deviceDictionary = [vendorDictionary objectForKey:@"Devices"];
