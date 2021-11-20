@@ -1,8 +1,8 @@
 #
 #	List of PCI ID's
 #
-#	Version: 2021.11.03
-#	Date:    2021-11-03 03:15:02
+#	Version: 2021.11.20
+#	Date:    2021-11-20 03:15:02
 #
 #	Maintained by Albert Pool, Martin Mares, and other volunteers from
 #	the PCI ID Project at https://pci-ids.ucw.cz/.
@@ -4530,6 +4530,8 @@
 	021b  GXT6500P Graphics Adapter
 	021c  GXT4500P Graphics Adapter
 	0233  GXT135P Graphics Adapter
+# Internal debugging card for CELL based systems
+	025a  Drone card
 	028c  Citrine chipset SCSI controller
 		1014 028d  Dual Channel PCI-X DDR SAS RAID Adapter (572E)
 		1014 02be  Dual Channel PCI-X DDR U320 SCSI RAID Adapter (571B)
@@ -12367,6 +12369,7 @@
 	21d1  TU116BM [GeForce GTX 1660 Ti Mobile]
 	2200  GA102
 	2204  GA102 [GeForce RTX 3090]
+		147d 10de  NVIDIA Geforce RTX 3090 Founders Edition
 	2205  GA102 [GeForce RTX 3080 Ti 20GB]
 	2206  GA102 [GeForce RTX 3080]
 		10de 1467  GA102 [GeForce RTX 3080]
@@ -12379,6 +12382,7 @@
 	222f  GA102 [GeForce RTX 3080 11GB / 12GB Engineering Sample]
 	2230  GA102GL [RTX A6000]
 	2231  GA102GL [RTX A5000]
+	2232  GA102GL [RTX A4500]
 	2235  GA102GL [A40]
 	2236  GA102GL [A10]
 	2237  GA102GL [A10G]
@@ -20863,7 +20867,7 @@
 	500b  PC SN530 NVMe SSD
 		1414 500b  Xbox Series X
 	500d  WD Ultrastar DC SN340 NVMe SSD
-	5011  WD Black SN850
+	5011  WD PC SN810 / Black SN850 NVMe SSD
 15b8  ADDI-DATA GmbH
 	1001  APCI1516 SP controller (16 digi outputs)
 	1003  APCI1032 SP controller (32 digi inputs w/ opto coupler)
@@ -23368,6 +23372,8 @@
 		1028 1fdf  BOSS-S1 Modular
 		1028 1fe2  BOSS-S1 Adapter
 		1028 2010  BOSS-S2 Adapter
+# RS0200L6R2iM2
+		1bd4 0073  RS0200L6R2iM2
 		1d49 0300  ThinkSystem M.2 with Mirroring Enablement Kit
 		1d49 0301  ThinkSystem SR630 x16 PCIE with 4 SATA ports Riser
 		1d49 0302  ThinkSystem SE350 M.2 SATA 4-Bay Data RAID Mirroring Enablement Kit
@@ -23662,10 +23668,11 @@
 	0001  Hunter PCI Express
 1c8c  Mobiveil, Inc.
 1cb0  Shannon Systems
-	8266  Andalusia Series SSD
-		1cb0 2021  Andalusia Series OCS U.2 SSD
-		1cb0 2121  Andalusia Series ZNS U.2 SSD
-		1cb0 2f21  Andalusia Series NVMe U.2 SSD
+	8266  SP4 Series SSD
+		1cb0 2021  SP4 Series OCS U.2 SSD
+		1cb0 2121  SP4 Series ZNS U.2 SSD
+		1cb0 2f21  SP4E Series NVMe U.2 SSD(1920/3840/7680GB)
+		1cb0 2f22  SP4X Series NVMe U.2 SSD(1600/3200/6400GB)
 	d000  Venice NVMe SSD
 		1cb0 2010  Venice-E Series OCS U.2
 		1cb0 2011  Venice Series OCS U.2
@@ -24072,6 +24079,12 @@
 		1dd8 4014  DSC-100 40/100G 2-port 8G RAM 16G eMMC G1 Services Card
 		1dd8 5001  DSC2-200 50/100/200G 2-port 32G RAM 64G eMMC G2 Services Card
 		1dd8 5003  DSC2-200 50/100/200G 2-port 32G RAM 64G eMMC G2 Services Card
+	1005  DSC NVMe Controller
+		1dd8 5001  DSC2-200 50/100/200G 2-port 32G RAM 64G eMMC G2 Services Card
+		1dd8 5003  DSC2-200 50/100/200G 2-port 32G RAM 64G eMMC G2 Services Card
+	1006  DSC NVMe Controller VF
+		1dd8 5001  DSC2-200 50/100/200G 2-port 32G RAM 64G eMMC G2 Services Card
+		1dd8 5003  DSC2-200 50/100/200G 2-port 32G RAM 64G eMMC G2 Services Card
 	1007  DSC Storage Accelerator
 		1dd8 4000  Naples 100Gb 2-port QSFP28 x16 8GB
 		1dd8 4001  Naples 100Gb 2-port QSFP28 x16 4GB
@@ -24314,6 +24327,7 @@
 1e9f  Lynxi Technologies Co., Ltd.
 1ea0  Tencent Technology (Shenzhen) Company Limited
 	2a16  Cloud Intelligent Inference Controller
+	2a18  Video Transcode Controller
 1ea7  Intelliprop, Inc
 	223a  Typhon+ PCIe to Gen-Z Bridge
 	224a  IPA-PE224A CXL to Gen-Z Bridge [Sphinx]
@@ -24441,6 +24455,7 @@
 2955  Connectix Virtual PC
 	6e61  OHCI USB 1.1 controller
 2a15  3D Vision(???)
+2a18  Video Transcode Controller
 2bd8  ROPEX Industrie-Elektronik GmbH
 3000  Hansol Electronics Inc.
 3112  Satelco Ingenieria S.A.
@@ -25259,7 +25274,7 @@
 	015d  Xeon E3-1200 v2/3rd Gen Core processor PCI Express Root Port
 		1043 844d  P8 series motherboard
 	015e  Xeon E3-1200 v2/3rd Gen Core processor Graphics Controller
-	0162  Xeon E3-1200 v2/3rd Gen Core processor Graphics Controller
+	0162  IvyBridge GT2 [HD Graphics 4000]
 		1043 84ca  P8 series motherboard
 		1849 0162  Motherboard
 	0166  3rd Gen Core processor Graphics Controller
@@ -26015,6 +26030,9 @@
 		8086 0000  Ethernet Controller XXV710 Intel(R) FPGA Programmable Acceleration Card N3000 for Networking
 		8086 0001  Ethernet Controller XXV710 Intel(R) FPGA Programmable Acceleration Card N3000 for Networking
 	0d9f  Ethernet Controller (2) I225-IT
+	0dd2  Ethernet Network Adapter I710
+		8086 000d  Ethernet Network Adapter I710-T4L
+		8086 0010  Ethernet Network Adapter I710-T4L for OCP 3.0
 	0e00  Xeon E7 v2/Xeon E5 v2/Core i7 DMI2
 		1028 04f7  Xeon E5 v2 on PowerEdge R320 server
 		15d9 066b  X9SRL-F
@@ -26685,7 +26703,7 @@
 		1059 0130  T4009 10GbE interface
 		8086 000c  Ethernet X520 10GbE Dual Port KX4-KR Mezz
 	10f9  82599 10 Gigabit Dual Port Network Connection
-	10fb  82599 10 Gigabit Dual Port Network Connection
+	10fb  82599ES 10-Gigabit SFI/SFP+ Network Connection
 		1028 1f72  Ethernet 10G 4P X520/I350 rNDC
 		103c 17d0  Ethernet 10Gb 2-port 560FLR-SFP+ Adapter
 		103c 17d2  Ethernet 10Gb 2-port 560M Adapter
@@ -27503,6 +27521,10 @@
 		8086 000b  Ethernet Network Adapter X710-T2L for OCP 3.0
 		8086 000c  Ethernet Network Adapter X710-T2L for OCP 3.0
 		8086 000f  Ethernet Network Adapter X710-T2L for OCP 3.0
+		8086 4009  Ethernet Network Adapter X710-T2L
+		8086 4012  Ethernet Network Adapter X710-T4L for OCP 3.0
+		8086 4018  Ethernet Network Adapter X710-T2L for OCP 3.0
+		8086 4019  Ethernet Network Adapter X710-T4L
 	1600  Broadwell-U Host Bridge -OPI
 	1601  Broadwell-U PCI Express x16 Controller
 	1602  Broadwell-U Integrated Graphics
@@ -33398,6 +33420,7 @@
 		8086 390b  SSD Pro 7600p/760p/E 6100p Series [NVM Express]
 	f1a8  SSD 660P Series
 8088  Beijing Wangxun Technology Co., Ltd.
+	0100  WX1860AL-W Gigabit Ethernet Controller
 	0101  WX1860A2 Gigabit Ethernet Controller
 		8088 0201  Dual-Port Ethernet Network Adaptor SF200T
 		8088 4201  Dual-Port Ethernet Network Adaptor SF200T (WOL)

@@ -43,7 +43,6 @@
 		E28286C221FC508300A0CB2D /* DiskUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E28286C021FC508300A0CB2D /* DiskUtilities.m */; };
 		E28286C821FC943700A0CB2D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E28286C721FC943700A0CB2D /* Security.framework */; };
 		E28341E622346A880022713F /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E28341E522346A880022713F /* libxml2.tbd */; };
-		E28652CE22B55A3C00D42BFB /* BT in Resources */ = {isa = PBXBuildFile; fileRef = E28652CD22B55A3C00D42BFB /* BT */; };
 		E29361D321FFF3DC00ED0105 /* ACPI in Resources */ = {isa = PBXBuildFile; fileRef = E29361D221FFF3DC00ED0105 /* ACPI */; };
 		E29361D521FFF3E300ED0105 /* Utilities in Resources */ = {isa = PBXBuildFile; fileRef = E29361D421FFF3E200ED0105 /* Utilities */; };
 		E29436BF21FBC5D30029FA2D /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E29436BE21FBC5D20029FA2D /* DiskArbitration.framework */; };
@@ -145,7 +144,6 @@
 		E28286C321FC913800A0CB2D /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		E28286C721FC943700A0CB2D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		E28341E522346A880022713F /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
-		E28652CD22B55A3C00D42BFB /* BT */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BT; sourceTree = "<group>"; };
 		E29361D221FFF3DC00ED0105 /* ACPI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ACPI; sourceTree = "<group>"; };
 		E29361D421FFF3E200ED0105 /* Utilities */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Utilities; sourceTree = "<group>"; };
 		E29436BE21FBC5D20029FA2D /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
@@ -377,7 +375,6 @@
 			children = (
 				E29361D221FFF3DC00ED0105 /* ACPI */,
 				E248A34E211B03CE00A48C84 /* Audio */,
-				E28652CD22B55A3C00D42BFB /* BT */,
 				E2D20D4C223184DF00BAC721 /* Clover */,
 				E2A5A6B022A03BCA00CE02D1 /* DisplayMergeNub */,
 				E2AB61FB227A44B100724F32 /* EveryMac */,
@@ -507,7 +504,6 @@
 				E2804A77220484F900B40C25 /* Localizable.strings in Resources */,
 				E2ABF70820D7369000652F83 /* Media.xcassets in Resources */,
 				E248A34F211B03CE00A48C84 /* Audio in Resources */,
-				E28652CE22B55A3C00D42BFB /* BT in Resources */,
 				E2D20D4D223184DF00BAC721 /* Clover in Resources */,
 				E27BFB91211BCEE300C75CDB /* Intel in Resources */,
 				E29361D521FFF3E300ED0105 /* Utilities in Resources */,
@@ -719,7 +715,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0367;
+				CURRENT_PROJECT_VERSION = 0368;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -734,7 +730,7 @@
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MARKETING_VERSION = 3.6.7;
+				MARKETING_VERSION = 3.6.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -755,7 +751,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0367;
+				CURRENT_PROJECT_VERSION = 0368;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -770,7 +766,7 @@
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MARKETING_VERSION = 3.6.7;
+				MARKETING_VERSION = 3.6.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
