@@ -1266,6 +1266,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 
 - (bool)getPCIDeviceInfo:(NSNumber *)vendorID deviceID:(NSNumber *)deviceID vendorName:(NSString **)vendorName deviceName:(NSString **)deviceName
 {
+	bool result = NO;
 	NSMutableDictionary *vendorDictionary = [_pciVendorsDictionary objectForKey:vendorID];
 	
 	if (vendorDictionary != nil)
@@ -1279,9 +1280,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		if (deviceNameTemp != nil)
 			*deviceName = deviceNameTemp;
+		
+		result = (vendorNameTemp != nil && deviceNameTemp != nil);
 	}
-	
-	bool result = (*deviceName != nil);
 	
 	if (*vendorName == nil)
 		*vendorName = @"???";
@@ -1572,8 +1573,17 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSMutableDictionary *subSystemsDictionary = nil;
 	NSMutableDictionary *programmingInterfacesDictionary = nil;
 	bool isReadingDevices = true;
+	NSError *error = nil;
 	
-	NSString *lineString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+	NSString *lineString = [NSString stringWithContentsOfFile:filePath encoding:NSASCIIStringEncoding error:&error];
+	
+	if (!lineString)
+	{
+	   NSLog(@"%@", [error localizedDescription]);
+		
+		return;
+	}
+	
 	NSArray *lineArray = [lineString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 	
 	for (NSString *line in lineArray)
@@ -1663,8 +1673,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		}
 	}
 	
-	// NSLog(@"%@", *vendorsDictionary);
-	// NSLog(@"%@", *classesDictionary);
+	//NSLog(@"%@", *vendorsDictionary);
+	//NSLog(@"%@", *classesDictionary);
 }
 
 - (void)appendTabCount:(uint32_t)tabCount outputString:(NSMutableString *)outputString
@@ -2015,7 +2025,6 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 {
 	NSString *productName = [deviceDictionary objectForKey:@kUSBProductString];
 	NSString *vendorName = [deviceDictionary objectForKey:@kUSBVendorString];
-	NSString *productNameTemp = nil, *vendorNameTemp = nil;
 	NSNumber *productID = [deviceDictionary objectForKey:@"idProduct"];
 	NSNumber *vendorID = [deviceDictionary objectForKey:@"idVendor"];
 	NSNumber *fwLoaded = [deviceDictionary objectForKey:@"FirmwareLoaded"];
@@ -2032,11 +2041,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	if (fwLoaded == nil)
 		fwLoaded = [deviceDictionary objectForKey:@"RM,FirmwareLoaded"];
 	
-	if ([self getUSBDeviceInfo:vendorID deviceID:productID vendorName:&vendorNameTemp deviceName:&productNameTemp])
-	{
-		vendorName = vendorNameTemp;
-		productName = productNameTemp;
-	}
+	[self getUSBDeviceInfo:vendorID deviceID:productID vendorName:&vendorName deviceName:&productName];
 
 	[bluetoothDeviceDictionary setObject:productID forKey:@"DeviceID"];
 	[bluetoothDeviceDictionary setObject:vendorID forKey:@"VendorID"];
@@ -2054,7 +2059,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	if (getIORegPropertyDictionaryArrayWithParent(@"IOBluetoothHostControllerTransport", @kIOUSBDeviceClassName, &bluetoothArray))
 	{
-		for (NSDictionary *deviceDictionary in bluetoothArray)
+		for (NSMutableDictionary *deviceDictionary in bluetoothArray)
 		{
 			NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
 			
@@ -2065,7 +2070,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	}
 	else if (getIORegBluetoothArray(&bluetoothArray))
 	{
-		for (NSDictionary *deviceDictionary in bluetoothArray)
+		for (NSMutableDictionary *deviceDictionary in bluetoothArray)
 		{
 			NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
 			
