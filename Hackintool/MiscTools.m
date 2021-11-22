@@ -952,6 +952,27 @@ NSString *getHexStringFromArray(NSMutableArray *numberArray)
 	return hexString;
 }
 
+NSString *getStringFromHexString(NSString *hexString)
+{
+	if (hexString == nil)
+		return nil;
+	
+	NSMutableString *string = [NSMutableString string];
+
+	for (NSInteger i = 0; i < [hexString length]; i += 2)
+	{
+		if (i + 2 >= [hexString length])
+			break;
+		
+		NSString *hex = [hexString substringWithRange:NSMakeRange(i, 2)];
+		int decimalValue = 0;
+		sscanf([hex UTF8String], "%x", &decimalValue);
+		[string appendFormat:@"%c", decimalValue];
+	}
+
+	return string;
+}
+
 NSArray *translateArray(NSArray *array)
 {
 	NSMutableArray *resultArray = [NSMutableArray array];

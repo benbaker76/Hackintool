@@ -67,6 +67,7 @@ void sendNotificationTitle(id delegate, NSString *title, NSString *subtitle, NSS
 bool tryFormatXML(NSString *rawXML, NSString **xmlString, bool formattingAllowed);
 NSMutableArray *getHexArrayFromString(NSString *hexString);
 NSString *getHexStringFromArray(NSMutableArray *numberArray);
+NSString *getStringFromHexString(NSString *hexString);
 NSArray *translateArray(NSArray *array);
 NSString *trimNewLine(NSString *string);
 NSString *getUUID();
