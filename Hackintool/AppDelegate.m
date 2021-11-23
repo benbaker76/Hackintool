@@ -1533,6 +1533,27 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[self parseIDs:filePath vendorsDictionary:&_usbVendorsDictionary classesDictionary:&_usbClassesDictionary];
 }
 
+- (bool)getUSBVendorInfo:(NSNumber *)vendorID vendorName:(NSString **)vendorName
+{
+	bool result = NO;
+	NSMutableDictionary *vendorDictionary = [_usbVendorsDictionary objectForKey:vendorID];
+	
+	if (vendorDictionary != nil)
+	{
+		NSString *vendorNameTemp = [vendorDictionary objectForKey:@"VendorName"];
+		
+		if (vendorNameTemp != nil)
+			*vendorName = vendorNameTemp;
+		
+		result = (vendorNameTemp != nil);
+	}
+
+	if (*vendorName == nil)
+		*vendorName = @"???";
+	
+	return result;
+}
+
 - (bool)getUSBDeviceInfo:(NSNumber *)vendorID deviceID:(NSNumber *)deviceID vendorName:(NSString **)vendorName deviceName:(NSString **)deviceName
 {
 	bool result = NO;
@@ -2020,6 +2041,67 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_networkInterfacesTableView reloadData];
 }
 
+- (BOOL)getNativeBluetoothDeviceInfo:(NSMutableDictionary *)bluetoothDeviceDictionary
+{
+	NSError *error = nil;
+	NSString *stdoutString = nil;
+	
+	if (!launchCommand(@"/usr/sbin/system_profiler", @[@"SPBluetoothDataType", @"-xml"], &stdoutString))
+		return NO;
+
+	NSArray *bluetoothArray = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
+		
+	if (bluetoothArray == nil)
+	{
+		NSLog(@"%@", [error localizedDescription]);
+		
+		return NO;
+	}
+	
+	NSDictionary *controllerDictionary = [[[[bluetoothArray objectAtIndex:0] objectForKey:@"_items"] objectAtIndex:0] objectForKey:@"controller_properties"];
+	
+	if (controllerDictionary == nil)
+		return NO;
+	
+	//NSString *controllerAddress = [controllerDictionary objectForKey:@"controller_address"];
+	NSString *controllerChipset = [controllerDictionary objectForKey:@"controller_chipset"];
+	//NSString *controllerFirmwareVersion = [controllerDictionary objectForKey:@"controller_firmwareVersion"];
+	NSString *controllerProductID = [controllerDictionary objectForKey:@"controller_productID"];
+	NSString *controllerVendorID = [controllerDictionary objectForKey:@"controller_vendorID"];
+	
+	//NSLog(@"Address: %@ Chipset: %@ FirmwareVersion: %@ ProductID: %@ VendorID: %@", controllerAddress, controllerChipset, controllerFirmwareVersion, controllerProductID, controllerVendorID);
+	
+	NSRange vendorRange = [controllerVendorID rangeOfString:@" "];
+	
+	if (vendorRange.location != NSNotFound)
+	{
+		controllerVendorID = [controllerVendorID substringToIndex:vendorRange.location];
+	}
+	
+	if ([controllerChipset isEqualToString:@"THIRD_PARTY_DONGLE"])
+	{
+		return NO;
+	}
+	
+	NSNumber *productID, *vendorID;
+	unsigned int intValue;
+	NSScanner *scanner = [NSScanner scannerWithString:controllerProductID];
+	[scanner scanHexInt:&intValue];
+	productID = [NSNumber numberWithInt:intValue];
+	scanner = [NSScanner scannerWithString:controllerVendorID];
+	[scanner scanHexInt:&intValue];
+	vendorID = [NSNumber numberWithInt:intValue];
+	
+	[bluetoothDeviceDictionary setObject:productID forKey:@"DeviceID"];
+	[bluetoothDeviceDictionary setObject:vendorID forKey:@"VendorID"];
+	[bluetoothDeviceDictionary setObject:controllerChipset forKey:@"DeviceName"];
+	[bluetoothDeviceDictionary setObject:@"Apple" forKey:@"VendorName"];
+	[bluetoothDeviceDictionary setObject:@"com.apple.iokit.IOBluetoothHostControllerTransport" forKey:@"BundleID"];
+	[bluetoothDeviceDictionary setObject:@(YES) forKey:@"FWLoaded"];
+	
+	return YES;
+}
+	
 - (void)getBluetoothDeviceInfo:(NSDictionary *)deviceDictionary bluetoothDeviceDictionary:(NSMutableDictionary *)bluetoothDeviceDictionary
 {
 	NSString *productName = [deviceDictionary objectForKey:@kUSBProductString];
@@ -2075,6 +2157,15 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			
 			[self getBluetoothDeviceInfo:deviceDictionary bluetoothDeviceDictionary:bluetoothDeviceDictionary];
 			
+			[_bluetoothDevicesArray addObject:bluetoothDeviceDictionary];
+		}
+	}
+	else
+	{
+		NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
+		
+		if ([self getNativeBluetoothDeviceInfo:bluetoothDeviceDictionary])
+		{
 			[_bluetoothDevicesArray addObject:bluetoothDeviceDictionary];
 		}
 	}
