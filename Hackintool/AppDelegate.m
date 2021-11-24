@@ -10763,8 +10763,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 					NSString *windowsLinkKey = [[linkKey stringByReplacingOccurrencesOfString:@"-" withString:@","] lowercaseString];
 					NSString *windowsLocalAddress = [[localAddress stringByReplacingOccurrencesOfString:@":" withString:@""] lowercaseString];
 					
-					[outputString appendFormat:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys\\%@]\n", windowsDeviceAddress];
-					[outputString appendFormat:@"\"%@\"=hex:%@\n", windowsLocalAddress, windowsLinkKey];
+					[outputString appendFormat:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys\\%@]\n", windowsLocalAddress];
+					[outputString appendFormat:@"\"%@\"=hex:%@\n", windowsDeviceAddress, windowsLinkKey];
 				}
 			}
 		}
