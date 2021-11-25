@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "IconDonate@1x.png",
+      "filename" : "IconEthereum.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "IconDonate@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "IconDonate@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

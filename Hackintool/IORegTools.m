@@ -11,6 +11,7 @@
 #include "Display.h"
 #include "AudioDevice.h"
 #include <IOKit/IOBSD.h>
+#include <IOKit/usb/USBSpec.h>
 #include <IOKit/IOKitLib.h>
 #include <IOKit/graphics/IOGraphicsLib.h>
 
@@ -1170,6 +1171,102 @@ bool getIORegNetworkArray(NSMutableArray **networkInterfacesArray)
 	return ([*networkInterfacesArray count] > 0);
 }
 
+bool getIORegBluetoothArray(NSMutableArray **propertyArray)
+{
+	*propertyArray = [NSMutableArray array];
+	io_iterator_t iterator;
+	
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching("AppleUSBHostPort"), &iterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
+	{
+		if (IOObjectConformsTo(device, "AppleUSBHubPort"))
+			continue;
+		
+		io_service_t childDevice;
+		
+		if (!getIORegChild(device, @"IOUserClient", &childDevice, true))
+			continue;
+		
+		CFMutableDictionaryRef properties = NULL;
+		kr = IORegistryEntryCreateCFProperties(childDevice, &properties, kCFAllocatorDefault, kNilOptions);
+		
+		if (kr != KERN_SUCCESS)
+			continue;
+		
+		CFStringRef usbUserClientOwningTaskName = nil;
+		
+		if (!CFDictionaryGetValueIfPresent(properties, CFSTR("UsbUserClientOwningTaskName"), (const void **)&usbUserClientOwningTaskName))
+			continue;
+		
+		if (CFStringCompare(usbUserClientOwningTaskName, CFSTR("bluetoothd"), 0) != kCFCompareEqualTo)
+		{
+			CFRelease(usbUserClientOwningTaskName);
+			
+			continue;
+		}
+
+		io_iterator_t parentIterator;
+		kern_return_t kr = IORegistryEntryCreateIterator(childDevice, kIOServicePlane, kIORegistryIterateRecursively | kIORegistryIterateParents, &parentIterator);
+		
+		if (kr != KERN_SUCCESS)
+			continue;
+		
+		for (io_service_t parentDevice; IOIteratorIsValid(parentIterator) && (parentDevice = IOIteratorNext(parentIterator)); IOObjectRelease(parentDevice))
+		{
+			if (!IOObjectConformsTo(parentDevice, "IOUSBDevice"))
+				continue;
+			
+			CFMutableDictionaryRef parentProperties = NULL;
+			kr = IORegistryEntryCreateCFProperties(parentDevice, &parentProperties, kCFAllocatorDefault, kNilOptions);
+			
+			if (kr != KERN_SUCCESS)
+				continue;
+			
+			bool skipDevice = NO;
+			CFStringRef usbProductString = nil;
+
+			if (CFDictionaryGetValueIfPresent(parentProperties, CFSTR(kUSBProductString), (const void **)&usbProductString))
+			{
+				if (CFStringCompare(usbProductString, CFSTR("Bluetooth USB Host Controller"), 0) == kCFCompareEqualTo)
+				{
+					skipDevice = YES;
+				}
+				
+				CFRelease(usbProductString);
+			}
+			
+			if (skipDevice)
+				continue;
+
+			CFMutableDictionaryRef parentPropertyDictionaryRef = 0;
+			
+			kr = IORegistryEntryCreateCFProperties(parentDevice, &parentPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+			
+			if (kr != KERN_SUCCESS)
+				continue;
+			
+			NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
+			
+			[*propertyArray addObject:parentPropertyDictionary];
+			
+			IOObjectRelease(parentDevice);
+			
+			break;
+		}
+		
+		IOObjectRelease(parentIterator);
+		CFRelease(usbUserClientOwningTaskName);
+	}
+	
+	IOObjectRelease(iterator);
+	
+	return ([*propertyArray count] > 0);
+}
+
 bool getIORegGraphicsArray(NSMutableArray **graphicsArray)
 {
 	*graphicsArray = [[NSMutableArray array] retain];
@@ -1340,6 +1437,40 @@ bool getIORegPropertyDictionaryArrayWithParent(NSString *serviceName, NSString *
 				NSMutableDictionary *parentPropertyDictionary = (__bridge NSMutableDictionary *)parentPropertyDictionaryRef;
 				
 				[*propertyArray addObject:parentPropertyDictionary];
+			}
+		}
+	}
+	
+	IOObjectRelease(iterator);
+	
+	return ([*propertyArray count] > 0);
+}
+
+bool getIORegPropertyDictionaryArrayWithChild(NSString *serviceName, NSString *childName, NSMutableArray **propertyArray)
+{
+	*propertyArray = [NSMutableArray array];
+	io_iterator_t iterator;
+	
+	kern_return_t kr = IOServiceGetMatchingServices(kIOMasterPortDefault, IOServiceMatching([serviceName UTF8String]), &iterator);
+	
+	if (kr != KERN_SUCCESS)
+		return false;
+	
+	for (io_service_t device; IOIteratorIsValid(iterator) && (device = IOIteratorNext(iterator)); IOObjectRelease(device))
+	{
+		io_service_t childDevice;
+		
+		if (getIORegChild(device, childName, &childDevice, true))
+		{
+			CFMutableDictionaryRef childPropertyDictionaryRef = 0;
+			
+			kr = IORegistryEntryCreateCFProperties(childDevice, &childPropertyDictionaryRef, kCFAllocatorDefault, kNilOptions);
+			
+			if (kr == KERN_SUCCESS)
+			{
+				NSMutableDictionary *childPropertyDictionary = (__bridge NSMutableDictionary *)childPropertyDictionaryRef;
+				
+				[*propertyArray addObject:childPropertyDictionary];
 			}
 		}
 	}
@@ -1831,10 +1962,10 @@ bool getIGPUModelAndVRAM(NSString **gpuModel, uint32_t &gpuDeviceID, uint32_t &g
 bool getScreenNumberForDisplay(SInt32 myVendorID, SInt32 myProductID, SInt32 mySerialNumber, CGDirectDisplayID *directDisplayID)
 {
 	bool retval = false;
-	CGDirectDisplayID directDisplayIDArray[10];
+	CGDirectDisplayID directDisplayIDArray[10] { 0 };
 	uint32_t displayCount = 0;
 	CGError err = CGGetActiveDisplayList(10, directDisplayIDArray, &displayCount);
-	
+
 	if (err != kCGErrorSuccess)
 		return false;
 	
@@ -1844,6 +1975,10 @@ bool getScreenNumberForDisplay(SInt32 myVendorID, SInt32 myProductID, SInt32 myS
 	for (uint32_t i = 0; i < displayCount; i++)
 	{
 		io_service_t servicePort = CGDisplayIOServicePort(directDisplayIDArray[i]);
+		
+		if (!servicePort)
+			continue;
+		
 		CFDictionaryRef displayInfo = IODisplayCreateInfoDictionary(servicePort, kIODisplayMatchingInfo);
 		
 		CFNumberRef vendorIDRef = nil;

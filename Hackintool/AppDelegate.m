@@ -38,8 +38,7 @@ extern "C" {
 #include <cstddef>
 
 #define MyPrivateTableViewDataType	@"MyPrivateTableViewDataType"
-#define BluetoothPath1				@"com.apple.Bluetoothd.plist"
-#define BluetoothPath2				@"blued.plist"
+#define BluetoothPath				@"com.apple.Bluetoothd.plist"
 #define PCIIDsUrl					@"https://pci-ids.ucw.cz/pci.ids"
 #define PCIIDsPath					[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"pci.ids"]
 #define USBIDsUrl					@"http://www.linux-usb.org/usb.ids"
@@ -519,14 +518,25 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		NSString *ioregIOName = [pciDeviceDictionary objectForKey:@"IORegIOName"];
 		NSNumber *vendorID = [pciDeviceDictionary objectForKey:@"VendorID"];
 		NSNumber *deviceID = [pciDeviceDictionary objectForKey:@"DeviceID"];
-		
+        
 		if (![ioregIOName isEqualToString:@"display"])
 			continue;
-		
+        
+        uint32_t gpuDeviceID = ([deviceID unsignedIntValue] << 16) | [vendorID unsignedIntValue];
+        
+        if (gpuDeviceID == 0x11111234)
+        {
+            deviceName = @"Apple Boch VGA";
+        }
+        else if (gpuDeviceID == 0x00001013)
+        {
+            deviceName = @"Apple Cirrus GD5446";
+        }
+        
 		NSMutableArray *gpuInfoArray = [NSMutableArray array];
 
 		[self addToList:gpuInfoArray name:@"GPU Name" value:deviceName];
-		[self addToList:gpuInfoArray name:@"GPU Device ID" value:[NSString stringWithFormat:@"0x%08X", ([deviceID unsignedIntValue] << 16) | [vendorID unsignedIntValue]]];
+		[self addToList:gpuInfoArray name:@"GPU Device ID" value:[NSString stringWithFormat:@"0x%08X", gpuDeviceID]];
 	
 		for (Display *display in _displaysArray)
 		{
@@ -1255,6 +1265,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 
 - (bool)getPCIDeviceInfo:(NSNumber *)vendorID deviceID:(NSNumber *)deviceID vendorName:(NSString **)vendorName deviceName:(NSString **)deviceName
 {
+	bool result = NO;
 	NSMutableDictionary *vendorDictionary = [_pciVendorsDictionary objectForKey:vendorID];
 	
 	if (vendorDictionary != nil)
@@ -1268,9 +1279,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		if (deviceNameTemp != nil)
 			*deviceName = deviceNameTemp;
+		
+		result = (vendorNameTemp != nil && deviceNameTemp != nil);
 	}
-	
-	bool result = (*deviceName != nil);
 	
 	if (*vendorName == nil)
 		*vendorName = @"???";
@@ -1522,8 +1533,30 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[self parseIDs:filePath vendorsDictionary:&_usbVendorsDictionary classesDictionary:&_usbClassesDictionary];
 }
 
+- (bool)getUSBVendorInfo:(NSNumber *)vendorID vendorName:(NSString **)vendorName
+{
+	bool result = NO;
+	NSMutableDictionary *vendorDictionary = [_usbVendorsDictionary objectForKey:vendorID];
+	
+	if (vendorDictionary != nil)
+	{
+		NSString *vendorNameTemp = [vendorDictionary objectForKey:@"VendorName"];
+		
+		if (vendorNameTemp != nil)
+			*vendorName = vendorNameTemp;
+		
+		result = (vendorNameTemp != nil);
+	}
+
+	if (*vendorName == nil)
+		*vendorName = @"???";
+	
+	return result;
+}
+
 - (bool)getUSBDeviceInfo:(NSNumber *)vendorID deviceID:(NSNumber *)deviceID vendorName:(NSString **)vendorName deviceName:(NSString **)deviceName
 {
+	bool result = NO;
 	NSMutableDictionary *vendorDictionary = [_usbVendorsDictionary objectForKey:vendorID];
 	
 	if (vendorDictionary != nil)
@@ -1537,10 +1570,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		
 		if (deviceNameTemp != nil)
 			*deviceName = deviceNameTemp;
+		
+		result = (vendorNameTemp != nil && deviceNameTemp != nil);
 	}
-	
-	bool result = (*deviceName != nil);
-	
+
 	if (*vendorName == nil)
 		*vendorName = @"???";
 	
@@ -1560,8 +1593,17 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSMutableDictionary *subSystemsDictionary = nil;
 	NSMutableDictionary *programmingInterfacesDictionary = nil;
 	bool isReadingDevices = true;
+	NSError *error = nil;
 	
-	NSString *lineString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+	NSString *lineString = [NSString stringWithContentsOfFile:filePath encoding:NSASCIIStringEncoding error:&error];
+	
+	if (!lineString)
+	{
+	   NSLog(@"%@", [error localizedDescription]);
+		
+		return;
+	}
+	
 	NSArray *lineArray = [lineString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 	
 	for (NSString *line in lineArray)
@@ -1651,8 +1693,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		}
 	}
 	
-	// NSLog(@"%@", *vendorsDictionary);
-	// NSLog(@"%@", *classesDictionary);
+	//NSLog(@"%@", *vendorsDictionary);
+	//NSLog(@"%@", *classesDictionary);
 }
 
 - (void)appendTabCount:(uint32_t)tabCount outputString:(NSMutableString *)outputString
@@ -1999,172 +2041,132 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[_networkInterfacesTableView reloadData];
 }
 
+- (BOOL)getNativeBluetoothDeviceInfo:(NSMutableDictionary *)bluetoothDeviceDictionary
+{
+	NSError *error = nil;
+	NSString *stdoutString = nil;
+	
+	if (!launchCommand(@"/usr/sbin/system_profiler", @[@"SPBluetoothDataType", @"-xml"], &stdoutString))
+		return NO;
+
+	NSArray *bluetoothArray = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
+		
+	if (bluetoothArray == nil)
+	{
+		NSLog(@"%@", [error localizedDescription]);
+		
+		return NO;
+	}
+	
+	NSDictionary *controllerDictionary = [[[[bluetoothArray objectAtIndex:0] objectForKey:@"_items"] objectAtIndex:0] objectForKey:@"controller_properties"];
+	
+	if (controllerDictionary == nil)
+		return NO;
+	
+	//NSString *controllerAddress = [controllerDictionary objectForKey:@"controller_address"];
+	NSString *controllerChipset = [controllerDictionary objectForKey:@"controller_chipset"];
+	//NSString *controllerFirmwareVersion = [controllerDictionary objectForKey:@"controller_firmwareVersion"];
+	NSString *controllerProductID = [controllerDictionary objectForKey:@"controller_productID"];
+	NSString *controllerVendorID = [controllerDictionary objectForKey:@"controller_vendorID"];
+	
+	//NSLog(@"Address: %@ Chipset: %@ FirmwareVersion: %@ ProductID: %@ VendorID: %@", controllerAddress, controllerChipset, controllerFirmwareVersion, controllerProductID, controllerVendorID);
+	
+	NSRange vendorRange = [controllerVendorID rangeOfString:@" "];
+	
+	if (vendorRange.location != NSNotFound)
+	{
+		controllerVendorID = [controllerVendorID substringToIndex:vendorRange.location];
+	}
+	
+	if ([controllerChipset isEqualToString:@"THIRD_PARTY_DONGLE"])
+	{
+		return NO;
+	}
+	
+	NSNumber *productID, *vendorID;
+	unsigned int intValue;
+	NSScanner *scanner = [NSScanner scannerWithString:controllerProductID];
+	[scanner scanHexInt:&intValue];
+	productID = [NSNumber numberWithInt:intValue];
+	scanner = [NSScanner scannerWithString:controllerVendorID];
+	[scanner scanHexInt:&intValue];
+	vendorID = [NSNumber numberWithInt:intValue];
+	
+	[bluetoothDeviceDictionary setObject:productID forKey:@"DeviceID"];
+	[bluetoothDeviceDictionary setObject:vendorID forKey:@"VendorID"];
+	[bluetoothDeviceDictionary setObject:controllerChipset forKey:@"DeviceName"];
+	[bluetoothDeviceDictionary setObject:@"Apple" forKey:@"VendorName"];
+	[bluetoothDeviceDictionary setObject:@"com.apple.iokit.IOBluetoothHostControllerTransport" forKey:@"BundleID"];
+	[bluetoothDeviceDictionary setObject:@(YES) forKey:@"FWLoaded"];
+	
+	return YES;
+}
+	
+- (void)getBluetoothDeviceInfo:(NSDictionary *)deviceDictionary bluetoothDeviceDictionary:(NSMutableDictionary *)bluetoothDeviceDictionary
+{
+	NSString *productName = [deviceDictionary objectForKey:@kUSBProductString];
+	NSString *vendorName = [deviceDictionary objectForKey:@kUSBVendorString];
+	NSNumber *productID = [deviceDictionary objectForKey:@"idProduct"];
+	NSNumber *vendorID = [deviceDictionary objectForKey:@"idVendor"];
+	NSNumber *fwLoaded = [deviceDictionary objectForKey:@"FirmwareLoaded"];
+	uint32_t deviceIDInt = propertyToUInt32([deviceDictionary objectForKey:@"device-id"]);
+	uint32_t vendorIDInt = propertyToUInt32([deviceDictionary objectForKey:@"vendor-id"]);
+	
+	if (deviceIDInt != 0)
+		productID = [NSNumber numberWithUnsignedInt:deviceIDInt];
+	
+	if (vendorIDInt != 0)
+		vendorID = [NSNumber numberWithUnsignedInt:vendorIDInt];
+	
+	// Try legacy entry
+	if (fwLoaded == nil)
+		fwLoaded = [deviceDictionary objectForKey:@"RM,FirmwareLoaded"];
+	
+	[self getUSBDeviceInfo:vendorID deviceID:productID vendorName:&vendorName deviceName:&productName];
+
+	[bluetoothDeviceDictionary setObject:productID forKey:@"DeviceID"];
+	[bluetoothDeviceDictionary setObject:vendorID forKey:@"VendorID"];
+	[bluetoothDeviceDictionary setObject:(productName != nil ? productName : @"???") forKey:@"DeviceName"];
+	[bluetoothDeviceDictionary setObject:(vendorName != nil ? vendorName : @"???") forKey:@"VendorName"];
+	[bluetoothDeviceDictionary setObject:@"com.apple.iokit.IOBluetoothHostControllerTransport" forKey:@"BundleID"];
+	[bluetoothDeviceDictionary setObject:(fwLoaded ? fwLoaded : @(NO)) forKey:@"FWLoaded"];
+}
+
 - (void)updateBluetoothDevices
 {
 	_bluetoothDevicesArray = [[NSMutableArray array] retain];
 	
 	NSMutableArray *bluetoothArray = nil;
 	
-	if (getIORegPropertyDictionaryArrayWithParent(@"IOBluetoothHostControllerTransport", @"IOUSBDevice", &bluetoothArray))
+	if (getIORegPropertyDictionaryArrayWithParent(@"IOBluetoothHostControllerTransport", @kIOUSBDeviceClassName, &bluetoothArray))
 	{
-		for (NSDictionary *deviceDictionary in bluetoothArray)
+		for (NSMutableDictionary *deviceDictionary in bluetoothArray)
 		{
-			NSString *productName = [deviceDictionary objectForKey:@"USB Product Name"];
-			NSString *vendorName = [deviceDictionary objectForKey:@"USB Vendor Name"];
-			NSNumber *productID = [deviceDictionary objectForKey:@"idProduct"];
-			NSNumber *vendorID = [deviceDictionary objectForKey:@"idVendor"];
-			NSNumber *fwLoaded = [deviceDictionary objectForKey:@"FirmwareLoaded"];
-			uint32_t deviceIDInt = propertyToUInt32([deviceDictionary objectForKey:@"device-id"]);
-			uint32_t vendorIDInt = propertyToUInt32([deviceDictionary objectForKey:@"vendor-id"]);
-			
-			if (deviceIDInt != 0)
-				productID = [NSNumber numberWithUnsignedInt:deviceIDInt];
-			
-			if (vendorIDInt != 0)
-				vendorID = [NSNumber numberWithUnsignedInt:vendorIDInt];
-			
-			// Try legacy entry
-			if (fwLoaded == nil)
-				fwLoaded = [deviceDictionary objectForKey:@"RM,FirmwareLoaded"];
-			
-			if (productName == nil || vendorName == nil)
-				[self getUSBDeviceInfo:vendorID deviceID:productID vendorName:&vendorName deviceName:&productName];
-
 			NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
 			
-			[bluetoothDeviceDictionary setObject:vendorID forKey:@"VendorID"];
-			[bluetoothDeviceDictionary setObject:productID forKey:@"DeviceID"];
-			[bluetoothDeviceDictionary setObject:(vendorName != nil ? vendorName : @"???") forKey:@"VendorName"];
-			[bluetoothDeviceDictionary setObject:(productName != nil ? productName : @"???") forKey:@"DeviceName"];
-			[bluetoothDeviceDictionary setObject:@"com.apple.iokit.IOBluetoothHostControllerTransport" forKey:@"BundleID"];
-			
-			if (fwLoaded)
-				[bluetoothDeviceDictionary setObject:fwLoaded forKey:@"FWLoaded"];
+			[self getBluetoothDeviceInfo:deviceDictionary bluetoothDeviceDictionary:bluetoothDeviceDictionary];
 			
 			[_bluetoothDevicesArray addObject:bluetoothDeviceDictionary];
 		}
 	}
-	
-	NSBundle *mainBundle = [NSBundle mainBundle];
-	NSString *filePath = nil;
-	
-	NSArray *brcmDeviceArray = nil;
-	NSArray *atherosDeviceArray = nil;
-	NSArray *intelDeviceArray = nil;
-	
-	if ((filePath = [mainBundle pathForResource:@"BRCMDevice" ofType:@"plist" inDirectory:@"BT"]))
-		brcmDeviceArray = [NSArray arrayWithContentsOfFile:filePath];
-	
-	if ((filePath = [mainBundle pathForResource:@"AtherosDevice" ofType:@"plist" inDirectory:@"BT"]))
-		atherosDeviceArray = [NSArray arrayWithContentsOfFile:filePath];
-	
-	if ((filePath = [mainBundle pathForResource:@"IntelDevice" ofType:@"plist" inDirectory:@"BT"]))
-		intelDeviceArray = [NSArray arrayWithContentsOfFile:filePath];
-	
-	NSMutableArray *usbPropertyDictionaryArray = nil;
-	
-	if (!getIORegPropertyDictionaryArray(@"IOUSBDevice", &usbPropertyDictionaryArray))
-		return;
-	
-	for (NSMutableDictionary *propertyDictionary in usbPropertyDictionaryArray)
+	else if (getIORegBluetoothArray(&bluetoothArray))
 	{
-		//NSString *productName = [propertyDictionary objectForKey:@"USB Product Name"];
-		NSString *vendorName = [propertyDictionary objectForKey:@"USB Vendor Name"];
-		NSNumber *idProduct = [propertyDictionary objectForKey:@"idProduct"];
-		NSNumber *idVendor = [propertyDictionary objectForKey:@"idVendor"];
-		NSNumber *fwLoaded = [propertyDictionary objectForKey:@"RM,FirmwareLoaded"];
-		
-		bool foundMatch = NO;
-		
-		if (bluetoothArray != nil)
+		for (NSMutableDictionary *deviceDictionary in bluetoothArray)
 		{
-			for (NSDictionary *bluetoothDeviceDictionary in bluetoothArray)
-			{
-				NSNumber *productID = [bluetoothDeviceDictionary objectForKey:@"idProduct"];
-				NSNumber *vendorID = [bluetoothDeviceDictionary objectForKey:@"idVendor"];
-				
-				if ([productID isEqualToNumber:idProduct] && [vendorID isEqualToNumber:idVendor])
-				{
-					foundMatch = YES;
-					
-					break;
-				}
-			}
-		}
-		
-		if (foundMatch)
-			continue;
-		
-		for (NSDictionary *brcmDeviceDictionary in brcmDeviceArray)
-		{
-			NSString *name = [brcmDeviceDictionary objectForKey:@"Name"];
-			NSNumber *productID = [brcmDeviceDictionary objectForKey:@"ProductID"];
-			NSNumber *vendorID = [brcmDeviceDictionary objectForKey:@"VendorID"];
+			NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
 			
-			if ([productID isEqualToNumber:idProduct] && [vendorID isEqualToNumber:idVendor])
-			{
-				NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
-				
-				[bluetoothDeviceDictionary setObject:idVendor forKey:@"VendorID"];
-				[bluetoothDeviceDictionary setObject:idProduct forKey:@"DeviceID"];
-				[bluetoothDeviceDictionary setObject:(vendorName != nil ? vendorName : @"???") forKey:@"VendorName"];
-				[bluetoothDeviceDictionary setObject:name forKey:@"DeviceName"];
-				
-				if (fwLoaded)
-					[bluetoothDeviceDictionary setObject:fwLoaded forKey:@"FWLoaded"];
-				
-				[_bluetoothDevicesArray addObject:bluetoothDeviceDictionary];
-				
-				break;
-			}
-		}
-		
-		for (NSDictionary *atherosDeviceDictionary in atherosDeviceArray)
-		{
-			NSString *name = [atherosDeviceDictionary objectForKey:@"Name"];
-			NSNumber *productID = [atherosDeviceDictionary objectForKey:@"ProductID"];
-			NSNumber *vendorID = [atherosDeviceDictionary objectForKey:@"VendorID"];
+			[self getBluetoothDeviceInfo:deviceDictionary bluetoothDeviceDictionary:bluetoothDeviceDictionary];
 			
-			if ([productID isEqualToNumber:idProduct] && [vendorID isEqualToNumber:idVendor])
-			{
-				NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
-				
-				[bluetoothDeviceDictionary setObject:idVendor forKey:@"VendorID"];
-				[bluetoothDeviceDictionary setObject:idProduct forKey:@"DeviceID"];
-				[bluetoothDeviceDictionary setObject:(vendorName != nil ? vendorName : @"???") forKey:@"VendorName"];
-				[bluetoothDeviceDictionary setObject:name forKey:@"DeviceName"];
-				
-				if (fwLoaded)
-					[bluetoothDeviceDictionary setObject:fwLoaded forKey:@"FWLoaded"];
-				
-				[_bluetoothDevicesArray addObject:bluetoothDeviceDictionary];
-				
-				break;
-			}
+			[_bluetoothDevicesArray addObject:bluetoothDeviceDictionary];
 		}
+	}
+	else
+	{
+		NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
 		
-		for (NSDictionary *intelDeviceDictionary in intelDeviceArray)
+		if ([self getNativeBluetoothDeviceInfo:bluetoothDeviceDictionary])
 		{
-			NSString *name = [intelDeviceDictionary objectForKey:@"Name"];
-			NSNumber *productID = [intelDeviceDictionary objectForKey:@"ProductID"];
-			NSNumber *vendorID = [intelDeviceDictionary objectForKey:@"VendorID"];
-			
-			if ([productID isEqualToNumber:idProduct] && [vendorID isEqualToNumber:idVendor])
-			{
-				NSMutableDictionary *bluetoothDeviceDictionary = [NSMutableDictionary dictionary];
-				
-				[bluetoothDeviceDictionary setObject:idVendor forKey:@"VendorID"];
-				[bluetoothDeviceDictionary setObject:idProduct forKey:@"DeviceID"];
-				[bluetoothDeviceDictionary setObject:(vendorName != nil ? vendorName : @"???") forKey:@"VendorName"];
-				[bluetoothDeviceDictionary setObject:name forKey:@"DeviceName"];
-				
-				if (fwLoaded)
-					[bluetoothDeviceDictionary setObject:fwLoaded forKey:@"FWLoaded"];
-				
-				[_bluetoothDevicesArray addObject:bluetoothDeviceDictionary];
-				
-				break;
-			}
+			[_bluetoothDevicesArray addObject:bluetoothDeviceDictionary];
 		}
 	}
 	
@@ -8760,9 +8762,42 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	[_window endSheet:superView.window returnCode:NSModalResponseOK];
 }
 
-- (IBAction)payPalButtonClicked:(id)sender
+- (IBAction)donateButtonClicked:(id)sender
+{
+	[_window beginSheet:_donateWindow completionHandler:^(NSModalResponse returnCode)
+	 {
+	 }];
+}
+
+- (IBAction)donateCloseButtonClicked:(id)sender
+{
+	[_window endSheet:_donateWindow];
+}
+
+- (IBAction)donatePayPalButtonClicked:(id)sender
 {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=benbaker@headsoft.com.au&item_name=Hackintool&currency_code=USD"]];
+}
+
+- (IBAction)donateEthereumButtonClicked:(id)sender
+{
+	[_ethereumTextField selectText:self];
+	[[NSPasteboard generalPasteboard] clearContents];
+	[[NSPasteboard generalPasteboard] setString:_ethereumTextField.stringValue forType:NSStringPboardType];
+}
+
+- (IBAction)donateBitcoinButtonClicked:(id)sender
+{
+	[_bitcoinTextField selectText:self];
+	[[NSPasteboard generalPasteboard] clearContents];
+	[[NSPasteboard generalPasteboard] setString:_bitcoinTextField.stringValue forType:NSStringPboardType];
+}
+
+- (IBAction)donateRaptoreumButtonClicked:(id)sender
+{
+	[_raptoreumTextField selectText:self];
+	[[NSPasteboard generalPasteboard] clearContents];
+	[[NSPasteboard generalPasteboard] setString:_raptoreumTextField.stringValue forType:NSStringPboardType];
 }
 
 - (IBAction)framebufferMenuItemClicked:(id)sender
@@ -10657,23 +10692,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	if (requestAdministratorRights() != 0)
 		return NO;
 	
-	NSError *error = nil;
-	NSString *stdoutString = nil;
-	
-	if (!launchCommandAsAdmin(@"/usr/bin/defaults", @[@"read", BluetoothPath1, @"LinkKeys"], &stdoutString))
-		launchCommandAsAdmin(@"/usr/bin/defaults", @[@"read", BluetoothPath2, @"LinkKeys"], &stdoutString);
-
-	if (stdoutString == nil)
-		return NO;
-	
-	// Convert new NSData to old format
-	NSRegularExpression *regEx = [NSRegularExpression regularExpressionWithPattern:@"\\{length = \\d+, bytes = 0x([0-9a-fA-F .]*)\\}" options:0 error:&error];
-	stdoutString = [regEx stringByReplacingMatchesInString:stdoutString options:0 range:NSMakeRange(0, [stdoutString length]) withTemplate:@"<$1>"];
-	
-	NSDictionary *linkKeysDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
-	
-	if (linkKeysDictionary == nil)
-		return NO;
+	NSOperatingSystemVersion minimumSupportedOSVersion = { .majorVersion = 12, .minorVersion = 0, .patchVersion = 0 };
+	BOOL isOSAtLeastMonterey = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:minimumSupportedOSVersion];
 	
 	NSMutableString *outputString = [NSMutableString string];
 	
@@ -10682,23 +10702,112 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	[outputString appendString:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys]\n"];
 	[outputString appendString:@"\n"];
 	
-	for (NSString *linkKey in linkKeysDictionary.allKeys)
+	NSError *error = nil;
+	NSString *stdoutString = nil;
+	
+	if (isOSAtLeastMonterey)
 	{
-		NSDictionary *linkKeyDictionary = [linkKeysDictionary objectForKey:linkKey];
-		NSString *windowsLinkKey = [linkKey stringByReplacingOccurrencesOfString:@"-" withString:@""];
-		
-		[outputString appendFormat:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys\\%@]\n", windowsLinkKey];
-		
-		for (NSString *key in linkKeyDictionary.allKeys)
+		if (launchCommand(@"/usr/sbin/system_profiler", @[@"SPBluetoothDataType", @"-xml"], &stdoutString))
 		{
-			NSData *keyData = [linkKeyDictionary objectForKey:key];
-			NSString *windowsKey = [key stringByReplacingOccurrencesOfString:@"-" withString:@""];
-			NSData *reversedKeyData = getReverseData(keyData);
+			NSArray *bluetoothArray = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
 			
-			[outputString appendFormat:@"\"%@\"=hex:%@\n", windowsKey, getByteString(reversedKeyData, @",", @"", false, false)];
+			if (bluetoothArray == nil)
+			{
+				NSLog(@"%@", [error localizedDescription]);
+				
+				return NO;
+			}
+			
+			bluetoothArray = [[[[bluetoothArray objectAtIndex:0] objectForKey:@"_items"] objectAtIndex:0] objectForKey:@"devices_list"];
+			
+			if (bluetoothArray == nil)
+				return NO;
+			
+			for (NSDictionary *bluetoothDictionary in bluetoothArray)
+			{
+				NSString *btKey = [[bluetoothDictionary allKeys] objectAtIndex:0];
+				NSDictionary *deviceDictionary =  [bluetoothDictionary objectForKey:btKey];
+				NSString *deviceAddress = [deviceDictionary objectForKey:@"device_address"];
+				
+				//NSLog(@"%@: %@", btKey, deviceAddress);
+				
+				if (launchCommandAsAdmin(@"/usr/bin/security", @[@"find-generic-password", @"-a", deviceAddress, @"-s", @"MobileBluetooth", @"-w"], &stdoutString))
+				{
+					// LinkKey = "11-68-89-16-DC-1C-22-69-E3-CB-4E-08-69-92-C8-53";
+					// LinkKeyType = Authenticated;
+					// LocalAddress = "18:4F:32:F3:41:D4";
+					
+					stdoutString = getStringFromHexString(stdoutString);
+				
+					if (stdoutString == nil)
+						continue;
+					
+					NSDictionary *linkKeysDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
+					
+					if (linkKeysDictionary == nil)
+					{
+						NSLog(@"%@", [error localizedDescription]);
+						
+						continue;
+					}
+					
+					NSString *linkKey = [linkKeysDictionary objectForKey:@"LinkKey"];
+					//NSString *linkKeyType = [linkKeysDictionary objectForKey:@"LinkKeyType"];
+					NSString *localAddress = [linkKeysDictionary objectForKey:@"LocalAddress"];
+					
+					//NSLog(@"linkKey: %@", linkKey);
+					//NSLog(@"linkKeyType: %@", linkKeyType);
+					//NSLog(@"localAddress: %@", localAddress);
+					
+					NSString *windowsDeviceAddress = [[deviceAddress stringByReplacingOccurrencesOfString:@":" withString:@""] lowercaseString];
+					NSString *windowsLinkKey = [[linkKey stringByReplacingOccurrencesOfString:@"-" withString:@","] lowercaseString];
+					NSString *windowsLocalAddress = [[localAddress stringByReplacingOccurrencesOfString:@":" withString:@""] lowercaseString];
+					
+					[outputString appendFormat:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys\\%@]\n", windowsLocalAddress];
+					[outputString appendFormat:@"\"%@\"=hex:%@\n", windowsDeviceAddress, windowsLinkKey];
+				}
+			}
 		}
 	}
-	
+	else
+	{
+		if (launchCommandAsAdmin(@"/usr/bin/defaults", @[@"read", BluetoothPath, @"LinkKeys"], &stdoutString))
+		{
+			if (stdoutString == nil)
+				return NO;
+			
+			// Convert new NSData to old format
+			NSRegularExpression *regEx = [NSRegularExpression regularExpressionWithPattern:@"\\{length = \\d+, bytes = 0x([0-9a-fA-F .]*)\\}" options:0 error:&error];
+			stdoutString = [regEx stringByReplacingMatchesInString:stdoutString options:0 range:NSMakeRange(0, [stdoutString length]) withTemplate:@"<$1>"];
+			
+			NSDictionary *linkKeysDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
+			
+			if (linkKeysDictionary == nil)
+			{
+				NSLog(@"%@", [error localizedDescription]);
+				
+				return NO;
+			}
+			
+			for (NSString *linkKey in linkKeysDictionary.allKeys)
+			{
+				NSDictionary *linkKeyDictionary = [linkKeysDictionary objectForKey:linkKey];
+				NSString *windowsLinkKey = [linkKey stringByReplacingOccurrencesOfString:@"-" withString:@""];
+				
+				[outputString appendFormat:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys\\%@]\n", windowsLinkKey];
+				
+				for (NSString *key in linkKeyDictionary.allKeys)
+				{
+					NSData *keyData = [linkKeyDictionary objectForKey:key];
+					NSString *windowsKey = [key stringByReplacingOccurrencesOfString:@"-" withString:@""];
+					NSData *reversedKeyData = getReverseData(keyData);
+					
+					[outputString appendFormat:@"\"%@\"=hex:%@\n", windowsKey, getByteString(reversedKeyData, @",", @"", false, false)];
+				}
+			}
+		}
+	}
+
 	NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);
 	NSString *desktopPath = [pathArray objectAtIndex:0];
 	NSString *outputFilePath = [desktopPath stringByAppendingPathComponent:@"Bluetooth.reg"];
