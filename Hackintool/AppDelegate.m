@@ -2058,7 +2058,25 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		return NO;
 	}
 	
-	NSDictionary *controllerDictionary = [[[[bluetoothArray objectAtIndex:0] objectForKey:@"_items"] objectAtIndex:0] objectForKey:@"controller_properties"];
+	if ([bluetoothArray count] == 0)
+		return NO;
+	
+	NSDictionary *controllerDictionary = [bluetoothArray objectAtIndex:0];
+	
+	if (controllerDictionary == nil)
+		return NO;
+	
+	NSArray *controllerArray = [controllerDictionary objectForKey:@"_items"];
+	
+	if (controllerArray == nil || [controllerArray count] == 0)
+		return NO;
+	
+	controllerDictionary = [controllerArray objectAtIndex:0];
+	
+	if (controllerDictionary == nil)
+		return NO;
+	
+	controllerDictionary = [controllerDictionary objectForKey:@"controller_properties"];
 	
 	if (controllerDictionary == nil)
 		return NO;
@@ -10718,7 +10736,25 @@ NSInteger usbControllerSort(id a, id b, void *context)
 				return NO;
 			}
 			
-			bluetoothArray = [[[[bluetoothArray objectAtIndex:0] objectForKey:@"_items"] objectAtIndex:0] objectForKey:@"devices_list"];
+			if ([bluetoothArray count] == 0)
+				return NO;
+			
+			NSDictionary *controllerDictionary = [bluetoothArray objectAtIndex:0];
+			
+			if (controllerDictionary == nil)
+				return NO;
+			
+			NSArray *controllerArray = [controllerDictionary objectForKey:@"_items"];
+			
+			if (controllerArray == nil || [controllerArray count] == 0)
+				return NO;
+			
+			controllerDictionary = [controllerArray objectAtIndex:0];
+			
+			if (controllerDictionary == nil)
+				return NO;
+			
+			bluetoothArray = [controllerDictionary objectForKey:@"devices_list"];
 			
 			if (bluetoothArray == nil)
 				return NO;

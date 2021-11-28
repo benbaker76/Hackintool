@@ -1239,6 +1239,18 @@ bool getIORegBluetoothArray(NSMutableArray **propertyArray)
 				CFRelease(usbProductString);
 			}
 			
+			CFNumberRef builtIn = nil;
+
+			if (CFDictionaryGetValueIfPresent(parentProperties, CFSTR("Built-in"), (const void **)&builtIn))
+			{
+				if ([(__bridge NSNumber *)builtIn boolValue])
+				{
+					// Built-in
+				}
+				
+				CFRelease(builtIn);
+			}
+			
 			if (skipDevice)
 				continue;
 
