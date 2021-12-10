@@ -38,7 +38,8 @@ extern "C" {
 #include <cstddef>
 
 #define MyPrivateTableViewDataType	@"MyPrivateTableViewDataType"
-#define BluetoothPath				@"com.apple.Bluetoothd.plist"
+#define BluetoothPath1				@"com.apple.Bluetoothd.plist"
+#define BluetoothPath2				@"blued.plist"
 #define PCIIDsUrl					@"https://pci-ids.ucw.cz/pci.ids"
 #define PCIIDsPath					[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"pci.ids"]
 #define USBIDsUrl					@"http://www.linux-usb.org/usb.ids"
@@ -1623,7 +1624,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			{
 				NSArray *subsystemArray = [line componentsSeparatedByString:@"  "];
 				NSArray *subsystemIDArray = [subsystemArray[0] componentsSeparatedByString:@" "];
-				NSNumber *subsystemID = [NSNumber numberWithInt:(getHexInt(subsystemIDArray[0]) << 16) | getHexInt(subsystemIDArray[1])];
+				NSNumber *subsystemID = [NSNumber numberWithInt:(getHexIntFromString(subsystemIDArray[0]) << 16) | getHexIntFromString(subsystemIDArray[1])];
 				NSString *subsystemName = subsystemArray[1];
 				
 				[subSystemsDictionary setObject:subsystemName forKey:subsystemID];
@@ -1631,7 +1632,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			else if ([line hasPrefix:@"\t"])
 			{
 				NSArray *deviceArray = [line componentsSeparatedByString:@"  "];
-				NSNumber *deviceID = [NSNumber numberWithInt:getHexInt(deviceArray[0])];
+				NSNumber *deviceID = [NSNumber numberWithInt:getHexIntFromString(deviceArray[0])];
 				NSString *deviceName = deviceArray[1];
 				
 				[deviceDictionary setObject:deviceName forKey:deviceID];
@@ -1639,7 +1640,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			else
 			{
 				NSArray *vendorArray = [line componentsSeparatedByString:@"  "];
-				NSNumber *vendorID = [NSNumber numberWithInt:getHexInt(vendorArray[0])];
+				NSNumber *vendorID = [NSNumber numberWithInt:getHexIntFromString(vendorArray[0])];
 				NSString *vendorName = vendorArray[1];
 				NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
 				[dictionary setObject:vendorID forKey:@"VendorID"];
@@ -1659,7 +1660,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			if ([line hasPrefix:@"\t\t"])
 			{
 				NSArray *progammingInterfaceArray = [line componentsSeparatedByString:@"  "];
-				NSNumber *progammingInterfaceID = [NSNumber numberWithInt:getHexInt(progammingInterfaceArray[0])];
+				NSNumber *progammingInterfaceID = [NSNumber numberWithInt:getHexIntFromString(progammingInterfaceArray[0])];
 				NSString *progammingInterfaceName = progammingInterfaceArray[1];
 				
 				[programmingInterfacesDictionary setObject:progammingInterfaceName forKey:progammingInterfaceID];
@@ -1667,7 +1668,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			else if ([line hasPrefix:@"\t"])
 			{
 				NSArray *subclassArray = [line componentsSeparatedByString:@"  "];
-				NSNumber *subclassID = [NSNumber numberWithInt:getHexInt(subclassArray[0])];
+				NSNumber *subclassID = [NSNumber numberWithInt:getHexIntFromString(subclassArray[0])];
 				NSString *subclassName = subclassArray[1];
 				
 				[subClassesDictionary setObject:subclassName forKey:subclassID];
@@ -1676,7 +1677,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			{
 				line = [line substringFromIndex:1];
 				NSArray *classArray = [line componentsSeparatedByString:@"  "];
-				NSNumber *classID = [NSNumber numberWithInt:getHexInt(classArray[0])];
+				NSNumber *classID = [NSNumber numberWithInt:getHexIntFromString(classArray[0])];
 				NSString *className = classArray[1];
 				NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
 				[dictionary setObject:classID forKey:@"ClassID"];
@@ -2578,9 +2579,13 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	{
 		NSString *browserDownloadUrl = [assetsDictionary objectForKey:@"browser_download_url"];
 		NSString *fileName = [browserDownloadUrl lastPathComponent];
+		NSString *extension = [browserDownloadUrl pathExtension];
 		NSString *version = nil;
 		
 		if (browserDownloadUrl == nil)
+			continue;
+		
+		if ([extension caseInsensitiveCompare:@"zip"] != NSOrderedSame)
 			continue;
 		
 		if ([fileName rangeOfString:@"debug" options:NSCaseInsensitiveSearch].location != NSNotFound)
@@ -4136,7 +4141,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	
 	NSString *intelGenString = [_intelGenComboBox objectValueOfSelectedItem];
 	NSString *deviceIDString = [_intelDeviceIDsDictionary objectForKey:intelGenString];
-	*deviceIDArray = getHexArrayFromString(deviceIDString);
+	*deviceIDArray = getHexArrayFromString(deviceIDString, @" ");
 	
 	for (int i = 0; i < [*deviceIDArray count]; i++)
 	{
@@ -5491,8 +5496,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		NSString *intelGenString = g_fbNameArray[i];
 		NSString *platformIDString_10_13_6 = [intelPlatformIDsDictionary_10_13_6 objectForKey:intelGenString];
 		NSString *platformIDString_10_14 = [intelPlatformIDsDictionary_10_14 objectForKey:intelGenString];
-		NSMutableArray *platformIDArray_10_13_6 = getHexArrayFromString(platformIDString_10_13_6);
-		NSMutableArray *platformIDArray_10_14 = getHexArrayFromString(platformIDString_10_14);
+		NSMutableArray *platformIDArray_10_13_6 = getHexArrayFromString(platformIDString_10_13_6, @" ");
+		NSMutableArray *platformIDArray_10_14 = getHexArrayFromString(platformIDString_10_14, @" ");
 		
 		[_intelPlatformIDsDictionary_10_13_6 setObject:platformIDArray_10_13_6 forKey:intelGenString];
 		[_intelPlatformIDsDictionary_10_14 setObject:platformIDArray_10_14 forKey:intelGenString];
@@ -10705,6 +10710,118 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	return ([NSApp runModalForWindow:_window] == NSOKButton);
 }
 
+- (BOOL)parseBluetoothLinkKeys:(NSString *)bluetoothPath outputString:(NSMutableString *)outputString
+{
+	NSError *error = nil;
+	NSString *stdoutString = nil;
+	
+	if (!launchCommandAsAdmin(@"/usr/bin/defaults", @[@"read", bluetoothPath, @"LinkKeys"], &stdoutString))
+		return NO;
+	
+	if (stdoutString == nil)
+		return NO;
+		
+	// Convert new NSData to old format
+	NSRegularExpression *regEx = [NSRegularExpression regularExpressionWithPattern:@"\\{length = \\d+, bytes = 0x([0-9a-fA-F .]*)\\}" options:0 error:&error];
+	stdoutString = [regEx stringByReplacingMatchesInString:stdoutString options:0 range:NSMakeRange(0, [stdoutString length]) withTemplate:@"<$1>"];
+	
+	NSDictionary *linkKeysDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
+	
+	if (linkKeysDictionary == nil)
+	{
+		NSLog(@"%@", [error localizedDescription]);
+		
+		return NO;
+	}
+	
+	for (NSString *linkKey in linkKeysDictionary.allKeys)
+	{
+		NSDictionary *linkKeyDictionary = [linkKeysDictionary objectForKey:linkKey];
+		NSString *windowsLinkKey = [linkKey stringByReplacingOccurrencesOfString:@"-" withString:@""];
+		
+		[outputString appendFormat:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys\\%@]\n", windowsLinkKey];
+		
+		for (NSString *key in linkKeyDictionary.allKeys)
+		{
+			NSData *keyData = [linkKeyDictionary objectForKey:key];
+			NSString *windowsKey = [key stringByReplacingOccurrencesOfString:@"-" withString:@""];
+			NSData *reversedKeyData = getReverseData(keyData);
+			
+			[outputString appendFormat:@"\"%@\"=hex:%@\n", windowsKey, getByteString(reversedKeyData, @",", @"", false, false)];
+		}
+	}
+	
+	return YES;
+}
+
+- (BOOL)parseBluetoothLEWithAddress:(NSString *)address controllerAddressData:(NSData *)controllerAddressData deviceAddressData:(NSData *)deviceAddressData outputString:(NSMutableString *)outputString
+{
+	NSError *error = nil;
+	NSString *stdoutString = nil;
+	
+	if (!launchCommand(@"/usr/bin/security", @[@"find-generic-password", @"-a", address, @"-s", @"BluetoothLE", @"-w"], &stdoutString))
+		return NO;
+
+	stdoutString = getStringFromHexString(stdoutString);
+		
+	if (stdoutString == nil)
+	{
+		return NO;
+	}
+
+	NSDictionary *remoteDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
+			
+	if (remoteDictionary == nil)
+	{
+		NSLog(@"%@", [error localizedDescription]);
+		
+		return NO;
+	}
+	
+	NSDictionary *remoteEncryptionDictionary = [remoteDictionary objectForKey:@"Remote Encryption"];
+	
+	NSData *encryptedDiversifier = [remoteEncryptionDictionary objectForKey:@"Encrypted Diversifier"];
+	NSData *longTermKey = [remoteEncryptionDictionary objectForKey:@"Long-term Key"];
+	NSData *longTermKeyLength = [remoteEncryptionDictionary objectForKey:@"Long-term Key Length"];
+	NSData *randomNumber = getReverseData([remoteEncryptionDictionary objectForKey:@"Random Number"]);
+	
+	NSData *remoteIRK = getReverseData([remoteDictionary objectForKey:@"Remote IRK"]);
+
+	//NSLog(@"encryptedDiversifier: %@", encryptedDiversifier);
+	//NSLog(@"longTermKey: %@", longTermKey);
+	//NSLog(@"longTermKey: %@", longTermKeyLength);
+	//NSLog(@"randomNumber: %@", randomNumber);
+	//NSLog(@"remoteIRK: %@", remoteIRK);
+	
+	NSString *windowsLocalAddress = getByteString(controllerAddressData, @"", @"", false, false);
+	NSString *windowsDeviceAddress = getByteString(deviceAddressData, @"", @"", false, false);
+	NSString *windowsLTK = getByteString(longTermKey, @",", @"", false, false);
+	NSString *windowsERand = getByteString(randomNumber, @",", @"", false, false);
+	NSString *windowsIRK = getByteString(remoteIRK, @",", @"", false, false);
+	NSMutableData *windowsAddressData = getReverseData(deviceAddressData);
+	const char emptyBytes[] = { 0x00, 0x00 };
+	[windowsAddressData appendBytes:emptyBytes length:2];
+	NSString *windowsAddress = getByteString(windowsAddressData, @",", @"", false, false);
+
+	[outputString appendFormat:@"\n[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys\\%@\\%@]\n", windowsLocalAddress, windowsDeviceAddress];
+	if (longTermKey != nil)
+		[outputString appendFormat:@"\"LTK\"=hex:%@\n", windowsLTK];
+	if (longTermKeyLength != nil)
+		[outputString appendFormat:@"\"KeyLength\"=dword:%08x\n", getIntFromData(longTermKeyLength)];
+	if (randomNumber != nil)
+		[outputString appendFormat:@"\"ERand\"=hex(b):%@\n", windowsERand];
+	if (encryptedDiversifier != nil)
+		[outputString appendFormat:@"\"EDIV\"=dword:%08x\n", getIntFromData(encryptedDiversifier)];
+	if (remoteIRK != nil)
+		[outputString appendFormat:@"\"IRK\"=hex:%@\n", windowsIRK];
+	[outputString appendFormat:@"\"Address\"=hex(b):%@\n", windowsAddress];
+	[outputString appendFormat:@"\"AddressType\"=dword:%08x\n", 1];
+	[outputString appendFormat:@"\"MasterIRKStatus\"=dword:%08x\n", 1];
+	[outputString appendFormat:@"\"AuthReq\"=dword:%08x\n", 0x2d];
+	
+	return YES;
+}
+
 - (BOOL)createWindowsBluetoothRegistryFile
 {
 	if (requestAdministratorRights() != 0)
@@ -10716,8 +10833,6 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	NSMutableString *outputString = [NSMutableString string];
 	
 	[outputString appendString:@"Windows Registry Editor Version 5.00\n"];
-	[outputString appendString:@"\n"];
-	[outputString appendString:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys]\n"];
 	[outputString appendString:@"\n"];
 	
 	NSError *error = nil;
@@ -10744,17 +10859,25 @@ NSInteger usbControllerSort(id a, id b, void *context)
 			if (controllerDictionary == nil)
 				return NO;
 			
-			NSArray *controllerArray = [controllerDictionary objectForKey:@"_items"];
+			NSArray *itemsArray = [controllerDictionary objectForKey:@"_items"];
 			
-			if (controllerArray == nil || [controllerArray count] == 0)
+			if (itemsArray == nil || [itemsArray count] == 0)
 				return NO;
 			
-			controllerDictionary = [controllerArray objectAtIndex:0];
+			NSDictionary *itemsDictionary = [itemsArray objectAtIndex:0];
+			
+			if (itemsDictionary == nil)
+				return NO;
+			
+			controllerDictionary = [itemsDictionary objectForKey:@"controller_properties"];
 			
 			if (controllerDictionary == nil)
 				return NO;
 			
-			bluetoothArray = [controllerDictionary objectForKey:@"devices_list"];
+			NSString *controllerAddress = [controllerDictionary objectForKey:@"controller_address"];
+			NSData *controllerAddressData = getNSDataFromString(controllerAddress, @":");
+			
+			bluetoothArray = [itemsDictionary objectForKey:@"devices_list"];
 			
 			if (bluetoothArray == nil)
 				return NO;
@@ -10764,84 +10887,59 @@ NSInteger usbControllerSort(id a, id b, void *context)
 				NSString *btKey = [[bluetoothDictionary allKeys] objectAtIndex:0];
 				NSDictionary *deviceDictionary =  [bluetoothDictionary objectForKey:btKey];
 				NSString *deviceAddress = [deviceDictionary objectForKey:@"device_address"];
+				NSData *deviceAddressData = getNSDataFromString(deviceAddress, @":");
+				NSString *publicAddress =[NSString stringWithFormat:@"Public %@", deviceAddress];
+				NSString *randomAddress =[NSString stringWithFormat:@"Random %@", deviceAddress];
 				
-				//NSLog(@"%@: %@", btKey, deviceAddress);
+				// NSLog(@"%@: %@", btKey, deviceAddress);
 				
-				if (launchCommandAsAdmin(@"/usr/bin/security", @[@"find-generic-password", @"-a", deviceAddress, @"-s", @"MobileBluetooth", @"-w"], &stdoutString))
+				if (launchCommand(@"/usr/bin/security", @[@"find-generic-password", @"-a", deviceAddress, @"-s", @"MobileBluetooth", @"-w"], &stdoutString))
 				{
 					// LinkKey = "11-68-89-16-DC-1C-22-69-E3-CB-4E-08-69-92-C8-53";
 					// LinkKeyType = Authenticated;
 					// LocalAddress = "18:4F:32:F3:41:D4";
-					
+										
 					stdoutString = getStringFromHexString(stdoutString);
 				
-					if (stdoutString == nil)
-						continue;
-					
-					NSDictionary *linkKeysDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
-					
-					if (linkKeysDictionary == nil)
+					if (stdoutString != nil)
 					{
-						NSLog(@"%@", [error localizedDescription]);
+						NSDictionary *linkKeysDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
 						
-						continue;
+						if (linkKeysDictionary != nil)
+						{
+							NSString *linkKey = [linkKeysDictionary objectForKey:@"LinkKey"];
+							//NSString *linkKeyType = [linkKeysDictionary objectForKey:@"LinkKeyType"];
+							NSString *localAddress = [linkKeysDictionary objectForKey:@"LocalAddress"];
+							
+							//NSLog(@"linkKey: %@", linkKey);
+							//NSLog(@"linkKeyType: %@", linkKeyType);
+							//NSLog(@"localAddress: %@", localAddress);
+							
+							NSData *linkKeyData = getNSDataFromString(linkKey, @"-");
+							NSData *localAddressData = getNSDataFromString(localAddress, @":");
+						
+							NSString *windowsDeviceAddress = getByteString(deviceAddressData, @"", @"", false, false);
+							NSString *windowsLinkKey = getByteString(linkKeyData, @",", @"", false, false);
+							NSString *windowsLocalAddress = getByteString(localAddressData, @"", @"", false, false);
+
+							[outputString appendFormat:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys\\%@]\n", windowsLocalAddress];
+							[outputString appendFormat:@"\"%@\"=hex:%@\n", windowsDeviceAddress, windowsLinkKey];
+						}
 					}
-					
-					NSString *linkKey = [linkKeysDictionary objectForKey:@"LinkKey"];
-					//NSString *linkKeyType = [linkKeysDictionary objectForKey:@"LinkKeyType"];
-					NSString *localAddress = [linkKeysDictionary objectForKey:@"LocalAddress"];
-					
-					//NSLog(@"linkKey: %@", linkKey);
-					//NSLog(@"linkKeyType: %@", linkKeyType);
-					//NSLog(@"localAddress: %@", localAddress);
-					
-					NSString *windowsDeviceAddress = [[deviceAddress stringByReplacingOccurrencesOfString:@":" withString:@""] lowercaseString];
-					NSString *windowsLinkKey = [[linkKey stringByReplacingOccurrencesOfString:@"-" withString:@","] lowercaseString];
-					NSString *windowsLocalAddress = [[localAddress stringByReplacingOccurrencesOfString:@":" withString:@""] lowercaseString];
-					
-					[outputString appendFormat:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys\\%@]\n", windowsLocalAddress];
-					[outputString appendFormat:@"\"%@\"=hex:%@\n", windowsDeviceAddress, windowsLinkKey];
 				}
+				
+				// security find-generic-password -a "Public 18:4F:32:F4:0D:C8" -s BluetoothLE -w
+				// security find-generic-password -a "Random 18:4F:32:F4:0D:C8" -s BluetoothLE -w
+				
+				[self parseBluetoothLEWithAddress:publicAddress controllerAddressData:controllerAddressData deviceAddressData:deviceAddressData outputString:outputString];
+				[self parseBluetoothLEWithAddress:randomAddress controllerAddressData:controllerAddressData deviceAddressData:deviceAddressData outputString:outputString];
 			}
 		}
 	}
 	else
 	{
-		if (launchCommandAsAdmin(@"/usr/bin/defaults", @[@"read", BluetoothPath, @"LinkKeys"], &stdoutString))
-		{
-			if (stdoutString == nil)
-				return NO;
-			
-			// Convert new NSData to old format
-			NSRegularExpression *regEx = [NSRegularExpression regularExpressionWithPattern:@"\\{length = \\d+, bytes = 0x([0-9a-fA-F .]*)\\}" options:0 error:&error];
-			stdoutString = [regEx stringByReplacingMatchesInString:stdoutString options:0 range:NSMakeRange(0, [stdoutString length]) withTemplate:@"<$1>"];
-			
-			NSDictionary *linkKeysDictionary = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
-			
-			if (linkKeysDictionary == nil)
-			{
-				NSLog(@"%@", [error localizedDescription]);
-				
-				return NO;
-			}
-			
-			for (NSString *linkKey in linkKeysDictionary.allKeys)
-			{
-				NSDictionary *linkKeyDictionary = [linkKeysDictionary objectForKey:linkKey];
-				NSString *windowsLinkKey = [linkKey stringByReplacingOccurrencesOfString:@"-" withString:@""];
-				
-				[outputString appendFormat:@"[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\BTHPORT\\Parameters\\Keys\\%@]\n", windowsLinkKey];
-				
-				for (NSString *key in linkKeyDictionary.allKeys)
-				{
-					NSData *keyData = [linkKeyDictionary objectForKey:key];
-					NSString *windowsKey = [key stringByReplacingOccurrencesOfString:@"-" withString:@""];
-					NSData *reversedKeyData = getReverseData(keyData);
-					
-					[outputString appendFormat:@"\"%@\"=hex:%@\n", windowsKey, getByteString(reversedKeyData, @",", @"", false, false)];
-				}
-			}
-		}
+		[self parseBluetoothLinkKeys:BluetoothPath1 outputString:outputString];
+		[self parseBluetoothLinkKeys:BluetoothPath2 outputString:outputString];
 	}
 
 	NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);

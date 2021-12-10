@@ -455,9 +455,12 @@ NSMutableString *getByteStringClassic(NSData *data)
 	return result;
 }
 
-NSData *getReverseData(NSData *data)
+NSMutableData *getReverseData(NSData *data)
 {
-	NSMutableData *result = [[[NSMutableData alloc] init] autorelease];
+	if (data == nil)
+		return nil;
+	
+	NSMutableData *result = [NSMutableData data];
 
 	for(int i = (int)data.length - 1; i >= 0; i--)
 		[result appendBytes:&((unsigned char *)data.bytes)[i] length:1];
@@ -835,7 +838,7 @@ bool getRegExArray(NSString *regExPattern, NSString *valueString, uint32_t itemC
 	return true;
 }
 
-uint32_t getInt(NSString *valueString)
+uint32_t getIntFromString(NSString *valueString)
 {
 	uint32_t value;
 	
@@ -845,7 +848,16 @@ uint32_t getInt(NSString *valueString)
 	return value;
 }
 
-uint32_t getHexInt(NSString *valueString)
+uint32_t getIntFromData(NSData *data)
+{
+	uint32_t result = 0;
+
+	[data getBytes:&result length:sizeof(result)];
+	
+	return result;
+}
+
+uint32_t getHexIntFromString(NSString *valueString)
 {
 	uint32_t value;
 	
@@ -917,7 +929,26 @@ bool tryFormatXML(NSString *rawXML, NSString **xmlString, bool formattingAllowed
 	return true;
 }
 
-NSMutableArray *getHexArrayFromString(NSString *hexString)
+NSMutableData *getNSDataFromString(NSString *hexString, NSString *separator)
+{
+	NSMutableData *hexValuesData = [NSMutableData data];
+	NSArray *hexArray = [hexString componentsSeparatedByString:separator];
+	
+	for (int i = 0; i < [hexArray count]; i++)
+	{
+		NSString *hexEntry = hexArray[i];
+		uint32_t value = 0;
+		NSScanner *scanner = [NSScanner scannerWithString:hexEntry];
+		[scanner scanHexInt:&value];
+		unsigned char byte = value;
+		
+		[hexValuesData appendBytes:&byte length:1];
+	}
+	
+	return hexValuesData;
+}
+
+NSMutableArray *getHexArrayFromString(NSString *hexString, NSString *separator)
 {
 	NSMutableArray *hexValuesArray = [NSMutableArray array];
 	NSArray *hexArray = [hexString componentsSeparatedByString: @" "];

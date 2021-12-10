@@ -252,14 +252,14 @@ NSString *const kVolumeIconFileName = @".VolumeIcon.icns";
 	
 	if (getRegExArray(@"disk(.*)s(.*)", _mediaBSDName, 2, &itemArray))
 	{
-		*device = getInt(itemArray[0]);
-		*slice = getInt(itemArray[1]);
+		*device = getIntFromString(itemArray[0]);
+		*slice = getIntFromString(itemArray[1]);
 		
 		return true;
 	}
 	else if (getRegExArray(@"disk(.*)", _mediaBSDName, 1, &itemArray))
 	{
-		*device = getInt(itemArray[0]);
+		*device = getIntFromString(itemArray[0]);
 		
 		return true;
 	}
