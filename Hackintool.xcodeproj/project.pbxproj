@@ -65,6 +65,7 @@
 		E2D20D4D223184DF00BAC721 /* Clover in Resources */ = {isa = PBXBuildFile; fileRef = E2D20D4C223184DF00BAC721 /* Clover */; };
 		E2DDD8AA2306DE640017F6D7 /* macserial.c in Sources */ = {isa = PBXBuildFile; fileRef = E2DDD8A62306DE640017F6D7 /* macserial.c */; };
 		E2DDD8AE2307E3800017F6D7 /* efidevp.c in Sources */ = {isa = PBXBuildFile; fileRef = E2DDD8AC2307E37F0017F6D7 /* efidevp.c */; };
+		E2E97BE9276522AB00A7BEBE /* UserPseudoRandom.c in Sources */ = {isa = PBXBuildFile; fileRef = E2E97BE7276522AB00A7BEBE /* UserPseudoRandom.c */; };
 		E2ED92F8221349FE00279FEA /* AudioDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = E2ED92F7221349FE00279FEA /* AudioDevice.m */; };
 		E2F6B2C522E3FE2B00BEF274 /* IORegTools.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F6B2C422E3FE2B00BEF274 /* IORegTools.m */; };
 		E2FB8637210EAB1000D6F0E4 /* FBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E2FB8635210EAB1000D6F0E4 /* FBUtilities.m */; };
@@ -186,6 +187,8 @@
 		E2E7D7F2220811AC0062D06D /* uk */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E2E7D7F62208124A0062D06D /* de */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E2E9476F2204A9F5005348C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		E2E97BE7276522AB00A7BEBE /* UserPseudoRandom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UserPseudoRandom.c; sourceTree = "<group>"; };
+		E2E97BE8276522AB00A7BEBE /* UserPseudoRandom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPseudoRandom.h; sourceTree = "<group>"; };
 		E2EA734A22845CDB0095E56C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = "zh-Hans"; path = "zh-Hans.lproj/Credits.rtf"; sourceTree = "<group>"; };
 		E2ED92F6221349F000279FEA /* AudioDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioDevice.h; sourceTree = "<group>"; };
 		E2ED92F7221349FE00279FEA /* AudioDevice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioDevice.m; sourceTree = "<group>"; };
@@ -351,6 +354,8 @@
 		E2DDD8A52306DE640017F6D7 /* MacSerial */ = {
 			isa = PBXGroup;
 			children = (
+				E2E97BE7276522AB00A7BEBE /* UserPseudoRandom.c */,
+				E2E97BE8276522AB00A7BEBE /* UserPseudoRandom.h */,
 				E2DDD8A62306DE640017F6D7 /* macserial.c */,
 				E2DDD8A72306DE640017F6D7 /* macserial.h */,
 				E2DDD8A82306DE640017F6D7 /* modelinfo.h */,
@@ -559,6 +564,7 @@
 				E2489DEE211AE5AD00A48C84 /* NSTabViewImage.m in Sources */,
 				E2520BA5226CE3B00077A0FC /* PCIMonitor.m in Sources */,
 				E277608E21EBD90D00EA6E44 /* FixEDID.m in Sources */,
+				E2E97BE9276522AB00A7BEBE /* UserPseudoRandom.c in Sources */,
 				E2DDD8AA2306DE640017F6D7 /* macserial.c in Sources */,
 				E200EE7A21FBD4600082D799 /* NVRAMXmlParser.m in Sources */,
 				E22AB5392278FC4500A46C8D /* OpenCore.m in Sources */,
@@ -715,7 +721,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0376;
+				CURRENT_PROJECT_VERSION = 0377;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -730,7 +736,7 @@
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MARKETING_VERSION = 3.7.6;
+				MARKETING_VERSION = 3.7.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -751,7 +757,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0376;
+				CURRENT_PROJECT_VERSION = 0377;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -766,7 +772,7 @@
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MARKETING_VERSION = 3.7.6;
+				MARKETING_VERSION = 3.7.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
