@@ -2568,7 +2568,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	if (jsonData == nil)
 		return false;
-	
+
 	NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONWritingPrettyPrinted error:&error];
 	NSArray *assetArray = [jsonDictionary objectForKey:@"assets"];
 	
@@ -2585,7 +2585,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		if (browserDownloadUrl == nil)
 			continue;
 		
-		if ([extension caseInsensitiveCompare:@"zip"] != NSOrderedSame)
+		// zip for OpenCore, pkg for Clover
+		if ([extension caseInsensitiveCompare:@"zip"] != NSOrderedSame &&
+			[extension caseInsensitiveCompare:@"pkg"] != NSOrderedSame)
 			continue;
 		
 		if ([fileName rangeOfString:@"debug" options:NSCaseInsensitiveSearch].location != NSNotFound)
@@ -2598,7 +2600,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		}
 		
 		*downloadUrl = [browserDownloadUrl retain];
-
+		
 		if ([self tryGetGithubDownloadVersion:browserDownloadUrl downloadVersion:&version])
 			*downloadVersion = [version retain];
 		
