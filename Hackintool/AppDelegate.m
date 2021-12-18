@@ -10938,8 +10938,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	}
 	else
 	{
-		[self parseBluetoothLinkKeys:BluetoothPath1 outputString:outputString];
-		[self parseBluetoothLinkKeys:BluetoothPath2 outputString:outputString];
+		if (![self parseBluetoothLinkKeys:BluetoothPath1 outputString:outputString])
+			[self parseBluetoothLinkKeys:BluetoothPath2 outputString:outputString];
 	}
 
 	NSArray *pathArray = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);

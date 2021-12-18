@@ -85,25 +85,39 @@
 	CFTypeRef property = nil;
 	
 	// NPT-001-2019-05-03
-	if (getIORegProperty(@"IODeviceTree:/options", @"4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102:opencore-version", &property))
+	if (!getIORegProperty(@"IODeviceTree:/options", @"4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102:opencore-version", &property))
+		return false;
+	
+	NSData *valueData = (__bridge NSData *)property;
+	
+	if (valueData.length >= 18)
 	{
-		NSData *valueData = (__bridge NSData *)property;
+		NSString *valueString = [[[NSString alloc] initWithData:valueData encoding:NSASCIIStringEncoding] autorelease];
 		
-		if (valueData.length >= 18)
+		NSString *openCoreTarget = [valueString substringWithRange:NSMakeRange(0, 3)];
+		NSString *openCoreVersion = [valueString substringWithRange:NSMakeRange(4, 3)];
+		NSString *openCoreYear = [valueString substringWithRange:NSMakeRange(8, 4)];
+		NSString *openCoreMonth = [valueString substringWithRange:NSMakeRange(13, 2)];
+		NSString *openCoreDay = [valueString substringWithRange:NSMakeRange(16, 2)];
+		
+		*bootedVersion = [NSString stringWithFormat:@"%@.%@.%@", [openCoreVersion substringWithRange:NSMakeRange(0, 1)], [openCoreVersion substringWithRange:NSMakeRange(1, 1)], [openCoreVersion substringWithRange:NSMakeRange(2, 1)]];
+		
+		if ([openCoreTarget isEqualToString:@"UNK"] &&
+			[openCoreVersion isEqualToString:@"000"] &&
+			[openCoreYear isEqualToString:@"0000"] &&
+			[openCoreMonth isEqualToString:@"00"] &&
+			[openCoreDay isEqualToString:@"00"])
 		{
-			NSString *valueString = [[[NSString alloc] initWithData:valueData encoding:NSASCIIStringEncoding] autorelease];
-			//NSString *openCoreTarget = [valueString substringWithRange:NSMakeRange(0, 3)];
-			NSString *openCoreVersion = [valueString substringWithRange:NSMakeRange(4, 3)];
-			//NSString *openCoreYear = [valueString substringWithRange:NSMakeRange(8, 4)];
-			//NSString *openCoreMonth = [valueString substringWithRange:NSMakeRange(13, 2)];
-			//NSString *openCoreDay = [valueString substringWithRange:NSMakeRange(16, 2)];
-			*bootedVersion = [NSString stringWithFormat:@"%@.%@.%@", [openCoreVersion substringWithRange:NSMakeRange(0, 1)], [openCoreVersion substringWithRange:NSMakeRange(1, 1)], [openCoreVersion substringWithRange:NSMakeRange(2, 1)]];
-			
+			// Clover injects UNK-000-0000-00-00
+			result = false;
+		}
+		else
+		{
 			result = true;
 		}
-		
-		CFRelease(property);
 	}
+		
+	CFRelease(property);
 	
 	return result;
 }
