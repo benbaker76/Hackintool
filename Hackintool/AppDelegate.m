@@ -786,7 +786,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_cloverInfo.ScheduledCheckInterval = kCloverScheduledCheckInterval;
 	_cloverInfo.LatestReleaseURL = kCloverLatestReleaseURL;
 	_cloverInfo.IconName = @"IconClover";
-	_cloverInfo.FileNameMatch = @"Clover_";
+	_cloverInfo.FileNamePrefix = kCloverFileNamePrefix;
+	_cloverInfo.FileNameSuffix = kCloverFileNameSuffix;
 	
 	_openCoreInfo.Name = @"OpenCore";
 	_openCoreInfo.LastVersionDownloaded = kOpenCoreLastVersionDownloaded;
@@ -795,7 +796,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	_openCoreInfo.ScheduledCheckInterval = kOpenCoreScheduledCheckInterval;
 	_openCoreInfo.LatestReleaseURL = kOpenCoreLatestReleaseURL;
 	_openCoreInfo.IconName = @"IconOpenCore";
-	_openCoreInfo.FileNameMatch = @"OpenCore";
+	_openCoreInfo.FileNamePrefix = kOpenCoreFileNamePrefix;
+	_openCoreInfo.FileNameSuffix = kOpenCoreFileNameSuffix;
 	
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSString *filePath = nil;
@@ -2560,7 +2562,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	return true;
 }
 
-- (Boolean)getGithubLatestDownloadInfo:(NSString *)url fileNameMatch:(NSString *)fileNameMatch browserDownloadUrl:(NSString **)downloadUrl downloadVersion:(NSString **)downloadVersion
+- (Boolean)getGithubLatestDownloadInfo:(NSString *)url fileNamePrefix:(NSString *)fileNamePrefix fileNameSuffix:(NSString *)fileNameSuffix browserDownloadUrl:(NSString **)downloadUrl downloadVersion:(NSString **)downloadVersion
 {
 	NSError *error;
 	NSURL *gitHubAPIUrl = [NSURL URLWithString:url];
@@ -2579,23 +2581,21 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	{
 		NSString *browserDownloadUrl = [assetsDictionary objectForKey:@"browser_download_url"];
 		NSString *fileName = [browserDownloadUrl lastPathComponent];
-		NSString *extension = [browserDownloadUrl pathExtension];
+		//NSString *extension = [browserDownloadUrl pathExtension];
 		NSString *version = nil;
 		
 		if (browserDownloadUrl == nil)
 			continue;
-		
-		// zip for OpenCore, pkg for Clover
-		if ([extension caseInsensitiveCompare:@"zip"] != NSOrderedSame &&
-			[extension caseInsensitiveCompare:@"pkg"] != NSOrderedSame)
-			continue;
-		
-		if ([fileName rangeOfString:@"debug" options:NSCaseInsensitiveSearch].location != NSNotFound)
-			continue;
-		
-		if (fileNameMatch != nil)
+
+		if (fileNamePrefix != nil)
 		{
-			if ([fileName rangeOfString:fileNameMatch options:NSCaseInsensitiveSearch].location == NSNotFound)
+			if (![fileName hasPrefix:fileNamePrefix])
+				continue;
+		}
+		
+		if (fileNameSuffix != nil)
+		{
+			if (![fileName hasSuffix:fileNameSuffix])
 				continue;
 		}
 		
@@ -8818,6 +8818,13 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	[[NSPasteboard generalPasteboard] setString:_bitcoinTextField.stringValue forType:NSStringPboardType];
 }
 
+- (IBAction)donateRavencoinButtonClicked:(id)sender
+{
+	[_ravencoinTextField selectText:self];
+	[[NSPasteboard generalPasteboard] clearContents];
+	[[NSPasteboard generalPasteboard] setString:_ravencoinTextField.stringValue forType:NSStringPboardType];
+}
+
 - (IBAction)donateRaptoreumButtonClicked:(id)sender
 {
 	[_raptoreumTextField selectText:self];
@@ -9808,7 +9815,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 			[defaults setObject:now forKey:_bootloaderInfo->LastCheckTimestamp];
 			[defaults synchronize];
 			
-			if ([self getGithubLatestDownloadInfo:_bootloaderInfo->LatestReleaseURL fileNameMatch:_bootloaderInfo->FileNameMatch browserDownloadUrl:&_bootloaderInfo->LatestDownloadURL downloadVersion:&_bootloaderInfo->LatestVersion])
+			if ([self getGithubLatestDownloadInfo:_bootloaderInfo->LatestReleaseURL fileNamePrefix:_bootloaderInfo->FileNamePrefix fileNameSuffix:_bootloaderInfo->FileNameSuffix browserDownloadUrl:&_bootloaderInfo->LatestDownloadURL downloadVersion:&_bootloaderInfo->LatestVersion])
 			{
 				NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:_bootloaderInfo->LatestDownloadURL] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
 				

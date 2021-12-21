@@ -16,6 +16,8 @@
 #define kOpenCoreProjectURL				@"https://github.com/acidanthera/OpenCorePkg"
 #define kOpenCoreProjectFileURL			@"https://github.com/acidanthera/OpenCorePkg/raw/master/OpenCorePkg.xcodeproj"
 #define kOpenCoreLatestReleaseURL		@"https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest"
+#define kOpenCoreFileNamePrefix			@"OpenCore-"
+#define kOpenCoreFileNameSuffix			@"RELEASE.zip"
 
 #define kOpenCoreLastVersionDownloaded	@"OpenCoreLastVersionDownloaded"
 #define kOpenCoreLastDownloadWarned		@"OpenCoreLastDownloadWarned"

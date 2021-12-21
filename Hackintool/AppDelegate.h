@@ -106,7 +106,8 @@ typedef struct
 	NSString *BootedVersion;
 	NSString *InstalledVersion;
 	NSString *DownloadPath;
-	NSString *FileNameMatch;
+	NSString *FileNamePrefix;
+	NSString *FileNameSuffix;
 	NSString *SuggestedFileName;
 	NSString *IconName;
 } BootloaderInfo;
@@ -199,6 +200,7 @@ typedef struct
 @property (assign) IBOutlet NSWindow *donateWindow;
 @property (assign) IBOutlet NSTextField *ethereumTextField;
 @property (assign) IBOutlet NSTextField *bitcoinTextField;
+@property (assign) IBOutlet NSTextField *ravencoinTextField;
 @property (assign) IBOutlet NSTextField *raptoreumTextField;
 // Import KextsToPatch Window
 @property (assign) IBOutlet NSWindow *importKextsToPatchWindow;
@@ -464,6 +466,7 @@ typedef struct
 - (IBAction)donatePayPalButtonClicked:(id)sender;
 - (IBAction)donateEthereumButtonClicked:(id)sender;
 - (IBAction)donateBitcoinButtonClicked:(id)sender;
+- (IBAction)donateRavencoinButtonClicked:(id)sender;
 - (IBAction)donateRaptoreumButtonClicked:(id)sender;
 - (IBAction)framebufferMenuItemClicked:(id)sender;
 - (IBAction)patchMenuItemClicked:(id)sender;

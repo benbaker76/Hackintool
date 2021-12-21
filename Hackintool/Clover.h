@@ -22,6 +22,8 @@
 //
 
 #define kCloverLatestReleaseURL			@"https://api.github.com/repos/CloverHackyColor/CloverBootloader/releases/latest"
+#define kCloverFileNamePrefix			@"Clover_"
+#define kCloverFileNameSuffix			@".pkg"
 
 #define kCloverLastVersionDownloaded    @"CloverLastVersionDownloaded"
 #define kCloverLastDownloadWarned       @"CloverLastDownloadWarned"
