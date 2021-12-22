@@ -2624,7 +2624,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSString *githubUrl = [NSString stringWithFormat:@"https://api.github.com/repos/%@/%@/releases/latest", username, projectName];
 	NSString *browserDownloadUrl = nil, *downloadVersion = nil;
 	
-	if ([self getGithubLatestDownloadInfo:githubUrl fileNameMatch:nil browserDownloadUrl:&browserDownloadUrl downloadVersion:&downloadVersion])
+	if ([self getGithubLatestDownloadInfo:githubUrl fileNamePrefix:nil fileNameSuffix:nil browserDownloadUrl:&browserDownloadUrl downloadVersion:&downloadVersion])
 	{
 		[*kextDictionary setObject:browserDownloadUrl forKey:@"DownloadUrl"];
 		
@@ -8849,7 +8849,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		[_importIORegNativeMenuItem setState:false];
 		[_importIORegPatchedMenuItem setState:false];
 	}
-	
+
 	if ([identifier isEqualToString:@"Current Version"])
 	{
 		[_macOS_10_13_6_MenuItem setState:state];
