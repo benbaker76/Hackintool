@@ -38,8 +38,8 @@ extern "C" {
 #include <cstddef>
 
 #define MyPrivateTableViewDataType	@"MyPrivateTableViewDataType"
-#define BluetoothPath1				@"com.apple.Bluetoothd.plist"
-#define BluetoothPath2				@"blued.plist"
+#define BluetoothPath1				@"/private/var/root/Library/Preferences/com.apple.bluetoothd.plist" // High Sierra
+#define BluetoothPath2				@"/private/var/root/Library/Preferences/blued.plist" // Sierra
 #define PCIIDsUrl					@"https://pci-ids.ucw.cz/pci.ids"
 #define PCIIDsPath					[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"pci.ids"]
 #define USBIDsUrl					@"http://www.linux-usb.org/usb.ids"
@@ -501,7 +501,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			[self addToList:_systemInfoArray name:@"VDA Decoder" value:GetLocalizedString(@"Decoder Failed")];
 			break;
 		default:
-			[self addToList:_systemInfoArray name:@"VDA Decoder" value:[NSString stringWithFormat:GetLocalizedString(@"Unknown Status (%@)"), decoderStatus]];
+			[self addToList:_systemInfoArray name:@"VDA Decoder" value:[NSString stringWithFormat:GetLocalizedString(@"Unknown Status (%d)"), (int)decoderStatus]];
 			break;
 	}
 	
@@ -2834,7 +2834,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			return;
 	}
 	
-	if (![[NSFileManager defaultManager] fileExistsAtPath:mtocDst1] || ![[NSFileManager defaultManager] fileExistsAtPath:mtocDst2])
+	if (![[NSFileManager defaultManager] fileExistsAtPath:mtocDst1] && ![[NSFileManager defaultManager] fileExistsAtPath:mtocDst2])
 	{
 		if ([self showAlert:@"Missing mtoc or mtoc.NEW!" text:@"Click OK to run installation."])
 		{
