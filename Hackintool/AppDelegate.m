@@ -10792,7 +10792,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	NSData *encryptedDiversifier = [remoteEncryptionDictionary objectForKey:@"Encrypted Diversifier"];
 	NSData *longTermKey = [remoteEncryptionDictionary objectForKey:@"Long-term Key"];
 	NSData *longTermKeyLength = [remoteEncryptionDictionary objectForKey:@"Long-term Key Length"];
-	NSData *randomNumber = getReverseData([remoteEncryptionDictionary objectForKey:@"Random Number"]);
+	NSData *randomNumber = [remoteEncryptionDictionary objectForKey:@"Random Number"];
 	
 	NSData *remoteIRK = getReverseData([remoteDictionary objectForKey:@"Remote IRK"]);
 
