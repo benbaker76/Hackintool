@@ -8656,7 +8656,6 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	
 	if (!state)
 	{
-		[_currentVersionMenuItem setState:false];
 		[_macOS_10_13_6_MenuItem setState:false];
 		[_macOS_10_14_MenuItem setState:false];
 	}
@@ -8850,19 +8849,12 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		[_importIORegPatchedMenuItem setState:false];
 	}
 
-	if ([identifier isEqualToString:@"Current Version"])
+	if ([identifier isEqualToString:@"<= macOS 10.13.6"])
 	{
-		[_macOS_10_13_6_MenuItem setState:state];
 		[_macOS_10_14_MenuItem setState:state];
 	}
-	else if ([identifier isEqualToString:@"macOS 10.13.6"])
+	else if ([identifier isEqualToString:@">= macOS 10.14"])
 	{
-		[_currentVersionMenuItem setState:state];
-		[_macOS_10_14_MenuItem setState:state];
-	}
-	else if ([identifier isEqualToString:@"macOS 10.14"])
-	{
-		[_currentVersionMenuItem setState:state];
 		[_macOS_10_13_6_MenuItem setState:state];
 	}
 	
@@ -10889,7 +10881,12 @@ NSInteger usbControllerSort(id a, id b, void *context)
 			bluetoothArray = [itemsDictionary objectForKey:@"devices_list"];
 			
 			if (bluetoothArray == nil)
-				return NO;
+			{
+				bluetoothArray = [itemsDictionary objectForKey:@"device_not_connected"];
+				
+				if (bluetoothArray == nil)
+					return NO;
+			}
 			
 			for (NSDictionary *bluetoothDictionary in bluetoothArray)
 			{

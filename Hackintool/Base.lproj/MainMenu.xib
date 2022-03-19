@@ -376,19 +376,13 @@
                 <menuItem title="Framebuffer" id="b77-4K-Zij">
                     <menu key="submenu" title="Framebuffer" id="lBS-mO-fIU">
                         <items>
-                            <menuItem title="Local Kexts" identifier="Current Version" id="cJU-Ku-vcs">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="framebufferMenuItemClicked:" target="494" id="uAb-As-YVz"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="&lt;= macOS 10.13.6" identifier="macOS 10.13.6" id="bZg-5b-nBf">
+                            <menuItem title="&lt;= macOS 10.13.6" identifier="&lt;= macOS 10.13.6" id="bZg-5b-nBf">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="framebufferMenuItemClicked:" target="494" id="QlY-3p-Xqt"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="&gt;= macOS 10.14" state="on" identifier="macOS 10.14" id="bOy-Ds-Xb8">
+                            <menuItem title="&gt;= macOS 10.14" state="on" identifier="&gt;= macOS 10.14" id="bOy-Ds-Xb8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="framebufferMenuItemClicked:" target="494" id="Men-LC-NR7"/>
@@ -8701,7 +8695,6 @@
                 <outlet property="createNVRAMTextView" destination="Tnh-uZ-siK" id="5Of-fD-Al6"/>
                 <outlet property="createNVRAMVariableWindow" destination="ru5-xZ-vEv" id="tcy-J5-bT8"/>
                 <outlet property="currentFBInfoTableView" destination="q6S-jX-yTB" id="jWS-vq-s9D"/>
-                <outlet property="currentVersionMenuItem" destination="cJU-Ku-vcs" id="Hlv-WU-vlA"/>
                 <outlet property="devicePropertiesPatchRadioButton" destination="wMI-gx-20w" id="43h-pV-LC8"/>
                 <outlet property="disableeGPUButton" destination="48b-Oy-BRX" id="Zoy-mc-fau"/>
                 <outlet property="displayInfoTableView" destination="nht-nN-daK" id="G5c-cX-9Lf"/>
@@ -9427,11 +9420,11 @@ Gw
                         <tabViewItems>
                             <tabViewItem label="PayPal" identifier="" id="0MB-mD-nyc">
                                 <view key="view" id="c33-kv-Ina">
-                                    <rect key="frame" x="10" y="19" width="320" height="314"/>
+                                    <rect key="frame" x="10" y="28" width="320" height="305"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C0n-8o-IkC">
-                                            <rect key="frame" x="32" y="40" width="256" height="256"/>
+                                            <rect key="frame" x="32" y="31" width="256" height="256"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="IconPayPal" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="tf3-3t-lE5">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>

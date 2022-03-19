@@ -348,7 +348,6 @@ typedef struct
 // Menus
 @property (assign) IBOutlet NSMenuItem *importIORegNativeMenuItem;
 @property (assign) IBOutlet NSMenuItem *importIORegPatchedMenuItem;
-@property (assign) IBOutlet NSMenuItem *currentVersionMenuItem;
 @property (assign) IBOutlet NSMenuItem *macOS_10_13_6_MenuItem;
 @property (assign) IBOutlet NSMenuItem *macOS_10_14_MenuItem;
 @property (assign) IBOutlet NSMenuItem *importKextsToPatchMenuItem;

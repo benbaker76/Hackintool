@@ -872,8 +872,9 @@ void exportUSBPowerSSDT(AppDelegate *appDelegate)
 	NSBundle *mainBundle = [NSBundle mainBundle];
 	NSString *iaslPath = [mainBundle pathForResource:@"iasl" ofType:@"" inDirectory:@"Utilities"];
 	NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	NSString *tempFilePath = [NSString stringWithFormat:@"%@/SSDT-EC-USBX.dsl", desktopPath];
-	NSString *outputFilePath = [NSString stringWithFormat:@"%@/SSDT-EC-USBX.aml", desktopPath];
+	NSString *fileName = (isOSAtLeastCatalina ? @"SSDT-USBX" : @"SSDT-EC-USBX");
+	NSString *tempFilePath = [NSString stringWithFormat:@"%@/%@.dsl", desktopPath, fileName];
+	NSString *outputFilePath = [NSString stringWithFormat:@"%@/%@.aml", desktopPath, fileName];
 	NSString *stdoutString = nil;
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:tempFilePath])
