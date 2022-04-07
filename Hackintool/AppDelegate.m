@@ -2941,8 +2941,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			updateGitSubmodules = [updateGitSubmodules stringByReplacingOccurrencesOfString:@"$(OUTPUT_PATH)" withString:outputPath];
             updateGitSubmodules = [updateGitSubmodules stringByReplacingOccurrencesOfString:@"$(SUBMODULE_UPDATE)" withString:GitSubmoduleUpdate];
             launchCommand(@"/bin/bash", @[@"-c", updateGitSubmodules], self,  @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
-			launchCommand(@"/usr/bin/xcodebuild", @[@"-project", [outputPath stringByAppendingPathComponent:projectFileName], @"-configuration", @"Debug", @"clean", @"build", @"ARCHS=x86_64", [NSString stringWithFormat:@"CONFIGURATION_BUILD_DIR=%@", debugPath]], self, @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
-			launchCommand(@"/usr/bin/xcodebuild", @[@"-project", [outputPath stringByAppendingPathComponent:projectFileName], @"-configuration", @"Release", @"clean", @"build", @"ARCHS=x86_64", [NSString stringWithFormat:@"CONFIGURATION_BUILD_DIR=%@", releasePath]], self, @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
+			launchCommand(@"/usr/bin/xcodebuild", @[@"-project", [outputPath stringByAppendingPathComponent:projectFileName], @"-configuration", @"Debug", @"clean", @"build", @"ARCHS=x86_64", @"WARNING_CFLAGS=-w", [NSString stringWithFormat:@"CONFIGURATION_BUILD_DIR=%@", debugPath]], self, @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
+			launchCommand(@"/usr/bin/xcodebuild", @[@"-project", [outputPath stringByAppendingPathComponent:projectFileName], @"-configuration", @"Release", @"clean", @"build", @"ARCHS=x86_64", @"WARNING_CFLAGS=-w", [NSString stringWithFormat:@"CONFIGURATION_BUILD_DIR=%@", releasePath]], self, @selector(compileOutputNotification:), @selector(compileErrorNotification:), @selector(compileCompleteNotification:));
 			
 			double progressPercent = (double)++compileIndex / (double)compileCount;
 			
@@ -10894,8 +10894,8 @@ NSInteger usbControllerSort(id a, id b, void *context)
 				NSDictionary *deviceDictionary =  [bluetoothDictionary objectForKey:btKey];
 				NSString *deviceAddress = [deviceDictionary objectForKey:@"device_address"];
 				NSData *deviceAddressData = getNSDataFromString(deviceAddress, @":");
-				NSString *publicAddress =[NSString stringWithFormat:@"Public %@", deviceAddress];
-				NSString *randomAddress =[NSString stringWithFormat:@"Random %@", deviceAddress];
+				NSString *publicAddress = [NSString stringWithFormat:@"Public %@", deviceAddress];
+				NSString *randomAddress = [NSString stringWithFormat:@"Random %@", deviceAddress];
 				
 				// NSLog(@"%@: %@", btKey, deviceAddress);
 				
