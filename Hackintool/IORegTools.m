@@ -1988,39 +1988,43 @@ bool getScreenNumberForDisplay(SInt32 myVendorID, SInt32 myProductID, SInt32 myS
 	{
 		io_service_t servicePort = CGDisplayIOServicePort(directDisplayIDArray[i]);
 		
-		if (!servicePort)
-			continue;
-		
-		CFDictionaryRef displayInfo = IODisplayCreateInfoDictionary(servicePort, kIODisplayMatchingInfo);
-		
-		CFNumberRef vendorIDRef = nil;
-		CFNumberRef productIDRef = nil;
-		CFNumberRef serialNumberRef = nil;
-		SInt32 vendorID = 0, productID = 0, serialNumber = 0;
-		
-		Boolean success;
-		success = CFDictionaryGetValueIfPresent(displayInfo, CFSTR(kDisplayVendorID), (const void **)&vendorIDRef);
-		success &= CFDictionaryGetValueIfPresent(displayInfo, CFSTR(kDisplayProductID), (const void **)&productIDRef);
-		
-		if (success)
+		if (servicePort)
 		{
-			CFNumberGetValue(vendorIDRef, kCFNumberSInt32Type, &vendorID);
-			CFNumberGetValue(productIDRef, kCFNumberSInt32Type, &productID);
-		}
+			CFDictionaryRef displayInfo = IODisplayCreateInfoDictionary(servicePort, kIODisplayMatchingInfo);
 		
-		if (CFDictionaryGetValueIfPresent(displayInfo, CFSTR(kDisplaySerialNumber), (const void **)&serialNumberRef))
-		{
-			CFNumberGetValue(serialNumberRef, kCFNumberSInt32Type, &serialNumber);
-		}
+			if (displayInfo)
+			{
+				CFNumberRef vendorIDRef = nil;
+				CFNumberRef productIDRef = nil;
+				CFNumberRef serialNumberRef = nil;
+				SInt32 vendorID = 0, productID = 0, serialNumber = 0;
 		
-		if (myVendorID == vendorID && myProductID == productID && mySerialNumber == serialNumber)
-		{
-			*directDisplayID = directDisplayIDArray[i];
+				if (CFDictionaryGetValueIfPresent(displayInfo, CFSTR(kDisplayVendorID), (const void **)&vendorIDRef))
+				{
+					CFNumberGetValue(vendorIDRef, kCFNumberSInt32Type, &vendorID);
+				}
+				
+				if (CFDictionaryGetValueIfPresent(displayInfo, CFSTR(kDisplayProductID), (const void **)&productIDRef))
+				{
+					CFNumberGetValue(productIDRef, kCFNumberSInt32Type, &productID);
+				}
+		
+				if (CFDictionaryGetValueIfPresent(displayInfo, CFSTR(kDisplaySerialNumber), (const void **)&serialNumberRef))
+				{
+					CFNumberGetValue(serialNumberRef, kCFNumberSInt32Type, &serialNumber);
+				}
+		
+				if (myVendorID == vendorID && myProductID == productID && mySerialNumber == serialNumber)
+				{
+					*directDisplayID = directDisplayIDArray[i];
 			
-			retval = true;
+					retval = true;
+				}
+		
+				CFRelease(displayInfo);
+			}
 		}
 		
-		CFRelease(displayInfo);
 		IOObjectRelease(servicePort);
 	}
 	
