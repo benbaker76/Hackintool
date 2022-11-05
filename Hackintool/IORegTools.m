@@ -2023,9 +2023,9 @@ bool getScreenNumberForDisplay(SInt32 myVendorID, SInt32 myProductID, SInt32 myS
 		
 				CFRelease(displayInfo);
 			}
+			
+			IOObjectRelease(servicePort);
 		}
-		
-		IOObjectRelease(servicePort);
 	}
 	
 	return retval;
