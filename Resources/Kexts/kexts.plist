@@ -658,6 +658,16 @@
 	</dict>
 	<dict>
 		<key>Description</key>
+		<string>Lilu kernel extension for installing Rosetta Cryptex (OS.dmg) in macOS Ventura; mainly applicable for systems lacking the AVX2.0 CPU instruction.</string>
+		<key>Name</key>
+		<string>CryptexFixup</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/CryptexFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Description</key>
 		<string>A driver that loads the Intel BTLE driver firmware on supported devices</string>
 		<key>Name</key>
 		<string>IntelBluetoothFirmware</string>
