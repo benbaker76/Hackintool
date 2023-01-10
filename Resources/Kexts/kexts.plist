@@ -748,5 +748,15 @@
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
+	<dict>
+		<key>Description</key>
+		<string>Lilu Kernel extension for installing Rosetta Cryptex in macOS Ventura. Applicable for both OS installation and updates.</string>
+		<key>Name</key>
+		<string>CryptexFixup</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/CryptexFixup</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
 </array>
 </plist>
