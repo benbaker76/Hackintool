@@ -16,3 +16,4 @@ build/
 *.xccheckout
 xcuserdata/
 *.moved-aside
+Frameworks/
