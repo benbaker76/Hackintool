@@ -50,6 +50,8 @@ jobs:
         run: |
           output=$(xcodebuild -project Hackintool.xcodeproj -configuration Release -showBuildSettings | grep MARKETING_VERSION | tr -d 'MARKETING_VERSION = ')
           echo "::set-output name=result::$output"
+      - name: Make Executable
+        run: chmod +x build/Hackintool.app/Contents/MacOS/Hackintool
       - name: Compress Files
         uses: vimtor/action-zip@v1
         with:
