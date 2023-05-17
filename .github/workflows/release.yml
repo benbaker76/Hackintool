@@ -50,13 +50,12 @@ jobs:
         run: |
           output=$(xcodebuild -project Hackintool.xcodeproj -configuration Release -showBuildSettings | grep MARKETING_VERSION | tr -d 'MARKETING_VERSION = ')
           echo "::set-output name=result::$output"
-      - name: Make Executable
-        run: chmod +x build/Hackintool.app/Contents/MacOS/Hackintool
       - name: Compress Files
-        uses: vimtor/action-zip@v1
+        uses: thedoctor0/zip-release@0.7.1
         with:
-          files: build
-          dest: build/Hackintool.zip
+          type: zip
+          directory: build
+          filename: Hackintool.zip
       - name: Clean up
         run: rm -R build/Hackintool.app
       - name: Generate appcast.xml
