@@ -33,10 +33,6 @@ jobs:
           fi
           mkdir sparkle && cd sparkle
           tar -xf ../Sparkle.tar.xz
-      - name: Copy Sparkle.framework
-        run: |
-          mkdir Frameworks
-          cp -Rf sparkle/Sparkle.framework Frameworks
       - name: Build app
         run: |
           xcodebuild -project Hackintool.xcodeproj -target Hackintool -configuration Release build ARCHS=x86_64 -verbose CONFIGURATION_BUILD_DIR=build
