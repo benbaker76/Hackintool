@@ -2049,7 +2049,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSError *error = nil;
 	NSString *stdoutString = nil;
 	
-	if (!launchCommand(@"/usr/sbin/system_profiler", @[@"SPBluetoothDataType", @"-xml"], &stdoutString))
+	if (!launchCommand(@"/usr/sbin/system_profiler", @[@"SPBluetoothDataType", @"-xml", @"-timeout", @"1"], &stdoutString))
 		return NO;
 
 	NSArray *bluetoothArray = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];

@@ -28,6 +28,7 @@
 		<key>LayoutIDs</key>
 		<array>
 			<integer>15</integer>
+			<integer>21</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>13</integer>
@@ -53,6 +54,7 @@
 			<integer>15</integer>
 			<integer>16</integer>
 			<integer>17</integer>
+			<integer>20</integer>
 			<integer>21</integer>
 			<integer>27</integer>
 			<integer>28</integer>
@@ -64,6 +66,7 @@
 			<integer>99</integer>
 			<integer>100</integer>
 			<integer>25</integer>
+			<integer>18</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -279,6 +282,7 @@
 			<integer>28</integer>
 			<integer>29</integer>
 			<integer>30</integer>
+			<integer>31</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -362,6 +366,7 @@
 		<array>
 			<integer>5</integer>
 			<integer>11</integer>
+			<integer>12</integer>
 			<integer>13</integer>
 			<integer>14</integer>
 			<integer>16</integer>
@@ -385,6 +390,8 @@
 			<integer>88</integer>
 			<integer>97</integer>
 			<integer>99</integer>
+			<integer>68</integer>
+			<integer>95</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -449,6 +456,7 @@
 			<integer>93</integer>
 			<integer>99</integer>
 			<integer>100</integer>
+			<integer>111</integer>
 			<integer>127</integer>
 			<integer>188</integer>
 			<integer>47</integer>
@@ -614,11 +622,12 @@
 		<key>LayoutIDs</key>
 		<array>
 			<integer>3</integer>
+			<integer>11</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
 		<key>MinKernel</key>
-		<integer>13</integer>
+		<integer>9</integer>
 		<key>Revisions</key>
 		<array/>
 	</dict>
@@ -631,6 +640,7 @@
 		<array>
 			<integer>1</integer>
 			<integer>3</integer>
+			<integer>11</integer>
 			<integer>13</integer>
 			<integer>14</integer>
 			<integer>15</integer>
@@ -927,6 +937,7 @@
 			<integer>50</integer>
 			<integer>11</integer>
 			<integer>51</integer>
+			<integer>52</integer>
 			<integer>69</integer>
 		</array>
 		<key>MaxKernel</key>
@@ -1480,7 +1491,9 @@
 		<string>ALC897</string>
 		<key>LayoutIDs</key>
 		<array>
+			<integer>13</integer>
 			<integer>23</integer>
+			<integer>21</integer>
 			<integer>66</integer>
 			<integer>69</integer>
 			<integer>12</integer>
@@ -1535,6 +1548,7 @@
 			<integer>20</integer>
 			<integer>21</integer>
 			<integer>22</integer>
+			<integer>23</integer>
 			<integer>27</integer>
 			<integer>28</integer>
 			<integer>29</integer>
@@ -1546,6 +1560,8 @@
 			<integer>100</integer>
 			<string>96</string>
 			<integer>255</integer>
+			<integer>69</integer>
+			<integer>37</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -1690,6 +1706,7 @@
 			<integer>29</integer>
 			<integer>30</integer>
 			<integer>32</integer>
+			<integer>33</integer>
 			<integer>47</integer>
 			<integer>66</integer>
 			<integer>72</integer>
@@ -1795,6 +1812,7 @@
 			<integer>23</integer>
 			<integer>36</integer>
 			<integer>54</integer>
+			<integer>55</integer>
 			<integer>99</integer>
 		</array>
 		<key>MaxKernel</key>
@@ -1883,6 +1901,7 @@
 			<integer>11</integer>
 			<integer>8</integer>
 			<integer>13</integer>
+			<integer>15</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -2027,6 +2046,7 @@
 		<key>LayoutIDs</key>
 		<array>
 			<integer>21</integer>
+			<integer>13</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
