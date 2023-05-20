@@ -668,6 +668,16 @@
 	</dict>
 	<dict>
 		<key>Description</key>
+		<string>macOS kernel extension for devices complying with the Secure Digital Host Controller (SDHC) specification.</string>
+		<key>Name</key>
+		<string>EmeraldSDHC</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/EmeraldSDHC</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Description</key>
 		<string>A driver that loads the Intel BTLE driver firmware on supported devices</string>
 		<key>Name</key>
 		<string>IntelBluetoothFirmware</string>
