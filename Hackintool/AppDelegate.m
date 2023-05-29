@@ -2084,11 +2084,12 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	if (controllerDictionary == nil)
 		return NO;
 	
-	//NSString *controllerAddress = [controllerDictionary objectForKey:@"controller_address"];
+	NSString *controllerAddress = [controllerDictionary objectForKey:@"controller_address"];
 	NSString *controllerChipset = [controllerDictionary objectForKey:@"controller_chipset"];
 	//NSString *controllerFirmwareVersion = [controllerDictionary objectForKey:@"controller_firmwareVersion"];
 	NSString *controllerProductID = [controllerDictionary objectForKey:@"controller_productID"];
 	NSString *controllerVendorID = [controllerDictionary objectForKey:@"controller_vendorID"];
+	NSString *serial = [controllerAddress stringByReplacingOccurrencesOfString:@":" withString:@""];
 	
 	//NSLog(@"Address: %@ Chipset: %@ FirmwareVersion: %@ ProductID: %@ VendorID: %@", controllerAddress, controllerChipset, controllerFirmwareVersion, controllerProductID, controllerVendorID);
 	
@@ -2099,10 +2100,10 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		controllerVendorID = [controllerVendorID substringToIndex:vendorRange.location];
 	}
 	
-	if ([controllerChipset isEqualToString:@"THIRD_PARTY_DONGLE"])
+	/* if ([controllerChipset isEqualToString:@"THIRD_PARTY_DONGLE"])
 	{
 		return NO;
-	}
+	} */
 	
 	NSNumber *productID, *vendorID;
 	unsigned int intValue;
@@ -2120,9 +2121,89 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	[bluetoothDeviceDictionary setObject:@"com.apple.iokit.IOBluetoothHostControllerTransport" forKey:@"BundleID"];
 	[bluetoothDeviceDictionary setObject:@(YES) forKey:@"FWLoaded"];
 	
+	[self getNativeBluetoothDeviceInfoWithSerial:serial bluetoothDeviceDictionary:bluetoothDeviceDictionary];
+	
 	return YES;
 }
+
+- (BOOL)getNativeBluetoothDeviceInfoWithSerial:(NSString *)serial bluetoothDeviceDictionary:(NSMutableDictionary *)bluetoothDeviceDictionary
+{
+	NSError *error = nil;
+	NSString *stdoutString = nil;
 	
+	if (!launchCommand(@"/usr/sbin/system_profiler", @[@"SPUSBDataType", @"-xml", @"-timeout", @"1"], &stdoutString))
+		return NO;
+
+	NSArray *controllerArray = [NSPropertyListSerialization propertyListWithData:[stdoutString dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions format:nil error:&error];
+		
+	if (controllerArray == nil)
+	{
+		NSLog(@"%@", [error localizedDescription]);
+		
+		return NO;
+	}
+	
+	if ([controllerArray count] == 0)
+		return NO;
+	
+	NSDictionary *controllerDictionary = [controllerArray objectAtIndex:0];
+	
+	if (controllerDictionary == nil)
+		return NO;
+	
+	NSArray *hostControllerArray = [controllerDictionary objectForKey:@"_items"];
+	
+	if (hostControllerArray == nil || [hostControllerArray count] == 0)
+		return NO;
+	
+	NSDictionary *hostControllerDictionary = [hostControllerArray objectAtIndex:0];
+	
+	if (hostControllerDictionary == nil)
+		return NO;
+	
+	NSArray *usbDeviceArray = [hostControllerDictionary objectForKey:@"_items"];
+	
+	if (usbDeviceArray == nil || [usbDeviceArray count] == 0)
+		return NO;
+
+	for (NSDictionary *deviceDictionary in usbDeviceArray)
+	{
+		NSString *serialNum = [deviceDictionary objectForKey:@"serial_num"];
+		
+		if (![serial isEqualTo:serialNum])
+			continue;
+		
+		NSString *name = [deviceDictionary objectForKey:@"_name"];
+		NSString *manufacturer = [deviceDictionary objectForKey:@"manufacturer"];
+		NSString *devicePID = [deviceDictionary objectForKey:@"product_id"];
+		NSString *deviceVID = [deviceDictionary objectForKey:@"vendor_id"];
+		NSRange spaceRange = [deviceVID rangeOfString:@" "];
+		
+		if (spaceRange.location != NSNotFound)
+			deviceVID = [deviceVID substringToIndex:spaceRange.location];
+		
+		NSNumber *productID, *vendorID;
+		unsigned int intValue;
+		NSScanner *scanner = [NSScanner scannerWithString:devicePID];
+		[scanner scanHexInt:&intValue];
+		productID = [NSNumber numberWithInt:intValue];
+		scanner = [NSScanner scannerWithString:deviceVID];
+		[scanner scanHexInt:&intValue];
+		vendorID = [NSNumber numberWithInt:intValue];
+		
+		[bluetoothDeviceDictionary setObject:name forKey:@"DeviceName"];
+		[bluetoothDeviceDictionary setObject:manufacturer forKey:@"VendorName"];
+		[bluetoothDeviceDictionary setObject:productID forKey:@"DeviceID"];
+		[bluetoothDeviceDictionary setObject:vendorID forKey:@"VendorID"];
+		
+		//NSLog(@"%@", deviceDictionary);
+
+		break;
+	}
+
+	return YES;
+}
+
 - (void)getBluetoothDeviceInfo:(NSDictionary *)deviceDictionary bluetoothDeviceDictionary:(NSMutableDictionary *)bluetoothDeviceDictionary
 {
 	NSString *productName = [deviceDictionary objectForKey:@kUSBProductString];
