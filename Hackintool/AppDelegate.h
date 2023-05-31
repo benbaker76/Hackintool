@@ -343,8 +343,6 @@ typedef struct
 @property (assign) IBOutlet NSComboBox *lspconConnectorComboBox;
 @property (assign) IBOutlet NSButton *lspconPreferredModeButton;
 @property (assign) IBOutlet NSComboBox *lspconPreferredModeComboBox;
-// Other
-@property (assign) IBOutlet NSButton *headsoftLogoButton;
 // Menus
 @property (assign) IBOutlet NSMenuItem *importIORegNativeMenuItem;
 @property (assign) IBOutlet NSMenuItem *importIORegPatchedMenuItem;
@@ -452,7 +450,8 @@ typedef struct
 - (IBAction)generateSerialComboBoxDidChange:(id)sender;
 - (IBAction)generateSerialButtonDidChange:(id)sender;
 - (IBAction)generatePatchButtonClicked:(id)sender;
-- (IBAction)headsoftLogoButtonClicked:(id)sender;
+- (IBAction)starButtonClicked:(id)sender;
+- (IBAction)webButtonClicked:(id)sender;
 - (IBAction)vramInfoChanged:(id)sender;
 - (IBAction)openDocument:(id)sender;
 - (IBAction)fileImportMenuItemClicked:(id)sender;
@@ -501,6 +500,7 @@ typedef struct
 - (IBAction)resolutionsChanged:(id)sender;
 - (IBAction)cancelButtonClicked:(id)sender;
 - (IBAction)okButtonClicked:(id)sender;
+- (IBAction)sponsorButtonClicked:(id)sender;
 - (IBAction)donateButtonClicked:(id)sender;
 - (IBAction)installedButtonClicked:(id)sender;
 - (IBAction)progressCancelButtonClicked:(id)sender;

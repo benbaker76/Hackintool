@@ -8582,9 +8582,14 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	}
 }
 
-- (IBAction)headsoftLogoButtonClicked:(id)sender
+- (IBAction)starButtonClicked:(id)sender
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://headsoft.com.au"]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/benbaker76/Hackintool"]];
+}
+
+- (IBAction)webButtonClicked:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.baker76.com/hackintool"]];
 }
 
 - (IBAction)vramInfoChanged:(id)sender
@@ -8867,6 +8872,11 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	NSView *superView = [sender superview];
 	
 	[_window endSheet:superView.window returnCode:NSModalResponseOK];
+}
+
+- (IBAction)sponsorButtonClicked:(id)sender
+{
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/sponsors/benbaker76"]];
 }
 
 - (IBAction)donateButtonClicked:(id)sender
