@@ -8893,7 +8893,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 
 - (IBAction)donatePayPalButtonClicked:(id)sender
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=benbaker@headsoft.com.au&item_name=Hackintool&currency_code=USD"]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ben@baker76.com&item_name=Hackintool&currency_code=USD"]];
 }
 
 - (IBAction)donateEthereumButtonClicked:(id)sender
