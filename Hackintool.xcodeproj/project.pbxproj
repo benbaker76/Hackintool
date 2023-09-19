@@ -86,6 +86,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DDF08EB52ABA2B3B004F1E1F /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = "pt-BR"; path = "pt-BR.lproj/Credits.rtf"; sourceTree = "<group>"; };
+		DDF08EB62ABA2B3B004F1E1F /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		DDF08EB72ABA2B3B004F1E1F /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/MainMenu.strings"; sourceTree = "<group>"; };
 		E200EE7821FBD4600082D799 /* NVRAMXmlParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVRAMXmlParser.h; sourceTree = "<group>"; };
 		E200EE7921FBD4600082D799 /* NVRAMXmlParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NVRAMXmlParser.m; sourceTree = "<group>"; };
 		E228024521046E9C00C0FDC6 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -485,6 +488,7 @@
 				fr,
 				"zh-Hans",
 				tr,
+				"pt-BR",
 			);
 			mainGroup = E24936EF169D1B2B00384895;
 			productRefGroup = E24936FB169D1B2B00384895 /* Products */;
@@ -586,6 +590,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				E2E9476F2204A9F5005348C0 /* Base */,
+				DDF08EB72ABA2B3B004F1E1F /* pt-BR */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -595,6 +600,7 @@
 			children = (
 				E2521F4422081D7200DB2BD2 /* Base */,
 				E2EA734A22845CDB0095E56C /* zh-Hans */,
+				DDF08EB52ABA2B3B004F1E1F /* pt-BR */,
 			);
 			name = Credits.rtf;
 			sourceTree = "<group>";
@@ -610,6 +616,7 @@
 				E2521F49220894DA00DB2BD2 /* fr */,
 				E2DDEC31222CA59F00661F3C /* zh-Hans */,
 				E2A91B71235CA34A007B7851 /* tr */,
+				DDF08EB62ABA2B3B004F1E1F /* pt-BR */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
