@@ -86,9 +86,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DDF08EB52ABA2B3B004F1E1F /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = "pt-BR"; path = "pt-BR.lproj/Credits.rtf"; sourceTree = "<group>"; };
-		DDF08EB62ABA2B3B004F1E1F /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		DDF08EB72ABA2B3B004F1E1F /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/MainMenu.strings"; sourceTree = "<group>"; };
+		DD4F6A3B2ABA379300E9FA56 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E200EE7821FBD4600082D799 /* NVRAMXmlParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVRAMXmlParser.h; sourceTree = "<group>"; };
 		E200EE7921FBD4600082D799 /* NVRAMXmlParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NVRAMXmlParser.m; sourceTree = "<group>"; };
 		E228024521046E9C00C0FDC6 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -459,8 +457,8 @@
 				ORGANIZATIONNAME = Headsoft;
 				TargetAttributes = {
 					E24936F9169D1B2B00384895 = {
-						DevelopmentTeam = 5LGHPJM9ZR;
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = T395SRU2FB;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 0;
@@ -590,7 +588,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				E2E9476F2204A9F5005348C0 /* Base */,
-				DDF08EB72ABA2B3B004F1E1F /* pt-BR */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -600,7 +597,6 @@
 			children = (
 				E2521F4422081D7200DB2BD2 /* Base */,
 				E2EA734A22845CDB0095E56C /* zh-Hans */,
-				DDF08EB52ABA2B3B004F1E1F /* pt-BR */,
 			);
 			name = Credits.rtf;
 			sourceTree = "<group>";
@@ -616,7 +612,7 @@
 				E2521F49220894DA00DB2BD2 /* fr */,
 				E2DDEC31222CA59F00661F3C /* zh-Hans */,
 				E2A91B71235CA34A007B7851 /* tr */,
-				DDF08EB62ABA2B3B004F1E1F /* pt-BR */,
+				DD4F6A3B2ABA379300E9FA56 /* pt-BR */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -725,11 +721,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0398;
-				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
+				DEVELOPMENT_TEAM = T395SRU2FB;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -761,11 +758,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0398;
-				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
+				DEVELOPMENT_TEAM = T395SRU2FB;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				FRAMEWORK_SEARCH_PATHS = (
