@@ -717,6 +717,9 @@ NSString *getOSName()
 	case 13:
 		codeName = @"macOS Ventura";
 		break;
+	case 14:
+		codeName = @"macOS Sonoma";
+		break;
 	}
 	
 	return [NSString stringWithFormat:@"%@ %@", codeName, osVersionString];

@@ -648,12 +648,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	for (NSDictionary *systemDictionary in _systemsArray)
 	{
-		NSString *model = [systemDictionary objectForKey:@"Model"];
-		NSString *modelIdentifier = [systemDictionary objectForKey:@"Model Identifier"];
+		NSString *model = [systemDictionary objectForKey:@"Name"];
+		NSString *modelIdentifier = [systemDictionary objectForKey:@"Model ID"];
 		NSString *modelEntry = [NSString stringWithFormat:@"%@ (%@)", model, modelIdentifier];
-		
-		if ([modelIdentifier isEqualToString:@"N/A"])
-			continue;
 		
 		[modelArray addObject:modelEntry];
 	}
@@ -668,10 +665,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	for (NSDictionary *systemDictionary in _systemsArray)
 	{
-		NSString *modelIdentifier = [systemDictionary objectForKey:@"Model Identifier"];
-		
-		if ([modelIdentifier isEqualToString:@"N/A"])
-			continue;
+		NSString *modelIdentifier = [systemDictionary objectForKey:@"Model ID"];
 		
 		if (selectedIndex == 0 && [_modelIdentifier isEqualToString:modelIdentifier])
 			selectedIndex = systemCount;
@@ -680,6 +674,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	}
 	
 	[_modelInfoComboBox selectItemAtIndex:selectedIndex];
+	
+	[self updateModelInfo];
 }
 
 - (uint32_t)getModelIndex:(NSString *)modelName
@@ -687,8 +683,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	for (int i = 0; i < _systemsArray.count; i++)
 	{
 		NSDictionary *systemDictionary = _systemsArray[i];
-		NSString *model = [systemDictionary objectForKey:@"Model"];
-		NSString *modelIdentifier = [systemDictionary objectForKey:@"Model Identifier"];
+		NSString *model = [systemDictionary objectForKey:@"Name"];
+		NSString *modelIdentifier = [systemDictionary objectForKey:@"Model ID"];
 		NSString *modelEntry = [NSString stringWithFormat:@"%@ (%@)", model, modelIdentifier];
 		
 		if (![modelName isEqualToString:modelEntry])
@@ -754,8 +750,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 
 	for (NSDictionary *systemDictionary in _systemsArray)
 	{
-		NSString *model = [systemDictionary objectForKey:@"Model"];
-		NSString *modelIdentifier = [systemDictionary objectForKey:@"Model Identifier"];
+		NSString *model = [systemDictionary objectForKey:@"Name"];
+		NSString *modelIdentifier = [systemDictionary objectForKey:@"Model ID"];
 		NSString *modelEntry = [NSString stringWithFormat:@"%@ (%@)", model, modelIdentifier];
 		
 		if ([_modelInfoComboBox.stringValue isEqualToString:modelEntry])

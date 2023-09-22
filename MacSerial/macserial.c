@@ -24,72 +24,72 @@
 #include "modelinfo.h"
 
 #ifdef __APPLE__
-CFTypeRef get_ioreg_entry(const char *path, CFStringRef name, CFTypeID type) {
+static CFTypeRef get_ioreg_entry(const char *path, CFStringRef name, CFTypeID type) {
   CFTypeRef value = NULL;
   io_registry_entry_t entry = IORegistryEntryFromPath(kIOMasterPortDefault, path);
   if (entry) {
-    value = IORegistryEntryCreateCFProperty(entry, name, kCFAllocatorDefault, 0);
-    if (value) {
-      if (CFGetTypeID(value) != type) {
-        CFRelease(value);
-        value = NULL;
-        printf("%s in %s has wrong type!\n", CFStringGetCStringPtr(name, kCFStringEncodingMacRoman), path);
-      }
-    } else {
-      printf("Failed to find to %s in %s!\n", CFStringGetCStringPtr(name, kCFStringEncodingMacRoman), path);
-    }
-    IOObjectRelease(entry);
+	value = IORegistryEntryCreateCFProperty(entry, name, kCFAllocatorDefault, 0);
+	if (value) {
+	  if (CFGetTypeID(value) != type) {
+		CFRelease(value);
+		value = NULL;
+		printf("%s in %s has wrong type!\n", CFStringGetCStringPtr(name, kCFStringEncodingMacRoman), path);
+	  }
+	} else {
+	  printf("Failed to find to %s in %s!\n", CFStringGetCStringPtr(name, kCFStringEncodingMacRoman), path);
+	}
+	IOObjectRelease(entry);
   } else {
-    printf("Failed to connect to %s!\n", path);
+	printf("Failed to connect to %s!\n", path);
   }
   return value;
 }
 #endif
 
 // Apple uses various conversion tables (e.g. AppleBase34) for value encoding.
-int32_t alpha_to_value(char c, int32_t *conv, const char *blacklist) {
+static int32_t alpha_to_value(char c, int32_t *conv, const char *blacklist) {
   if (c < 'A' || c > 'Z')
-    return -1;
+	return -1;
 
   while (blacklist && *blacklist != '\0')
-    if (*blacklist++ == c)
-      return -1;
+	if (*blacklist++ == c)
+	  return -1;
 
   return conv[c - 'A'];
 }
 
 // This is modified base34 used by Apple with I and O excluded.
-int32_t base34_to_value(char c, int32_t mul) {
+static int32_t base34_to_value(char c, int32_t mul) {
   if (c >= '0' && c <= '9')
-    return (c - '0') * mul;
+	return (c - '0') * mul;
   if (c >= 'A' && c <= 'Z') {
-      int32_t tmp = alpha_to_value(c, AppleTblBase34, AppleBase34Blacklist);
-      if (tmp >= 0)
-        return tmp * mul;
+	  int32_t tmp = alpha_to_value(c, AppleTblBase34, AppleBase34Blacklist);
+	  if (tmp >= 0)
+		return tmp * mul;
   }
   return -1;
 }
 
-int32_t line_to_rmin(int32_t line) {
+static int32_t line_to_rmin(int32_t line) {
   // info->line[0] is raw decoded copy, but it is not the real first produced unit.
   // To get the real copy we need to find the minimal allowed raw decoded copy,
   // which allows to obtain info->decodedLine.
   int rmin = 0;
   if (line > SERIAL_LINE_REPR_MAX)
-    rmin = (line - SERIAL_LINE_REPR_MAX + 67) / 68;
+	rmin = (line - SERIAL_LINE_REPR_MAX + 67) / 68;
   return rmin;
 }
 
 // This one is modded to implement CCC algo for better generation.
 // Changed base36 to base34, since that's what Apple uses.
 // The algo is trash but is left for historical reasons.
-bool get_ascii7(uint32_t value, char *dst, size_t sz) {
+static bool get_ascii7(uint32_t value, char *dst, size_t sz) {
   // This is CCC conversion.
   if (value < 1000000)
-    return false;
+	return false;
 
   while (value > 10000000)
-    value /= 10;
+	value /= 10;
 
   // log(2**64) / log(34) = 12.57 => max 13 char + '\0'
   char buffer[14];
@@ -97,7 +97,7 @@ bool get_ascii7(uint32_t value, char *dst, size_t sz) {
 
   buffer[--offset] = '\0';
   do {
-    buffer[--offset] = AppleBase34Reverse[value % 34];
+	buffer[--offset] = AppleBase34Reverse[value % 34];
   } while (value /= 34);
 
   strncpy(dst, &buffer[offset], sz-1);
@@ -106,84 +106,84 @@ bool get_ascii7(uint32_t value, char *dst, size_t sz) {
   return true;
 }
 
-bool verify_mlb_checksum(const char *mlb, size_t len) {
+static bool verify_mlb_checksum(const char *mlb, size_t len) {
   const char alphabet[] = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
   size_t checksum = 0;
   for (size_t i = 0; i < len; ++i) {
-    for (size_t j = 0; j <= sizeof (alphabet); ++j) {
-      if (j == sizeof (alphabet))
-        return false;
-      if (mlb[i] == alphabet[j]) {
-        checksum += (((i & 1) == (len & 1)) * 2 + 1) * j;
-        break;
-      }
-    }
+	for (size_t j = 0; j <= sizeof (alphabet); ++j) {
+	  if (j == sizeof (alphabet))
+		return false;
+	  if (mlb[i] == alphabet[j]) {
+		checksum += (((i & 1) == (len & 1)) * 2 + 1) * j;
+		break;
+	  }
+	}
   }
   return checksum % (sizeof(alphabet) - 1) == 0;
 }
 
-int32_t get_current_model(void) {
+static int32_t get_current_model(void) {
 #ifdef __APPLE__
   CFDataRef model = get_ioreg_entry("IODeviceTree:/", CFSTR("model"), CFDataGetTypeID());
   if (model) {
-    const char *cptr = (const char *)CFDataGetBytePtr(model);
-    size_t len = (size_t)CFDataGetLength(model);
-    int32_t i;
-    for (i = 0; i < APPLE_MODEL_MAX; i++) {
-      if (!strncmp(ApplePlatformData[i].productName, cptr, len))
-        break;
-    }
-    CFRelease(model);
-    if (i < APPLE_MODEL_MAX)
-      return i;
+	const char *cptr = (const char *)CFDataGetBytePtr(model);
+	size_t len = (size_t)CFDataGetLength(model);
+	int32_t i;
+	for (i = 0; i < APPLE_MODEL_MAX; i++) {
+	  if (!strncmp(ApplePlatformData[i].productName, cptr, len))
+		break;
+	}
+	CFRelease(model);
+	if (i < APPLE_MODEL_MAX)
+	  return i;
   }
 #endif
   return -1;
 }
 
-uint32_t get_production_year(AppleModel model, bool print) {
+static uint32_t get_production_year(AppleModel model, bool print) {
   uint32_t *years = &AppleModelYear[model][0];
   uint32_t num = 0;
 
   for (num = 0; num < APPLE_MODEL_YEAR_MAX && years[num]; num++) {
-    if (print) {
-      if (num+1 != APPLE_MODEL_YEAR_MAX && years[num+1])
-        printf("%d, ", years[num]);
-      else
-        printf("%d\n", years[num]);
-    }
+	if (print) {
+	  if (num+1 != APPLE_MODEL_YEAR_MAX && years[num+1])
+		printf("%d, ", years[num]);
+	  else
+		printf("%d\n", years[num]);
+	}
   }
 
   if (ApplePreferredModelYear[model] > 0)
-    return ApplePreferredModelYear[model];
+	return ApplePreferredModelYear[model];
 
   return years[pseudo_random() % num];
 }
 
-const char *get_model_code(AppleModel model, bool print) {
+static const char *get_model_code(AppleModel model, bool print) {
   const char **codes = &AppleModelCode[model][0];
 
   if (print) {
-    for (uint32_t i = 0; i < APPLE_MODEL_CODE_MAX && codes[i]; i++)
-      if (i+1 != APPLE_MODEL_CODE_MAX && codes[i+1])
-        printf("%s, ", codes[i]);
-      else
-        printf("%s\n", codes[i]);
+	for (uint32_t i = 0; i < APPLE_MODEL_CODE_MAX && codes[i]; i++)
+	  if (i+1 != APPLE_MODEL_CODE_MAX && codes[i+1])
+		printf("%s, ", codes[i]);
+	  else
+		printf("%s\n", codes[i]);
   }
 
   // Always choose the first model for stability by default.
   return codes[0];
 }
 
-const char *get_board_code(AppleModel model, bool print) {
+static const char *get_board_code(AppleModel model, bool print) {
   const char **codes = &AppleBoardCode[model][0];
 
   if (print) {
-    for (uint32_t i = 0; i < APPLE_BOARD_CODE_MAX && codes[i]; i++)
-      if (i+1 != APPLE_BOARD_CODE_MAX && codes[i+1])
-        printf("%s, ", codes[i]);
-      else
-        printf("%s\n", codes[i]);
+	for (uint32_t i = 0; i < APPLE_BOARD_CODE_MAX && codes[i]; i++)
+	  if (i+1 != APPLE_BOARD_CODE_MAX && codes[i+1])
+		printf("%s, ", codes[i]);
+	  else
+		printf("%s\n", codes[i]);
   }
 
   // Always choose the first model for stability by default.
@@ -192,15 +192,15 @@ const char *get_board_code(AppleModel model, bool print) {
 
 bool get_serial_info(const char *serial, SERIALINFO *info, bool print) {
   if (!info)
-    return false;
+	return false;
 
   memset(info, 0, sizeof(SERIALINFO));
 
   // Verify length.
   size_t serial_len = strlen(serial);
   if (serial_len != SERIAL_OLD_LEN && serial_len != SERIAL_NEW_LEN) {
-    printf("ERROR: Invalid serial length, must be %d or %d\n", SERIAL_NEW_LEN, SERIAL_OLD_LEN);
-    return false;
+	printf("ERROR: Invalid serial length, must be %d or %d\n", SERIAL_NEW_LEN, SERIAL_OLD_LEN);
+	return false;
   }
 
   // Assume every serial valid by default.
@@ -208,11 +208,11 @@ bool get_serial_info(const char *serial, SERIALINFO *info, bool print) {
 
   // Verify alphabet (base34 with I and O exclued).
   for (size_t i = 0; i < serial_len; i++) {
-    if (!((serial[i] >= 'A' && serial[i] <= 'Z' && serial[i] != 'O' && serial[i] != 'I') ||
-          (serial[i] >= '0' && serial[i] <= '9'))) {
-      printf("WARN: Invalid symbol '%c' in serial!\n", serial[i]);
-      info->valid = false;
-    }
+	if (!((serial[i] >= 'A' && serial[i] <= 'Z' && serial[i] != 'O' && serial[i] != 'I') ||
+		  (serial[i] >= '0' && serial[i] <= '9'))) {
+	  printf("WARN: Invalid symbol '%c' in serial!\n", serial[i]);
+	  info->valid = false;
+	}
   }
 
   size_t model_len = 0;
@@ -220,46 +220,46 @@ bool get_serial_info(const char *serial, SERIALINFO *info, bool print) {
   // Start with looking up the model.
   info->modelIndex = -1;
   for (uint32_t i = 0; i < ARRAY_SIZE(AppleModelCode); i++) {
-    for (uint32_t j = 0; j < APPLE_MODEL_CODE_MAX; j++) {
-      const char *code = AppleModelCode[i][j];
-      if (!code)
-        break;
-      model_len = strlen(code);
-      if (model_len == 0)
-        break;
-      assert(model_len == MODEL_CODE_OLD_LEN || model_len == MODEL_CODE_NEW_LEN);
-      if (((serial_len == SERIAL_OLD_LEN && model_len == MODEL_CODE_OLD_LEN)
-        || (serial_len == SERIAL_NEW_LEN && model_len == MODEL_CODE_NEW_LEN))
-        && !strncmp(serial + serial_len - model_len, code, model_len)) {
-        strncpy(info->model, code, sizeof(info->model));
-        info->model[sizeof(info->model)-1] = '\0';
-        info->modelIndex = (int32_t)i;
-        break;
-      }
-    }
+	for (uint32_t j = 0; j < APPLE_MODEL_CODE_MAX; j++) {
+	  const char *code = AppleModelCode[i][j];
+	  if (!code)
+		break;
+	  model_len = strlen(code);
+	  if (model_len == 0)
+		break;
+	  assert(model_len == MODEL_CODE_OLD_LEN || model_len == MODEL_CODE_NEW_LEN);
+	  if (((serial_len == SERIAL_OLD_LEN && model_len == MODEL_CODE_OLD_LEN)
+		|| (serial_len == SERIAL_NEW_LEN && model_len == MODEL_CODE_NEW_LEN))
+		&& !strncmp(serial + serial_len - model_len, code, model_len)) {
+		strncpy(info->model, code, sizeof(info->model));
+		info->model[sizeof(info->model)-1] = '\0';
+		info->modelIndex = (int32_t)i;
+		break;
+	  }
+	}
   }
 
   // Also lookup apple model.
   for (uint32_t i = 0; i < ARRAY_SIZE(AppleModelDesc); i++) {
-    const char *code = AppleModelDesc[i].code;
-    model_len = strlen(code);
-    assert(model_len == MODEL_CODE_OLD_LEN || model_len == MODEL_CODE_NEW_LEN);
-    if (((serial_len == SERIAL_OLD_LEN && model_len == MODEL_CODE_OLD_LEN)
-      || (serial_len == SERIAL_NEW_LEN && model_len == MODEL_CODE_NEW_LEN))
-      && !strncmp(serial + serial_len - model_len, code, model_len)) {
-      info->appleModel = AppleModelDesc[i].name;
-      break;
-    }
+	const char *code = AppleModelDesc[i].code;
+	model_len = strlen(code);
+	assert(model_len == MODEL_CODE_OLD_LEN || model_len == MODEL_CODE_NEW_LEN);
+	if (((serial_len == SERIAL_OLD_LEN && model_len == MODEL_CODE_OLD_LEN)
+	  || (serial_len == SERIAL_NEW_LEN && model_len == MODEL_CODE_NEW_LEN))
+	  && !strncmp(serial + serial_len - model_len, code, model_len)) {
+	  info->appleModel = AppleModelDesc[i].name;
+	  break;
+	}
   }
 
   // Fallback to possibly valid values if model is unknown.
   if (info->modelIndex == -1) {
-    if (serial_len == SERIAL_NEW_LEN)
-      model_len = MODEL_CODE_NEW_LEN;
-    else
-      model_len = MODEL_CODE_OLD_LEN;
-    strncpy(info->model, serial + serial_len - model_len, model_len);
-    info->model[model_len] = '\0';
+	if (serial_len == SERIAL_NEW_LEN)
+	  model_len = MODEL_CODE_NEW_LEN;
+	else
+	  model_len = MODEL_CODE_OLD_LEN;
+	strncpy(info->model, serial + serial_len - model_len, model_len);
+	info->model[model_len] = '\0';
   }
 
   // Lookup production location
@@ -267,157 +267,157 @@ bool get_serial_info(const char *serial, SERIALINFO *info, bool print) {
   info->modernCountryIdx = -1;
 
   if (serial_len == SERIAL_NEW_LEN) {
-    strncpy(info->country, serial, COUNTRY_NEW_LEN);
-    info->country[COUNTRY_NEW_LEN] = '\0';
-    serial += COUNTRY_NEW_LEN;
-    for (size_t i = 0; i < ARRAY_SIZE(AppleLocations); i++) {
-      if (!strcmp(info->country, AppleLocations[i])) {
-        info->modernCountryIdx = (int32_t)i;
-        break;
-      }
-    }
+	strncpy(info->country, serial, COUNTRY_NEW_LEN);
+	info->country[COUNTRY_NEW_LEN] = '\0';
+	serial += COUNTRY_NEW_LEN;
+	for (size_t i = 0; i < ARRAY_SIZE(AppleLocations); i++) {
+	  if (!strcmp(info->country, AppleLocations[i])) {
+		info->modernCountryIdx = (int32_t)i;
+		break;
+	  }
+	}
   } else {
-    strncpy(info->country, serial, COUNTRY_OLD_LEN);
-    info->country[COUNTRY_OLD_LEN] = '\0';
-    serial += COUNTRY_OLD_LEN;
-    for (size_t i = 0; i < ARRAY_SIZE(AppleLegacyLocations); i++) {
-      if (!strcmp(info->country, AppleLegacyLocations[i])) {
-        info->legacyCountryIdx = (int32_t)i;
-        break;
-      }
-    }
+	strncpy(info->country, serial, COUNTRY_OLD_LEN);
+	info->country[COUNTRY_OLD_LEN] = '\0';
+	serial += COUNTRY_OLD_LEN;
+	for (size_t i = 0; i < ARRAY_SIZE(AppleLegacyLocations); i++) {
+	  if (!strcmp(info->country, AppleLegacyLocations[i])) {
+		info->legacyCountryIdx = (int32_t)i;
+		break;
+	  }
+	}
   }
 
   // Decode production year and week
   if (serial_len == SERIAL_NEW_LEN) {
-    // These are not exactly year and week, lower year bit is used for week encoding.
-    info->year[0] = *serial++;
-    info->week[0] = *serial++;
+	// These are not exactly year and week, lower year bit is used for week encoding.
+	info->year[0] = *serial++;
+	info->week[0] = *serial++;
 
-    // New encoding started in 2010.
-    info->decodedYear = alpha_to_value(info->year[0], AppleTblYear, AppleYearBlacklist);
-    // Since year can be encoded ambiguously, check the model code for 2010/2020 difference.
-    // Old check relies on first letter of model to be greater than or equal to H, which breaks compatibility with iMac20,2 (=0).
-    // Added logic checks provided model years `AppleModelYear` first year greater than or equal to 2020.
-    if ((info->modelIndex >= 0 && AppleModelYear[info->modelIndex][0] >= 2017 && info->decodedYear < 7)
-      || (info->decodedYear == 0 && info->model[0] >= 'H')) {
-      info->decodedYear += 2020;
-    } else if (info->decodedYear >= 0) {
-      info->decodedYear += 2010;
-    } else {
-      printf("WARN: Invalid year symbol '%c'!\n", info->year[0]);
-      info->valid = false;
-    }
+	// New encoding started in 2010.
+	info->decodedYear = alpha_to_value(info->year[0], AppleTblYear, AppleYearBlacklist);
+	// Since year can be encoded ambiguously, check the model code for 2010/2020 difference.
+	// Old check relies on first letter of model to be greater than or equal to H, which breaks compatibility with iMac20,2 (=0).
+	// Added logic checks provided model years `AppleModelYear` first year greater than or equal to 2020.
+	if ((info->modelIndex >= 0 && AppleModelYear[info->modelIndex][0] >= 2017 && info->decodedYear < 7)
+	  || (info->decodedYear == 0 && info->model[0] >= 'H')) {
+	  info->decodedYear += 2020;
+	} else if (info->decodedYear >= 0) {
+	  info->decodedYear += 2010;
+	} else {
+	  printf("WARN: Invalid year symbol '%c'!\n", info->year[0]);
+	  info->valid = false;
+	}
 
-    if (info->week[0] > '0' && info->week[0] <= '9')
-      info->decodedWeek = info->week[0] - '0';
-    else
-      info->decodedWeek = alpha_to_value(info->week[0], AppleTblWeek, AppleWeekBlacklist);
-    if (info->decodedWeek > 0) {
-      if (info->decodedYear > 0)
-        info->decodedWeek += alpha_to_value(info->year[0], AppleTblWeekAdd, NULL);
-    } else {
-      printf("WARN: Invalid week symbol '%c'!\n", info->week[0]);
-      info->valid = false;
-    }
+	if (info->week[0] > '0' && info->week[0] <= '9')
+	  info->decodedWeek = info->week[0] - '0';
+	else
+	  info->decodedWeek = alpha_to_value(info->week[0], AppleTblWeek, AppleWeekBlacklist);
+	if (info->decodedWeek > 0) {
+	  if (info->decodedYear > 0)
+		info->decodedWeek += alpha_to_value(info->year[0], AppleTblWeekAdd, NULL);
+	} else {
+	  printf("WARN: Invalid week symbol '%c'!\n", info->week[0]);
+	  info->valid = false;
+	}
   } else {
-    info->year[0] = *serial++;
-    info->week[0] = *serial++;
-    info->week[1] = *serial++;
+	info->year[0] = *serial++;
+	info->week[0] = *serial++;
+	info->week[1] = *serial++;
 
-    // This is proven by MacPro5,1 valid serials from 2011 and 2012.
-    if (info->year[0] >= '0' && info->year[0] <= '2') {
-      info->decodedYear = 2010 + info->year[0] - '0';
-    } else if (info->year[0] >= '3' && info->year[0] <= '9') {
-      info->decodedYear = 2000 + info->year[0] - '0';
-    } else {
-      info->decodedYear = -1;
-      printf("WARN: Invalid year symbol '%c'!\n", info->year[0]);
-      info->valid = false;
-    }
+	// This is proven by MacPro5,1 valid serials from 2011 and 2012.
+	if (info->year[0] >= '0' && info->year[0] <= '2') {
+	  info->decodedYear = 2010 + info->year[0] - '0';
+	} else if (info->year[0] >= '3' && info->year[0] <= '9') {
+	  info->decodedYear = 2000 + info->year[0] - '0';
+	} else {
+	  info->decodedYear = -1;
+	  printf("WARN: Invalid year symbol '%c'!\n", info->year[0]);
+	  info->valid = false;
+	}
 
-    for (int32_t i = 0; i < 2; i++) {
-      if (info->week[i] >= '0' && info->week[i] <= '9') {
-        info->decodedWeek += (i == 0 ? 10 : 1) * (info->week[i] - '0');
-      } else {
-        info->decodedWeek = -1;
-        printf("WARN: Invalid week symbol '%c'!\n", info->week[i]);
-        info->valid = false;
-        break;
-      }
-    }
+	for (int32_t i = 0; i < 2; i++) {
+	  if (info->week[i] >= '0' && info->week[i] <= '9') {
+		info->decodedWeek += (i == 0 ? 10 : 1) * (info->week[i] - '0');
+	  } else {
+		info->decodedWeek = -1;
+		printf("WARN: Invalid week symbol '%c'!\n", info->week[i]);
+		info->valid = false;
+		break;
+	  }
+	}
   }
 
   if (info->decodedWeek < SERIAL_WEEK_MIN || info->decodedWeek > SERIAL_WEEK_MAX) {
-    printf("WARN: Decoded week %d is out of valid range [%d, %d]!\n", info->decodedWeek, SERIAL_WEEK_MIN, SERIAL_WEEK_MAX);
-    info->decodedWeek = -1;
+	printf("WARN: Decoded week %d is out of valid range [%d, %d]!\n", info->decodedWeek, SERIAL_WEEK_MIN, SERIAL_WEEK_MAX);
+	info->decodedWeek = -1;
   }
 
   if (info->decodedYear > 0 && info->modelIndex >= 0) {
-    bool found = false;
-    for (size_t i = 0; !found && i < APPLE_MODEL_YEAR_MAX && AppleModelYear[info->modelIndex][i]; i++)
-      if ((int32_t)AppleModelYear[info->modelIndex][i] == info->decodedYear)
-        found = true;
-    if (!found) {
-      printf("WARN: Invalid year %d for model %s\n", info->decodedYear, ApplePlatformData[info->modelIndex].productName);
-      info->valid = false;
-    }
+	bool found = false;
+	for (size_t i = 0; !found && i < APPLE_MODEL_YEAR_MAX && AppleModelYear[info->modelIndex][i]; i++)
+	  if ((int32_t)AppleModelYear[info->modelIndex][i] == info->decodedYear)
+		found = true;
+	if (!found) {
+	  printf("WARN: Invalid year %d for model %s\n", info->decodedYear, ApplePlatformData[info->modelIndex].productName);
+	  info->valid = false;
+	}
   }
 
   // Decode production line and copy
   int32_t mul[] = {68, 34, 1};
   for (uint32_t i = 0; i < ARRAY_SIZE(mul); i++) {
-    info->line[i] = *serial++;
-    int32_t tmp = base34_to_value(info->line[i], mul[i]);
-    if (tmp >= 0) {
-      info->decodedLine += tmp;
-    } else {
-      printf("WARN: Invalid line symbol '%c'!\n", info->line[i]);
-      info->valid = false;
-      break;
-    }
+	info->line[i] = *serial++;
+	int32_t tmp = base34_to_value(info->line[i], mul[i]);
+	if (tmp >= 0) {
+	  info->decodedLine += tmp;
+	} else {
+	  printf("WARN: Invalid line symbol '%c'!\n", info->line[i]);
+	  info->valid = false;
+	  break;
+	}
   }
 
   if (info->decodedLine >= 0)
-    info->decodedCopy = base34_to_value(info->line[0], 1) - line_to_rmin(info->decodedLine);
+	info->decodedCopy = base34_to_value(info->line[0], 1) - line_to_rmin(info->decodedLine);
 
   if (print) {
-    printf("%14s: %4s - ", "Country", info->country);
-    if (info->legacyCountryIdx >= 0)
-      printf("%s\n", AppleLegacyLocationNames[info->legacyCountryIdx]);
-    else if (info->modernCountryIdx >= 0)
-      printf("%s\n", AppleLocationNames[info->modernCountryIdx]);
-    else
-      puts("Unknown, please report!");
-    printf("%14s: %4s - %d\n", "Year", info->year, info->decodedYear);
-    printf("%14s: %4s - %d", "Week", info->week, info->decodedWeek);
-    if (info->decodedYear > 0 && info->decodedWeek > 0) {
-      struct tm startd = {
-        .tm_isdst = -1,
-        .tm_year = info->decodedYear - 1900,
-        .tm_mday = 1 + 7 * (info->decodedWeek-1),
-        .tm_mon = 0
-      };
-      if (mktime(&startd) >= 0) {
-        printf(" (%02d.%02d.%04d", startd.tm_mday, startd.tm_mon+1, startd.tm_year+1900);
-        if (info->decodedWeek == 53 && startd.tm_mday != 31) {
-          printf("-31.12.%04d", startd.tm_year+1900);
-        } else if (info->decodedWeek < 53) {
-          startd.tm_mday += 6;
-          if (mktime(&startd))
-            printf("-%02d.%02d.%04d", startd.tm_mday, startd.tm_mon+1, startd.tm_year+1900);
-        }
-        puts(")");
-      }
-    } else {
-      puts("");
-    }
-    printf("%14s: %4s - %d (copy %d)\n", "Line", info->line, info->decodedLine,
-      info->decodedCopy >= 0 ? info->decodedCopy + 1 : -1);
-    printf("%14s: %4s - %s\n", "Model", info->model, info->modelIndex >= 0 ?
-      ApplePlatformData[info->modelIndex].productName : "Unknown");
-    printf("%14s: %s\n", "SystemModel", info->appleModel != NULL ? info->appleModel : "Unknown, please report!");
-    printf("%14s: %s\n", "Valid", info->valid ? "Possibly" : "Unlikely");
+	printf("%14s: %4s - ", "Country", info->country);
+	if (info->legacyCountryIdx >= 0)
+	  printf("%s\n", AppleLegacyLocationNames[info->legacyCountryIdx]);
+	else if (info->modernCountryIdx >= 0)
+	  printf("%s\n", AppleLocationNames[info->modernCountryIdx]);
+	else
+	  puts("Unknown, please report!");
+	printf("%14s: %4s - %d\n", "Year", info->year, info->decodedYear);
+	printf("%14s: %4s - %d", "Week", info->week, info->decodedWeek);
+	if (info->decodedYear > 0 && info->decodedWeek > 0) {
+	  struct tm startd = {
+		.tm_isdst = -1,
+		.tm_year = info->decodedYear - 1900,
+		.tm_mday = 1 + 7 * (info->decodedWeek-1),
+		.tm_mon = 0
+	  };
+	  if (mktime(&startd) >= 0) {
+		printf(" (%02d.%02d.%04d", startd.tm_mday, startd.tm_mon+1, startd.tm_year+1900);
+		if (info->decodedWeek == 53 && startd.tm_mday != 31) {
+		  printf("-31.12.%04d", startd.tm_year+1900);
+		} else if (info->decodedWeek < 53) {
+		  startd.tm_mday += 6;
+		  if (mktime(&startd))
+			printf("-%02d.%02d.%04d", startd.tm_mday, startd.tm_mon+1, startd.tm_year+1900);
+		}
+		puts(")");
+	  }
+	} else {
+	  puts("");
+	}
+	printf("%14s: %4s - %d (copy %d)\n", "Line", info->line, info->decodedLine,
+	  info->decodedCopy >= 0 ? info->decodedCopy + 1 : -1);
+	printf("%14s: %4s - %s\n", "Model", info->model, info->modelIndex >= 0 ?
+	  ApplePlatformData[info->modelIndex].productName : "Unknown");
+	printf("%14s: %s\n", "SystemModel", info->appleModel != NULL ? info->appleModel : "Unknown, please report!");
+	printf("%14s: %s\n", "Valid", info->valid ? "Possibly" : "Unlikely");
   }
 
   return true;
@@ -425,74 +425,74 @@ bool get_serial_info(const char *serial, SERIALINFO *info, bool print) {
 
 bool get_serial(SERIALINFO *info) {
   if (info->modelIndex < 0 && info->model[0] == '\0') {
-    printf("ERROR: Unable to determine model!\n");
-    return false;
+	printf("ERROR: Unable to determine model!\n");
+	return false;
   }
 
   if (info->model[0] == '\0') {
-    strncpy(info->model, get_model_code((AppleModel)info->modelIndex, false), MODEL_CODE_NEW_LEN);
-    info->model[MODEL_CODE_NEW_LEN] = '\0';
+	strncpy(info->model, get_model_code((AppleModel)info->modelIndex, false), MODEL_CODE_NEW_LEN);
+	info->model[MODEL_CODE_NEW_LEN] = '\0';
   }
 
   size_t country_len = strlen(info->country);
   if (country_len == 0) {
-    // Random country choice strongly decreases key verification probability.
-    country_len = strlen(info->model) == MODEL_CODE_NEW_LEN ? COUNTRY_NEW_LEN : COUNTRY_OLD_LEN;
-    if (info->modelIndex < 0) {
-      strncpy(info->country, country_len == COUNTRY_OLD_LEN ? AppleLegacyLocations[0] : AppleLocations[0], COUNTRY_NEW_LEN+1);
-    } else {
-      strncpy(info->country, &ApplePlatformData[info->modelIndex].serialNumber[0], country_len);
-      info->country[country_len] = '\0';
-    }
+	// Random country choice strongly decreases key verification probability.
+	country_len = strlen(info->model) == MODEL_CODE_NEW_LEN ? COUNTRY_NEW_LEN : COUNTRY_OLD_LEN;
+	if (info->modelIndex < 0) {
+	  strncpy(info->country, country_len == COUNTRY_OLD_LEN ? AppleLegacyLocations[0] : AppleLocations[0], COUNTRY_NEW_LEN+1);
+	} else {
+	  strncpy(info->country, &ApplePlatformData[info->modelIndex].serialNumber[0], country_len);
+	  info->country[country_len] = '\0';
+	}
   }
 
   if (info->decodedYear < 0) {
-    if (info->modelIndex < 0)
-      info->decodedYear = country_len == COUNTRY_OLD_LEN ? SERIAL_YEAR_OLD_MAX : SERIAL_YEAR_NEW_MID;
-    else
-      info->decodedYear = (int32_t)get_production_year((AppleModel)info->modelIndex, false);
+	if (info->modelIndex < 0)
+	  info->decodedYear = country_len == COUNTRY_OLD_LEN ? SERIAL_YEAR_OLD_MAX : SERIAL_YEAR_NEW_MID;
+	else
+	  info->decodedYear = (int32_t)get_production_year((AppleModel)info->modelIndex, false);
   }
 
   // Last week is too rare to care
   if (info->decodedWeek < 0)
-    info->decodedWeek = (int32_t)pseudo_random_between(SERIAL_WEEK_MIN, SERIAL_WEEK_MAX-1);
+	info->decodedWeek = (int32_t)pseudo_random_between(SERIAL_WEEK_MIN, SERIAL_WEEK_MAX-1);
 
   if (country_len == COUNTRY_OLD_LEN) {
-    if (info->decodedYear < SERIAL_YEAR_OLD_MIN || info->decodedYear > SERIAL_YEAR_OLD_MAX) {
-      printf("ERROR: Year %d is out of valid legacy range [%d, %d]!\n", info->decodedYear, SERIAL_YEAR_OLD_MIN, SERIAL_YEAR_OLD_MAX);
-      return false;
-    }
+	if (info->decodedYear < SERIAL_YEAR_OLD_MIN || info->decodedYear > SERIAL_YEAR_OLD_MAX) {
+	  printf("ERROR: Year %d is out of valid legacy range [%d, %d]!\n", info->decodedYear, SERIAL_YEAR_OLD_MIN, SERIAL_YEAR_OLD_MAX);
+	  return false;
+	}
 
-    info->year[0] = '0' + (char)((info->decodedYear - 2000) % 10);
-    info->week[0] = '0' + (char)((info->decodedWeek) / 10);
-    info->week[1] = '0' + (info->decodedWeek) % 10;
+	info->year[0] = '0' + (char)((info->decodedYear - 2000) % 10);
+	info->week[0] = '0' + (char)((info->decodedWeek) / 10);
+	info->week[1] = '0' + (info->decodedWeek) % 10;
   } else {
-    if (info->decodedYear < SERIAL_YEAR_NEW_MIN || info->decodedYear > SERIAL_YEAR_NEW_MAX) {
-      printf("ERROR: Year %d is out of valid modern range [%d, %d]!\n", info->decodedYear, SERIAL_YEAR_NEW_MIN, SERIAL_YEAR_NEW_MAX);
-      return false;
-    }
+	if (info->decodedYear < SERIAL_YEAR_NEW_MIN || info->decodedYear > SERIAL_YEAR_NEW_MAX) {
+	  printf("ERROR: Year %d is out of valid modern range [%d, %d]!\n", info->decodedYear, SERIAL_YEAR_NEW_MIN, SERIAL_YEAR_NEW_MAX);
+	  return false;
+	}
 
-    size_t base_new_year = 2010;
-    if (info->decodedYear >= SERIAL_YEAR_NEW_MID) {
-      base_new_year = 2020;
-    }
+	size_t base_new_year = 2010;
+	if (info->decodedYear >= SERIAL_YEAR_NEW_MID) {
+	  base_new_year = 2020;
+	}
 
-    info->year[0] = AppleYearReverse[(info->decodedYear - base_new_year) * 2 + (info->decodedWeek >= 27)];
-    info->week[0] = AppleWeekReverse[info->decodedWeek];
+	info->year[0] = AppleYearReverse[(info->decodedYear - base_new_year) * 2 + (info->decodedWeek >= 27)];
+	info->week[0] = AppleWeekReverse[info->decodedWeek];
   }
 
   if (info->decodedLine < 0)
-    info->decodedLine = (int32_t)pseudo_random_between(SERIAL_LINE_MIN, SERIAL_LINE_MAX);
+	info->decodedLine = (int32_t)pseudo_random_between(SERIAL_LINE_MIN, SERIAL_LINE_MAX);
 
   int32_t rmin = line_to_rmin(info->decodedLine);
 
   // Verify and apply user supplied copy if any
   if (info->decodedCopy >= 0) {
-    rmin += info->decodedCopy - 1;
-    if (rmin * 68 > info->decodedLine) {
-      printf("ERROR: Copy %d cannot represent line %d!\n", info->decodedCopy, info->decodedLine);
-      return false;
-    }
+	rmin += info->decodedCopy - 1;
+	if (rmin * 68 > info->decodedLine) {
+	  printf("ERROR: Copy %d cannot represent line %d!\n", info->decodedCopy, info->decodedLine);
+	  return false;
+	}
   }
 
   info->line[0] = AppleBase34Reverse[rmin];
@@ -505,87 +505,87 @@ bool get_serial(SERIALINFO *info) {
 void get_mlb(SERIALINFO *info, char *dst, size_t sz) {
   // This is a direct reverse from CCC, rework it later...
   if (info->modelIndex < 0) {
-    printf("WARN: Unknown model, assuming default!\n");
-    info->modelIndex = APPLE_MODEL_MAX - 1;
+	printf("WARN: Unknown model, assuming default!\n");
+	info->modelIndex = APPLE_MODEL_MAX - 1;
   }
   do {
-    uint32_t year = 0, week = 0;
+	uint32_t year = 0, week = 0;
 
-    bool legacy = strlen(info->country) == COUNTRY_OLD_LEN;
+	bool legacy = strlen(info->country) == COUNTRY_OLD_LEN;
 
-    if (legacy) {
-      year = (uint32_t)(info->year[0] - '0');
-      week = (uint32_t)(info->week[0] - '0') * 10 + (uint32_t)(info->week[1] - '0');
-    } else {
-      char syear = info->year[0];
-      char sweek = info->week[0];
+	if (legacy) {
+	  year = (uint32_t)(info->year[0] - '0');
+	  week = (uint32_t)(info->week[0] - '0') * 10 + (uint32_t)(info->week[1] - '0');
+	} else {
+	  char syear = info->year[0];
+	  char sweek = info->week[0];
 
-      const char srcyear[] = "CDFGHJKLMNPQRSTVWXYZ";
-      const char dstyear[] = "00112233445566778899";
-      for (size_t i = 0; i < ARRAY_SIZE(srcyear)-1; i++) {
-        if (syear == srcyear[i]) {
-          year = (uint32_t)(dstyear[i] - '0');
-          break;
-        }
-      }
+	  const char srcyear[] = "CDFGHJKLMNPQRSTVWXYZ";
+	  const char dstyear[] = "00112233445566778899";
+	  for (size_t i = 0; i < ARRAY_SIZE(srcyear)-1; i++) {
+		if (syear == srcyear[i]) {
+		  year = (uint32_t)(dstyear[i] - '0');
+		  break;
+		}
+	  }
 
-      const char overrides[] = "DGJLNQSVXZ";
-      for (size_t i = 0; i < ARRAY_SIZE(overrides)-1; i++) {
-        if (syear == overrides[i]) {
-          week = 27;
-          break;
-        }
-      }
+	  const char overrides[] = "DGJLNQSVXZ";
+	  for (size_t i = 0; i < ARRAY_SIZE(overrides)-1; i++) {
+		if (syear == overrides[i]) {
+		  week = 27;
+		  break;
+		}
+	  }
 
-      const char srcweek[] = "123456789CDFGHJKLMNPQRSTVWXYZ";
-      for (size_t i = 0; i < ARRAY_SIZE(srcweek)-1; i++) {
-        if (sweek == srcweek[i]) {
-          week += i + 1;
-          break;
-        }
-      }
+	  const char srcweek[] = "123456789CDFGHJKLMNPQRSTVWXYZ";
+	  for (size_t i = 0; i < ARRAY_SIZE(srcweek)-1; i++) {
+		if (sweek == srcweek[i]) {
+		  week += i + 1;
+		  break;
+		}
+	  }
 
-      // This is silently not handled, and it should not be needed for normal serials.
-      // Bugged MacBookPro6,2 and MacBookPro7,1 will gladly hit it.
-      if (week < SERIAL_WEEK_MIN) {
-        snprintf(dst, sz, "FAIL-ZERO-%c", sweek);
-        return;
-      }
-    }
+	  // This is silently not handled, and it should not be needed for normal serials.
+	  // Bugged MacBookPro6,2 and MacBookPro7,1 will gladly hit it.
+	  if (week < SERIAL_WEEK_MIN) {
+		snprintf(dst, sz, "FAIL-ZERO-%c", sweek);
+		return;
+	  }
+	}
 
-    week--;
+	week--;
 
-    if (week <= 9) {
-      if (week == 0) {
-        week = SERIAL_WEEK_MAX;
-        if (year == 0)
-          year = 9;
-        else
-          year--;
-      }
-    }
+	if (week <= 9) {
+	  if (week == 0) {
+		week = SERIAL_WEEK_MAX;
+		if (year == 0)
+		  year = 9;
+		else
+		  year--;
+	  }
+	}
 
-    if (legacy) {
-      char code[4] = {0};
-      // The loop is not present in CCC, but it throws an exception here,
-      // and effectively generates nothing. The logic is crazy :/.
-      // Also, it was likely meant to be written as pseudo_random() % 0x8000.
-      while (!get_ascii7(pseudo_random_between(0, 0x7FFE) * 0x73BA1C, code, sizeof(code)));
-      const char *board = get_board_code(info->modelIndex, false);
-      char suffix = AppleBase34Reverse[pseudo_random() % 34];
-      snprintf(dst, sz, "%s%d%02d0%s%s%c", info->country, year, week, code, board, suffix);
-    } else {
-      const char *part1 = MLBBlock1[pseudo_random() % ARRAY_SIZE(MLBBlock1)];
-      const char *part2 = MLBBlock2[pseudo_random() % ARRAY_SIZE(MLBBlock2)];
-      const char *board = get_board_code(info->modelIndex, false);
-      const char *part3 = MLBBlock3[pseudo_random() % ARRAY_SIZE(MLBBlock3)];
+	if (legacy) {
+	  char code[4] = {0};
+	  // The loop is not present in CCC, but it throws an exception here,
+	  // and effectively generates nothing. The logic is crazy :/.
+	  // Also, it was likely meant to be written as pseudo_random() % 0x8000.
+	  while (!get_ascii7(pseudo_random_between(0, 0x7FFE) * 0x73BA1C, code, sizeof(code)));
+	  const char *board = get_board_code(info->modelIndex, false);
+	  char suffix = AppleBase34Reverse[pseudo_random() % 34];
+	  snprintf(dst, sz, "%s%d%02d0%s%s%c", info->country, year, week, code, board, suffix);
+	} else {
+	  const char *part1 = MLBBlock1[pseudo_random() % ARRAY_SIZE(MLBBlock1)];
+	  const char *part2 = MLBBlock2[pseudo_random() % ARRAY_SIZE(MLBBlock2)];
+	  const char *board = get_board_code(info->modelIndex, false);
+	  const char *part3 = MLBBlock3[pseudo_random() % ARRAY_SIZE(MLBBlock3)];
 
-      snprintf(dst, sz, "%s%d%02d%s%s%s%s", info->country, year, week, part1, part2, board, part3);
-    }
+	  snprintf(dst, sz, "%s%d%02d%s%s%s%s", info->country, year, week, part1, part2, board, part3);
+	}
   } while (!verify_mlb_checksum(dst, strlen(dst)));
 }
 
-void get_system_info(void) {
+static void get_system_info(void) {
 #ifdef __APPLE__
   CFDataRef model    = get_ioreg_entry("IODeviceTree:/", CFSTR("model"), CFDataGetTypeID());
   CFDataRef board    = get_ioreg_entry("IODeviceTree:/", CFSTR("board-id"), CFDataGetTypeID());
@@ -598,82 +598,82 @@ void get_system_info(void) {
 
   CFDataRef   pwr[5] = {0};
   CFStringRef pwrname[5] = {
-    CFSTR("Gq3489ugfi"),
-    CFSTR("Fyp98tpgj"),
-    CFSTR("kbjfrfpoJU"),
-    CFSTR("oycqAZloTNDm"),
-    CFSTR("abKPld1EcMni"),
+	CFSTR("Gq3489ugfi"),
+	CFSTR("Fyp98tpgj"),
+	CFSTR("kbjfrfpoJU"),
+	CFSTR("oycqAZloTNDm"),
+	CFSTR("abKPld1EcMni"),
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(pwr); i++)
-    pwr[i] = get_ioreg_entry("IOPower:/", pwrname[i], CFDataGetTypeID());
+	pwr[i] = get_ioreg_entry("IOPower:/", pwrname[i], CFDataGetTypeID());
 
   if (model) {
-    printf("%14s: %.*s\n", "Model", (int)CFDataGetLength(model), CFDataGetBytePtr(model));
-    CFRelease(model);
+	printf("%14s: %.*s\n", "Model", (int)CFDataGetLength(model), CFDataGetBytePtr(model));
+	CFRelease(model);
   }
 
   if (board) {
-    printf("%14s: %.*s\n", "Board ID", (int)CFDataGetLength(board), CFDataGetBytePtr(board));
-    CFRelease(board);
+	printf("%14s: %.*s\n", "Board ID", (int)CFDataGetLength(board), CFDataGetBytePtr(board));
+	CFRelease(board);
   }
 
   if (efiver) {
-    printf("%14s: %.*s\n", "FW Version", (int)CFDataGetLength(efiver), CFDataGetBytePtr(efiver));
-    CFRelease(efiver);
+	printf("%14s: %.*s\n", "FW Version", (int)CFDataGetLength(efiver), CFDataGetBytePtr(efiver));
+	CFRelease(efiver);
   }
 
   if (hwuuid) {
-    printf("%14s: %s\n", "Hardware UUID", CFStringGetCStringPtr(hwuuid, kCFStringEncodingMacRoman));
-    CFRelease(hwuuid);
+	printf("%14s: %s\n", "Hardware UUID", CFStringGetCStringPtr(hwuuid, kCFStringEncodingMacRoman));
+	CFRelease(hwuuid);
   }
 
   puts("");
 
   if (serial) {
-    const char *cstr = CFStringGetCStringPtr(serial, kCFStringEncodingMacRoman);
-    printf("%14s: %s\n", "Serial Number", cstr);
-    SERIALINFO info;
-    get_serial_info(cstr, &info, true);
-    CFRelease(serial);
-    puts("");
+	const char *cstr = CFStringGetCStringPtr(serial, kCFStringEncodingMacRoman);
+	printf("%14s: %s\n", "Serial Number", cstr);
+	SERIALINFO info;
+	get_serial_info(cstr, &info, true);
+	CFRelease(serial);
+	puts("");
   }
 
   if (smuuid) {
-    if (CFDataGetLength(smuuid) == SZUUID) {
-      const uint8_t *p = CFDataGetBytePtr(smuuid);
-      printf("%14s: " PRIUUID "\n", "System ID", CASTUUID(p));
-    }
-    CFRelease(smuuid);
+	if (CFDataGetLength(smuuid) == SZUUID) {
+	  const uint8_t *p = CFDataGetBytePtr(smuuid);
+	  printf("%14s: " PRIUUID "\n", "System ID", CASTUUID(p));
+	}
+	CFRelease(smuuid);
   }
 
   if (rom) {
-    if (CFDataGetLength(rom) == 6) {
-      const uint8_t *p = CFDataGetBytePtr(rom);
-      printf("%14s: %02X%02X%02X%02X%02X%02X\n", "ROM", p[0], p[1], p[2], p[3], p[4], p[5]);
-    }
-    CFRelease(rom);
+	if (CFDataGetLength(rom) == 6) {
+	  const uint8_t *p = CFDataGetBytePtr(rom);
+	  printf("%14s: %02X%02X%02X%02X%02X%02X\n", "ROM", p[0], p[1], p[2], p[3], p[4], p[5]);
+	}
+	CFRelease(rom);
   }
 
   if (mlb) {
-    printf("%14s: %.*s\n", "MLB", (int)CFDataGetLength(mlb), CFDataGetBytePtr(mlb));
-    if (!verify_mlb_checksum((const char *)CFDataGetBytePtr(mlb), CFDataGetLength(mlb)))
-      printf("WARN: Invalid MLB checksum!\n");
-    CFRelease(mlb);
+	printf("%14s: %.*s\n", "MLB", (int)CFDataGetLength(mlb), CFDataGetBytePtr(mlb));
+	if (!verify_mlb_checksum((const char *)CFDataGetBytePtr(mlb), CFDataGetLength(mlb)))
+	  printf("WARN: Invalid MLB checksum!\n");
+	CFRelease(mlb);
   }
 
   puts("");
 
   for (size_t i = 0; i < ARRAY_SIZE(pwr); i++) {
-    if (pwr[i]) {
-      printf("%14s: ", CFStringGetCStringPtr(pwrname[i], kCFStringEncodingMacRoman));
-      const uint8_t *p = CFDataGetBytePtr(pwr[i]);
-      CFIndex sz = CFDataGetLength(pwr[i]);
-      for (CFIndex j = 0; j < sz; j++)
-        printf("%02X", p[j]);
-      puts("");
-      CFRelease(pwr[i]);
-    }
+	if (pwr[i]) {
+	  printf("%14s: ", CFStringGetCStringPtr(pwrname[i], kCFStringEncodingMacRoman));
+	  const uint8_t *p = CFDataGetBytePtr(pwr[i]);
+	  CFIndex sz = CFDataGetLength(pwr[i]);
+	  for (CFIndex j = 0; j < sz; j++)
+		printf("%02X", p[j]);
+	  puts("");
+	  CFRelease(pwr[i]);
+	}
   }
 
   puts("");
@@ -682,29 +682,29 @@ void get_system_info(void) {
   printf("Version %s. Use -h argument to see usage options.\n", PROGRAM_VERSION);
 }
 
-int usage(const char *app) {
+static int usage(const char *app) {
   printf(
-    "%s arguments:\n"
-    " --help           (-h)  show this help\n"
-    " --version        (-v)  show program version\n"
-    " --deriv <serial> (-d)  generate all derivative serials\n"
-    " --generate       (-g)  generate serial for current model\n"
-    " --generate-all   (-a)  generate serial for all models\n"
-    " --info <serial>  (-i)  decode serial information\n"
-    " --verify <mlb>         verify MLB checksum\n"
-    " --list           (-l)  list known mac models\n"
-    " --list-products  (-lp) list known product codes\n"
-    " --mlb <serial>         generate MLB based on serial\n"
-    " --sys            (-s)  get system info\n\n"
-    "Tuning options:\n"
-    " --model <model>  (-m)  mac model used for generation\n"
-    " --num <num>      (-n)  number of generated pairs\n"
-    " --year <year>    (-y)  year used for generation\n"
-    " --week <week>    (-w)  week used for generation\n"
-    " --country <loc>  (-c)  country location used for generation\n"
-    " --copy <copy>    (-o)  production copy index\n"
-    " --line <line>    (-e)  production line\n"
-    " --platform <ppp> (-p)  platform code used for generation\n\n", app);
+	"%s arguments:\n"
+	" --help           (-h)  show this help\n"
+	" --version        (-v)  show program version\n"
+	" --deriv <serial> (-d)  generate all derivative serials\n"
+	" --generate       (-g)  generate serial for current model\n"
+	" --generate-all   (-a)  generate serial for all models\n"
+	" --info <serial>  (-i)  decode serial information\n"
+	" --verify <mlb>         verify MLB checksum\n"
+	" --list           (-l)  list known mac models\n"
+	" --list-products  (-lp) list known product codes\n"
+	" --mlb <serial>         generate MLB based on serial\n"
+	" --sys            (-s)  get system info\n\n"
+	"Tuning options:\n"
+	" --model <model>  (-m)  mac model used for generation\n"
+	" --num <num>      (-n)  number of generated pairs\n"
+	" --year <year>    (-y)  year used for generation\n"
+	" --week <week>    (-w)  week used for generation\n"
+	" --country <loc>  (-c)  country location used for generation\n"
+	" --copy <copy>    (-o)  production copy index\n"
+	" --line <line>    (-e)  production line\n"
+	" --platform <ppp> (-p)  platform code used for generation\n\n", app);
 
   return EXIT_FAILURE;
 }

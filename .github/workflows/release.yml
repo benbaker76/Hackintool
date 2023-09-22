@@ -23,8 +23,8 @@ jobs:
         run: brew install coreutils pandoc
       - name: Setup Sparkle
         env:
-          SPARKLE_VERSION: '2.4.1'
-          SPARKLE_HASH: '1cbfba4fc55a4ac1c66767333c353870acbfe05a43d5756cc1204fd4ebf2ba77'
+          SPARKLE_VERSION: '2.5.0'
+          SPARKLE_HASH: '06a59e6bfd3c57b79e004b4f6bf6d65fde05ed3a23678dadecfd3f6ed01d5c6b'
         run: |
           curl -L "https://github.com/sparkle-project/Sparkle/releases/download/${{ env.SPARKLE_VERSION }}/Sparkle-${{ env.SPARKLE_VERSION }}.tar.xz" -o Sparkle.tar.xz
           if [[ '${{ env.SPARKLE_HASH }}' != "$(sha256sum Sparkle.tar.xz | cut -d " " -f 1)" ]]; then
