@@ -458,7 +458,7 @@
 				ORGANIZATIONNAME = Headsoft;
 				TargetAttributes = {
 					E24936F9169D1B2B00384895 = {
-						DevelopmentTeam = T395SRU2FB;
+						DevelopmentTeam = 5LGHPJM9ZR;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
@@ -727,8 +727,8 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0400;
-				DEVELOPMENT_TEAM = T395SRU2FB;
+				CURRENT_PROJECT_VERSION = 0401;
+				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -742,7 +742,7 @@
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 4.0.0;
+				MARKETING_VERSION = 4.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -764,8 +764,8 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0400;
-				DEVELOPMENT_TEAM = T395SRU2FB;
+				CURRENT_PROJECT_VERSION = 0401;
+				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -779,7 +779,7 @@
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 4.0.0;
+				MARKETING_VERSION = 4.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
