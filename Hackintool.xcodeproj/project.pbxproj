@@ -86,6 +86,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9F601B9D2DC093F800DA2FED /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DD47FE242ABB85F50063D03F /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/MainMenu.strings"; sourceTree = "<group>"; };
 		DD4F6A3B2ABA379300E9FA56 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E200EE7821FBD4600082D799 /* NVRAMXmlParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVRAMXmlParser.h; sourceTree = "<group>"; };
@@ -488,6 +489,7 @@
 				"zh-Hans",
 				tr,
 				"pt-BR",
+				"zh-Hant",
 			);
 			mainGroup = E24936EF169D1B2B00384895;
 			productRefGroup = E24936FB169D1B2B00384895 /* Products */;
@@ -615,6 +617,7 @@
 				E2DDEC31222CA59F00661F3C /* zh-Hans */,
 				E2A91B71235CA34A007B7851 /* tr */,
 				DD4F6A3B2ABA379300E9FA56 /* pt-BR */,
+				9F601B9D2DC093F800DA2FED /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
