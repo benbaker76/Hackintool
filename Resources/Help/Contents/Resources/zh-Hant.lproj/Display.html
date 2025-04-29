@@ -1,0 +1,48 @@
+<html lang="zh-Hant">
+<head>
+<title>Display EDID Patching</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="edid, display">
+<meta name="description" content="Patching Display EDID.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<p>顯示器EDID修補</p>
+<p><br>
+</p>
+<p>使用EDID修補你可以進行顯示器型號的修改以及加入縮放選項。操作方法如下：<p>     </p>
+<p><p>    1.從顯示列表中選擇你要編輯的顯示器</p>
+<p><p>    2.如果顯示器的EDID沒有解析度範圍或不好，有選擇性地加入/修復解析度範圍<p>   </p>
+<p><p>    3.單擊“加入”按鈕加入解析度，再單擊解析度值進行編輯。選中某個解析度值再點擊“删除”按鈕即可删除此解析度。</p>
+<p><p>    4.編輯完成后，點擊“匯出”按鈕在桌面上生成修改好的修補文件。</p>
+<p>安裝</p>
+<p><br></p>
+<p>安裝EDID修補有兩種方法：安裝顯示器修補文件，以及顯示器驅動：</p>
+<p><p>	</p>
+<p class="p6">安裝顯示器修補文件：</p>
+<p><br></p>
+<p><p>    •將生成的DisplayVendorID-x文件夾複製到/system/library/displays/contents/resources/overrides（對於El Capitan系統則是/system/library/displays/overrides ）</p>
+<p><p>    •將生成的icons.plist複製到/system/library/displays/contents/resources/overrides（對於El Capitan則是/system/library/displays/overrides）</p>
+<p><br>
+</p>
+<p class="p6">安裝顯示器驅動：</p>
+<p><br></p>
+<p><p>   •將生成的DisplayEDID-x-x.kext複製到/library/extensions或efi/clover/kexts/other（取決於您的設定）</p>
+<p><br>
+</p>
+<p>注意：在複製文件之前，請先關閉系統完整性保護（SIP)</p>
+<p><br>
+</p>
+<p>其他資訊</p>
+<p>對於16:10且想使用縮放解析度的顯示器，可以選擇如下類型顯示器：</p>
+<p><p>	•iMac顯示器</p>
+<p><p>	•MacBook Pro顯示器</p>
+<p><p>	•影院高畫質顯示器</p>
+<p><p>	•LED影院顯示器</p>
+<p>對於16:9的，則可以選擇：</p>
+<p><p>	•Apple Thunderbolt顯示器（此種切勿用在内部顯示器上！）</p>
+<p><p>	•iMac視網膜顯示</p>
+<p><p>	•MacBook Air顯示器</p>
+</body>
+</html>
+
