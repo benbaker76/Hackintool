@@ -1,0 +1,61 @@
+<html lang="zh-Hant">
+<head>
+<title>USB Port Patching</title>
+<meta charset="UTF-8">
+<meta name="KEYWORDS" content="usb">
+<meta name="description" content="Patching USB.">
+<link rel="stylesheet" href="../css/style.css" media="all" />
+</head>
+<body class="Normal">
+<p>USB埠修補</p>
+<p><br></p>
+<p>MacOS 10.14.1以上版本暫時沒有可用的USB埠限制修補，這可能導致無法同時使用電腦上的所有USB埠。Rehabman已更新USBInjectAll.kext來包含用於排除埠組的啟動標識。</p>
+<p><br>
+</p>
+<p>使用方法</p>
+<p class="p6"><br></p>
+<p>1、將用於埠識別的USBInjectAll.kext放入EFI/CLOVER/kexts/Other，並用四葉草編輯器在config.plist中對DSDT中以下名稱重命名四葉草（有哪些就重命名哪些）：</p>
+<p>°XHCI -&gt; XHC</p>
+<p>°XHC1 -&gt; XHC</p>
+<p>°EHC1 -&gt; EH01</p>
+<p>°EHC2 -&gt; EH02</p>
+<p>2、重啟</p>
+<p>3、啟動Hackintool，進入“已安裝”選項卡，檢查USBInjectAll是否正確安裝。</p>
+<p>例如：USBInjectAll: Yes (Release-0.7.1)</p>
+<p>4、進入“USB”選項卡查看USB控制器列表。基於USB控制器類型，可能需要安裝其他驅動。如需要安裝額外驅動，請安裝該驅動，然後重新啟動再次啟動Hackintool。</p>
+<p><br>
+</p>
+<p>以下是額外驅動列表：</p>
+<p>°8086:8CB1， macOS版本小於&lt; 10.11.1 -&gt; XHCI-9-series.kext</p>
+<p>°8086:8D31, 8086:A2AF, 8086:A36D, 8086:9DED -&gt; XHCI-unsupported.kext</p>
+<p>°8086:1E31, 8086:8C31, 8086:8CB1, 8086:8D31, 8086:9C31, 8086:9CB1 -&gt; FakePCIID.kext + FakePCIID_XHCIMux.kext</p>
+<p><br>
+</p>
+<p>5、轉到“USB”選項卡，選擇USB埠列表中的所有項目，點擊“刪除”按鈕，再點擊“刷新”按鈕。</p>
+<p>6、在config.plist中加入 -uia_exclude_ss、uia_include=HS01,HS02啟動選項後，重新啟動，在HS01、HS02兩埠連接滑鼠和鍵盤。</p>
+<p>7、啟動Hackintool並轉到“USB”選項卡，將USB 2.0設備依次插入到系統上所有USB埠，活動的埠將保持綠色高亮，所有未綠色高亮的埠則需要刪除。</p>
+<p>8、在config.plist中加入-uia_exclude_hs並刪除-uia_exclude_ss 啟動選項後重啟，再次啟動Hackintool進入“USB”選項卡，將一個USB 3.0設備與一個TypeC設備依次插入系統上的所有可用埠（TypeC為雙向的），活動的埠將保持綠色高亮，刪除那些未綠色高亮的埠。</p>
+<p>9、接下來對於所有保留下來的埠，點擊每一個的“類型”，在彈出的下拉列表裡選擇正確埠類型：</p>
+<p>°主機板設備（如M2藍牙卡）設定為“Internal”</p>
+<p>°USB3.0的HSXX埠設定為“USB3”。</p>
+<p>°內部集線器通常連接到PR11和PR21，設定為“Internal”</p>
+<p>°對於TypeC，如果它在2.0與3.0下使用相同的HSXX/SSXX，那麼選擇“TypeC+Sw”，否則選擇 “TypeC”</p>
+<p>10、使用“匯出”按鈕將文件生成到桌面，匯出的文件有兩種形式，你可以自由選擇：</p>
+<p>1.匯出USBPorts.kext，並複製到EFI/CLOVER/kexts/Other</p>
+<p>2.匯出SSDT-UIAC.aml和SSDT-USBX.aml ，複製到EFI/CLOVER/ACPI/patched</p>
+<p>11、如果生成了SSDT-EC.aml，將其複製到EFI/CLOVER/ACPI/patched</p>
+<p>12、清理不必要的文件，刪除啟動標識-uia_exclude_ss -uia_exclude_hs uia_include=x，刪除USBInjectAll.kext</p>
+<p>13、重新啟動，啟動Hackintool，進入“USB”選項卡，選擇USB埠列表中的所有項目，點擊“刪除”，然再點擊“刷新”，查看所有埠是否正常工作。如果需要更改埠類型，則需要在更改完成後重新匯出USBPorts.kext並複製替換；如果修補錯誤導致埠不正常，請刪除USBPorts.kext然後從頭再來。<br>
+</p>
+<p class="p8"><br></p>
+<p>關於USB相關的QA</p>
+<p><br>
+</p>
+<p>Q:什麼是USBPorts.kext？</p>
+<p>A.這是一個用於注入USB埠的無代碼驅動。</p>
+<p>Q:我需要SSDT-UIAC.aml嗎？</p>
+<p>A.不，此方法使用了USBPorts.kext這個無代碼驅動代替它。</p>
+</body>
+</html>
+
+
