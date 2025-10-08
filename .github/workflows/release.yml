@@ -17,8 +17,15 @@ jobs:
         env:
           PRIVATE_SPARKLE_KEY: ${{ secrets.PRIVATE_SPARKLE_KEY }}
         run: 'echo "${{ env.PRIVATE_SPARKLE_KEY }}" | base64 -d -o eddsa_private.key'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
       - name: Install Python Requirements
-        run: pip3 install requests xmltodict
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests xmltodict
       - name: Install Brew Requirements
         run: brew install coreutils pandoc
       - name: Setup Sparkle
