@@ -57,7 +57,7 @@ jobs:
       - name: Generate appcast.xml
         run: sparkle/bin/generate_appcast --ed-key-file eddsa_private.key -o build/appcast.xml build
       - name: Upload to Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Artifacts
           path: build/*
