@@ -714,12 +714,24 @@ NSString *getOSName()
 	case 12:
 		codeName = @"macOS Monterey";
 		break;
-	case 13:
-		codeName = @"macOS Ventura";
-		break;
-	case 14:
-		codeName = @"macOS Sonoma";
-		break;
+    case 13:
+        codeName = @"macOS Ventura";
+        break;
+    case 14:
+        codeName = @"macOS Sonoma";
+        break;
+    case 15:
+        codeName = @"macOS Sequoia";
+        break;
+    case 26:
+        codeName = @"macOS Tahoe";
+        break;
+    default:
+        if (version.majorVersion > 26)
+            codeName = [NSString stringWithFormat:@"macOS (Future %ld)", (long)version.majorVersion];
+        else
+            codeName = @"macOS (Unknown)";
+        break;
 	}
 	
 	return [NSString stringWithFormat:@"%@ %@", codeName, osVersionString];

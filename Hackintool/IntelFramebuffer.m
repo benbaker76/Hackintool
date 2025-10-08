@@ -267,17 +267,22 @@ bool readFramebuffer(const char *fileName, IntelGen &intelGen, uint8_t **origina
 	intelGen = IGUnknown;
 	framebufferSize = 0;
 	framebufferCount = 0;
-	ifstream file(fileName, ios::in | ios::binary);
-	
-	if (!file)
+    ifstream file(fileName, ios::in | ios::binary);
+    
+    file.tie(nullptr);
+    file.exceptions(std::ifstream::badbit);
+
+    std::string path(fileName);
+    file.open(path, std::ios::binary);
+    
+    if (!file.is_open())
+        return false;
+
+    file.seekg(0, std::ios::end);
+    std::streamoff bufferSize = file.tellg();
+    if (bufferSize <= 0)
 		return false;
-	
-	if (!file.is_open())
-		return false;
-	
-	file.seekg(0, std::ios::end);
-	size_t bufferSize = file.tellg();
-	file.seekg(0, std::ios::beg);
+    file.seekg(0, std::ios::beg);
 	uint8_t *buffer = new uint8_t[bufferSize];
 	file.read(reinterpret_cast<char *>(buffer), bufferSize);
 	file.close();

@@ -23,15 +23,22 @@
 
 enum KernelVersion
 {
-	SnowLeopard   = 10,
-	Lion          = 11,
-	MountainLion  = 12,
-	Mavericks     = 13,
-	Yosemite      = 14,
-	ElCapitan     = 15,
-	Sierra        = 16,
-	HighSierra    = 17,
-	Mojave        = 18,
+    SnowLeopard   = 10,
+    Lion          = 11,
+    MountainLion  = 12,
+    Mavericks     = 13,
+    Yosemite      = 14,
+    ElCapitan     = 15,
+    Sierra        = 16,
+    HighSierra    = 17,
+    Mojave        = 18,
+    Catalina      = 19,
+    BigSur        = 20,
+    Monterey      = 21,
+    Ventura       = 22,
+    Sonoma        = 23,
+    Sequoia       = 24,
+    Tahoe         = 25,
 };
 
 bool getIntelGenString(NSDictionary *fbDriversDictionary, NSString **intelGenString);

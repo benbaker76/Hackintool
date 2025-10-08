@@ -51,11 +51,11 @@ def scrape_model_page(model_url):
                     cols = row.find_all('td')
                     if len(cols) >= 2:
                         key = cols[0].text.replace(":", "").strip()
-                        value = cols[1].text.strip()
+                        value = cols[1].text.replace("*", "").strip()
                         model_data[key] = value
                     if len(cols) >= 4:
                         key = cols[2].text.replace(":", "").strip()
-                        value = cols[3].text.strip()
+                        value = cols[3].text.replace("*", "").strip()
                         model_data[key] = value
         assert('Apple Model No' in model_data and 'Model ID' in model_data)
     except Exception as e:

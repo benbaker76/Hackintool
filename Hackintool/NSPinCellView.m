@@ -24,13 +24,14 @@
 
 - (void)dealloc {
 	[_item release];
+    _item = nil;
 	
 	[super dealloc];
 }
 
 - (void)setItem:(AudioNode *)device isSelected:(BOOL)isSelected
 {
-	_item = device;
+	self.item = device;
 	_isSelected = isSelected;
 }
 

@@ -957,15 +957,15 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	
 	[_lspconConnectorComboBox addItemsWithObjectValues:@[@"0", @"1", @"2", @"3"]];
 	[_lspconPreferredModeComboBox addItemsWithObjectValues:@[GetLocalizedString(@"LS (DP to HDMI 1.4)"), GetLocalizedString(@"PCON (DP to HDMI 2.0)")]];
-	
+    
 	[self updateSettingsGUI];
-	
+    
 	[_intelGenComboBox removeAllItems];
-	
+    
 	for (int i = 0; i < IGCount; i++)
-		[_intelGenComboBox addItemWithObjectValue:g_fbNameArray[i]];
-	
-	[_intelGenComboBox selectItemWithObjectValue:_settings.IntelGen];
+        [_intelGenComboBox addItemWithObjectValue:g_fbNameArray[i]];
+    
+    [_intelGenComboBox selectItemWithObjectValue:_settings.IntelGen];
 }
 
 - (void)updateSettingsGUI
@@ -5627,7 +5627,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 			}
 		}
 	}
-	
+    
 	return false;
 }
 
@@ -5637,7 +5637,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	
 	if (![self getIntelGenMatch:platformID intelGen:&intelGenString])
 		return;
-	
+    
 	_settings.IntelGen = intelGenString;
 	_settings.PlatformID = [[NSString stringWithFormat:@"0x%08X", platformID] retain];
 	
@@ -5764,7 +5764,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	NSString *intelGenString = nil;
 	
 	[self getIntelGenMatch:_platformID intelGen:&intelGenString];
-	
+    
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSDictionary *defaultsDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
 										(intelGenString != nil ? intelGenString : @"Coffee Lake"), @"IntelGen",
@@ -5824,7 +5824,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 - (void)loadSettings
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	
+    
 	_settings.IntelGen = [defaults stringForKey:@"IntelGen"];
 	_settings.PlatformID = [defaults stringForKey:@"PlatformID"];
 	_settings.KextsToPatchHex = [defaults boolForKey:@"KextsToPatchHex"];
