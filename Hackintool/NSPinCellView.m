@@ -41,10 +41,11 @@
 	
 	[[NSGraphicsContext currentContext] saveGraphicsState];
 	
-	_isSelected = [self isSelected];
-	NSRect rect = NSMakeRect(dirtyRect.origin.x + 3.0, dirtyRect.origin.y + 3.0, 10, 10);
-	NSColor *jackColor = [_item jackColor];
-	[jackColor set];
+    NSRect bounds = self.bounds;
+    CGFloat d = 10.0;
+    NSRect rect = NSMakeRect(3.0, floor((NSHeight(bounds) - d) * 0.5), d, d);
+    NSColor *jackColor = [_item jackColor];
+    [jackColor set];
 	
 	if ([_item hasJack])
 	{
