@@ -859,8 +859,8 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 		{
 			NSData *findData = [patchDictionary objectForKey:@"Find"];
 			NSData *replaceData = [patchDictionary objectForKey:@"Replace"];
-			NSString *findString = [NSString stringWithUTF8String:(const char *)findData.bytes];
-			NSString *replaceString = [NSString stringWithUTF8String:(const char *)replaceData.bytes];
+            NSString *findString = [[NSString alloc] initWithBytes:findData.bytes length:findData.length encoding:NSUTF8StringEncoding];
+            NSString *replaceString = [[NSString alloc] initWithBytes:replaceData.bytes length:replaceData.length encoding:NSUTF8StringEncoding];
 			bool foundACPI = (findString != nil ? hasACPIEntry(findString) : false);
 			
 			if (foundACPI)
@@ -895,6 +895,9 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 			[patchDictionary setObject:@(YES) forKey:@"Disabled"];
 			
 			[_bootloaderPatchArray addObject:patchDictionary];
+            
+            [findString release];
+            [replaceString release];
 		}
 	}
 	
@@ -4425,7 +4428,10 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	
 	if (intelGen == -1 || platformIDIndex == -1)
 		return;
-	
+    
+    if (_originalFramebufferList == NULL)
+        return;
+    
 	FILE *file;
 	file = fopen([framebufferTextPath UTF8String], "w");
 	
@@ -4474,6 +4480,9 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	
 	if (intelGen == -1 || platformIDIndex == -1)
 		return;
+    
+    if (_originalFramebufferList == NULL)
+        return;
 	
 	FILE *file;
 	file = fopen([framebufferTextPath UTF8String], "wb");
@@ -4550,6 +4559,9 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	
 	if (intelGen == -1 || platformIDIndex == -1)
 		return;
+    
+    if (_modifiedFramebufferList == NULL)
+        return;
 	
 	switch (intelGen)
 	{
@@ -4734,6 +4746,9 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	
 	if (intelGen == -1 || platformIDIndex == -1)
 		return;
+    
+    if (_modifiedFramebufferList == NULL)
+        return;
 	
 	switch (intelGen)
 	{
@@ -5027,6 +5042,9 @@ NSInteger usbControllerSort(id a, id b, void *context)
 			
 			if (![self getConnectorInfo:&connectorInfo index:i modified:false])
 				continue;
+            
+            if (connectorInfo == NULL)
+                return false;
 			
 			if ((connectorInfo->index != -1 && connectorInfo->index != 0) || connectorInfo->busID != 0 || connectorInfo->pipe != 0 || connectorInfo->type != ConnectorDummy || (connectorInfo->flags.value != 0x20 && connectorInfo->flags.value != 0x40))
 				return false;
@@ -5492,11 +5510,11 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	}
 	else
 	{
-		if (_macOS_10_13_6_MenuItem.state)
+		if (intelGen == IGSandyBridge || _macOS_10_13_6_MenuItem.state)
 		{
 			NSBundle *mainBundle = [NSBundle mainBundle];
 			
-			_fileName = [mainBundle pathForResource:intelGenString ofType:@"bin" inDirectory:@"Framebuffer/macOS 10.13.6"];
+            _fileName = [mainBundle pathForResource:intelGenString ofType:@"bin" inDirectory:@"Framebuffer/macOS 10.13.6"];
 			
 			if (intelGen > IGCoffeeLake)
 				_fileName = nil;
@@ -5505,16 +5523,29 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		{
 			NSBundle *mainBundle = [NSBundle mainBundle];
 			
-			_fileName = [mainBundle pathForResource:intelGenString ofType:@"bin" inDirectory:@"Framebuffer/macOS 10.14"];
+            _fileName = [mainBundle pathForResource:intelGenString ofType:@"bin" inDirectory:@"Framebuffer/macOS 10.14"];
 		}
 
 		if (_fileName != nil)
-			readFramebuffer([_fileName cStringUsingEncoding:NSUTF8StringEncoding], (IntelGen &)intelGen, &_originalFramebufferList, &_modifiedFramebufferList, _framebufferSize, _framebufferCount);
+        {
+            NSData *fbData = [NSData dataWithContentsOfFile:_fileName];
+            
+            if (fbData)
+            {
+                readFramebuffer((const uint8_t *)[fbData bytes], (size_t)[fbData length], (IntelGen &)intelGen, &_originalFramebufferList, &_modifiedFramebufferList, _framebufferSize, _framebufferCount);
+            }
+        }
 		else
 		{
 			NSString *fbDriverName = [_fbDriversDictionary objectForKey:g_fbNameArray[intelGen]];
 			NSString *fbDriverPath = [NSString stringWithFormat:@"/System/Library/Extensions/%@.kext/Contents/MacOS/%@", fbDriverName, fbDriverName];
-			readFramebuffer([fbDriverPath cStringUsingEncoding:NSUTF8StringEncoding], (IntelGen &)intelGen, &_originalFramebufferList, &_modifiedFramebufferList, _framebufferSize, _framebufferCount);
+            
+            NSData *fbData = [NSData dataWithContentsOfFile:fbDriverPath];
+            
+            if (fbData)
+            {
+                readFramebuffer((const uint8_t *)[fbData bytes], (size_t)[fbData length], (IntelGen &)intelGen, &_originalFramebufferList, &_modifiedFramebufferList, _framebufferSize, _framebufferCount);
+            }
 		}
 	}
 	
@@ -5987,7 +6018,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 	NSInteger intelGen = [_intelGenComboBox indexOfSelectedItem];
 	NSInteger platformIDIndex = [_platformIDComboBox indexOfSelectedItem];
 	
-	if (intelGen == -1 || platformIDIndex == -1)
+	if (intelGen == -1 || platformIDIndex == -1 || index == -1)
 		return false;
 	
 	uint8_t *framebufferList = (modified ? _modifiedFramebufferList : _originalFramebufferList);
@@ -6007,13 +6038,18 @@ NSInteger usbControllerSort(id a, id b, void *context)
 
 - (bool)getConnectorInfo:(ConnectorInfo **)connectorInfo index:(NSInteger)index modified:(bool)modified
 {
+    *connectorInfo = NULL;
+    
 	NSInteger intelGen = [_intelGenComboBox indexOfSelectedItem];
 	NSInteger platformIDIndex = [_platformIDComboBox indexOfSelectedItem];
 	
-	if (intelGen == -1 || platformIDIndex == -1)
+	if (intelGen == -1 || platformIDIndex == -1 || index == -1)
 		return false;
 	
 	uint8_t *framebufferList = (modified ? _modifiedFramebufferList : _originalFramebufferList);
+    
+    if (framebufferList == NULL)
+        return false;
 	
 	switch (intelGen)
 	{

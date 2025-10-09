@@ -268,16 +268,10 @@ bool readFramebuffer(const char *fileName, IntelGen &intelGen, uint8_t **origina
 	framebufferSize = 0;
 	framebufferCount = 0;
     ifstream file(fileName, ios::in | ios::binary);
-    
-    file.tie(nullptr);
-    file.exceptions(std::ifstream::badbit);
 
-    std::string path(fileName);
-    file.open(path, std::ios::binary);
-    
     if (!file.is_open())
         return false;
-
+    
     file.seekg(0, std::ios::end);
     std::streamoff bufferSize = file.tellg();
     if (bufferSize <= 0)
@@ -336,7 +330,7 @@ bool readFramebuffer(const uint8_t *buffer, size_t bufferSize, IntelGen &intelGe
 				}
 				
 				intelGen = IGSandyBridge;
-				framebufferCount++;
+				framebufferCount = 7;
 				pos += sizeof(FramebufferSNB);
 			}
 			else if (firstID == FirstIvyBridgeID)
@@ -439,7 +433,7 @@ bool readFramebuffer(const uint8_t *buffer, size_t bufferSize, IntelGen &intelGe
 			
 			/* There is no -1 termination on Sandy */
 			if (firstID == FirstSandyBridgeID && i == 7)
-				break;
+                break;
 			
 			i++;
 		}

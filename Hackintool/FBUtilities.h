@@ -457,9 +457,15 @@ void applyAutoPatching(AppDelegate *appDelegate)
 		return;
 	
 	Settings settings = [appDelegate settings];
+    
+    if (appDelegate.originalFramebufferList == NULL || appDelegate.modifiedFramebufferList == NULL)
+        return;
 	
 	T *originalFramebufferPointer = &reinterpret_cast<T *>(appDelegate.originalFramebufferList)[platformIDIndex];
 	T *modifiedFramebufferPointer = &reinterpret_cast<T *>(appDelegate.modifiedFramebufferList)[platformIDIndex];
+    
+    if (originalFramebufferPointer == NULL || modifiedFramebufferPointer == NULL)
+        return;
 	
 	if constexpr (!std::is_same_v<T, FramebufferSNB>)
 	{
@@ -480,7 +486,7 @@ void applyAutoPatching(AppDelegate *appDelegate)
 		modifiedFramebufferPointer->fPortCount = settings.FBPortCount;
 		//modifiedFramebufferPointer->fMemoryCount = settings.FBPortCount;
 	}
-	
+    
 	for (int i = 0; i < arrsize(originalFramebufferPointer->connectors); i++)
 	{
 		bool disablePort = (settings.FBPortLimit && i >= settings.FBPortCount);
