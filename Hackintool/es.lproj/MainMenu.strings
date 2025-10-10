@@ -1,0 +1,26 @@
+// Fichero Localizable.strings traducido y revisado por ChatGPT y kaoskinkae
+
+// Archivo corregido - Castellano técnico
+
+/* Class = "NSMenuItem"; title = "Copy Value"; ObjectID = "FKD-ve-cfy"; */
+"FKD-ve-cfy.title" = "Copiar Valor";
+/* Class = "NSMenuItem"; title = "Open Url"; ObjectID = "7XP-he-DPA"; */
+"7XP-he-DPA.title" = "Abrir Url";
+/* Class = "NSMenuItem"; title = "Copy to Clipboard"; ObjectID = "XHU-IL-qb5"; */
+"XHU-IL-qb5.title" = "Copiar al portapapeles";
+/* Class = "NSMenuItem"; title = "Tools"; ObjectID = "hzl-Fh-fle"; */
+"hzl-Fh-fle.title" = "Herramientas";
+/* Class = "NSMenuItem"; title = "Delete APFS Container"; ObjectID = "EMZ-X5-qoN"; */
+"EMZ-X5-qoN.title" = "Eliminar contenedor APFS";
+/* Class = "NSMenuItem"; title = "Convert to APFS"; ObjectID = "lsD-x0-jlt"; */
+"lsD-x0-jlt.title" = "Convertir a APFS";
+/* Class = "NSMenuItem"; title = "Copy IOReg Path"; ObjectID = "VTm-tE-hQe"; */
+"VTm-tE-hQe.title" = "Copiar ruta de IOReg";
+/* Class = "NSMenuItem"; title = "Copy Device Path"; ObjectID = "CS3-ME-Vvd"; */
+"CS3-ME-Vvd.title" = "Copiar ruta del dispositivo";
+/* Class = "NSMenuItem"; title = "Eject"; ObjectID = "qfB-NO-Xg0"; */
+"qfB-NO-Xg0.title" = "Espulsar";
+/* Class = "NSMenuItem"; title = "Open"; ObjectID = "L4p-C1-k8r"; */
+"L4p-C1-k8r.title" = "Abrir";
+/* Class = "NSMenuItem"; title = "Save..."; ObjectID = "Qt1-ky-Hn9"; */
+"Qt1-ky-Hn9.title" = "Guardar...";
