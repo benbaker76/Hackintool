@@ -8368,7 +8368,7 @@ NSInteger usbControllerSort(id a, id b, void *context)
 		[self appendTextView:_patchOutputTextView text:base64ModifiedEncoded];
 	}
 	
-	[self appendTextViewWithFormat:_patchOutputTextView format:@"\rComment: %@ %@ Patch by Hackintool (credit headkaze)\r\r", platformIDString, name];
+	[self appendTextViewWithFormat:_patchOutputTextView format:@"\rComment: %@ %@ Patch by Hackintool (credit Ben Baker)\r\r", platformIDString, name];
 	
 	return true;
 }
