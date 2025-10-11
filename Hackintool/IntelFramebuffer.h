@@ -218,26 +218,34 @@ union ConnectorFlags
 {
 	struct ConnectorFlagBits
 	{
-		/* Bits 1, 2, 8 are mentioned in AppleIntelFramebufferController::GetGPUCapability */
-		/* Lets apperture memory to be not required AppleIntelFramebuffer::isApertureMemoryRequired */
-		uint8_t CNAlterAppertureRequirements :1;  /* 0x1 */
-		uint8_t CNUnknownFlag_2              :1;  /* 0x2 */
-		uint8_t CNUnknownFlag_4              :1;  /* 0x4 */
-		/* Normally set for LVDS displays (i.e. built-in displays) */
-		uint8_t CNConnectorAlwaysConnected   :1;  /* 0x8 */
-		uint8_t CNUnknownFlag_10             :1;  /* 0x10 */
-		uint8_t CNUnknownFlag_20             :1;  /* 0x20 */
-		/* Disable blit translation table? AppleIntelFramebufferController::ConfigureBufferTranslation */
-		uint8_t CNDisableBlitTranslationTable:1;  /* 0x40 */
-		uint8_t CNUnknownFlag_80             :1;  /* 0x80 */
-		uint8_t CNUnknownFlag_100            :1;  /* 0x100 */
-		uint8_t CNUnknownFlag_200            :1;  /* 0x200 */
-		uint8_t CNUnknownFlag_400            :1;  /* 0x400 */
-		uint8_t CNUnknownFlag_800            :1;  /* 0x800 */
-		uint8_t CNUnknownFlag_1000           :1;  /* 0x1000 */
-		uint8_t CNUnknownFlag_2000           :1;  /* 0x2000 */
-		uint8_t CNUnknownFlag_4000           :1;  /* 0x4000 */
-		uint8_t CNUnknownFlag_8000           :1;  /* 0x8000 */
+        /* Bits 1, 2, 8 are mentioned in AppleIntelFramebufferController::GetGPUCapability */
+        /* Lets apperture memory to be not required AppleIntelFramebuffer::isApertureMemoryRequired */
+        uint8_t CNAlterAppertureRequirements :1;  /* 0x1 */
+        uint8_t CNUnknownFlag_2              :1;  /* 0x2 */
+        uint8_t CNUnknownFlag_4              :1;  /* 0x4 */
+        /* Normally set for LVDS displays (i.e. built-in displays) */
+        uint8_t CNConnectorAlwaysConnected   :1;  /* 0x8 */
+        /* AppleIntelFramebuffer::maxSupportedDepths checks this and returns 2 IODisplayModeInformation::maxDepthIndex ?? */
+        uint8_t CNUnknownFlag_10             :1;  /* 0x10 */
+        uint8_t CNUnknownFlag_20             :1;  /* 0x20 */
+        /* Disable blit translation table? AppleIntelFramebufferController::ConfigureBufferTranslation */
+        uint8_t CNDisableBlitTranslationTable:1;  /* 0x40 */
+        /* Used in AppleIntelFramebufferController::setPowerWellState */
+        /* Activates MISC IO power well (SKL_DISP_PW_MISC_IO) */
+        uint8_t CNUseMiscIoPowerWell         :1;  /* 0x80 */
+        /* Used in AppleIntelFramebufferController::setPowerWellState */
+        /* Activates Power Well 2 usage (SKL_PW_CTL_IDX_PW_2) */
+        /* May help with HDMI audio configuration issues */
+        /* REF: https://github.com/acidanthera/bugtracker/issues/1189 */
+        uint8_t CNUsePowerWell2              :1;  /* 0x100 */
+        uint8_t CNUnknownFlag_200            :1;  /* 0x200 */
+        uint8_t CNUnknownFlag_400            :1;  /* 0x400 */
+        /* Sets fAvailableLaneCount to 30 instead of 20 when specified */
+        uint8_t CNIncreaseLaneCount          :1;  /* 0x800 */
+        uint8_t CNUnknownFlag_1000           :1;  /* 0x1000 */
+        uint8_t CNUnknownFlag_2000           :1;  /* 0x2000 */
+        uint8_t CNUnknownFlag_4000           :1;  /* 0x4000 */
+        uint8_t CNUnknownFlag_8000           :1;  /* 0x8000 */
 		uint16_t CNUnknownZeroFlags;
 	} bits;
 	uint32_t value;
@@ -399,7 +407,10 @@ struct FramebufferBDW
 struct FramebufferSKL
 {
 	uint32_t framebufferID;
-	uint32_t pad;
+    /* Unclear what values really are, yet 4 stands for non-LP chipset.
+     * See AppleIntelFramebufferController::start.
+     */
+    uint32_t fPchType;
 	uint64_t fModelNameAddr;
 	/* While it is hard to be sure, because having 0 here results in online=true returned by
 	 * AppleIntelFramebuffer::GetOnlineInfo, after all it appears to be the case, and the unused
@@ -417,20 +428,20 @@ struct FramebufferSKL
 	uint32_t fUnifiedMemorySize;
 	uint32_t fBacklightFrequency;
 	uint32_t fBacklightMax;
-	uint32_t pad2[2];
+	uint32_t pad1[2];
 	ConnectorInfo connectors[4];
 	FramebufferFlags flags;
 	/* Check DDI Buffer Translations in Linux driver for details. */
 	uint8_t fBTTableOffsetIndexSlice; /* FBEnableSliceFeatures = 1 */
 	uint8_t fBTTableOffsetIndexNormal; /* FBEnableSliceFeatures = 0 */
 	uint8_t fBTTableOffsetIndexHDMI; /* fDisplayType = 1 */
-	uint8_t pad3;
+	uint8_t pad2;
 	uint32_t camelliaVersion;
 	uint64_t unk3[3];
 	uint32_t fNumTransactionsThreshold;
 	/* Defaults to 14, used when UseVideoTurbo bit is set */
 	uint32_t fVideoTurboFreq;
-	uint32_t pad4;
+	uint32_t pad3;
 	uint64_t fBTTArraySliceAddr;
 	uint64_t fBTTArrayNormalAddr;
 	uint64_t fBTTArrayHDMIAddr;
@@ -442,7 +453,10 @@ struct FramebufferSKL
 struct FramebufferCFL
 {
 	uint32_t framebufferID;
-	uint32_t pad;
+    /* Unclear what values really are, yet 4 stands for non-LP chipset.
+     * See AppleIntelFramebufferController::start.
+     */
+	uint32_t fPchType;
 	uint64_t fModelNameAddr;
 	/* While it is hard to be sure, because having 0 here results in online=true returned by
 	 * AppleIntelFramebuffer::GetOnlineInfo, after all it appears to be the case, and the unused
@@ -458,20 +472,20 @@ struct FramebufferCFL
 	/* This is for boot framebuffer from what I can understand */
 	uint32_t fFramebufferMemorySize;
 	uint32_t fUnifiedMemorySize;
-	uint32_t pad2[2];
+	uint32_t pad1[2];
 	ConnectorInfo connectors[4];
 	FramebufferFlags flags;
 	/* Check DDI Buffer Translations in Linux driver for details. */
 	uint8_t fBTTableOffsetIndexSlice; /* FBEnableSliceFeatures = 1 */
 	uint8_t fBTTableOffsetIndexNormal; /* FBEnableSliceFeatures = 0 */
 	uint8_t fBTTableOffsetIndexHDMI; /* fDisplayType = 1 */
-	uint8_t pad3;
+	uint8_t pad2;
 	uint32_t camelliaVersion;
 	uint64_t unk3[3];
 	uint32_t fNumTransactionsThreshold;
 	/* Defaults to 14, used when UseVideoTurbo bit is set */
 	uint32_t fVideoTurboFreq;
-	uint32_t pad4;
+	uint32_t pad3;
 	uint64_t fBTTArraySliceAddr;
 	uint64_t fBTTArrayNormalAddr;
 	uint64_t fBTTArrayHDMIAddr;
@@ -483,8 +497,9 @@ struct FramebufferCFL
 /* Not sure what it is, in CNL value2 is a pointer, and value1 could be size.  */
 struct FramebufferCNLCurrents
 {
-	uint64_t value1;
-	uint64_t valu2;
+    uint32_t value1;
+    uint32_t pad;
+    uint64_t value2;
 };
 
 struct FramebufferCNL
