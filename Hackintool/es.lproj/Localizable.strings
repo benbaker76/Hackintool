@@ -1,7 +1,4 @@
-// Fichero Localizable.strings traducido y revisado por ChatGPT y kaoskinkae
-
-// Archivo corregido - Castellano técnico
-
+//// Info / System
 "Unlock" = "Desbloquear";
 "System" = "Sistema";
 "Serial" = "Generador de número de serie";
@@ -48,7 +45,9 @@
 "Valid" = "Válido";
 "Possibly" = "Posiblemente";
 "Unlikely" = "Mejorar";
+// Info / Serial Generator
 "Serial Generator Info:" = "Info del Generador del Serial:";
+// Info / Model
 "Model Info:" = "Información del Modelo:";
 "2nd Disp Support" = "Soporte de Segunde la Pantalla";
 "2nd Max Res" = "Soporte de segunda pantalla";
@@ -123,6 +122,7 @@
 "Model:" = "Modelo:";
 "Visit EveryMac" = "Visite EveryMac";
 "Visit" = "Visite";
+// Info / Misc
 "Network Interfaces:" = "Interfaces de Redes:";
 "Vendor " = "Fabricante";
 "Vendor Name" = "Nombre del Fabricante";
@@ -140,8 +140,9 @@
 "Model" = "Modelo";
 "Location" = "Local";
 "Phy Block" = "Bloques Físicos";
+// Menu
 "About Hackintool" = "Sobre de Hackintool";
-"Check for Updates..." = "Acerca de Hackintool";
+"Check for Updates..." = "Buscar Actualización";
 "Preferences…" = "Preferencias…";
 "Services" = "Servicios";
 "Hide Hackintool" = "Ocultar Hackintool";
@@ -220,6 +221,7 @@
 "Logs" = "Logs";
 "Intel Generation:" = "Generación Intel:";
 "Platform ID:" = "Plataforma ID:";
+// Tabs
 "Info" = "Info";
 "Framebuffer" = "Información";
 "Connectors" = "Conectores";
@@ -227,18 +229,22 @@
 "Go To Current" = "Ir para Actual ";
 "Reload" = "Recargar";
 "Selected Framebuffer" = "Framebuffer Selecionado";
+// Patch
 "Intel Generation" = "Generación Intel";
 "Platform ID" = "Plataforma ID";
 "GPU Name" = "Nombre de la GPU";
 "Mobile" = "Móvil";
 "GPU Device ID(s)" = "Dispositivo GPU ID(s)";
 "Model(s)" = "Modelo(s)";
+// Patch / Current Framebuffer Info
 "Current Framebuffer" = "Framebuffer Actual";
+// Patch / VRAM Info
 "VRAM Info:" = "Información de VRAM:";
 "Stolen" = "Reservada";
 "FBMem" = "Framebuffer";
 "VRAM" = "VRAM";
 "Max Stolen" = "Max Reservada";
+// Patch / Framebuffer
 "Total Stolen" = "Total Reservada";
 "Total Cursor" = "Total Cursor";
 "Max Overall" = "General Máximo";
@@ -319,8 +325,8 @@
 "CNUnknownFlag_10" = "CNUnknownFlag_10";
 "CNUnknownFlag_20" = "CNUnknownFlag_20";
 "CNDisableBlitTranslationTable" = "CNDisableBlitTranslationTable";
-"CNUseMiscIoPowerWell" = "CNUnknownFlag_80";
-"CNUsePowerWell2" = "CNUnknownFlag_100";
+"CNUseMiscIoPowerWell" = "CNUseMiscIoPowerWell";
+"CNUsePowerWell2" = "CNUsePowerWell2";
 "CNUnknownFlag_200" = "CNUnknownFlag_200";
 "CNUnknownFlag_400" = "CNUnknownFlag_400";
 "CNUnknownFlag_800" = "CNUnknownFlag_800";
@@ -329,6 +335,7 @@
 "CNUnknownFlag_4000" = "CNUnknownFlag_4000";
 "CNUnknownFlag_8000" = "CNUnknownFlag_8000";
 "CNUnknownZeroFlags" = "CNUnknownZeroFlags";
+// Patch Options / Advanced ToolTips
 "TT_DVMTPreAlloc32MB" = "Establece la preasignación de DVMT en 32 MB para que coincide la con la configuración de la BIOS (stolen mem = 19 MB / fb mem = 9 MB)";
 "TT_DisableeGPU" = "Desactiva GPU externa (disable-external-gpu)";
 "TT_EnableHDMI20" = "HDMI en resolución 4K con 60 fps (enable-hdmi20)";
@@ -343,7 +350,9 @@
 "TT_SpoofAudioDeviceID" = "Falsificar el ID del dispositivo HDEF si está disponible";
 "TT_SpoofVideoDeviceID" = "Identificación del dispositivo IGPU falsa";
 "TT_InjectDeviceID" = "Identificación del dispositivo IGPU falsa";
+// Patch Options / LSPCON ToolTips
 "TT_LSPCONEnableDriver" = "Las computadoras portátiles recientes (basadas en Kaby Lake/Coffee Lake) suelen estar equipadas con un puerto HDMI 2.0. Este puerto puede estar enrutado a IGPU o DGPU, y puede tener una confirmación en Windows 10. Sin embargo, Intel (U)HD Graphics no proporciona una salide la HDMI 2.0 nativa, por lo que para resolver este problema, los OEM agregan un hardware adicional llamado LSPCON en la placa base para convertir DisplayPort en HDMI 2.0. LSPCON funciona en modo Level Shifter (LS) o Protocol Converter (PCON). Cuando el adaptador funciona en modo LS, es capaz de producir señales HDMI 1.4 desde DisplayPort, mientras que en modo PCON, podría proporcionar una salide la HDMI 2.0. Algunos adaptadores LSPCON integrados (por ejemplo, el de Dell XPS 15 9570) se han configurado en el firmware para funcionar en modo LS de forma predeterminada, lo que genera una pantalla negra al manejar conexiones HDMI 2.0.\r\rA partir de la versión 1.3.0, WhateverGreen ahora proporciona soporte de controlador para el LSPCON integrado al configurar automáticamente el adaptador para que se ejecute en modo PCON en nuevas conexiones HDMI y, por lo tanto, resuelve el problema de la pantalla negra en algunas plataformas.\r\r- El controlador LSPCON solo se aplica a computadoras portátiles y PC con HDMI 2.0 enrutado a IGPU.\r- El controlador LSPCON es necesario para todas las plataformas más nuevas a menos que la nueva IGPU comience a proporcionar una salide la HDMI 2.0 nativa.\r- Plataforma Intel compatible: Skylake, Kaby Lake, Coffee Lake y posteriores.\rEstuche Skylake: Intel NUC Skull Canyon; Iris Pro 580 + HDMI 2.0 con Parade PS175 LSPCON.\rCaso Coffee Lake: Algunas computadoras portátiles, por ejemplo, Dell XPS 15 9570, están equipadas con HDMI 2.0 y Parade PS175 LSPCON.\r- Si ha confirmado que su HDMI 2.0 está enrutado a IGPU y está funcionando correctamente en este momento, no necesita habilitar este controlador, porque su LSPCON integrado podría ya estar configurado en el firmware para funcionar en modo PCON.";
+// Framebuffer Flags ToolTips
 "TT_FBAvoidFastLinkTraining" = "Descubierto en AppleIntelFBController::LinkTraining. Desactiva el uso de FastLinkTraining. Según joevt, con cero SKL, el entrenamiento del enlace se realiza a 450 MHz, de lo contrario, a 540 MHz.";
 "TT_FBFramebufferCommonMemory" = "Establece la lógica del cálculo de minStolenMem, cuandel se establece, fStolenMemorySize no se multiplica por fFBMemoryCount, asumiendel que fStolenMemorySize cuenta todos los búferes de cuadros a la vez.";
 "TT_FBFramebufferCompression" = "Descubierto en AppleIntelFramebufferController::getFeatureControl.\rEsto es equivalente a configurar FBC=1 en la sección FeatureControl de plist.";
@@ -369,11 +378,13 @@
 "TT_FBUnknownFlag_400000" = "";
 "TT_FBSupport5KSourceSize" = "Descubierto en AppleIntelFramebuffer::enableController.\rUtilizadel por AppleIntelFramebuffer::ValidateSourceSize.\rAl configurar este bit, aumenta el tamaño máximo de la fuente de 4096x4096 a 5120x5120.\rLo más probable es que esto habilite la compatibilidad con 5K a través de Intel HD.";
 "TT_FBUnknownZeroFlags" = "";
+// Connector Info ToolTips
 "TT_Index" = "Tenga cuidado, esto es realmente complicado (ver AppleIntelFramebufferController::MapFBToPort). No estoy completamente seguro de por qué existe esto y recomiendo establecer el índice en el índice de la matriz (es decir, el número secuencial desde 0). Los únicos valores aceptados son 0, 1, 2, 3 y -1 (0xFF). Cuando el índice es igual al índice de la matriz, la lógica es simple:\rEl puerto con índice 0 siempre se considera integrado (de tipo LVDS) independientemente de cualquier otro valor.\rLos puertos con índices 1~3 se verifican con el tipo, HDMI permitirá el uso de audio digital, de lo contrario se asume DP.\rEl puerto con índice 0xFF se ignora y se omite.\r\rCuando índice != índice de matriz, el tipo de puerto se leerá desde conector[índice].tipo.\rDigamos que tenemos 2 puertos activos:\r0 - [1] busID 4 tipo LVDS\r1 - [2] busID 5 tipo DP\r2 - [3] busID 6 tipo HDMI\r3 - [-1] busID 0 tipo Dummy\rEsto dará como resultado 2 framebuffers cuyos tipos se cambiarán:\r0 - busID 4 tipo DP\r1 - busID 5 tipo HDMI\rDe hecho, los valores de BusID también se leen como conector[índice].busID, pero luego se vuelven a asignar a través de AppleIntelFramebufferController::getGMBusIDfromPort buscando un conector con el índice especificado. La búsquede la se detendrá tan pronto como se encuentre un conector marcador especial (-1). Para ilustrarlo, si tenemos 2 puertos activos:\r0 - [1] busID 4 tipo LVDS\r1 - [2] busID 5 tipo DP\r2 - [-1] busID 6 tipo HDMI\r3 - [-1] busID 0 tipo Dummy\rEl resultado serán 2 framebuffers cuyos tipos y el segundo busID se desplazarán:\r0 - busID 4 tipo DP\r1 - busID 6 tipo HDMI\rTambién se utiliza para el cálculo del número de puerto.\r- Las pantallas LVDS (más precisamente, las pantallas con el indicador CNConnectorAlwaysConnected establecido) obtienen el número de puerto 0.\r- Otras pantallas pasan por la asignación de índice-número de puerto: 1 - 5, 2 - 6, 3 - 7, o vuelven a 0.";
 "TT_BusID" = "Probado por AppleIntelFramebufferController::MapFBToPort, mediante una llamade la a AppleIntelFramebufferController::getGMBusIDfromPort.\rEste es el ID de GMBUS (Bus de administración gráfica) descrito en https://01.org/sites/default/files/documentation/intel-gfx-prm-osrc-hsw-display_0.pdf.\rEl uso se puede encontrar en el código fuente del controlador de gráficos Intel Linux. Código:\rhttps://github.com/torvalds/linux/blob/6481d5ed076e69db83ca75e751ad492a6fb669a7/drivers/gpu/drm/i915/intel_i2c.c#L43\rhttps://github.com/torvalds/linux/blob/605dc7761d2701f73c17183649de0e3044609817/drivers/gpu/drm/i915/i915_reg.h#L3053\rSin embargo, debe tenerse en cuenta que los identificadores de Apple son ligeramente diferentes del controlador de Linux.\rEn Linux, 0 significa deshabilitado, sin embargo, para Apple tiene un significado especial y se usa para la visualización interna.\rAparte de eso, los valores son los mismos:\r- GMBUS_PIN_DPC (4) HDMIC\r- GMBUS_PIN_DPB (5) SDVO, HDMIB\r- GMBUS_PIN_DPD (6) HDMID\r- GMBUS_PIN_VGADDC (2) VGA hasta Broadwell inclusive.\rBásicamente, puede usar 4, 5, 6 para pantallas HDMI o DisplayPort arbitrarias.\rDado que 5 admite SDVO (https://en.wikipedia.org/wiki/Serial_Digital_Video_Out), también se puede usar para admitir pantallas DVI.\rA partir de Skylake, VGA también funciona a través de SDVO (en lugar de una identificación GMBUS_PIN_VGADDC dedicada).";
 "TT_Pipe" = "AParece usarse para agrupar puertos tal como dice Piker, pero no puedel encontrar el uso.";
 "TT_Type" = "Tipos válidos:\r- Cero\r- Dummy (siempre se usa como dummy, a veces parece funcionar como VGA)\r- LVDS (al igual que en AMD, LVDS se usa para eDP)\r- DigitalDVI (no es eDP a pesar de una creencia errónea común)\r- SVID\r- VGA\r- DP\r- HDMI\r- AnalogDVI";
 "TT_Flags" = "Estas son banderas de conector, no tienen nade la que ver con retrasos independientemente de lo que diga Piker. Intenté describir algunas en ConnectorFlags.";
+// Connector Flags ToolTips
 "TT_CNAlterAppertureRequirements" = "Permite que la memoria de apertura no sea necesaria AppleIntelFramebuffer::isApertureMemoryRequired";
 "TT_CNUnknownFlag_2" = "";
 "TT_CNUnknownFlag_4" = "";
@@ -381,8 +392,8 @@
 "TT_CNUnknownFlag_10" = "";
 "TT_CNUnknownFlag_20" = "";
 "TT_CNDisableBlitTranslationTable" = "¿Desactivar la tabla de traducción blit? AppleIntelFramebufferController::ConfigureBufferTranslation";
-"TT_CNUseMiscIoPowerWell" = "Used in AppleIntelFramebufferController::setPowerWellState\rActivates MISC IO power well (SKL_DISP_PW_MISC_IO)";
-"TT_CNUsePowerWell2" = "Used in AppleIntelFramebufferController::setPowerWellState\rActivates Power Well 2 usage (SKL_PW_CTL_IDX_PW_2)\rMay help with HDMI audio configuration issues\rREF: https://github.com/acidanthera/bugtracker/issues/1189";
+"TT_CNUnknownFlag_80" = "";
+"TT_CNUnknownFlag_100" = "";
 "TT_CNUnknownFlag_200" = "";
 "TT_CNUnknownFlag_400" = "";
 "TT_CNUnknownFlag_800" = "";
@@ -391,6 +402,7 @@
 "TT_CNUnknownFlag_4000" = "";
 "TT_CNUnknownFlag_8000" = "";
 "TT_CNUnknownZeroFlags" = "";
+// Patch / Connectors
 "Connector Info:" = "Información de los Conectores:";
 "Index" = "Índice";
 "Bus ID" = "Bus ID";
@@ -407,6 +419,7 @@
 "Serial No." = "Nº de Serie.";
 "Internal" = "Interno";
 "EDID" = "EDID";
+// Patch / Patch
 "Patch Options:" = "Opciones del Parche:";
 "General" = "General";
 "Advanced" = "Avanzado";
@@ -447,6 +460,7 @@
 "LS (DP to HDMI 1.4)" = "LS (DP to HDMI 1.4)";
 "PCON (DP to HDMI 2.0)" = "PCON (DP to HDMI 2.0)";
 "Generate Patch" = "Generar Parche";
+// Bootloader
 "Bootloader Info:" = "Información del cargador de arranque:";
 "Current Booted Version" = "Versión Boot Actual";
 "Last Installed Version" = "Última Versión Instalada";
@@ -458,15 +472,17 @@
 "Download Bootloader" = "Bajar Bootloader";
 "Refresh Bootloader" = "Refrecar Bootloader";
 "Apply Bootloader Patches" = "Aplicar Parche no Bootloader";
+// NVRAM
 "NVRAM Variables" = "Variables NVRAM";
 "Variable Value" = "Valor Variable";
 "Add" = "Add";
+// Extensions
 "Installed Kexts:" = "Kexts Instaladas:";
 "Select" = "Seleccionar";
 "Installed" = "Instalado";
 "Current" = "Actual";
 "Download" = "Bajar";
-"Replaced By" = "Substituide la Por";
+"Replaced By" = "Reemplazar por";
 "Description" = "Descripción";
 "Url" = "Url";
 "Compile Output" = "Compilar Salida";
@@ -477,6 +493,7 @@
 "Compile Selected" = "Compilar Seleccionado";
 "Install Kext(s)" = "Instalar Kext(s)";
 "Rebuild KextCache and Repair Permissions" = "Reconstruir KextCache e Reparar Permisos";
+// Displays
 "Displays:" = "Monitores:";
 "Name" = "Nombre";
 "Vendor ID" = "ID del Fabricante";
@@ -506,6 +523,7 @@
 "Delete Resolution" = "Apagar Resolución";
 "Refresh" = "Actualizar";
 "Export" = "Exportar";
+// Audio
 "Audio Devices:" = "Dispositivos de Sonido:";
 "Sub Device" = "Sub Dispositivo";
 "Revision" = "Revisión";
@@ -602,6 +620,7 @@
 "Layout ID" = "Dispositivo ID";
 "Boot Config Data" = "Datos de Configuración del Arranque";
 "Info" = "Info";
+// USB
 "USB Controllers:" = "Controladores USB:";
 "ID" = "ID";
 "Name" = "Nombre";
@@ -622,6 +641,7 @@
 "Import" = "Importar";
 "Export" = "Exportar";
 "Active Port" = "Puerto Activo";
+// Disks
 "EFI Partitions:" = "Particiones EFI:";
 "Device Name" = "Nombre del Dispositivo";
 "Partition Scheme" = "Esquema de Partición";
@@ -633,6 +653,7 @@
 "Unmount" = "Desmontar";
 "Open" = "Abrir";
 "Boot EFI" = "Boot EFI";
+// PCI
 "PCI Devices:" = "Dispositivos PCI:";
 "Debug" = "Depurar";
 "Vendor" = "Fabricante";
@@ -645,8 +666,10 @@
 "IOReg Name" = "Nombre IOReg";
 "IOReg IOName" = "IOReg IOName";
 "Device Path" = "Camino del Dispositivo";
+// Power
 "Power Info:" = "Información Energia:";
 "Fix sleepimage" = "Arreglar Sueño";
+// Calculator
 "Sequence" = "Sequencia";
 "Hex:" = "Hex:";
 "Hex (reversed):" = "Hex (reverso):";
@@ -656,6 +679,7 @@
 "Decimal:" = "Decimal:";
 "Octal:" = "Octal:";
 "Binary:" = "Binario:";
+// Tools
 "Tools Output:" = "Salide la de Herramientas:";
 "Get AppleIntelInfo" = "Obtener AppleIntelInfo";
 "Install Kext for Atheros AR92xx/93xx WLan Cards (only 10.14+)" = "Instalar Kext para Atheros AR92xx/93xx WLan Cards (Solamente 10.14+)";
@@ -685,12 +709,14 @@
 "Erase Log" = "Apagar Log";
 "Disable Gatekeeper and mount the disk in read/write mode?" = "Desactivar Gatekeeper e montar el disco model lectura/grabación?";
 "This is required for some operations on macOS 10.15+" = "Esto es necesario para algunas operaciones en el macOS 10.15+";
+// Import KextsToPatch
 "Search (⌘F)" = "Buscar (⌘F)";
 "Import KextsToPatch" = "Importar KextsToPatch";
 "Find:" = "Localizar:";
 "Replace:" = "Substituir:";
 "Cancel" = "Cancelar";
 "OK" = "Ok";
+// Bootloader Updater
 "%@ Updated" = "%@ Actualizado";
 "Downloading %@" = "Descargandel %@";
 "No new %@ Version is Avaliable at this Time!" = "Ninguna Versión %@ está Disponíble Ahora";
@@ -700,6 +726,7 @@
 "Set %@ Installer Location" = "Defina Localizar el Instalador de %@";
 "An error occured while trying to download %@ installer!" = "Un error ocurre cuandel intento bajar o instalar de %@!";
 "%1.1f Mbytes" = "%1.1f Mbytes";
+// Misc
 "You may require %@" = "Puedes exigir %@";
 "You may require Spoof Audio Device ID" = "Puedes exigir Spoof Audio Device ID";
 "%@ %@-series Controller (0x%08X)" = "%@ %@-Controlador de series (0x%08X)";

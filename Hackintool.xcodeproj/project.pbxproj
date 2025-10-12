@@ -86,8 +86,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		46305E5F2E9999BC00D95EAF /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/MainMenu.strings; sourceTree = "<group>"; };
-		46305E602E9999BD00D95EAF /* es */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = es; path = es.lproj/Credits.rtf; sourceTree = "<group>"; };
+		46305E632E9C255300D95EAF /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/MainMenu.strings; sourceTree = "<group>"; };
+		46305E642E9C255300D95EAF /* es */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = es; path = es.lproj/Credits.rtf; sourceTree = "<group>"; };
+		46305E652E9C255300D95EAF /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9F601B9D2DC093F800DA2FED /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DD47FE242ABB85F50063D03F /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/MainMenu.strings"; sourceTree = "<group>"; };
 		DD4F6A3B2ABA379300E9FA56 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -595,7 +596,7 @@
 			children = (
 				E2E9476F2204A9F5005348C0 /* Base */,
 				DD47FE242ABB85F50063D03F /* pt-BR */,
-				46305E5F2E9999BC00D95EAF /* es */,
+				46305E632E9C255300D95EAF /* es */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -605,7 +606,7 @@
 			children = (
 				E2521F4422081D7200DB2BD2 /* Base */,
 				E2EA734A22845CDB0095E56C /* zh-Hans */,
-				46305E602E9999BD00D95EAF /* es */,
+				46305E642E9C255300D95EAF /* es */,
 			);
 			name = Credits.rtf;
 			sourceTree = "<group>";
@@ -623,6 +624,7 @@
 				E2A91B71235CA34A007B7851 /* tr */,
 				DD4F6A3B2ABA379300E9FA56 /* pt-BR */,
 				9F601B9D2DC093F800DA2FED /* zh-Hant */,
+				46305E652E9C255300D95EAF /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -735,7 +737,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0409;
+				CURRENT_PROJECT_VERSION = 0411;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -750,7 +752,7 @@
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 4.1.0;
+				MARKETING_VERSION = 4.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -772,7 +774,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0409;
+				CURRENT_PROJECT_VERSION = 0411;
 				DEVELOPMENT_TEAM = 5LGHPJM9ZR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -787,7 +789,7 @@
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 4.1.0;
+				MARKETING_VERSION = 4.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
