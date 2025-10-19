@@ -575,10 +575,10 @@
 		<string>Lilu</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>AlpsHID</string>
 		<key>Description</key>
 		<string>VoodooI2C HID plugin for add support ALPS touchpad</string>
+		<key>Name</key>
+		<string>AlpsHID</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/blankmac/AlpsHID</string>
 		<key>Type</key>
@@ -716,7 +716,7 @@
 		<key>Description</key>
 		<string>An OpenBSD-based macOS Intel wireless card driver for supported devices that behaves like an integrated AirPort card</string>
 		<key>Name</key>
-		<string>itlwm</string>
+		<string>AirportItlwm</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/OpenIntelWireless/itlwm</string>
 		<key>Type</key>
@@ -757,6 +757,108 @@
 		<string>https://github.com/0xFireWolf/RealtekCardReaderFriend</string>
 		<key>Type</key>
 		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>Hyper-V integration support for macOS</string>
+		<key>Name</key>
+		<string>MacHyperVSupport</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/MacHyperVSupport</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>Make PCIe drives appear internal</string>
+		<key>Name</key>
+		<string>Innie</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/cdf/Innie</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>A Lilu plugin intended to enable debug output in the macOS kernel</string>
+		<key>Name</key>
+		<string>DebugEnhancer</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/acidanthera/DebugEnhancer</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>Power management, monitoring and VirtualSMC plugin for AMD processors</string>
+		<key>Name</key>
+		<string>AMDRyzenCPUPowerManagement</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/trulyspinach/SMCAMDProcessor</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>BundleID</key>
+		<string>HoRNDIS</string>
+		<key>Description</key>
+		<string>Android USB tethering driver for Mac OS X</string>
+		<key>Name</key>
+		<string>HoRNDIS9.2</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/w19996/HoRNDIS</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>Disable EFICheck.kext to avoid Firmware changes detected errors.</string>
+		<key>Name</key>
+		<string>EFICheckDisabler</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/w19996/EFICheckDisabler</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>A Lilu plugin that makes System Information recognize your builtin USB card reader as a native one.</string>
+		<key>Name</key>
+		<string>GenericCardReaderFriend</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/0xFireWolf/GenericCardReaderFriend</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>An Lilu plugin that optimizes Intel heterogeneous core configuration.</string>
+		<key>Name</key>
+		<string>CpuTopologyRebuild</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/b00t0x/CpuTopologyRebuild</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>Making USB mapping simple(r)</string>
+		<key>Name</key>
+		<string>USBToolBox</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/USBToolBox/kext</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>A macOS kext for Intel i210/211 Gbit Ethernet.</string>
+		<key>Name</key>
+		<string>SimpleGBE</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/laobamac/SimpleGBE</string>
+		<key>Type</key>
+		<string>Kext</string>
 	</dict>
 </array>
 </plist>
