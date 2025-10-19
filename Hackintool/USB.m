@@ -956,6 +956,30 @@ void exportUSBPortsKext(AppDelegate *appDelegate)
 			//[usbEntryDictionary removeObjectForKey:@"Comment"];
 		}
 	}
+
+	// Add compatibility to macOS Tahoe, set modern classes and copy old keys to new keys.
+    // Committed by laobamac
+    for (NSString *ioKitKey in [ioKitPersonalities allKeys])
+    {
+        NSMutableDictionary *modelEntryDictionary = [ioKitPersonalities objectForKey:ioKitKey];
+        [modelEntryDictionary setObject:@"AppleUSBHostMergeProperties" forKey:@"IOClass"];
+        [modelEntryDictionary setObject:@"com.apple.driver.AppleUSBHostMergeProperties" forKey:@"CFBundleIdentifier"];
+        NSMutableDictionary *ioProviderMergePropertiesDictionary = [modelEntryDictionary objectForKey:@"IOProviderMergeProperties"];
+        NSMutableDictionary *portsDictionary = [ioProviderMergePropertiesDictionary objectForKey:@"ports"];
+        
+        for (NSString *portKey in [portsDictionary allKeys])
+        {
+            NSMutableDictionary *usbEntryDictionary = [portsDictionary objectForKey:portKey];
+            id portValue = [usbEntryDictionary objectForKey:@"port"];
+            if (portValue) {
+                [usbEntryDictionary setObject:portValue forKey:@"usb-port-number"];
+            }
+            id connectorValue = [usbEntryDictionary objectForKey:@"UsbConnector"];
+            if (connectorValue) {
+                [usbEntryDictionary setObject:connectorValue forKey:@"usb-port-type"];
+            }
+        }
+    }
 	
 	NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 	NSString *destFilePath = [NSString stringWithFormat:@"%@/USBPorts.kext", desktopPath];
