@@ -51,8 +51,6 @@ jobs:
           filename: Hackintool.zip
       - name: Clean up
         run: rm -R build/Hackintool.app
-      - name: Generate appcast.xml
-        run: sparkle/bin/generate_appcast --ed-key-file eddsa_private.key -o build/appcast.xml build
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -66,8 +64,3 @@ jobs:
           tag: ${{ steps.version.outputs.result }}
           overwrite: true
           file_glob: true
-      - name: Clean up keychain and provisioning profile
-        if: ${{ always() }}
-        run: |
-          security delete-keychain app-signing.keychain
-          rm eddsa_private.key
