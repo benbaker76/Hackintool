@@ -7,16 +7,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Install the Apple certificate and provisioning profile
-        uses: apple-actions/import-codesign-certs@v1
-        with:
-          keychain: app-signing
-          p12-file-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-          p12-password: ${{ secrets.P12_PASSWORD }}
-      - name: Get Sparkle key
-        env:
-          PRIVATE_SPARKLE_KEY: ${{ secrets.PRIVATE_SPARKLE_KEY }}
-        run: 'echo "${{ env.PRIVATE_SPARKLE_KEY }}" | base64 -d -o eddsa_private.key'
       - name: Set up Python
         uses: actions/setup-python@v5
         with:

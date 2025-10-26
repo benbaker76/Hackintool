@@ -2475,7 +2475,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSArray *iconArray = @[@"Default", @"iMac", @"MacBook", @"MacBook Pro", @"LG Display"];
 	[_iconComboBox addItemsWithObjectValues:translateArray(iconArray)];
 	
-	NSArray *resolutionArray = @[@"1080p", @"2K", @"Manual"];
+    NSArray *resolutionArray = @[@"1080p",@"2K",@"4K",@"1200p(1920*1200)",@"Manual"];
 	[_resolutionComboBox addItemsWithObjectValues:translateArray(resolutionArray)];
 	
 	[self refreshDisplays];
@@ -9775,7 +9775,13 @@ NSInteger usbControllerSort(id a, id b, void *context)
 										  [[[Resolution alloc] initWithWidth:1280 height:720 type:kHiDPI1] autorelease],
 										  [[[Resolution alloc] initWithWidth:1024 height:576 type:kHiDPI1] autorelease],
 								];
-		
+        NSArray *resolution1200pArray = @[
+                                          [[[Resolution alloc] initWithWidth:1920 height:1200 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1680 height:1050 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1440 height:900 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1280 height:800 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1024 height:640 type:kHiDPI1] autorelease],
+                                ];
 		NSArray *resolution2KArray = @[
 									   [[[Resolution alloc] initWithWidth:2048 height:1152 type:kHiDPI1] autorelease],
 									   [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI1] autorelease],
@@ -9786,7 +9792,16 @@ NSInteger usbControllerSort(id a, id b, void *context)
 									   [[[Resolution alloc] initWithWidth:960 height:540 type:kHiDPI3] autorelease],
 									   [[[Resolution alloc] initWithWidth:2048 height:1152 type:kHiDPI4] autorelease],
 										  ];
-		
+        NSArray *resolution4KArray = @[
+                                               [[[Resolution alloc] initWithWidth:4096 height:2160 type:kHiDPI1] autorelease], // DCI 4K 标准
+                                               [[[Resolution alloc] initWithWidth:3840 height:2160 type:kHiDPI1] autorelease], // 4K UHD 标准
+                                               [[[Resolution alloc] initWithWidth:3200 height:1800 type:kHiDPI1] autorelease],
+                                               [[[Resolution alloc] initWithWidth:3008 height:1692 type:kHiDPI1] autorelease],
+                                               [[[Resolution alloc] initWithWidth:2560 height:1440 type:kHiDPI1] autorelease],
+                                               [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI2] autorelease], // 像素精确缩放 (2x)
+                                               [[[Resolution alloc] initWithWidth:1600 height:900  type:kHiDPI3] autorelease],
+                                               [[[Resolution alloc] initWithWidth:3840 height:2160 type:kHiDPI4] autorelease],
+                                                  ];
 		NSArray *resolutionGeneralArray = @[
 											[[[Resolution alloc] initWithWidth:1280 height:720 type:kHiDPI2] autorelease],
 											[[[Resolution alloc] initWithWidth:960 height:540 type:kHiDPI2] autorelease],
@@ -9807,6 +9822,26 @@ NSInteger usbControllerSort(id a, id b, void *context)
 											[[[Resolution alloc] initWithWidth:960 height:540 type:kHiDPI4] autorelease],
 											[[[Resolution alloc] initWithWidth:640 height:360 type:kHiDPI4] autorelease],
 										  ];
+        NSArray *resolutionGeneral1200pArray = @[
+                                            [[[Resolution alloc] initWithWidth:1280 height:800 type:kHiDPI2] autorelease],
+                                            [[[Resolution alloc] initWithWidth:960 height:600 type:kHiDPI2] autorelease],
+                                            [[[Resolution alloc] initWithWidth:640 height:400 type:kHiDPI2] autorelease],
+                                            [[[Resolution alloc] initWithWidth:840 height:525 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:720 height:450 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:640 height:400 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:576 height:360 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:512 height:320 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:420 height:262 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:400 height:250 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:320 height:200 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1920 height:1200 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1680 height:1050 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1440 height:900 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1280 height:800 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1024 height:600 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:960 height:600 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:640 height:400 type:kHiDPI4] autorelease],
+                                          ];
 
 		if ([display.resolutionsArray count] == 0)
 		{
@@ -9814,15 +9849,23 @@ NSInteger usbControllerSort(id a, id b, void *context)
 			{
 				case 0: // 1080p
 					[display.resolutionsArray addObjectsFromArray:resolution1080pArray];
+                    [display.resolutionsArray addObjectsFromArray:resolutionGeneralArray];
 					break;
 				case 1: // 2K
 					[display.resolutionsArray addObjectsFromArray:resolution2KArray];
+                    [display.resolutionsArray addObjectsFromArray:resolutionGeneralArray];
 					break;
-				case 2: // Manual
+				case 2: // 4K
+                    [display.resolutionsArray addObjectsFromArray:resolution2KArray];
+                    [display.resolutionsArray addObjectsFromArray:resolutionGeneralArray];
 					break;
+                case 3: // 1200p
+                    [display.resolutionsArray addObjectsFromArray:resolution1200pArray];
+                    [display.resolutionsArray addObjectsFromArray:resolutionGeneral1200pArray];
+                    break;
 			}
 			
-			[display.resolutionsArray addObjectsFromArray:resolutionGeneralArray];
+			
 		}
 		else
 		{
