@@ -7,10 +7,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Install the Apple certificate and provisioning profile
+        uses: apple-actions/import-codesign-certs@v1
+        with:
+          keychain: app-signing
+          p12-file-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
+      - name: Get Sparkle key
+        env:
+          PRIVATE_SPARKLE_KEY: ${{ secrets.PRIVATE_SPARKLE_KEY }}
+        run: 'echo "${{ env.PRIVATE_SPARKLE_KEY }}" | base64 -d -o eddsa_private.key'
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.11'
           cache: 'pip'
       - name: Install Python Requirements
         run: |
@@ -51,6 +61,8 @@ jobs:
           filename: Hackintool.zip
       - name: Clean up
         run: rm -R build/Hackintool.app
+      - name: Generate appcast.xml
+        run: sparkle/bin/generate_appcast --ed-key-file eddsa_private.key -o build/appcast.xml build
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -64,3 +76,7 @@ jobs:
           tag: ${{ steps.version.outputs.result }}
           overwrite: true
           file_glob: true
+      - name: Clean up keychain and provisioning profile
+        if: ${{ always() }}
+        run: |
+          security delete-keychain app-signing.keychain
