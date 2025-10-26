@@ -9792,10 +9792,10 @@ NSInteger usbControllerSort(id a, id b, void *context)
             [[[Resolution alloc] initWithWidth:2560 height:1440 type:kHiDPI2] autorelease],
             [[[Resolution alloc] initWithWidth:2304 height:1296 type:kHiDPI3] autorelease],
             [[[Resolution alloc] initWithWidth:2048 height:1152 type:kHiDPI3] autorelease],
-            [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI3] autorelease], /
+            [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI3] autorelease],
             [[[Resolution alloc] initWithWidth:1680 height:945 type:kHiDPI3] autorelease],
             [[[Resolution alloc] initWithWidth:5120 height:2880 type:kHiDPI4] autorelease],
-        ];
+            ];
 		NSArray *resolution2KArray = @[
 									   [[[Resolution alloc] initWithWidth:2048 height:1152 type:kHiDPI1] autorelease],
 									   [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI1] autorelease],
@@ -9807,12 +9807,12 @@ NSInteger usbControllerSort(id a, id b, void *context)
 									   [[[Resolution alloc] initWithWidth:2048 height:1152 type:kHiDPI4] autorelease],
 										  ];
         NSArray *resolution4KArray = @[
-                                               [[[Resolution alloc] initWithWidth:4096 height:2160 type:kHiDPI1] autorelease], // DCI 4K 标准
-                                               [[[Resolution alloc] initWithWidth:3840 height:2160 type:kHiDPI1] autorelease], // 4K UHD 标准
+                                               [[[Resolution alloc] initWithWidth:4096 height:2160 type:kHiDPI1] autorelease],
+                                               [[[Resolution alloc] initWithWidth:3840 height:2160 type:kHiDPI1] autorelease],
                                                [[[Resolution alloc] initWithWidth:3200 height:1800 type:kHiDPI1] autorelease],
                                                [[[Resolution alloc] initWithWidth:3008 height:1692 type:kHiDPI1] autorelease],
                                                [[[Resolution alloc] initWithWidth:2560 height:1440 type:kHiDPI1] autorelease],
-                                               [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI2] autorelease], // 像素精确缩放 (2x)
+                                               [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI2] autorelease], 
                                                [[[Resolution alloc] initWithWidth:1600 height:900  type:kHiDPI3] autorelease],
                                                [[[Resolution alloc] initWithWidth:3840 height:2160 type:kHiDPI4] autorelease],
                                                   ];
