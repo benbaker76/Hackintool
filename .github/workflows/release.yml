@@ -80,3 +80,4 @@ jobs:
         if: ${{ always() }}
         run: |
           security delete-keychain app-signing.keychain
+          rm eddsa_private.key 
