@@ -2475,7 +2475,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSArray *iconArray = @[@"Default", @"iMac", @"MacBook", @"MacBook Pro", @"LG Display"];
 	[_iconComboBox addItemsWithObjectValues:translateArray(iconArray)];
 	
-    NSArray *resolutionArray = @[@"1080p",@"2K",@"4K",@"1920*1200",@"5K",@"Manual"];
+    NSArray *resolutionArray = @[@"1080p",@"2K",@"4K",@"1200p",@"5K",@"Manual"];
 	[_resolutionComboBox addItemsWithObjectValues:translateArray(resolutionArray)];
 	
 	[self refreshDisplays];
