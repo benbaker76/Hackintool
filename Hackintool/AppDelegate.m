@@ -2475,7 +2475,7 @@ void authorizationGrantedCallback(AuthorizationRef authorization, OSErr status, 
 	NSArray *iconArray = @[@"Default", @"iMac", @"MacBook", @"MacBook Pro", @"LG Display"];
 	[_iconComboBox addItemsWithObjectValues:translateArray(iconArray)];
 	
-	NSArray *resolutionArray = @[@"1080p", @"2K", @"Manual"];
+    NSArray *resolutionArray = @[@"1080p", @"2K", @"4K", @"1200p", @"5K", @"Manual"];
 	[_resolutionComboBox addItemsWithObjectValues:translateArray(resolutionArray)];
 	
 	[self refreshDisplays];
@@ -9725,145 +9725,207 @@ NSInteger usbControllerSort(id a, id b, void *context)
 
 - (IBAction)displayButtonClicked:(id)sender
 {
-	NSButton *button = (NSButton *)sender;
-	NSString *identifier = [button identifier];
-	
-	if ([identifier isEqualToString:@"Info"])
-	{
-		/* [_infoTextView setString:@""];
-		[_infoTextField setStringValue:@""];
-		
-		NSBundle *mainBundle = [NSBundle mainBundle];
-		NSString *filePath = nil;
-		
-		if ((filePath = [mainBundle pathForResource:@"EDID" ofType:@"rtf"]))
-			[_infoTextView readRTFDFromFile:filePath];
-		
-		NSRect frame = [_infoWindow frame];
-		frame.size = NSMakeSize(_window.frame.size.width, frame.size.height);
-		[_infoWindow setFrame:frame display:NO animate:NO];
-		
-		[_window beginSheet:_infoWindow completionHandler:^(NSModalResponse returnCode)
-		 {
-			 switch (returnCode)
-			 {
-				 case NSModalResponseCancel:
-					 break;
-				 case NSModalResponseOK:
-					 break;
-				 default:
-					 break;
-			 }
-		 }]; */
-		
-		NSString *helpBookName = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
-		[[NSHelpManager sharedHelpManager] openHelpAnchor:@"Display" inBook:helpBookName];
-		
-		return;
-	}
-	else if ([identifier isEqualToString:@"Add"])
-	{
-		Display *display;
-		
-		if (![self getCurrentlySelectedDisplay:&display])
-			return;
-		
-		NSArray *resolution1080pArray = @[
-										  [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI1] autorelease],
-										  [[[Resolution alloc] initWithWidth:1680 height:945 type:kHiDPI1] autorelease],
-										  [[[Resolution alloc] initWithWidth:1440 height:810 type:kHiDPI1] autorelease],
-										  [[[Resolution alloc] initWithWidth:1280 height:720 type:kHiDPI1] autorelease],
-										  [[[Resolution alloc] initWithWidth:1024 height:576 type:kHiDPI1] autorelease],
-								];
-		
-		NSArray *resolution2KArray = @[
-									   [[[Resolution alloc] initWithWidth:2048 height:1152 type:kHiDPI1] autorelease],
-									   [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI1] autorelease],
-									   [[[Resolution alloc] initWithWidth:1680 height:945 type:kHiDPI1] autorelease],
-									   [[[Resolution alloc] initWithWidth:1440 height:810 type:kHiDPI1] autorelease],
-									   [[[Resolution alloc] initWithWidth:1280 height:720 type:kHiDPI1] autorelease],
-									   [[[Resolution alloc] initWithWidth:1024 height:576 type:kHiDPI2] autorelease],
-									   [[[Resolution alloc] initWithWidth:960 height:540 type:kHiDPI3] autorelease],
-									   [[[Resolution alloc] initWithWidth:2048 height:1152 type:kHiDPI4] autorelease],
-										  ];
-		
-		NSArray *resolutionGeneralArray = @[
-											[[[Resolution alloc] initWithWidth:1280 height:720 type:kHiDPI2] autorelease],
-											[[[Resolution alloc] initWithWidth:960 height:540 type:kHiDPI2] autorelease],
-											[[[Resolution alloc] initWithWidth:640 height:360 type:kHiDPI2] autorelease],
-											[[[Resolution alloc] initWithWidth:840 height:472 type:kHiDPI3] autorelease],
-											[[[Resolution alloc] initWithWidth:720 height:405 type:kHiDPI3] autorelease],
-											[[[Resolution alloc] initWithWidth:640 height:360 type:kHiDPI3] autorelease],
-											[[[Resolution alloc] initWithWidth:576 height:324 type:kHiDPI3] autorelease],
-											[[[Resolution alloc] initWithWidth:512 height:288 type:kHiDPI3] autorelease],
-											[[[Resolution alloc] initWithWidth:420 height:234 type:kHiDPI3] autorelease],
-											[[[Resolution alloc] initWithWidth:400 height:225 type:kHiDPI3] autorelease],
-											[[[Resolution alloc] initWithWidth:320 height:180 type:kHiDPI3] autorelease],
-											[[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI4] autorelease],
-											[[[Resolution alloc] initWithWidth:1680 height:945 type:kHiDPI4] autorelease],
-											[[[Resolution alloc] initWithWidth:1440 height:810 type:kHiDPI4] autorelease],
-											[[[Resolution alloc] initWithWidth:1280 height:720 type:kHiDPI4] autorelease],
-											[[[Resolution alloc] initWithWidth:1024 height:576 type:kHiDPI4] autorelease],
-											[[[Resolution alloc] initWithWidth:960 height:540 type:kHiDPI4] autorelease],
-											[[[Resolution alloc] initWithWidth:640 height:360 type:kHiDPI4] autorelease],
-										  ];
+    NSButton *button = (NSButton *)sender;
+    NSString *identifier = [button identifier];
+    
+    if ([identifier isEqualToString:@"Info"])
+    {
+        /* [_infoTextView setString:@""];
+        [_infoTextField setStringValue:@""];
+        
+        NSBundle *mainBundle = [NSBundle mainBundle];
+        NSString *filePath = nil;
+        
+        if ((filePath = [mainBundle pathForResource:@"EDID" ofType:@"rtf"]))
+            [_infoTextView readRTFDFromFile:filePath];
+        
+        NSRect frame = [_infoWindow frame];
+        frame.size = NSMakeSize(_window.frame.size.width, frame.size.height);
+        [_infoWindow setFrame:frame display:NO animate:NO];
+        
+        [_window beginSheet:_infoWindow completionHandler:^(NSModalResponse returnCode)
+         {
+             switch (returnCode)
+             {
+                 case NSModalResponseCancel:
+                     break;
+                 case NSModalResponseOK:
+                     break;
+                 default:
+                     break;
+             }
+         }]; */
+        
+        NSString *helpBookName = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
+        [[NSHelpManager sharedHelpManager] openHelpAnchor:@"Display" inBook:helpBookName];
+        
+        return;
+    }
+    else if ([identifier isEqualToString:@"Add"])
+    {
+        Display *display;
+        
+        if (![self getCurrentlySelectedDisplay:&display])
+            return;
+        
+        NSArray *resolution1080pArray = @[
+                                          [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1680 height:945 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1440 height:810 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1280 height:720 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1024 height:576 type:kHiDPI1] autorelease],
+                                ];
+        NSArray *resolution1200pArray = @[
+                                          [[[Resolution alloc] initWithWidth:1920 height:1200 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1680 height:1050 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1440 height:900 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1280 height:800 type:kHiDPI1] autorelease],
+                                          [[[Resolution alloc] initWithWidth:1024 height:640 type:kHiDPI1] autorelease],
+                                ];
+        NSArray *resolution5KArray = @[
+            [[[Resolution alloc] initWithWidth:5120 height:2880 type:kHiDPI1] autorelease],
+            [[[Resolution alloc] initWithWidth:3840 height:2160 type:kHiDPI1] autorelease],
+            [[[Resolution alloc] initWithWidth:3360 height:1890 type:kHiDPI1] autorelease],
+            [[[Resolution alloc] initWithWidth:3200 height:1800 type:kHiDPI1] autorelease],
+            [[[Resolution alloc] initWithWidth:3008 height:1692 type:kHiDPI1] autorelease],
+            [[[Resolution alloc] initWithWidth:2880 height:1620 type:kHiDPI1] autorelease],
+            [[[Resolution alloc] initWithWidth:2560 height:1440 type:kHiDPI2] autorelease],
+            [[[Resolution alloc] initWithWidth:2304 height:1296 type:kHiDPI3] autorelease],
+            [[[Resolution alloc] initWithWidth:2048 height:1152 type:kHiDPI3] autorelease],
+            [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI3] autorelease],
+            [[[Resolution alloc] initWithWidth:1680 height:945 type:kHiDPI3] autorelease],
+            [[[Resolution alloc] initWithWidth:5120 height:2880 type:kHiDPI4] autorelease],
+        ];
+        NSArray *resolution2KArray = @[
+                                       [[[Resolution alloc] initWithWidth:2048 height:1152 type:kHiDPI1] autorelease],
+                                       [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI1] autorelease],
+                                       [[[Resolution alloc] initWithWidth:1680 height:945 type:kHiDPI1] autorelease],
+                                       [[[Resolution alloc] initWithWidth:1440 height:810 type:kHiDPI1] autorelease],
+                                       [[[Resolution alloc] initWithWidth:1280 height:720 type:kHiDPI1] autorelease],
+                                       [[[Resolution alloc] initWithWidth:1024 height:576 type:kHiDPI2] autorelease],
+                                       [[[Resolution alloc] initWithWidth:960 height:540 type:kHiDPI3] autorelease],
+                                       [[[Resolution alloc] initWithWidth:2048 height:1152 type:kHiDPI4] autorelease],
+                                          ];
+        NSArray *resolution4KArray = @[
+                                               [[[Resolution alloc] initWithWidth:4096 height:2160 type:kHiDPI1] autorelease], // DCI 4K 标准
+                                               [[[Resolution alloc] initWithWidth:3840 height:2160 type:kHiDPI1] autorelease], // 4K UHD 标准
+                                               [[[Resolution alloc] initWithWidth:3200 height:1800 type:kHiDPI1] autorelease],
+                                               [[[Resolution alloc] initWithWidth:3008 height:1692 type:kHiDPI1] autorelease],
+                                               [[[Resolution alloc] initWithWidth:2560 height:1440 type:kHiDPI1] autorelease],
+                                               [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI2] autorelease], // 像素精确缩放 (2x)
+                                               [[[Resolution alloc] initWithWidth:1600 height:900  type:kHiDPI3] autorelease],
+                                               [[[Resolution alloc] initWithWidth:3840 height:2160 type:kHiDPI4] autorelease],
+                                                  ];
+        NSArray *resolutionGeneralArray = @[
+                                            [[[Resolution alloc] initWithWidth:1280 height:720 type:kHiDPI2] autorelease],
+                                            [[[Resolution alloc] initWithWidth:960 height:540 type:kHiDPI2] autorelease],
+                                            [[[Resolution alloc] initWithWidth:640 height:360 type:kHiDPI2] autorelease],
+                                            [[[Resolution alloc] initWithWidth:840 height:472 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:720 height:405 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:640 height:360 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:576 height:324 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:512 height:288 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:420 height:234 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:400 height:225 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:320 height:180 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1920 height:1080 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1680 height:945 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1440 height:810 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1280 height:720 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1024 height:576 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:960 height:540 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:640 height:360 type:kHiDPI4] autorelease],
+                                          ];
+        NSArray *resolutionGeneral1200pArray = @[
+                                            [[[Resolution alloc] initWithWidth:1280 height:800 type:kHiDPI2] autorelease],
+                                            [[[Resolution alloc] initWithWidth:960 height:600 type:kHiDPI2] autorelease],
+                                            [[[Resolution alloc] initWithWidth:640 height:400 type:kHiDPI2] autorelease],
+                                            [[[Resolution alloc] initWithWidth:840 height:525 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:720 height:450 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:640 height:400 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:576 height:360 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:512 height:320 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:420 height:262 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:400 height:250 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:320 height:200 type:kHiDPI3] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1920 height:1200 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1680 height:1050 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1440 height:900 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1280 height:800 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:1024 height:600 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:960 height:600 type:kHiDPI4] autorelease],
+                                            [[[Resolution alloc] initWithWidth:640 height:400 type:kHiDPI4] autorelease],
+                                          ];
 
-		if ([display.resolutionsArray count] == 0)
-		{
-			switch(display.resolutionIndex)
-			{
-				case 0: // 1080p
-					[display.resolutionsArray addObjectsFromArray:resolution1080pArray];
-					break;
-				case 1: // 2K
-					[display.resolutionsArray addObjectsFromArray:resolution2KArray];
-					break;
-				case 2: // Manual
-					break;
-			}
-			
-			[display.resolutionsArray addObjectsFromArray:resolutionGeneralArray];
-		}
-		else
-		{
-			Resolution *resolution = [[Resolution alloc] initWithWidth:1920 height:1080 type:kAuto];
-			[resolution autorelease];
-			[display.resolutionsArray addObject:resolution];
-		}
-		
-		[_resolutionsTableView reloadData];
-	}
-	else if ([identifier isEqualToString:@"Delete"])
-	{
-		Display *display;
-		
-		if (![self getCurrentlySelectedDisplay:&display])
-			return;
-		
-		NSIndexSet *indexSex = [_resolutionsTableView selectedRowIndexes];
-		NSUInteger index = [indexSex lastIndex];
-		
-		while (index != NSNotFound)
-		{
-			[display.resolutionsArray removeObjectAtIndex:index];
-			
-			index = [indexSex indexLessThanIndex:index];
-		}
-		
-		[_resolutionsTableView reloadData];
-	}
-	else if ([identifier isEqualToString:@"Refresh"])
-	{
-		[self refreshDisplays];
-	}
-	else if ([identifier isEqualToString:@"Export"])
-	{
-		for (Display *display in _displaysArray)
-		{
-			[FixEDID makeEDIDFiles:display];
-			[FixEDID createDisplayIcons:_displaysArray];
-		}
-	}
+        if ([display.resolutionsArray count] == 0)
+        {
+            switch(display.resolutionIndex)
+            {
+                case 0: // 1080p
+                    [display.resolutionsArray addObjectsFromArray:resolution1080pArray];
+                    [display.resolutionsArray addObjectsFromArray:resolutionGeneralArray];
+                    break;
+                case 1: // 2K
+                    [display.resolutionsArray addObjectsFromArray:resolution2KArray];
+                    [display.resolutionsArray addObjectsFromArray:resolutionGeneralArray];
+                    break;
+                case 2: // 4K
+                    [display.resolutionsArray addObjectsFromArray:resolution4KArray];
+                    [display.resolutionsArray addObjectsFromArray:resolutionGeneralArray];
+                    break;
+                case 3: // 1200p
+                    [display.resolutionsArray addObjectsFromArray:resolution1200pArray];
+                    [display.resolutionsArray addObjectsFromArray:resolutionGeneral1200pArray];
+                    break;
+                case 4://5K
+                    [display.resolutionsArray addObjectsFromArray:resolution5KArray];
+                    [display.resolutionsArray addObjectsFromArray:resolutionGeneralArray];
+                case 5:
+                    break;
+            }
+            
+            
+        }
+        else
+        {
+            Resolution *resolution = [[Resolution alloc] initWithWidth:1920 height:1080 type:kAuto];
+            [resolution autorelease];
+            [display.resolutionsArray addObject:resolution];
+        }
+        
+        [_resolutionsTableView reloadData];
+    }
+    else if ([identifier isEqualToString:@"Delete"])
+    {
+        Display *display;
+        
+        if (![self getCurrentlySelectedDisplay:&display])
+            return;
+        
+        NSIndexSet *indexSex = [_resolutionsTableView selectedRowIndexes];
+        NSUInteger index = [indexSex lastIndex];
+        
+        while (index != NSNotFound)
+        {
+            [display.resolutionsArray removeObjectAtIndex:index];
+            
+            index = [indexSex indexLessThanIndex:index];
+        }
+        
+        [_resolutionsTableView reloadData];
+    }
+    else if ([identifier isEqualToString:@"Refresh"])
+    {
+        [self refreshDisplays];
+    }
+    else if ([identifier isEqualToString:@"Export"])
+    {
+        for (Display *display in _displaysArray)
+        {
+            [FixEDID makeEDIDFiles:display];
+            [FixEDID createDisplayIcons:_displaysArray];
+        }
+    }
 }
 
 - (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
