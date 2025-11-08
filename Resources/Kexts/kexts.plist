@@ -254,7 +254,7 @@
 		<key>Name</key>
 		<string>USBInjectAll</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/Sniki/OS-X-USB-Inject-All</string>
+		<string>https://github.com/daliansky/OS-X-USB-Inject-All</string>
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
