@@ -754,7 +754,7 @@
 		<key>Name</key>
 		<string>RealtekCardReaderFriend</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/0xFireWolf/RealtekCardReaderFriend</string>
+		<string>https://github.com/Baio1977/RealtekCardReaderFriend</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
@@ -826,7 +826,7 @@
 		<key>Name</key>
 		<string>GenericCardReaderFriend</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/0xFireWolf/GenericCardReaderFriend</string>
+		<string>https://github.com/Baio1977/GenericCardReaderFriend</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
