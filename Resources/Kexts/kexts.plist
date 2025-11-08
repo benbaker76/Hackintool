@@ -860,5 +860,15 @@
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
+	<dict>
+		<key>Description</key>
+		<string>A macOS kext for Metal driver patches for Vega M.</string>
+		<key>Name</key>
+		<string>Polaris22Fixup</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/Baio1977/Polaris22Fixup</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>	
 </array>
 </plist>
