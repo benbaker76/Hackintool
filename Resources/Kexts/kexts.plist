@@ -3,18 +3,6 @@
 <plist version="1.0">
 <array>
 	<dict>
-		<key>BundleID</key>
-		<string>Sinetek-rtsx</string>
-		<key>Description</key>
-		<string>An unofficial macOS kernel extension for Realtek PCIe/USB-based SD card readers.</string>
-		<key>Name</key>
-		<string>Sinetek-rtsx</string>
-		<key>ProjectUrl</key>
-		<string>https://github.com/cholonam/Sinetek-rtsx</string>
-		<key>Type</key>
-		<string>kext</string>
-	</dict>
-	<dict>
 		<key>Description</key>
 		<string>Lilu plugin providing Sidecar and other functions</string>
 		<key>Name</key>
@@ -33,18 +21,6 @@
 		<string>https://github.com/corpnewt/NullCPUPowerManagement</string>
 		<key>Type</key>
 		<string>Kext</string>
-	</dict>
-	<dict>
-		<key>Description</key>
-		<string>Protected video playback support and hardware video acceleration on various hardware</string>
-		<key>Name</key>
-		<string>Shiki</string>
-		<key>ProjectUrl</key>
-		<string>https://github.com/acidanthera/Shiki</string>
-		<key>Superseder</key>
-		<string>WhateverGreen</string>
-		<key>Type</key>
-		<string>Lilu</string>
 	</dict>
 	<dict>
 		<key>Description</key>
@@ -214,7 +190,7 @@
 		<key>Name</key>
 		<string>HibernationFixup</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/lvs1974/HibernationFixup</string>
+		<string>https://github.com/acidanthera/HibernationFixup</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
@@ -224,7 +200,7 @@
 		<key>Name</key>
 		<string>AirportBrcmFixup</string>
 		<key>ProjectUrl</key>
-		<string>https://github.com/lvs1974/AirportBrcmFixup</string>
+		<string>https://github.com/acidanthera/AirportBrcmFixup</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
@@ -275,18 +251,6 @@
 		<string>ECEnabler</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/1Revenger1/ECEnabler</string>
-		<key>Type</key>
-		<string>Lilu</string>
-	</dict>
-	<dict>
-		<key>Description</key>
-		<string>A Lilu plugin that removes whitelist for Wi-Fi under macOS</string>
-		<key>Name</key>
-		<string>BrcmWLFixup</string>
-		<key>ProjectUrl</key>
-		<string>https://github.com/PMheart/BrcmWLFixup</string>
-		<key>Superseder</key>
-		<string>AirportBrcmFixup</string>
 		<key>Type</key>
 		<string>Lilu</string>
 	</dict>
@@ -464,7 +428,7 @@
 		<key>Description</key>
 		<string>A macOS driver for Intel on-board LAN adapters (by acidanthera)</string>
 		<key>Name</key>
-		<string>IntelMausiEthernet</string>
+		<string>IntelMausi</string>
 		<key>ProjectUrl</key>
 		<string>https://github.com/acidanthera/IntelMausi</string>
 		<key>Type</key>

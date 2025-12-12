@@ -34,48 +34,65 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HP12", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HP13", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HP14", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HP15", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HP16", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HP17", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
+                    
                     "HP18", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                 },
             },
@@ -89,36 +106,49 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                                                
                     },
+                    
                     "HP22", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                                                
                     },
                     "HP23", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                                                
                     },
                     "HP24", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                                                
                     },
                     "HP25", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                                                
                     },
                     "HP26", Package()
                     {
                         //"UsbConnector", 0,
                         "portType", 0,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                                                
                     },
                 },
             },
@@ -131,41 +161,57 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 255,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 255,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                                                
                     },
                     "PR12", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                                                
                     },
                     "PR13", Package()
                     {
                         "UsbConnector", 0,
-                        "port", Buffer() { 3, 0, 0, 0 },
+                        "port", Buffer() { 3, 0, 0, 0 },                        
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },        
                     },
                     "PR14", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                         
                     },
                     "PR15", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                         
                     },
                     "PR16", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                         
                     },
                     "PR17", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                         
                     },
                     "PR18", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                         
                     },
                 },
             },
@@ -178,31 +224,43 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 255,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 255,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 }, 
                     },
                     "PR22", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 }, 
                     },
                     "PR23", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 }, 
                     },
                     "PR24", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 }, 
                     },
                     "PR25", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 }, 
                     },
                     "PR26", Package()
                     {
                         "UsbConnector", 0,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 0,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 }, 
                     },
                 },
             },
@@ -215,81 +273,113 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 18, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 19, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 19, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 20, 0, 0, 0 },                        
                     },
                     "USR1", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "USR2", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },                        
                     },
                 },
             },            
@@ -302,131 +392,183 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "HS11", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 11, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 11, 0, 0, 0 },                        
                     },
                     "HS12", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 12, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 12, 0, 0, 0 },
                     },
                     "HS13", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },
                     },
                     "HS14", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 14, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 14, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 18, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 19, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 19, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 20, 0, 0, 0 },                        
                     },
                     "SS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 21, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 21, 0, 0, 0 },                        
                     },
                     "SS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 22, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 22, 0, 0, 0 },
                     },
                     "SS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 23, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 23, 0, 0, 0 },                        
                     },
                     "SS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 24, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 24, 0, 0, 0 },                        
                     },
                     "SS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 25, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 25, 0, 0, 0 },                        
                     },
                     "SS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 26, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 26, 0, 0, 0 },
                     },
                     "USR1", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "USR2", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },                        
                     },
                 },
             },
@@ -439,81 +581,113 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 18, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 19, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 19, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 20, 0, 0, 0 },                        
                     },
                     "USR1", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "USR2", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },                        
                     },
                 },
             },              
@@ -526,41 +700,57 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                 },
             },
@@ -573,132 +763,184 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "HS11", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 11, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 11, 0, 0, 0 },                        
                     },
                     "HS12", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 12, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 12, 0, 0, 0 },
                     },
                     "HS13", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },
                     },
                     "HS14", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 14, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 14, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 18, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 19, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 19, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 20, 0, 0, 0 },                        
                     },
                     "SS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 21, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 21, 0, 0, 0 },                        
                     },
                     "SS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 22, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 22, 0, 0, 0 },
                     },
                     "SS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 23, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 23, 0, 0, 0 },                        
                     },
                     "SS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 24, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 24, 0, 0, 0 },                        
                     },
                     "SS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 25, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 25, 0, 0, 0 },                        
                     },
                     "SS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 26, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 26, 0, 0, 0 },
                     },
                     "USR1", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "USR2", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
-                    },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },
+                    },                                 
                 },
             },
             "8086_8xxx", Package()
@@ -710,102 +952,142 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "HS11", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 11, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 11, 0, 0, 0 },                        
                     },
                     "HS12", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 12, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 12, 0, 0, 0 },                        
                     },
                     "HS13", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },                        
                     },
                     "HS14", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 14, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 14, 0, 0, 0 },                        
                     },
                     //HS15 is phantom port (port address 15 not used)
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 18, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 19, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 19, 0, 0, 0 },                        
                     },
                     "SS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 20, 0, 0, 0 },                        
                     },
                     "SS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 21, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 21, 0, 0, 0 },                        
                     },
                 },
             },
@@ -818,66 +1100,92 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 11, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 11, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 12, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 12, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },                        
                     },
                 },
             },
@@ -890,76 +1198,107 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "HS11", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 11, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 11, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 12, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 12, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 14, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 14, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
+                        
                     },
                 },
             },
@@ -972,132 +1311,184 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "HS11", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 11, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 11, 0, 0, 0 },                        
                     },
                     "HS12", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 12, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 12, 0, 0, 0 },
                     },
                     "HS13", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },
                     },
                     "HS14", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 14, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 14, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 18, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 19, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 19, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 20, 0, 0, 0 },                        
                     },
                     "SS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 21, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 21, 0, 0, 0 },                        
                     },
                     "SS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 22, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 22, 0, 0, 0 },                        
                     },
                     "SS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 23, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 23, 0, 0, 0 },                        
                     },
                     "SS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 24, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 24, 0, 0, 0 },                        
                     },
                     "SS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 25, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 25, 0, 0, 0 },                        
                     },
                     "SS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 26, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 26, 0, 0, 0 },
                     },
                     "USR1", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "USR2", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
-                    },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },
+                    },     
                 },
             },
             "8086_9dxx", Package()  // examples: 0x9d2f, 0x9ded
@@ -1109,92 +1500,128 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                       
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 14, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 14, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },                        
                     },
                     "SS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "USR1", Package()
                     {
                         "UsbConnector", 3,
-                        "port", Buffer() { 11, 0, 0, 0 },
+                        "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "USR2", Package()
                     {
                         "UsbConnector", 3,
-                        "port", Buffer() { 12, 0, 0, 0 },
-                    },
+                        "port", Buffer() { 16, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },
+                    },     
                 },
             },
             "8086_a2af", Package()
@@ -1206,131 +1633,183 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "HS11", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 11, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 11, 0, 0, 0 },                        
                     },
                     "HS12", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 12, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 12, 0, 0, 0 },
                     },
                     "HS13", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },
                     },
                     "HS14", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 14, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 14, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 18, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 19, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 19, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 20, 0, 0, 0 },                        
                     },
                     "SS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 21, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 21, 0, 0, 0 },                        
                     },
                     "SS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 22, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 22, 0, 0, 0 },                        
                     },
                     "SS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 23, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 23, 0, 0, 0 },                        
                     },
                     "SS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 24, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 24, 0, 0, 0 },                        
                     },
                     "SS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 25, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 25, 0, 0, 0 },                        
                     },
                     "SS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 26, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 26, 0, 0, 0 },
                     },
                     "USR1", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "USR2", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },                        
                     },
                 },
             },
@@ -1343,131 +1822,183 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "HS11", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 11, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 11, 0, 0, 0 },                        
                     },
                     "HS12", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 12, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 12, 0, 0, 0 },
                     },
                     "HS13", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },
                     },
                     "HS14", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 14, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 14, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 18, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 19, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 19, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 20, 0, 0, 0 },                        
                     },
                     "SS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 21, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 21, 0, 0, 0 },                        
                     },
                     "SS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 22, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 22, 0, 0, 0 },                        
                     },
                     "SS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 23, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 23, 0, 0, 0 },                        
                     },
                     "SS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 24, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 24, 0, 0, 0 },                        
                     },
                     "SS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 25, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 25, 0, 0, 0 },                        
                     },
                     "SS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 26, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 26, 0, 0, 0 },
                     },
                     "USR1", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "USR2", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },                        
                     },
                 },
             },
@@ -1480,131 +2011,183 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "HS11", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 11, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 11, 0, 0, 0 },                        
                     },
                     "HS12", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 12, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 12, 0, 0, 0 },
                     },
                     "HS13", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },
                     },
                     "HS14", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 14, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 14, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 18, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 19, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 19, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 20, 0, 0, 0 },                        
                     },
                     "SS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 21, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 21, 0, 0, 0 },                        
                     },
                     "SS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 22, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 22, 0, 0, 0 },                        
                     },
                     "SS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 23, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 23, 0, 0, 0 },                        
                     },
                     "SS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 24, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 24, 0, 0, 0 },                        
                     },
                     "SS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 25, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 25, 0, 0, 0 },                        
                     },
                     "SS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 26, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 26, 0, 0, 0 },
                     },
                     "USR1", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "USR2", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },                        
                     },
                 },
             }, 
@@ -1617,131 +2200,183 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_UIAC", 0)
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 1, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 1, 0, 0, 0 },                        
                     },
                     "HS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 2, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 2, 0, 0, 0 },                        
                     },
                     "HS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 3, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 3, 0, 0, 0 },                        
                     },
                     "HS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 4, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 4, 0, 0, 0 },                        
                     },
                     "HS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 5, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 5, 0, 0, 0 },                        
                     },
                     "HS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 6, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 6, 0, 0, 0 },                        
                     },
                     "HS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 7, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 7, 0, 0, 0 },                        
                     },
                     "HS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 8, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 8, 0, 0, 0 },                        
                     },
                     "HS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 9, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 9, 0, 0, 0 },                        
                     },
                     "HS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 10, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 10, 0, 0, 0 },                        
                     },
                     "HS11", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 11, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 11, 0, 0, 0 },                        
                     },
                     "HS12", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 12, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 12, 0, 0, 0 },
                     },
                     "HS13", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 13, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 13, 0, 0, 0 },
                     },
                     "HS14", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 14, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 14, 0, 0, 0 },                        
                     },
                     "SS01", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 17, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 17, 0, 0, 0 },                        
                     },
                     "SS02", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 18, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 18, 0, 0, 0 },                        
                     },
                     "SS03", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 19, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 19, 0, 0, 0 },                        
                     },
                     "SS04", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 20, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 20, 0, 0, 0 },                        
                     },
                     "SS05", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 21, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 21, 0, 0, 0 },                        
                     },
                     "SS06", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 22, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 22, 0, 0, 0 },                        
                     },
                     "SS07", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 23, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 23, 0, 0, 0 },                        
                     },
                     "SS08", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 24, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 24, 0, 0, 0 },                        
                     },
                     "SS09", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 25, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 25, 0, 0, 0 },                        
                     },
                     "SS10", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 26, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 26, 0, 0, 0 },
                     },
                     "USR1", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 15, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 15, 0, 0, 0 },                        
                     },
                     "USR2", Package()
                     {
                         "UsbConnector", 3,
                         "port", Buffer() { 16, 0, 0, 0 },
+                        "usb-port-type", 3,
+                        "usb-port-number", Buffer() { 16, 0, 0, 0 },                        
                     },
                 },
             },           
