@@ -42,7 +42,7 @@ jobs:
           tar -xf ../Sparkle.tar.xz
       - name: Build app
         run: |
-          xcodebuild -project Hackintool.xcodeproj -target Hackintool -configuration Release build ARCHS=x86_64 -verbose CONFIGURATION_BUILD_DIR=build
+          xcodebuild -project Hackintool.xcodeproj -target Hackintool -configuration Release build ARCHS='x86_64 arm64' -verbose CONFIGURATION_BUILD_DIR=build
           rm -R build/EagerLinkingTBDs
           rm -R build/Hackintool.app.dSYM
           rm -R build/Hackintool.build
