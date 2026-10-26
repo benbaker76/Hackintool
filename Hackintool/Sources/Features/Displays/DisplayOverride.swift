@@ -115,6 +115,20 @@ enum HiDPIMode: Int, CaseIterable {
 	var title: String {
 		return ["HiDPI 1", "HiDPI 2", "HiDPI 3", "HiDPI 4", "Non Scaled", "Auto"][rawValue]
 	}
+
+	/// What each mode writes to scale-resolutions (shown as a tooltip). The flag variants are
+	/// what different macOS versions and displays accept; if a HiDPI size doesn't appear in
+	/// Displays settings, try another variant.
+	var detail: String {
+		switch self {
+		case .hiDPI1: return L("HiDPI at double this size, with a single 0 flag byte (9 bytes).")
+		case .hiDPI2: return L("HiDPI at double this size, with flags 0x1 and 0x200000 (16 bytes).")
+		case .hiDPI3: return L("HiDPI at double this size, with flag 0x1 (12 bytes).")
+		case .hiDPI4: return L("HiDPI at double this size, with flags 0x9 and 0xA00000 (16 bytes).")
+		case .nonScaled: return L("Adds this size as a normal (non-HiDPI) resolution (8 bytes).")
+		case .auto: return L("Writes both HiDPI 3 and HiDPI 2 entries for this size.")
+		}
+	}
 }
 
 struct ScaledResolution {

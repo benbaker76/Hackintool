@@ -25,6 +25,8 @@ final class DisplaysViewController: NSViewController, SectionContent {
 			self?.update(display) { $0.productIDOverride = UInt32(truncatingIfNeeded: id) }
 		}) { [unowned self] in String(format: "0x%04X", self.settings(for: $0).productIDOverride) },
 		DataColumn("SerialNumber", "Serial No.", width: 90, monospaced: true) { String(format: "0x%04X", $0.serialNumber) },
+		// The framebuffer index on its GPU; it matches the connector row highlighted in Patch.
+		DataColumn("Framebuffer", "FB", width: 40, monospaced: true, sortKey: { .number(Double($0.index)) }) { String($0.index) },
 		DataColumn("Port", "Port", width: 50, monospaced: true) { String(format: "0x%02X", $0.port) },
 		DataColumn("Internal", "Internal", width: 60) { [unowned self] in L(self.settings(for: $0).isInternal ? "Yes" : "No") },
 		DataColumn("Aspect", "Aspect", width: 70) { $0.edid.flatMap(EDID.init)?.aspectRatio ?? "" },
@@ -260,6 +262,9 @@ final class DisplaysViewController: NSViewController, SectionContent {
 				written.append(icons)
 			}
 			NSWorkspace.shared.activateFileViewerSelecting(written)
+			// /System is read-only on macOS 11+; overrides go in /Library instead.
+			Alerts.show("Display Overrides Exported",
+			            L("Copy the DisplayVendorID-… folders and Icons.plist to /Library/Displays/Contents/Resources/Overrides, or install DisplayEDID-….kext with your bootloader, then restart."))
 		}
 	}
 }
@@ -271,7 +276,11 @@ final class ResolutionModePopUp: NSPopUpButton {
 		self.row = row
 		super.init(frame: .zero, pullsDown: false)
 		addItems(withTitles: HiDPIMode.allCases.map { L($0.title) })
+		for (item, mode) in zip(itemArray, HiDPIMode.allCases) {
+			item.toolTip = mode.detail
+		}
 		selectItem(at: row.resolution.mode.rawValue)
+		toolTip = row.resolution.mode.detail
 		self.target = target
 		self.action = action
 	}
