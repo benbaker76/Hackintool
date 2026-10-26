@@ -82,7 +82,9 @@ def main():
                 model_url = urljoin(base_url, link['href'])
                 print(f"Scraping data for {model_url}...")
                 model_data = scrape_model_page(model_url)
-                years_data.append(model_data)
+                # Skip pages that failed; plistlib can't write None.
+                if model_data is not None:
+                    years_data.append(model_data)
                 time.sleep(5)  # Sleep for 5 seconds to avoid overloading the server
 
     # Save the data to a plist file
