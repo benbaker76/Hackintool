@@ -122,15 +122,23 @@ final class ConfigPlist {
 		array.add(NSMutableDictionary(dictionary: patch))
 	}
 
-	/// Darwin version prefix for a Clover MatchOS such as "10.14.x" or "11.x" → "18." / "20.".
+	/// Darwin version prefix for a Clover MatchOS such as "10.14.x", "11.x", "26.x" or "27.x" → "18." / "20." / "25." / "27.".
 	static func kernelPrefix(forMatchOS matchOS: String) -> String? {
 		let parts = matchOS.split(separator: ".").compactMap { Int($0) }
 		guard let major = parts.first else { return nil }
-		if major == 10 {
+		switch major {
+		case 10:
 			guard parts.count > 1 else { return nil }
-			return "\(parts[1] + 4)."
+			return "\(parts[1] + 4)."      // 10.15 → Darwin 19
+		case 11...15:
+			return "\(major + 9)."         // 15 Sequoia → Darwin 24
+		case 26:
+			return "25."                     // 26 Tahoe → Darwin 25
+		case 27...:
+			return "\(major)."             // Darwin matches from 27 Golden Gate (Darwin 27)
+		default:
+			return nil
 		}
-		return "\(major + 9)."
 	}
 
 	/// Whether a Clover MatchOS ("10.15.x,11.x") includes the running macOS.

@@ -72,7 +72,8 @@ enum SystemInfo {
 		case (14, _): return "macOS Sonoma"
 		case (15, _): return "macOS Sequoia"
 		case (26, _): return "macOS Tahoe"
-		case (let major, _) where major > 26: return "macOS (Future \(major))"
+		case (27, _): return "macOS Golden Gate"
+		case (let major, _) where major > 27: return "macOS (Future \(major))"
 		default: return "macOS (Unknown)"
 		}
 	}
