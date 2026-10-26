@@ -902,3 +902,4 @@
 "Yes" = "Sí";
 "“%@” doesn't exist. Do you want to create it?" = "“%@” no existe. ¿Quieres crearlo?";
 "“%@” has no DeviceProperties for %@." = "“%@” no tiene DeviceProperties para %@.";
+"Version" = "Versión";

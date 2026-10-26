@@ -65,8 +65,29 @@ final class SidebarViewController: NSViewController {
 		scrollView.drawsBackground = false
 		scrollView.autohidesScrollers = true
 
+		// "Version 5.0.0 (0500)" under the list, so it's easy to tell which build is running.
+		let info = Bundle.main.infoDictionary
+		let version = info?["CFBundleShortVersionString"] as? String ?? "?"
+		let build = info?["CFBundleVersion"] as? String ?? "?"
+		let versionLabel = NSTextField(labelWithString: "\(L("Version")) \(version) (\(build))")
+		versionLabel.font = .systemFont(ofSize: NSFont.smallSystemFontSize)
+		versionLabel.textColor = .tertiaryLabelColor
+		versionLabel.isSelectable = true
+		versionLabel.translatesAutoresizingMaskIntoConstraints = false
+
+		scrollView.translatesAutoresizingMaskIntoConstraints = false
 		view = NSView()
-		view.addPinnedSubview(scrollView)
+		view.addSubview(scrollView)
+		view.addSubview(versionLabel)
+		NSLayoutConstraint.activate([
+			scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+			scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			versionLabel.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 6),
+			versionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+			versionLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -16),
+			versionLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
+		])
 	}
 
 	override func viewDidLoad() {
