@@ -50,17 +50,16 @@ jobs:
           rm -rf build/XCBuildData
           rm -rf build/*.swiftmodule
           rm -rf build/SwiftExplicitPrecompiledModules
+          rm -rf build/ExplicitPrecompiledModules
       - name: Get version
         id: version
         run: |
           output=$(xcodebuild -project Hackintool.xcodeproj -configuration Release -showBuildSettings | grep MARKETING_VERSION | tr -d 'MARKETING_VERSION = ')
           echo "::set-output name=result::$output"
       - name: Compress Files
-        uses: thedoctor0/zip-release@0.7.1
-        with:
-          type: zip
-          directory: build
-          filename: Hackintool.zip
+        # ditto keeps the symlinks inside Sparkle.framework; zip turned them into copies,
+        # which broke the framework's code signature.
+        run: ditto -c -k --sequesterRsrc --keepParent build/Hackintool.app build/Hackintool.zip
       - name: Clean up
         run: rm -R build/Hackintool.app
       - name: Generate appcast.xml
