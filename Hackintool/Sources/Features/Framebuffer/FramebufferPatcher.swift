@@ -342,9 +342,10 @@ enum FramebufferPatcher {
 	// MARK: SSDT
 
 	/// An SSDT injecting the generated properties through _DSM, for setups without DeviceProperties.
-	static func ssdt(context: PatchContext) -> String {
+	/// `forceAll` covers every PCI device regardless of the patch settings (PCI ▸ Export).
+	static func ssdt(context: PatchContext, forceAll: Bool = false) -> String {
 		let config = ConfigPlist(format: .openCore)
-		addDeviceProperties(to: config, context: context)
+		addDeviceProperties(to: config, context: context, forceAll: forceAll)
 		let properties = config.deviceProperties
 
 		func device(_ pci: PCIDevice, tabs: Int) -> [String] {
@@ -376,7 +377,7 @@ enum FramebufferPatcher {
 		}
 
 		var lines: [String] = []
-		if Settings.patchPCIDevices {
+		if Settings.patchPCIDevices || forceAll {
 			lines.append("DefinitionBlock (\"\", \"SSDT\", 2, \"Hackintool\", \"PCI Devices\", 0x00000000)")
 			lines.append("{")
 			context.pciDevices.forEach { lines += device($0, tabs: 1) }

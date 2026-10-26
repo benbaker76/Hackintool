@@ -84,6 +84,18 @@ enum FramebufferSelfTest {
 				print("   " + connectors.joined(separator: " | "))
 			}
 		}
+		if ProcessInfo.processInfo.environment["HACKINTOOL_FBTEST"] == "patch" {
+			// Edit a Coffee Lake record and print each output format.
+			guard let table = FramebufferTable.load(.coffeeLake, from: .macOS10_14), let index = table.index(of: 0x3E9B_0007) else { exit(1) }
+			var connector = table.modified[index].connector(at: 1)
+			connector.type = ConnectorType.hdmi.rawValue
+			table.modified[index].setConnector(connector, at: 1)
+			table.modified[index].stolenMemory = 0x0200_0000
+			let context = PatchContext(table: table, index: index, pciDevices: [PatchContext.fakeIGPU], audioDevices: [], displays: [], injectedDeviceID: nil)
+			print(FramebufferPatcher.kextsToPatch(context: context, format: .hex))
+			print(FramebufferPatcher.kextsToPatch(context: context, format: .base64))
+			print(FramebufferPatcher.ssdt(context: context, forceAll: true))
+		}
 		exit(0)
 	}
 }

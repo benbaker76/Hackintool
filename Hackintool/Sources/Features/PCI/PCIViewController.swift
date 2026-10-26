@@ -109,11 +109,22 @@ final class PCIViewController: NSViewController, SectionContent {
 	@objc private func export(_ sender: Any?) {
 		let devices = table.rows
 		FilePanels.chooseFolder(prompt: "Export") { folder in
-			FilePanels.write([
+			var files = [
 				("pcidevices.txt", PCIExport.table(devices)),
 				("pcidevices.json", PCIExport.json(devices)),
-				("pcidevices.plist", PCIExport.deviceProperties(devices, format: BootloaderConfigFormat.current)),
-			], to: folder)
+			]
+			// With a framebuffer table the plist and SSDT carry the full IGPU and audio properties too.
+			let model = FramebufferModel()
+			model.load()
+			if let context = model.context {
+				let config = ConfigPlist(format: BootloaderConfigFormat.current)
+				FramebufferPatcher.addDeviceProperties(to: config, context: context, forceAll: true)
+				files.append(("pcidevices.plist", config.xmlString))
+				files.append(("pcidevices.dsl", FramebufferPatcher.ssdt(context: context, forceAll: true)))
+			} else {
+				files.append(("pcidevices.plist", PCIExport.deviceProperties(devices, format: BootloaderConfigFormat.current)))
+			}
+			FilePanels.write(files, to: folder)
 		}
 	}
 }
