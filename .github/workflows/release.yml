@@ -51,6 +51,42 @@ jobs:
           rm -rf build/*.swiftmodule
           rm -rf build/SwiftExplicitPrecompiledModules
           rm -rf build/ExplicitPrecompiledModules
+      - name: Sign Sparkle helpers
+        # Xcode re-signs Sparkle.framework but leaves its helpers ad-hoc signed, which
+        # notarization rejects. Re-sign inside out with a secure timestamp (Sparkle's docs).
+        run: |
+          ID="Developer ID Application: Benjamin Baker (9AM8849YMD)"
+          SPARKLE=build/Hackintool.app/Contents/Frameworks/Sparkle.framework
+          codesign -f -s "$ID" -o runtime --timestamp $SPARKLE/Versions/B/XPCServices/Installer.xpc
+          codesign -f -s "$ID" -o runtime --timestamp --preserve-metadata=entitlements $SPARKLE/Versions/B/XPCServices/Downloader.xpc
+          codesign -f -s "$ID" -o runtime --timestamp $SPARKLE/Versions/B/Autoupdate
+          codesign -f -s "$ID" -o runtime --timestamp $SPARKLE/Versions/B/Updater.app
+          codesign -f -s "$ID" -o runtime --timestamp $SPARKLE
+          codesign -f -s "$ID" -o runtime --timestamp --preserve-metadata=entitlements,requirements build/Hackintool.app
+          codesign --verify --deep --strict --verbose=2 build/Hackintool.app
+      - name: Notarize app
+        env:
+          NOTARY_KEY: ${{ secrets.NOTARY_KEY }}
+          NOTARY_KEY_ID: ${{ secrets.NOTARY_KEY_ID }}
+          NOTARY_ISSUER_ID: ${{ secrets.NOTARY_ISSUER_ID }}
+        run: |
+          # The secret is the .p8 file itself; accept it base64-encoded too.
+          if [[ "$NOTARY_KEY" == *"BEGIN PRIVATE KEY"* ]]; then
+              echo "$NOTARY_KEY" > notary_key.p8
+          else
+              echo "$NOTARY_KEY" | base64 -d -o notary_key.p8
+          fi
+          ditto -c -k --keepParent build/Hackintool.app notarize.zip
+          xcrun notarytool submit notarize.zip --key notary_key.p8 --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID" --wait --timeout 30m --output-format json | tee notarize.json
+          id=$(python3 -c 'import json; print(json.load(open("notarize.json"))["id"])')
+          status=$(python3 -c 'import json; print(json.load(open("notarize.json"))["status"])')
+          if [[ "$status" != "Accepted" ]]; then
+              xcrun notarytool log "$id" --key notary_key.p8 --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID"
+              exit 1
+          fi
+          xcrun stapler staple build/Hackintool.app
+          xcrun stapler validate build/Hackintool.app
+          rm notarize.zip
       - name: Get version
         id: version
         run: |
@@ -84,4 +120,4 @@ jobs:
         if: ${{ always() }}
         run: |
           security delete-keychain app-signing.keychain
-          rm eddsa_private.key
+          rm -f eddsa_private.key notary_key.p8

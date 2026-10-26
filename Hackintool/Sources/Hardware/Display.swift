@@ -40,14 +40,19 @@ struct Display {
 			let serialNumber = (info[kDisplaySerialNumber] as? NSNumber)?.uint32Value ?? 0
 			let gpuVendor = gpu.uint32("vendor-id") ?? 0
 			let gpuDevice = gpu.uint32("device-id") ?? 0
+			// AMD hangs the IOFramebuffer (AMDFramebufferVIB) under ATY,AMD,RadeonFramebuffer@N,
+			// which carries the index and port-number, so look up to the GPU for them.
+			let ports = [framebuffer] + framebuffer.ancestors().prefix { $0.registryID != gpu.registryID }
+			let index = ports.lazy.compactMap { $0.location().flatMap { UInt32($0) } }.first ?? 0
+			let port = ports.lazy.compactMap { $0.uint32("port-number") }.first ?? 0
 
 			let displayID = activeDisplays.first {
 				CGDisplayVendorNumber($0) == vendorID && CGDisplayModelNumber($0) == productID && CGDisplaySerialNumber($0) == serialNumber
 			}
 
 			return Display(name: names?.values.first ?? L("Unknown"),
-			               index: UInt32(framebuffer.location() ?? "") ?? 0,
-			               port: framebuffer.uint32("port-number") ?? 0,
+			               index: index,
+			               port: port,
 			               vendorID: vendorID,
 			               productID: productID,
 			               serialNumber: serialNumber,
