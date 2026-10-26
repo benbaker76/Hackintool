@@ -132,7 +132,7 @@ enum USBMapExport {
 				let connector = UInt8(truncatingIfNeeded: IOValue.uint32(value["UsbConnector"] ?? value["usb-port-type"]) ?? 0)
 				ports.append(USBPort(name: name, port: number,
 				                     locationID: (controller?.location ?? 0) << 24 | number << 16,
-				                     connector: connector, comment: value["Comment"] as? String, isActive: false,
+				                     connector: connector, comment: (value["Comment"] ?? value["comment"]) as? String, isActive: false,
 				                     controllerName: controllerName, controllerID: controller?.deviceID ?? 0,
 				                     controllerLocation: controller?.location ?? 0, controllerClass: controller?.className,
 				                     hubName: isHub ? (personality["IOProviderClass"] as? String ?? "AppleUSB20InternalHub") : nil,

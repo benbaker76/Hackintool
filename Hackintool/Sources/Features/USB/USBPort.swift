@@ -150,7 +150,8 @@ enum USBDiscovery {
 			               port: number,
 			               locationID: IOValue.uint32(properties["locationID"]) ?? 0,
 			               connector: connector,
-			               comment: properties["Comment"] as? String,
+			               // USBToolBox writes a lowercase "comment".
+			               comment: (properties["Comment"] ?? properties["comment"]) as? String,
 			               isActive: false,
 			               controllerName: controller.name,
 			               controllerID: controller.deviceID,
@@ -165,17 +166,32 @@ enum USBDiscovery {
 		}
 	}
 
-	/// Devices currently attached, keyed by the IOService path of the port they're on.
+	/// Devices currently attached, keyed by the IOService path of every port above them. A device
+	/// behind a hub is listed on the hub's port and on the port the hub is plugged into, so a mapped
+	/// port shows "USB2.0 Hub, BRCM20702" instead of losing the device behind the hub.
 	static func attachedDevices() -> [String: (name: String, speed: Int?)] {
-		var devices: [String: (name: String, speed: Int?)] = [:]
+		var found: [String: [(depth: Int, name: String, speed: Int?)]] = [:]
 		for device in IORegistryEntry.services(matching: "IOUSBHostDevice") {
-			guard let port = device.ancestor(conformingTo: ["AppleUSBHostPort"]), let path = port.path() else { continue }
 			let properties = device.properties
 			let name = properties["USB Product Name"] as? String ?? properties["kUSBProductString"] as? String ?? device.name
 			let speed = IOValue.uint32(properties["Device Speed"] ?? properties["USBSpeed"]).map { Int($0) }
-			devices[path] = (name, speed)
+			var ports: [String] = []
+			var entry = device.parent()
+			while let current = entry, !current.conforms(to: "IOPCIDevice") {
+				if current.conforms(to: "AppleUSBHostPort"), let path = current.path() {
+					ports.append(path)
+				}
+				entry = current.parent()
+			}
+			// The number of ports above a device is its depth; the nearest-to-root device comes first.
+			for path in ports {
+				found[path, default: []].append((ports.count, name, speed))
+			}
 		}
-		return devices
+		return found.mapValues { entries in
+			let sorted = entries.sorted { $0.depth < $1.depth }
+			return (sorted.map { $0.name }.joined(separator: ", "), sorted.first?.speed)
+		}
 	}
 }
 
