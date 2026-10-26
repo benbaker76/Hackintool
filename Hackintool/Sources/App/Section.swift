@@ -98,7 +98,7 @@ enum Section: String, CaseIterable {
 		case .nvram: return NVRAMViewController()
 		case .logs: return LogsViewController()
 		case .disks: return DisksViewController()
-		case .bootloader: return BootloaderViewController()
+		case .bootloader: return BootloaderSectionViewController()
 		case .extensions: return ExtensionsViewController()
 		case .utilities: return UtilitiesViewController()
 		case .sound: return SoundViewController()

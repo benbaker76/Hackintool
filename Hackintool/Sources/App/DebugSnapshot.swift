@@ -235,3 +235,76 @@ enum FramebufferSelfTest {
 	}
 }
 #endif
+
+#if DEBUG
+/// HACKINTOOL_AMDTEST=/path/to/patches.plist: exercise the AMD Vanilla merge and checks, then quit.
+enum AMDVanillaSelfTest {
+	static func runIfRequested() {
+		guard let path = ProcessInfo.processInfo.environment["HACKINTOOL_AMDTEST"] else { return }
+		var failures = 0
+		func check(_ condition: Bool, _ message: String) {
+			print((condition ? "PASS " : "FAIL ") + message)
+			if !condition { failures += 1 }
+		}
+		guard let data = FileManager.default.contents(atPath: path), let patches = AMDVanilla.parse(data) else {
+			print("FAIL couldn't parse \(path)")
+			exit(1)
+		}
+		for patch in patches {
+			print(String(format: "  %2d %@ %-16@ %@", patch.index, patch.isEnabledByDefault ? "on " : "off", patch.macOSRange, patch.comment))
+		}
+		print("  newest macOS: \(AMDVanilla.newestMacOS(patches) ?? "?"), running covered: \(AMDVanilla.isRunningKernelCovered(patches))")
+		print("  PAT groups: \(AMDVanilla.exclusiveGroups(patches).map { $0.map { $0.index } })")
+		let defaults = Set(patches.filter { $0.isEnabledByDefault }.map { $0.index })
+		let corePatches = patches.filter { $0.kind == .coreCount }
+		check(corePatches.count == 4, "four core count patches")
+
+		// A new config.
+		let fresh = ConfigPlist(format: .openCore)
+		AMDVanilla.apply(patches, enabled: defaults, coreCount: 8, provideCurrentCpuInfo: true, to: fresh)
+		let freshPatches = fresh.kernelPatches().compactMap { $0 as? NSDictionary }
+		check(freshPatches.count == patches.count, "fresh config has \(patches.count) patches")
+		check(freshPatches.filter { $0["Comment"] as? String == corePatches[0].comment }.allSatisfy { ($0["Replace"] as! Data)[1] == 8 }, "core count byte is 8")
+		check(fresh.kernelQuirks["ProvideCurrentCpuInfo"] as? Bool == true, "ProvideCurrentCpuInfo enabled")
+		let freshReport = AMDVanillaReport(config: fresh.root, patches: patches)
+		check(freshReport.warnings.isEmpty, "fresh report has no warnings: \(freshReport.warnings)")
+		check(freshReport.coreCounts == [8], "report reads core count 8")
+		check(patches.allSatisfy { if case .current(let on) = freshReport.states[$0.index]! { return on == defaults.contains($0.index) } else { return false } }, "every patch current with default enablement")
+
+		// An existing config: another patch first, an outdated AMD patch, both PAT patches on, core count 0, no quirk.
+		let existing = ConfigPlist(format: .openCore)
+		let other: NSMutableDictionary = ["Comment": "Someone else's patch", "Identifier": "com.example", "Enabled": true, "Find": Data([1]), "Replace": Data([2])]
+		let array = existing.kernelPatches()
+		array.add(other)
+		for patch in patches {
+			let entry = patch.configEntry(enabled: patch.kind == .pat ? true : patch.isEnabledByDefault, coreCount: 0)
+			if patch.index == 5 { entry["Find"] = Data([0xDE, 0xAD]) }
+			array.add(entry)
+		}
+		let report = AMDVanillaReport(config: existing.root, patches: patches)
+		print("  warnings: \(report.warnings)")
+		check(report.warnings.count == 5, "warns about quirk, core count 0, PAT and outdated")
+		if case .outdated? = report.states[5] { check(true, "patch 5 outdated") } else { check(false, "patch 5 outdated") }
+
+		AMDVanilla.apply(patches, enabled: defaults, coreCount: 12, provideCurrentCpuInfo: true, to: existing)
+		let merged = existing.kernelPatches().compactMap { $0 as? NSDictionary }
+		check(merged.count == patches.count + 1, "merge replaced rather than duplicated (\(merged.count))")
+		check(merged.first?["Comment"] as? String == "Someone else's patch", "other patch kept in place")
+		let mergedReport = AMDVanillaReport(config: existing.root, patches: patches)
+		check(mergedReport.warnings.isEmpty, "merged report clean: \(mergedReport.warnings)")
+		check(mergedReport.coreCounts == [12], "core count now 12")
+
+		// Round trip through a file.
+		let url = FileManager.default.temporaryDirectory.appendingPathComponent("amdtest-config.plist")
+		try? existing.write(to: url)
+		let reread = ConfigPlist(contentsOf: url, format: .openCore)
+		check(reread.map { AMDVanillaReport(config: $0.root, patches: patches).warnings.isEmpty } == true, "written file reads back clean")
+
+		for (kernel, expected) in [("17.0.0", "10.13"), ("18.99.99", "10.14"), ("20.3.0", "11.2"), ("22.4.0", "13.3"), ("22.3.99", "13.2"), ("25.99.99", "26"), ("27.0.0", "27")] {
+			check(AMDVanilla.macOSVersion(forKernel: kernel) == expected, "\(kernel) → \(AMDVanilla.macOSVersion(forKernel: kernel) ?? "nil") (want \(expected))")
+		}
+		print(failures == 0 ? "ALL PASSED" : "\(failures) FAILED")
+		exit(failures == 0 ? 0 : 1)
+	}
+}
+#endif

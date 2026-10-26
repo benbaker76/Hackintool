@@ -48,6 +48,11 @@ final class ConfigPlist {
 		}
 	}
 
+	/// Kernel ▸ Quirks (OpenCore only).
+	var kernelQuirks: NSMutableDictionary {
+		return dictionary(at: ["Kernel", "Quirks"])
+	}
+
 	/// ACPI ▸ Patch (OpenCore) or ACPI ▸ DSDT ▸ Patches (Clover).
 	var acpiPatches: NSMutableArray {
 		switch format {

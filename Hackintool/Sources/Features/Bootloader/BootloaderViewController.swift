@@ -73,6 +73,20 @@ enum BootloaderRelease {
 	}
 }
 
+/// Bootloader section: the bootloader and its patches, and the AMD Vanilla patches.
+final class BootloaderSectionViewController: TabbedViewController {
+	init() {
+		super.init(identifier: "Bootloader", pages: [
+			Page(title: L("Bootloader"), viewController: BootloaderViewController()),
+			Page(title: L("AMD Vanilla"), viewController: AMDVanillaViewController()),
+		])
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) is not supported")
+	}
+}
+
 final class BootloaderViewController: NSViewController, SectionContent {
 	private let info = PropertyListViewController(showsGroupHeaders: false)
 	private var selectedPatches = Set<Int>()

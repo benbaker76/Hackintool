@@ -19,6 +19,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 		Settings.migrateLegacySettings()
 		#if DEBUG
 		FramebufferSelfTest.runIfRequested()
+		AMDVanillaSelfTest.runIfRequested()
 		#endif
 		NSApp.mainMenu = MainMenu.make(updater: updaterController)
 	}
