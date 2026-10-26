@@ -152,8 +152,16 @@ final class UtilitiesViewController: NSViewController {
 	@objc private func createBluetoothRegistryFile(_ sender: Any?) {
 		FilePanels.save(suggestedName: "Bluetooth.reg", allowedExtensions: ["reg"]) { url in
 			DispatchQueue.global(qos: .userInitiated).async {
-				let contents = WindowsBluetooth.registryFile()
-				DispatchQueue.main.async { FilePanels.write([(url.lastPathComponent, contents)], to: url.deletingLastPathComponent()) }
+				let export = WindowsBluetooth.export()
+				DispatchQueue.main.async {
+					guard export.deviceCount > 0 else {
+						Alerts.error("No Bluetooth pairing keys found.",
+						             "Pair your devices in macOS first. If you cancelled the password prompt, try again and allow access to the System keychain.")
+						return
+					}
+					FilePanels.write([(url.lastPathComponent, export.registryFile)], to: url.deletingLastPathComponent())
+					self.output.append(L("Exported %d Bluetooth device(s).", export.deviceCount) + "\n", color: .systemGreen)
+				}
 			}
 		}
 	}
