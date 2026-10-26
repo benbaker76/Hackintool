@@ -168,7 +168,11 @@ final class JackColorView: NSView {
 		let circle = NSBezierPath(ovalIn: rect)
 		color.setFill()
 		circle.fill()
-		NSColor.separatorColor.setStroke()
+		if #available(macOS 10.14, *) {
+			NSColor.separatorColor.setStroke()
+		} else {
+			NSColor.gridColor.setStroke()
+		}
 		circle.lineWidth = 1
 		circle.stroke()
 	}

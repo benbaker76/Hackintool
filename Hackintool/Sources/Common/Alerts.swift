@@ -6,7 +6,6 @@
 //
 
 import Cocoa
-import UniformTypeIdentifiers
 
 enum Alerts {
 	/// Shows an informational alert.
@@ -75,11 +74,10 @@ enum FilePanels {
 
 	static func setAllowedExtensions(_ extensions: [String]?, on panel: NSSavePanel) {
 		guard let extensions = extensions else { return }
-		if #available(macOS 11.0, *) {
-			panel.allowedContentTypes = extensions.compactMap { UTType(filenameExtension: $0) }
-		} else {
-			panel.allowedFileTypes = extensions
-		}
+		// allowedFileTypes works on every macOS version. allowedContentTypes would need
+		// UniformTypeIdentifiers, which doesn't exist before macOS 11, so call the setter
+		// by name to avoid the macOS 12 deprecation warning.
+		panel.perform(NSSelectorFromString("setAllowedFileTypes:"), with: extensions)
 	}
 
 	private static func begin(_ panel: NSSavePanel, completion: @escaping () -> Void) {
