@@ -35,6 +35,15 @@ final class PeripheralsViewController: NSViewController, SectionContent {
 		DataColumn("BundleID", "Kext", width: 220) { $0.bundleID ?? "" },
 	])
 
+	private let audio = DataTableViewController<AudioDevice>(columns: [
+		DataColumn.hex("Device", "Device", width: 90, digits: 8) { $0.deviceID },
+		DataColumn.hex("SubDevice", "Sub Device", width: 90, digits: 8) { $0.subDeviceID },
+		DataColumn.hex("Codec", "Codec", width: 90, digits: 8) { $0.codecID },
+		DataColumn.hex("Revision", "Revision", width: 80, digits: 6) { $0.codecRevisionID },
+		DataColumn("Name", "Name", width: 240) { "\($0.codecVendorName) \($0.codecName)" },
+		DataColumn("BundleID", "Kext", width: 220) { $0.bundleID ?? "" },
+	])
+
 	private let storage = DataTableViewController<StorageDevice>(columns: [
 		DataColumn("Model", "Model", width: 220) { $0.model },
 		DataColumn("Type", "Type", width: 100) { $0.type },
@@ -47,11 +56,17 @@ final class PeripheralsViewController: NSViewController, SectionContent {
 		.init(title: "Network", viewController: network),
 		.init(title: "Bluetooth", viewController: bluetooth),
 		.init(title: "Graphics", viewController: graphics),
+		.init(title: "Sound", viewController: audio),
 		.init(title: "Storage", viewController: storage),
 	])
 
 	override func loadView() {
 		addChild(stacked)
+		network.onDoubleClick = { Kexts.reveal(bundleIdentifier: $0.bundleID) }
+		bluetooth.onDoubleClick = { Kexts.reveal(bundleIdentifier: $0.bundleID) }
+		graphics.onDoubleClick = { Kexts.reveal(bundleIdentifier: $0.bundleID) }
+		audio.onDoubleClick = { Kexts.reveal(bundleIdentifier: $0.bundleID) }
+		storage.onDoubleClick = { Kexts.reveal(bundleIdentifier: $0.bundleID) }
 		view = stacked.view
 	}
 
@@ -68,11 +83,13 @@ final class PeripheralsViewController: NSViewController, SectionContent {
 			let bluetoothDevices = BluetoothDevice.all()
 			let graphicsDevices = GraphicsDevice.all()
 			let storageDevices = StorageDevice.all()
+			let audioDevices = AudioDevice.all()
 			DispatchQueue.main.async {
 				self.network.setRows(networkInterfaces)
 				self.bluetooth.setRows(bluetoothDevices)
 				self.graphics.setRows(graphicsDevices)
 				self.storage.setRows(storageDevices)
+				self.audio.setRows(audioDevices)
 			}
 		}
 	}

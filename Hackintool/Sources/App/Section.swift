@@ -101,6 +101,7 @@ enum Section: String, CaseIterable {
 		case .bootloader: return BootloaderViewController()
 		case .extensions: return ExtensionsViewController()
 		case .utilities: return UtilitiesViewController()
+		case .sound: return SoundViewController()
 		default: return PlaceholderViewController(section: self)
 		}
 	}
