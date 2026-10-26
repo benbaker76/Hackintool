@@ -99,6 +99,7 @@ enum Section: String, CaseIterable {
 		case .logs: return LogsViewController()
 		case .disks: return DisksViewController()
 		case .bootloader: return BootloaderViewController()
+		case .extensions: return ExtensionsViewController()
 		default: return PlaceholderViewController(section: self)
 		}
 	}

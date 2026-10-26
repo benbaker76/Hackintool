@@ -41,6 +41,47 @@ enum Shell {
 		return run(launchPath, arguments)?.output
 	}
 
+	/// Runs a tool to completion on the calling (background) thread, passing output to
+	/// `output` on the main queue as it arrives. `isError` marks stderr.
+	@discardableResult
+	static func runStreaming(_ launchPath: String, _ arguments: [String], currentDirectory: String = "/",
+	                         output: @escaping (_ text: String, _ isError: Bool) -> Void) -> Int32 {
+		let process = Process()
+		process.executableURL = URL(fileURLWithPath: launchPath)
+		process.arguments = arguments
+		process.currentDirectoryURL = URL(fileURLWithPath: currentDirectory)
+		process.standardInput = FileHandle.nullDevice
+		let outputPipe = Pipe()
+		let errorPipe = Pipe()
+		process.standardOutput = outputPipe
+		process.standardError = errorPipe
+
+		let group = DispatchGroup()
+		for (pipe, isError) in [(outputPipe, false), (errorPipe, true)] {
+			group.enter()
+			DispatchQueue.global(qos: .utility).async {
+				let handle = pipe.fileHandleForReading
+				while case let data = handle.availableData, !data.isEmpty {
+					let text = String(decoding: data, as: UTF8.self)
+					DispatchQueue.main.async { output(text, isError) }
+				}
+				group.leave()
+			}
+		}
+		do {
+			try process.run()
+		} catch {
+			DispatchQueue.main.async { output("\(launchPath): \(error.localizedDescription)\n", true) }
+			outputPipe.fileHandleForWriting.closeFile()
+			errorPipe.fileHandleForWriting.closeFile()
+			group.wait()
+			return -1
+		}
+		process.waitUntilExit()
+		group.wait()
+		return process.terminationStatus
+	}
+
 	/// Runs a tool in the background, delivering stdout and stderr on the main queue as they arrive.
 	/// Returns the running process so the caller can terminate it.
 	@discardableResult

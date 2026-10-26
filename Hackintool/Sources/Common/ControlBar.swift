@@ -9,29 +9,23 @@
 import Cocoa
 
 enum ControlBar {
-	/// A horizontal row of controls with standard margins.
+	/// A horizontal row of controls with standard margins: `views` on the left, `trailing` on the right.
 	static func make(_ views: [NSView], trailing: [NSView] = []) -> NSView {
-		let leading = NSStackView(views: views)
-		leading.orientation = .horizontal
-		leading.spacing = 8
-		leading.alignment = .centerY
-
-		let trailingStack = NSStackView(views: trailing)
-		trailingStack.orientation = .horizontal
-		trailingStack.spacing = 8
-		trailingStack.alignment = .centerY
-
-		let row = NSStackView(views: [leading, NSView(), trailingStack])
+		let row = NSStackView()
 		row.orientation = .horizontal
 		row.alignment = .centerY
-		row.distribution = .fill
+		row.spacing = 8
 		row.edgeInsets = NSEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
+		row.setViews(views, in: .leading)
+		row.setViews(trailing, in: .trailing)
+		// Hug the controls tightly so the row never grows taller than they are.
 		row.setHuggingPriority(.required, for: .vertical)
 		return row
 	}
 
-	/// Stacks a control bar above content and returns the combined view.
+	/// Stacks an optional header and footer around content that fills the remaining height.
 	static func stack(header: NSView?, content: NSView, footer: NSView? = nil) -> NSView {
+		let container = NSView()
 		var views: [NSView] = []
 		if let header = header {
 			views.append(header)
@@ -40,16 +34,28 @@ enum ControlBar {
 		if let footer = footer {
 			views.append(footer)
 		}
-		let stack = NSStackView(views: views)
-		stack.orientation = .vertical
-		stack.spacing = 0
-		stack.alignment = .leading
-		views.forEach { $0.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true }
-		content.setContentHuggingPriority(.defaultLow, for: .vertical)
+		for view in views {
+			view.translatesAutoresizingMaskIntoConstraints = false
+			container.addSubview(view)
+			NSLayoutConstraint.activate([
+				view.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+				view.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+			])
+		}
+		// Bars keep their natural height; the content takes the rest.
+		for bar in [header, footer].compactMap({ $0 }) {
+			bar.setContentHuggingPriority(.required, for: .vertical)
+			bar.setContentCompressionResistancePriority(.required, for: .vertical)
+		}
+		content.setContentHuggingPriority(NSLayoutConstraint.Priority(1), for: .vertical)
 		content.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-
-		let container = NSView()
-		container.addPinnedSubview(stack)
+		NSLayoutConstraint.activate([
+			views.first!.topAnchor.constraint(equalTo: container.topAnchor),
+			views.last!.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+		])
+		for (above, below) in zip(views, views.dropFirst()) {
+			below.topAnchor.constraint(equalTo: above.bottomAnchor).isActive = true
+		}
 		return container
 	}
 

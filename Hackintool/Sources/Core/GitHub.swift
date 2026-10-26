@@ -30,14 +30,18 @@ enum GitHub {
 		let size: Int
 	}
 
-	/// Fetches the latest release of owner/repository; calls back on the main queue.
-	static func latestRelease(owner: String, repository: String, completion: @escaping (Release?) -> Void) {
+	/// Fetches the latest release of owner/repository; calls back on `queue` (nil: the session's own queue).
+	static func latestRelease(owner: String, repository: String, queue: DispatchQueue? = .main, completion: @escaping (Release?) -> Void) {
 		let url = URL(string: "https://api.github.com/repos/\(owner)/\(repository)/releases/latest")!
 		var request = URLRequest(url: url)
 		request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
 		URLSession.shared.dataTask(with: request) { data, _, _ in
 			let release = data.flatMap(parseRelease)
-			DispatchQueue.main.async { completion(release) }
+			if let queue = queue {
+				queue.async { completion(release) }
+			} else {
+				completion(release)
+			}
 		}.resume()
 	}
 
