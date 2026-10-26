@@ -1,124 +1,73 @@
 <html lang="en">
 <head>
-<title>USB Port Patching</title>
+<title>USB Port Mapping</title>
 <meta charset="UTF-8">
 <meta name="KEYWORDS" content="usb">
-<meta name="description" content="Patching USB.">
+<meta name="description" content="Mapping USB ports.">
 <link rel="stylesheet" href="../css/style.css" media="all" />
 </head>
 <body class="Normal">
-<a class="Heading1" name="USB">USB Port Patching</a></a>
-<p>macOS 10.14.1+ does not work with the USB port limit patch and therefore
-there is no way to have all ports available to configure at one time. RehabMan 
-has updated USBInjectAll.kext to include boot flags for excluding groups of 
-ports</p>
+<a class="Heading1" name="USB">USB Port Mapping</a>
+<p>macOS only uses the first 15 ports of each USB controller, and it needs to know
+what kind of connector each port is. A USB map tells it which ports exist and how
+they're connected. Hackintool builds the map as a codeless USBPorts.kext.</p>
+
+<a class="Heading2" name="USB_Before">Before you start</a>
+<ul>
+	<li>To see every port while mapping, temporarily lift the 15-port limit:
+	OpenCore's <b>Kernel &gt; Quirks &gt; XhciPortLimit</b> works up to macOS 11.2.
+	On macOS 11.3 and later it no longer works, so map with USBToolBox.kext
+	(or USBInjectAll.kext) loaded, or map the controller in two passes
+	(USB 2 ports first, then USB 3).</li>
+	<li>If Hackintool flags a controller name as reserved (for example XHC1,
+	EHC1 or EHC2), use <b>Add Renames…</b> to add the ACPI renames to your
+	config.plist, then reboot.</li>
+</ul>
+
+<a class="Heading2" name="USB_Mapping">Mapping</a>
 <ol>
-	<li>Place the
-	<a HREF="https://bitbucket.org/RehabMan/os-x-usb-inject-all/downloads/">
-	USBInjectAll.kext</a> (for port
-	discovery) into EFI/CLOVER/kexts/Other</li>
-	<li>USBInjectAll.kext Requirements:</li>
-	<li>Clover-&gt;DSDT Renames (if detected)<ul>
-		<li>XHCI -&gt; XHC</li>
-		<li>XHC1 -&gt; XHC</li>
-		<li>EHC1 -&gt; EH01</li>
-		<li>EHC2 -&gt; EH02</li>
-	</ul>
-	</li>
-	<li>&nbsp;Reboot</li>
-	<li>&nbsp;Run Hackintool then go to General-&gt;Installed to check USBInjectAll 
-	is installed correctly<ul>
-		<li>Eg. USBInjectAll: Yes (Release-0.7.1)</li>
-	</ul>
-	</li>
-	<li>&nbsp;Go to the General-&gt;USB tab to check your USB Controllers list. 
-	Based on your USB Controller you may need to install additional kexts:<ul>
-		<li>8086:8CB1 and macOS &lt; 10.11.1 -&gt; XHCI-9-series.kext</li>
-		<li>8086:8D31, 8086:A2AF, 8086:A36D, 8086:9DED -&gt; XHCI-unsupported.kext</li>
-		<li>8086:1E31, 8086:8C31, 8086:8CB1, 8086:8D31, 8086:9C31, 8086:9CB1 -&gt; 
-		FakePCIID.kext + FakePCIID_XHCIMux.kext</li>
-	</ul>
-	</li>
-	<li>&nbsp;Reboot if you need to install one of the additional kexts then run 
-	Hackintool again</li>
-	<li>&nbsp;Go to the General-&gt;USB tab</li>
-	<li>&nbsp;Select all items in the USB Ports list and select the “Delete” 
-	then the “Refresh” button</li>
-	<li>&nbsp;Reboot with -uia_exclude_ss uia_include=HS01,HS02 boot flags<ul>
-		<li>Change the HS01,HS02 ports to the ones you have your mouse and 
-		keyboard attached</li>
-	</ul>
-	</li>
-	<li>&nbsp;Run Hackintool and go to the General-&gt;USB tab</li>
-	<li>Plug and unplug a USB 2.0 device into all ports on your system<ul>
-		<li>The ports that are active will remain highlighted
-		green</li>
-		<li>&nbsp;Delete all ports that are not highlighted green</li>
-	</ul>
-	</li>
-	<li>&nbsp;Reboot with -uia_exclude_hs boot flag and remove the -uia_exclude_ss 
-	boot flag</li>
-	<li>&nbsp;Run Hackintool and go to the General-&gt;USB tab<ul>
-		<li>Plug and unplug a USB 3.0 device into all ports on your system</li>
-		<li>Plug and unplug a TypeC device into all ports (in both orientations)</li>
-		<li>The ports that are active will remain highlighted green</li>
-		<li>&nbsp;Delete all ports that are not highlighted green</li>
-	</ul>
-	</li>
-	<li>&nbsp;Set each port to the appropriate Connector using the drop down 
-	list<ul>
-		<li>USB ports with devices permanently attached (eg. M.2 Bluetooth card) 
-		should be set to “Internal”</li>
-		
-		<li>HSxx ports connected to USB3 ports should be set to
-		USB3</li>
-		<li>Internal HUBs are typically connected to ports PR11
-		and PR21 and therefore should be set to “Internal”</li>
-		<li>TypeC:<ul>
-			<li>If it uses the same HSxx/SSxx in both
-			orientations, then it has an internal switch (use “TypeC+Sw”)</li>
-			<li>If it uses a different HSxx/SSxx in each
-			orientation, then it has no switch (use “TypeC”)</li>
-		</ul>
-		</li>
-	</ul>
-	</li>
-	<li>Use the “Export” button to generate files to your Desktop<ul>
-		<li>Copy SSDT-EC.aml (if created) to
-		EFI/CLOVER/ACPI/patched</li>
-		<li>Choose one of the following two:<ol>
-			<li>Copy USBPorts.kext to EFI/CLOVER/kexts/Other or;</li>
-			<li>Copy SSDT-UIAC.aml and SSDT-USBX.aml (if created)
-			to EFI/CLOVER/ACPI/patched</li>
-		</ol>
-		</li>
-	</ul>
-	</li>
-	<li>You can now perform a clean up and remove unnecessary
-	files:<ul>
-		<li>Remove custom boot flags (-uia_exclude_ss -uia_exclude_hs
-		uia_include=x)</li>
-		<li>Remove USBInjectAll.kext (if using USBPorts.kext)</li>
-	</ul>
-	</li>
-	<li>Reboot</li>
-	<li>Run Hackintool and go to the General-&gt;USB tab</li>
-	<li>Select all items in the USB Ports list and select the
-	“Delete” then the “Refresh” button<ul>
-		<li>Now you can check all ports are working correctly</li>
-		<li>If you need to change a Connector type you will need to export your 
-		USBPorts.kext over the current one</li>
-		<li>If you made a mistake delete USBPorts.kext and start from the 
-		beginning of the instructions again</li>
-	</ul>
-	</li>
+	<li>Open the USB section. Use <b>Clear All</b> and then Refresh to start
+	from a fresh list of the ports macOS can see.</li>
+	<li>Plug a USB 2 device and a USB 3 device into every port. For Type-C
+	ports, plug in both orientations. Ports in use turn green, and the
+	device's name and speed are shown.</li>
+	<li>Click <b>Remove Unused</b> to remove ports that never had a device
+	plugged in (or select ports and click <b>Delete</b>).</li>
+	<li>Set each port's connector type:<ul>
+		<li><b>Internal</b> for ports with a device permanently attached, such
+		as Bluetooth modules and internal hubs.</li>
+		<li><b>USB3</b> for both the HSxx and SSxx ports of a USB 3 Type-A port.</li>
+		<li><b>TypeC+Sw</b> if a Type-C port uses the same ports in both
+		orientations (it has a switch), <b>TypeC</b> if it uses different
+		ports in each orientation.</li>
+	</ul></li>
+	<li>Keep each controller at 15 ports or fewer. Hackintool warns you
+	when a controller has too many.</li>
+	<li>Click <b>Export</b>. Hackintool writes USBPorts.kext and SSDT-USBX.aml
+	(USB power properties) to the folder you choose.</li>
 </ol>
+
+<a class="Heading2" name="USB_Install">Installing</a>
+<ul>
+	<li>OpenCore: copy USBPorts.kext to EFI/OC/Kexts and SSDT-USBX.aml to
+	EFI/OC/ACPI, then add both to config.plist.</li>
+	<li>Clover: copy USBPorts.kext to EFI/CLOVER/kexts/Other and
+	SSDT-USBX.aml to EFI/CLOVER/ACPI/patched.</li>
+	<li>Remove USBToolBox.kext / USBInjectAll.kext and disable XhciPortLimit,
+	then reboot.</li>
+</ul>
+
+<a class="Heading2" name="USB_Changes">Making changes later</a>
+<p>Use <b>Import</b> to load an existing USBPorts.kext (or a map made by
+USBMap), change it, and export it over the old one.</p>
+
 <p>Q. What is USBPorts.kext?<br>
 A. It's a
 <a HREF="https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/KEXTConcept/KEXTConceptAnatomy/kext_anatomy.html">
-Codeless Kernel Extension</a> used to inject
-the USB ports</p>
+codeless kernel extension</a> that tells macOS which ports exist and what
+type they are. It needs no other kexts.</p>
 <p>Q. Do I need SSDT-UIAC.aml?<br>
-A. No, this method uses a codeless kext</p>
+A. Only if you still use USBInjectAll.kext. File &gt; Export &gt; USB SSDT-UIAC…
+creates it, but USBPorts.kext is the recommended method.</p>
 </body>
 </html>
