@@ -35,8 +35,6 @@
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2019 Ben Baker. All rights reserved.</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>

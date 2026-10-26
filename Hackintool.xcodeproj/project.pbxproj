@@ -3,14 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E200EE7A21FBD4600082D799 /* NVRAMXmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E200EE7921FBD4600082D799 /* NVRAMXmlParser.m */; };
 		E228024621046E9D00C0FDC6 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E228024521046E9C00C0FDC6 /* IOKit.framework */; };
-		E22AB5392278FC4500A46C8D /* OpenCore.m in Sources */ = {isa = PBXBuildFile; fileRef = E22AB5382278FC4500A46C8D /* OpenCore.m */; };
-		E22AB53C227905FE00A46C8D /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = E22AB53B227905FE00A46C8D /* Config.m */; };
 		E22AB53E2279F02800A46C8D /* OpenCore in Resources */ = {isa = PBXBuildFile; fileRef = E22AB53D2279F02800A46C8D /* OpenCore */; };
 		E22CAB9C226A6919008B4B52 /* VDADecoderChecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E22CAB9A226A6919008B4B52 /* VDADecoderChecker.cpp */; };
 		E22CAB9E226A696A008B4B52 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E22CAB9D226A696A008B4B52 /* CoreVideo.framework */; };
@@ -18,29 +15,15 @@
 		E22CB14D2126EB2900A883BA /* Framebuffer in Resources */ = {isa = PBXBuildFile; fileRef = E22CB14C2126EB2900A883BA /* Framebuffer */; };
 		E22DE6CE211C58000015C27A /* USB in Resources */ = {isa = PBXBuildFile; fileRef = E22DE6CD211C58000015C27A /* USB */; };
 		E23342012125AEF6000FDF6A /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E23342002125AEF6000FDF6A /* OpenCL.framework */; };
-		E23474CC22132CE6006E2A28 /* Display.m in Sources */ = {isa = PBXBuildFile; fileRef = E23474CB22132CE6006E2A28 /* Display.m */; };
-		E23474CE22133099006E2A28 /* Resolution.m in Sources */ = {isa = PBXBuildFile; fileRef = E23474CD22133099006E2A28 /* Resolution.m */; };
-		E23474D1221330D4006E2A28 /* Disk.m in Sources */ = {isa = PBXBuildFile; fileRef = E23474D0221330D4006E2A28 /* Disk.m */; };
-		E23A52E02200DBB5001ECEA6 /* Clover.m in Sources */ = {isa = PBXBuildFile; fileRef = E23A52DE2200DBB5001ECEA6 /* Clover.m */; };
-		E23A52E3220146D4001ECEA6 /* Authorization.m in Sources */ = {isa = PBXBuildFile; fileRef = E23A52E1220146D4001ECEA6 /* Authorization.m */; };
-		E2489DEE211AE5AD00A48C84 /* NSTabViewImage.m in Sources */ = {isa = PBXBuildFile; fileRef = E2489DED211AE5AD00A48C84 /* NSTabViewImage.m */; };
 		E248A34F211B03CE00A48C84 /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = E248A34E211B03CE00A48C84 /* Audio */; };
 		E24936FF169D1B2B00384895 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E24936FE169D1B2B00384895 /* Cocoa.framework */; };
-		E249370B169D1B2B00384895 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E249370A169D1B2B00384895 /* main.m */; };
-		E2493712169D1B2B00384895 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2493711169D1B2B00384895 /* AppDelegate.m */; };
-		E2493715169D1B2B00384895 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2493713169D1B2B00384895 /* MainMenu.xib */; };
-		E2520BA5226CE3B00077A0FC /* PCIMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2520BA3226CE3AF0077A0FC /* PCIMonitor.m */; };
 		E2521F4522081D7200DB2BD2 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E2521F4322081D7200DB2BD2 /* Credits.rtf */; };
 		E2547D302237F60900EF116F /* Help in Resources */ = {isa = PBXBuildFile; fileRef = E2547D2F2237F60800EF116F /* Help */; };
 		E256471423256F28000CB6C8 /* DisplayMergeNub.h in Headers */ = {isa = PBXBuildFile; fileRef = E256471123256F28000CB6C8 /* DisplayMergeNub.h */; };
 		E256471523256F28000CB6C8 /* DisplayMergeNub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E256471223256F28000CB6C8 /* DisplayMergeNub.cpp */; };
-		E2674F9720D61D1A007F0F2A /* IntelFramebuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = E2674F9620D61D1A007F0F2A /* IntelFramebuffer.m */; };
 		E26BE3DE22520DC0004901D8 /* PCI in Resources */ = {isa = PBXBuildFile; fileRef = E26BE3DD22520DC0004901D8 /* PCI */; };
-		E277608E21EBD90D00EA6E44 /* FixEDID.m in Sources */ = {isa = PBXBuildFile; fileRef = E277608C21EBD90D00EA6E44 /* FixEDID.m */; };
 		E27BFB91211BCEE300C75CDB /* Intel in Resources */ = {isa = PBXBuildFile; fileRef = E27BFB90211BCEE300C75CDB /* Intel */; };
-		E2804A74220483E700B40C25 /* Localizer.m in Sources */ = {isa = PBXBuildFile; fileRef = E2804A73220483E700B40C25 /* Localizer.m */; };
 		E2804A77220484F900B40C25 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2804A75220484F900B40C25 /* Localizable.strings */; };
-		E28286C221FC508300A0CB2D /* DiskUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E28286C021FC508300A0CB2D /* DiskUtilities.m */; };
 		E28286C821FC943700A0CB2D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E28286C721FC943700A0CB2D /* Security.framework */; };
 		E28341E622346A880022713F /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E28341E522346A880022713F /* libxml2.tbd */; };
 		E29361D321FFF3DC00ED0105 /* ACPI in Resources */ = {isa = PBXBuildFile; fileRef = E29361D221FFF3DC00ED0105 /* ACPI */; };
@@ -49,26 +32,16 @@
 		E29C38CF222B871200F2178F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E29C38CE222B871200F2178F /* Sparkle.framework */; };
 		E29C38D0222B871C00F2178F /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E29C38CE222B871200F2178F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E29F093923241A0E0039D931 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = E29F093723241A0E0039D931 /* utils.c */; };
-		E2A397EE2246F2DE00C6D2B1 /* BarTableRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = E2A397EB2246F2DD00C6D2B1 /* BarTableRowView.m */; };
 		E2A397F02246F34500C6D2B1 /* DiskManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2A397EF2246F34500C6D2B1 /* DiskManagement.framework */; };
 		E2A5A6B122A03BCA00CE02D1 /* DisplayMergeNub in Resources */ = {isa = PBXBuildFile; fileRef = E2A5A6B022A03BCA00CE02D1 /* DisplayMergeNub */; };
 		E2AB57A02234DA3400DD8F8C /* Kexts in Resources */ = {isa = PBXBuildFile; fileRef = E2AB579F2234DA3400DD8F8C /* Kexts */; };
 		E2AB61FC227A44B100724F32 /* EveryMac in Resources */ = {isa = PBXBuildFile; fileRef = E2AB61FB227A44B100724F32 /* EveryMac */; };
 		E2ABF70820D7369000652F83 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2ABF70720D7369000652F83 /* Media.xcassets */; };
-		E2B848D4240B208800CD051F /* AudioNode.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B848D3240B208800CD051F /* AudioNode.m */; };
-		E2B848D7240B20BC00CD051F /* NSString+Pin.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B848D6240B20BC00CD051F /* NSString+Pin.m */; };
-		E2B848DA240B20E500CD051F /* NSColor+Pin.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B848D9240B20E500CD051F /* NSColor+Pin.m */; };
-		E2B848DD240B235B00CD051F /* NSPinCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B848DC240B235B00CD051F /* NSPinCellView.m */; };
-		E2BD9C1B2200642800E04431 /* USB.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BD9C192200642800E04431 /* USB.m */; };
-		E2BD9C2122006B1C00E04431 /* MiscTools.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BD9C1F22006B1C00E04431 /* MiscTools.m */; };
 		E2C5B2E6226FEBEA009BB776 /* Windows in Resources */ = {isa = PBXBuildFile; fileRef = E2C5B2E5226FEBEA009BB776 /* Windows */; };
 		E2D20D4D223184DF00BAC721 /* Clover in Resources */ = {isa = PBXBuildFile; fileRef = E2D20D4C223184DF00BAC721 /* Clover */; };
 		E2DDD8AA2306DE640017F6D7 /* macserial.c in Sources */ = {isa = PBXBuildFile; fileRef = E2DDD8A62306DE640017F6D7 /* macserial.c */; };
 		E2DDD8AE2307E3800017F6D7 /* efidevp.c in Sources */ = {isa = PBXBuildFile; fileRef = E2DDD8AC2307E37F0017F6D7 /* efidevp.c */; };
 		E2E97BE9276522AB00A7BEBE /* UserPseudoRandom.c in Sources */ = {isa = PBXBuildFile; fileRef = E2E97BE7276522AB00A7BEBE /* UserPseudoRandom.c */; };
-		E2ED92F8221349FE00279FEA /* AudioDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = E2ED92F7221349FE00279FEA /* AudioDevice.m */; };
-		E2F6B2C522E3FE2B00BEF274 /* IORegTools.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F6B2C422E3FE2B00BEF274 /* IORegTools.m */; };
-		E2FB8637210EAB1000D6F0E4 /* FBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E2FB8635210EAB1000D6F0E4 /* FBUtilities.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -203,6 +176,10 @@
 		E2FB8636210EAB1000D6F0E4 /* FBUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBUtilities.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		AA5F00000000000000000001 /* Sources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Sources; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		E24936F7169D1B2B00384895 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -276,6 +253,7 @@
 		E2493704169D1B2B00384895 /* Hackintool */ = {
 			isa = PBXGroup;
 			children = (
+				AA5F00000000000000000001 /* Sources */,
 				E2493710169D1B2B00384895 /* AppDelegate.h */,
 				E2493711169D1B2B00384895 /* AppDelegate.m */,
 				E2ED92F6221349F000279FEA /* AudioDevice.h */,
@@ -429,6 +407,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				AA5F00000000000000000001 /* Sources */,
+			);
 			name = Hackintool;
 			productName = Hackintool;
 			productReference = E24936FA169D1B2B00384895 /* Hackintool.app */;
@@ -528,7 +509,6 @@
 				E2AB57A02234DA3400DD8F8C /* Kexts in Resources */,
 				E26BE3DE22520DC0004901D8 /* PCI in Resources */,
 				E22DE6CE211C58000015C27A /* USB in Resources */,
-				E2493715169D1B2B00384895 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,36 +527,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E22CAB9C226A6919008B4B52 /* VDADecoderChecker.cpp in Sources */,
-				E22AB53C227905FE00A46C8D /* Config.m in Sources */,
-				E23474D1221330D4006E2A28 /* Disk.m in Sources */,
 				E29F093923241A0E0039D931 /* utils.c in Sources */,
-				E23474CC22132CE6006E2A28 /* Display.m in Sources */,
-				E2B848DA240B20E500CD051F /* NSColor+Pin.m in Sources */,
-				E249370B169D1B2B00384895 /* main.m in Sources */,
-				E2B848D4240B208800CD051F /* AudioNode.m in Sources */,
 				E2DDD8AE2307E3800017F6D7 /* efidevp.c in Sources */,
-				E2ED92F8221349FE00279FEA /* AudioDevice.m in Sources */,
-				E23A52E3220146D4001ECEA6 /* Authorization.m in Sources */,
-				E2804A74220483E700B40C25 /* Localizer.m in Sources */,
-				E2B848D7240B20BC00CD051F /* NSString+Pin.m in Sources */,
-				E2BD9C1B2200642800E04431 /* USB.m in Sources */,
-				E2FB8637210EAB1000D6F0E4 /* FBUtilities.m in Sources */,
-				E2F6B2C522E3FE2B00BEF274 /* IORegTools.m in Sources */,
-				E2B848DD240B235B00CD051F /* NSPinCellView.m in Sources */,
-				E2A397EE2246F2DE00C6D2B1 /* BarTableRowView.m in Sources */,
-				E2BD9C2122006B1C00E04431 /* MiscTools.m in Sources */,
-				E2493712169D1B2B00384895 /* AppDelegate.m in Sources */,
-				E23474CE22133099006E2A28 /* Resolution.m in Sources */,
-				E23A52E02200DBB5001ECEA6 /* Clover.m in Sources */,
-				E2674F9720D61D1A007F0F2A /* IntelFramebuffer.m in Sources */,
-				E28286C221FC508300A0CB2D /* DiskUtilities.m in Sources */,
-				E2489DEE211AE5AD00A48C84 /* NSTabViewImage.m in Sources */,
-				E2520BA5226CE3B00077A0FC /* PCIMonitor.m in Sources */,
-				E277608E21EBD90D00EA6E44 /* FixEDID.m in Sources */,
 				E2E97BE9276522AB00A7BEBE /* UserPseudoRandom.c in Sources */,
 				E2DDD8AA2306DE640017F6D7 /* macserial.c in Sources */,
-				E200EE7A21FBD4600082D799 /* NVRAMXmlParser.m in Sources */,
-				E22AB5392278FC4500A46C8D /* OpenCore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,17 +700,29 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Frameworks",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Hackintool/Hackintool-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/GfxUtil",
+					"$(PROJECT_DIR)/MacSerial",
+				);
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@loader_path/../Frameworks",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 4.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SYSTEM_FRAMEWORK_SEARCH_PATHS = "$(inherited) $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OBJC_BRIDGING_HEADER = "Hackintool/Sources/Support/Hackintool-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -783,17 +749,27 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Frameworks",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Hackintool/Hackintool-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/GfxUtil",
+					"$(PROJECT_DIR)/MacSerial",
+				);
 				INFOPLIST_FILE = "Hackintool/Hackintool-Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@loader_path/../Frameworks",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 4.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Headsoft.Hackintool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SYSTEM_FRAMEWORK_SEARCH_PATHS = "$(inherited) $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks";
+				SWIFT_OBJC_BRIDGING_HEADER = "Hackintool/Sources/Support/Hackintool-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
