@@ -874,5 +874,15 @@
 		<key>Type</key>
 		<string>Kext</string>
 	</dict>
+	<dict>
+		<key>Description</key>
+		<string>Lilu plugin adding support for the Vega graphics in AMD Ryzen APUs</string>
+		<key>Name</key>
+		<string>NootedRed</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/ChefKissInc/NootedRed</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
 </array>
 </plist>

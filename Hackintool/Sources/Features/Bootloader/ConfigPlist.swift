@@ -61,6 +61,51 @@ final class ConfigPlist {
 		}
 	}
 
+	// MARK: Boot arguments
+
+	/// The NVRAM GUID boot-args live under in OpenCore.
+	static let appleBootVariableGUID = "7C436110-AB2A-4BBB-A880-FE41995C9F82"
+
+	/// NVRAM ▸ Add ▸ 7C436110… ▸ boot-args (OpenCore) or Boot ▸ Arguments (Clover).
+	var bootArgs: String {
+		get {
+			switch format {
+			case .openCore: return dictionary(at: ["NVRAM", "Add", ConfigPlist.appleBootVariableGUID])["boot-args"] as? String ?? ""
+			case .clover: return dictionary(at: ["Boot"])["Arguments"] as? String ?? ""
+			}
+		}
+		set {
+			switch format {
+			case .openCore:
+				dictionary(at: ["NVRAM", "Add", ConfigPlist.appleBootVariableGUID])["boot-args"] = newValue
+				// OpenCore only overwrites a variable that's also listed under Delete.
+				let delete = array(at: ["NVRAM", "Delete", ConfigPlist.appleBootVariableGUID])
+				if !delete.contains("boot-args") {
+					delete.add("boot-args")
+				}
+			case .clover:
+				dictionary(at: ["Boot"])["Arguments"] = newValue
+			}
+		}
+	}
+
+	/// Adds boot arguments that aren't there yet; one with the same name ("radpg=7") is replaced in place.
+	func addBootArgs(_ arguments: [String]) {
+		guard !arguments.isEmpty else { return }
+		func name(_ argument: String) -> String {
+			return argument.split(separator: "=").first.map(String.init) ?? argument
+		}
+		var current = bootArgs.split(separator: " ").map(String.init)
+		for argument in arguments {
+			if let index = current.firstIndex(where: { name($0) == name(argument) }) {
+				current[index] = argument
+			} else {
+				current.append(argument)
+			}
+		}
+		bootArgs = current.joined(separator: " ")
+	}
+
 	// MARK: Adding patches
 
 	/// Adds a kext or kernel patch written in Clover's format, converting it for OpenCore.

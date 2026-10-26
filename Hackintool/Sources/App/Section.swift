@@ -11,6 +11,7 @@ enum Section: String, CaseIterable {
 	case system
 	case framebuffer
 	case displays
+	case radeon
 	case sound
 	case usb
 	case disks
@@ -44,7 +45,7 @@ enum Section: String, CaseIterable {
 	var group: Group {
 		switch self {
 		case .system: return .mac
-		case .framebuffer, .displays: return .graphics
+		case .framebuffer, .displays, .radeon: return .graphics
 		case .sound, .usb, .disks, .pci, .power: return .hardware
 		case .bootloader, .nvram, .extensions: return .boot
 		case .utilities, .calculator, .logs: return .tools
@@ -56,6 +57,7 @@ enum Section: String, CaseIterable {
 		case .system: return L("System")
 		case .framebuffer: return L("Patch")
 		case .displays: return L("Displays")
+		case .radeon: return L("Radeon")
 		case .sound: return L("Sound")
 		case .usb: return L("USB")
 		case .disks: return L("Disks")
@@ -75,6 +77,7 @@ enum Section: String, CaseIterable {
 		case .system: return .system
 		case .framebuffer: return .framebuffer
 		case .displays: return .displays
+		case .radeon: return .gpu
 		case .sound: return .sound
 		case .usb: return .usb
 		case .disks: return .disks
@@ -104,6 +107,7 @@ enum Section: String, CaseIterable {
 		case .sound: return SoundViewController()
 		case .usb: return USBViewController()
 		case .displays: return DisplaysViewController()
+		case .radeon: return RadeonViewController()
 		case .framebuffer: return FramebufferViewController()
 		}
 	}

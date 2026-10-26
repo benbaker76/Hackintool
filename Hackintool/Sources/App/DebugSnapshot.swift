@@ -308,3 +308,74 @@ enum AMDVanillaSelfTest {
 	}
 }
 #endif
+
+#if DEBUG
+/// HACKINTOOL_RADEONTEST=1: classify every AMD GPU in pci.ids and check the generated config, then quit.
+enum RadeonSelfTest {
+	static func runIfRequested() {
+		guard ProcessInfo.processInfo.environment["HACKINTOOL_RADEONTEST"] != nil else { return }
+		var failures = 0
+		func check(_ condition: Bool, _ message: String) {
+			print((condition ? "PASS " : "FAIL ") + message)
+			if !condition { failures += 1 }
+		}
+		let database = IDDatabase.pci
+		database.loadIfNeeded()
+		var counts: [String: Int] = [:]
+		var unknown: [String] = []
+		for deviceID in UInt32(0)...0xFFFF {
+			guard let name = database.deviceName(vendorID: PCIVendor.amd, deviceID: deviceID),
+			      !name.contains("Audio"), !name.contains("HDMI"), !name.contains("USB"), !name.contains("Bridge") else { continue }
+			let family = RadeonFamily.family(forDeviceName: name)
+			counts[family.name, default: 0] += 1
+			if family == .unknown { unknown.append(String(format: "%04x %@", deviceID, name)) }
+		}
+		counts.sorted { $0.key < $1.key }.forEach { print("  \($0.key): \($0.value)") }
+		print("  unknown sample: \(unknown.filter { ($0.contains("Radeon") || $0.contains("FirePro")) && !$0.contains(" RV") && !$0.contains(" R3") && !$0.contains(" R4") && !$0.contains(" R5") && !$0.contains(" RS") && !$0.contains(" M") }.prefix(60).joined(separator: "\n    "))")
+
+		let expectations: [(UInt32, RadeonFamily)] = [
+			(0x73BF, .navi21), (0x73FF, .navi23), (0x731F, .navi1x), (0x7340, .navi1x), (0x73DF, .unsupportedDiscrete),
+			(0x744C, .unsupportedDiscrete), (0x67DF, .polaris), (0x699F, .lexa), (0x694E, .polaris22), (0x687F, .vega),
+			(0x66AF, .vega), (0x6798, .gcn1), (0x683F, .gcn1), (0x67B1, .gcn2), (0x7300, .gcn3), (0x15DD, .vegaAPU),
+			(0x15D8, .vegaAPU), (0x1636, .vegaAPU), (0x1638, .vegaAPU), (0x164C, .vegaAPU), (0x15E7, .vegaAPU),
+			(0x1681, .unsupportedAPU), (0x15BF, .unsupportedAPU), (0x164E, .unsupportedAPU), (0x1900, .unsupportedAPU), (0x1309, .unsupportedAPU),
+		]
+		for (deviceID, expected) in expectations {
+			let gpu = RadeonGPU.manual(deviceID: deviceID, devicePath: "PciRoot(0x0)/Pci(0x1,0x0)/Pci(0x0,0x0)")
+			check(gpu.family == expected, String(format: "0x%04X %@ → %@", deviceID, gpu.name, gpu.family.name))
+		}
+
+		// Navi: agdpmod on by default, null terminated.
+		let navi = RadeonGPU.manual(deviceID: 0x73BF, devicePath: "PciRoot(0x0)/Pci(0x1,0x0)/Pci(0x0,0x0)/Pci(0x0,0x0)/Pci(0x0,0x0)")
+		var options = RadeonOptions(for: navi)
+		check(options.properties()["agdpmod"] as? Data == Data("pikera\0".utf8), "Navi gets agdpmod=pikera\\0")
+		options.shikigva = 80
+		options.model = "AMD Radeon RX 6900 XT"
+		let config = ConfigPlist(format: .openCore)
+		config.bootArgs = "-v keepsyms=1 radpg=7"
+		var cape = RadeonOptions(for: RadeonGPU.manual(deviceID: 0x683F, devicePath: ""))
+		check(cape.radPG15, "Cape Verde defaults to radpg=15")
+		cape.radDVI = true
+		RadeonConfig.apply(path: navi.devicePath, options: options, to: config)
+		config.addBootArgs(cape.bootArgs)
+		let props = config.deviceProperties[navi.devicePath] as? NSDictionary
+		check(props?["shikigva"] as? Data == Data([80, 0, 0, 0]), "shikigva 80 as 4-byte little endian")
+		check(props?["model"] as? String == "AMD Radeon RX 6900 XT", "model string")
+		check(config.bootArgs == "-v keepsyms=1 radpg=15 -raddvi", "boot-args merged: \(config.bootArgs)")
+		let delete = (((config.root["NVRAM"] as? NSDictionary)?["Delete"] as? NSDictionary)?[ConfigPlist.appleBootVariableGUID] as? NSArray)
+		check(delete?.contains("boot-args") == true, "boot-args listed under NVRAM Delete")
+
+		// Unsupported: only disable-gpu.
+		var navi22 = RadeonOptions(for: RadeonGPU.manual(deviceID: 0x73DF, devicePath: ""))
+		navi22.model = "ignored"
+		check(navi22.properties().keys.sorted() == ["disable-gpu"], "unsupported card writes only disable-gpu")
+
+		let clover = ConfigPlist(format: .clover)
+		clover.addBootArgs(["-raddvi"])
+		check(((clover.root["Boot"] as? NSDictionary)?["Arguments"] as? String) == "-raddvi", "Clover boot-args in Boot ▸ Arguments")
+		print(RadeonConfig.preview(path: navi.devicePath, options: options, format: .openCore))
+		print(failures == 0 ? "ALL PASSED" : "\(failures) FAILED")
+		exit(failures == 0 ? 0 : 1)
+	}
+}
+#endif

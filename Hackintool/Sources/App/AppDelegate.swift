@@ -20,6 +20,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 		#if DEBUG
 		FramebufferSelfTest.runIfRequested()
 		AMDVanillaSelfTest.runIfRequested()
+		RadeonSelfTest.runIfRequested()
 		#endif
 		NSApp.mainMenu = MainMenu.make(updater: updaterController)
 	}

@@ -15,6 +15,7 @@ enum Symbol: String {
 	case nvram = "NVRAM"
 	case extensions = "Extensions"
 	case displays = "Displays"
+	case gpu = "GPU"
 	case sound = "Sound"
 	case usb = "USB"
 	case disks = "Disks"
