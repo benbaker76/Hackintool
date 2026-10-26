@@ -83,6 +83,15 @@ enum Utilities {
 		rebuildKextCache(log: log)
 	}
 
+	/// Copies kexts into a bootloader's kexts folder (e.g. EFI/OC/Kexts); no kext cache involved.
+	static func copy(_ kexts: [URL], to destination: String, log: AdminCommandLog) {
+		for kext in kexts {
+			log.heading(L("Installing '%@'...", kext.lastPathComponent))
+			log.run("/bin/rm", ["-Rf", (destination as NSString).appendingPathComponent(kext.lastPathComponent)])
+			log.run("/bin/cp", ["-R", kext.path, destination])
+		}
+	}
+
 	/// Fixes kext ownership and permissions, then rebuilds the kext cache (kmutil on macOS 11+).
 	static func rebuildKextCache(log: AdminCommandLog) {
 		log.heading(L("Rebuilding KextCache and Repairing Permissions..."))
@@ -195,11 +204,21 @@ enum Utilities {
 
 		log.run("/usr/sbin/chown", ["-R", "root:wheel", kext.path])
 		log.run("/bin/chmod", ["-R", "755", kext.path])
-		log.run("/sbin/kextload", [kext.path])
+		// kextload no longer loads third-party kexts on macOS 11+; kmutil does (with SIP's
+		// kext protection disabled, as on most Hackintoshes).
+		if isBigSurOrLater {
+			log.run("/usr/bin/kmutil", ["load", "-p", kext.path])
+		} else {
+			log.run("/sbin/kextload", [kext.path])
+		}
 		if options.logCStates {
 			waitWhileLogging(30)
 		}
-		log.run("/sbin/kextunload", [kext.path])
+		if isBigSurOrLater {
+			log.run("/usr/bin/kmutil", ["unload", "-p", kext.path])
+		} else {
+			log.run("/sbin/kextunload", [kext.path])
+		}
 		log.run("/bin/cp", ["/tmp/AppleIntelInfo.dat", report.path])
 		log.run("/usr/sbin/chown", [NSUserName(), report.path])
 		return try? String(contentsOf: report, encoding: .utf8)

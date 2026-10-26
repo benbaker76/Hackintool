@@ -45,8 +45,11 @@ final class UtilitiesViewController: NSViewController {
 			ToolRow.make(symbol: .settings, title: "Windows UTC Registry Files",
 			             detail: "Make Windows keep the hardware clock in UTC, like macOS.",
 			             button: "Create…", target: self, action: #selector(createUTCRegistryFiles(_:))),
-			appleIntelInfoRow(),
 		]
+		// AppleIntelInfo.kext is x86_64 only.
+		if !SystemInfo.isAppleSilicon {
+			rows.append(appleIntelInfoRow())
+		}
 
 		let list = Form.scrollingStack(rows, spacing: 0, insets: NSEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
 		let split = NSSplitView()
@@ -140,9 +143,25 @@ final class UtilitiesViewController: NSViewController {
 		}
 	}
 
+	/// Asks where to put AppleAHCIPortHotplug.kext: /Library/Extensions (installed and the kext
+	/// cache rebuilt) or the bootloader's kexts folder, e.g. EFI/OC/Kexts.
 	@objc private func installSATAHotplugFix(_ sender: Any?) {
-		guard let kext = Utilities.bundledKext("AppleAHCIPortHotplug") else { return }
-		runAdminTask { Utilities.install([kext], to: Utilities.extensionsPath, log: self.log) }
+		guard let kext = Utilities.bundledKext("AppleAHCIPortHotplug"), let window = view.window else { return }
+		let panel = NSOpenPanel()
+		panel.canChooseFiles = false
+		panel.canChooseDirectories = true
+		panel.canCreateDirectories = true
+		panel.directoryURL = URL(fileURLWithPath: Utilities.extensionsPath)
+		panel.message = L("Choose /Library/Extensions, or your bootloader's kexts folder (e.g. EFI/OC/Kexts).")
+		panel.prompt = L("Install")
+		panel.beginSheetModal(for: window) { response in
+			guard response == .OK, let folder = panel.url else { return }
+			if folder.standardizedFileURL.path == URL(fileURLWithPath: Utilities.extensionsPath).standardizedFileURL.path {
+				self.runAdminTask { Utilities.install([kext], to: Utilities.extensionsPath, log: self.log) }
+			} else {
+				self.runAdminTask { Utilities.copy([kext], to: folder.path, log: self.log) }
+			}
+		}
 	}
 
 	@objc private func installAtheros(_ sender: Any?) {
