@@ -16,6 +16,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 	let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
 
 	func applicationWillFinishLaunching(_ notification: Notification) {
+		#if DEBUG
+		FramebufferSelfTest.runIfRequested()
+		#endif
 		NSApp.mainMenu = MainMenu.make(updater: updaterController)
 	}
 

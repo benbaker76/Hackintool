@@ -65,3 +65,26 @@ enum DebugSnapshot {
 	}
 }
 #endif
+
+#if DEBUG
+/// HACKINTOOL_FBTEST=1: parse every bundled framebuffer table and print a summary, then quit.
+enum FramebufferSelfTest {
+	static func runIfRequested() {
+		guard ProcessInfo.processInfo.environment["HACKINTOOL_FBTEST"] != nil else { return }
+		for source in [FramebufferTable.Source.macOS10_13_6, .macOS10_14] {
+			for generation in IntelGeneration.allCases {
+				guard let table = FramebufferTable.load(generation, from: source) else {
+					print("\(source) \(generation.name): not found")
+					continue
+				}
+				let first = table.modified[table.modified.count > 1 ? 1 : 0]
+				let connectors = first.connectors.map { "[\($0.index)] bus 0x\(String($0.busID, radix: 16)) pipe \($0.pipe) \($0.typeName) 0x\(String($0.flags, radix: 16))" }
+				print("\(source) \(generation.name): \(table.original.count) records, ids \(table.platformIDs.prefix(4).map { String(format: "0x%08X", $0) }.joined(separator: " "))")
+				print("   #1 mobile \(first.isMobile) pipes \(first.pipeCount) ports \(first.portCount) stolen \(first.stolenMemory.map { ByteFormatting.memory($0) } ?? "-") fb \(first.framebufferMemory.map { ByteFormatting.memory($0) } ?? "-") flags \(first.flags.map { String(format: "0x%08X", $0) } ?? "-") camellia \(first.camellia.map(String.init) ?? "-")")
+				print("   " + connectors.joined(separator: " | "))
+			}
+		}
+		exit(0)
+	}
+}
+#endif

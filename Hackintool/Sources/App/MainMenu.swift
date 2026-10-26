@@ -16,6 +16,7 @@ enum MainMenu {
 		mainMenu.addItem(submenuItem(fileMenu()))
 		mainMenu.addItem(submenuItem(editMenu()))
 		mainMenu.addItem(submenuItem(viewMenu()))
+		mainMenu.addItem(submenuItem(framebufferMenu()))
 
 		let windowMenu = self.windowMenu()
 		mainMenu.addItem(submenuItem(windowMenu))
@@ -50,7 +51,59 @@ enum MainMenu {
 
 	private static func fileMenu() -> NSMenu {
 		let menu = NSMenu(title: L("File"))
+		menu.addItem(item(L("Open…"), #selector(FramebufferViewController.openDocument(_:)), key: "o"))
+		menu.addItem(.separator())
+		let export = NSMenu(title: L("Export"))
+		export.addItem(item(L("Bootloader config.plist…"), #selector(FramebufferViewController.exportBootloaderConfig(_:))))
+		export.addItem(item(L("Framebuffer Text…"), #selector(FramebufferViewController.exportFramebufferText(_:))))
+		export.addItem(item(L("Framebuffer Binary…"), #selector(FramebufferViewController.exportFramebufferBinary(_:))))
+		export.addItem(.separator())
+		export.addItem(item(L("USB SSDT-UIAC…"), #selector(USBViewController.exportSSDTUIAC(_:))))
+		menu.addItem(submenuItem(export))
+		menu.addItem(.separator())
 		menu.addItem(item(L("Close"), #selector(NSWindow.performClose(_:)), key: "w"))
+		return menu
+	}
+
+	/// Framebuffer source and patch presets; enabled while the Patch section is showing.
+	private static func framebufferMenu() -> NSMenu {
+		let menu = NSMenu(title: L("Framebuffer"))
+		let sources: [(String, FramebufferTable.Source)] = [
+			(L("Installed Kext"), .installedKext), ("macOS 10.13.6", .macOS10_13_6), ("macOS 10.14", .macOS10_14),
+			(L("IOReg Dump (Native)"), .ioregNative), (L("IOReg Dump (Patched)"), .ioregPatched),
+		]
+		for (title, source) in sources {
+			let sourceItem = item(title, #selector(FramebufferViewController.selectFramebufferSource(_:)))
+			sourceItem.tag = source.rawValue
+			menu.addItem(sourceItem)
+		}
+		menu.addItem(.separator())
+		menu.addItem(item(L("Apply Current Patches"), #selector(FramebufferViewController.toggleApplyCurrentPatches(_:))))
+		menu.addItem(.separator())
+		menu.addItem(item(L("Import KextsToPatch…"), #selector(FramebufferViewController.importKextsToPatch(_:))))
+		menu.addItem(item("AzulPatcher4600", #selector(FramebufferViewController.applyAzulPatcher4600(_:))))
+		menu.addItem(submenuItem(systemConfigsMenu()))
+		return menu
+	}
+
+	/// Resources/Intel/SystemConfigs: one submenu per vendor folder, one item per board preset.
+	private static func systemConfigsMenu() -> NSMenu {
+		let menu = NSMenu(title: L("System Configs"))
+		guard let root = Bundle.main.resourceURL?.appendingPathComponent("Intel/SystemConfigs") else { return menu }
+		let fileManager = FileManager.default
+		let vendors = (try? fileManager.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)) ?? []
+		for vendor in vendors.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
+			let vendorMenu = NSMenu(title: vendor.lastPathComponent)
+			let files = (try? fileManager.contentsOfDirectory(at: vendor, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)) ?? []
+			for file in files.filter({ $0.pathExtension == "plist" }).sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
+				let configItem = item(file.deletingPathExtension().lastPathComponent, #selector(FramebufferViewController.loadSystemConfig(_:)))
+				configItem.representedObject = file
+				vendorMenu.addItem(configItem)
+			}
+			if vendorMenu.numberOfItems > 0 {
+				menu.addItem(submenuItem(vendorMenu))
+			}
+		}
 		return menu
 	}
 

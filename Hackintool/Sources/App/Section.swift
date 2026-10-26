@@ -104,6 +104,7 @@ enum Section: String, CaseIterable {
 		case .sound: return SoundViewController()
 		case .usb: return USBViewController()
 		case .displays: return DisplaysViewController()
+		case .framebuffer: return FramebufferViewController()
 		default: return PlaceholderViewController(section: self)
 		}
 	}
