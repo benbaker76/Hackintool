@@ -89,7 +89,7 @@ enum USBMapExport {
 		return [
 			"CFBundleDevelopmentRegion": "English",
 			"CFBundleGetInfoString": "1.0 Created by Hackintool",
-			"CFBundleIdentifier": "com.Headsoft.USBPorts",
+			"CFBundleIdentifier": "com.Baker76.USBPorts",
 			"CFBundleInfoDictionaryVersion": "6.0",
 			"CFBundleName": "USBPorts",
 			"CFBundlePackageType": "KEXT",

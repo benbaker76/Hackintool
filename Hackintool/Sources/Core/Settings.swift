@@ -4,6 +4,7 @@
 //
 //  User preferences, stored in UserDefaults under the same keys the
 //  Objective-C app used so existing settings carry over.
+//  Settings saved under the old com.Headsoft.Hackintool bundle ID are copied over once.
 //
 
 import Foundation
@@ -29,6 +30,22 @@ enum BootloaderChoice: Int {
 }
 
 enum Settings {
+	/// The bundle ID Hackintool used before moving to com.Baker76.Hackintool.
+	private static let legacyDomain = "com.Headsoft.Hackintool"
+	private static let migratedKey = "MigratedLegacySettings"
+
+	/// Copies preferences from the old bundle ID's domain the first time the app runs under the
+	/// new one. Sparkle's own keys (SU…) are skipped so the updater starts fresh with the new key.
+	static func migrateLegacySettings() {
+		let defaults = UserDefaults.standard
+		guard Bundle.main.bundleIdentifier != legacyDomain, !defaults.bool(forKey: migratedKey) else { return }
+		defaults.set(true, forKey: migratedKey)
+		guard let legacy = defaults.persistentDomain(forName: legacyDomain) else { return }
+		for (key, value) in legacy where !key.hasPrefix("SU") && defaults.object(forKey: key) == nil {
+			defaults.set(value, forKey: key)
+		}
+	}
+
 	// Framebuffer patching
 	@Default("IntelGen", "Coffee Lake") static var intelGeneration: String
 	@Default("PlatformID", "") static var platformID: String
