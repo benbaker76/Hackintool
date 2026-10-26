@@ -34,6 +34,10 @@ struct DataColumn<Row> {
 	var sortKey: ((Row) -> SortKey)?
 	/// Makes the column editable; called with the row and the new text.
 	var onEdit: ((Row, String) -> Void)?
+	/// An icon shown before the text.
+	var image: ((Row) -> NSImage?)?
+	/// A custom cell (a level indicator, a button...) instead of text. The text is still used for sorting, search and copying.
+	var customView: ((Row) -> NSView)?
 
 	/// - Parameter title: an English column title, localized for display.
 	init(_ identifier: String, _ title: String, width: CGFloat = 120, monospaced: Bool = false,
@@ -172,7 +176,13 @@ class DataTableViewController<Row>: NSViewController, NSTableViewDataSource, NST
 	func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		guard let tableColumn = tableColumn,
 		      let column = columns.first(where: { $0.identifier == tableColumn.identifier.rawValue }) else { return nil }
-		let cell = TextCell.make(in: tableView, identifier: tableColumn.identifier)
+		if let customView = column.customView {
+			return customView(displayedRows[row])
+		}
+		let cell = column.image != nil
+			? ImageTextCell.make(in: tableView, identifier: tableColumn.identifier)
+			: TextCell.make(in: tableView, identifier: tableColumn.identifier)
+		cell.imageView?.image = column.image?(displayedRows[row])
 		let value = column.text(displayedRows[row])
 		cell.textField?.stringValue = value
 		cell.textField?.alignment = column.alignment

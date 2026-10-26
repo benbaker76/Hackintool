@@ -97,6 +97,7 @@ enum Section: String, CaseIterable {
 		case .power: return PowerViewController()
 		case .nvram: return NVRAMViewController()
 		case .logs: return LogsViewController()
+		case .disks: return DisksViewController()
 		default: return PlaceholderViewController(section: self)
 		}
 	}

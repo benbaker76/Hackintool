@@ -68,9 +68,23 @@ final class Privileges {
 		return true
 	}
 
+	struct Result {
+		let output: String
+		let error: String
+		let status: Int32
+
+		var succeeded: Bool { return status == 0 }
+
+		/// stderr if there is any, otherwise stdout, trimmed: the message to show the user.
+		var message: String {
+			return (error.isEmpty ? output : error).trimmingCharacters(in: .whitespacesAndNewlines)
+		}
+	}
+
 	/// Runs a tool as root and waits for it to finish. Output is captured through temporary files.
 	/// Returns nil if authorization was refused or the tool couldn't be started.
-	func run(_ launchPath: String, _ arguments: [String] = []) -> (output: String, error: String)? {
+	@discardableResult
+	func run(_ launchPath: String, _ arguments: [String] = []) -> Result? {
 		guard unlock(), let authorization = authorization, let execute = executeWithPrivileges else { return nil }
 
 		let directory = FileManager.default.temporaryDirectory.appendingPathComponent("Hackintool-\(UUID().uuidString)")
@@ -79,10 +93,11 @@ final class Privileges {
 
 		let stdoutPath = directory.appendingPathComponent("stdout").path
 		let stderrPath = directory.appendingPathComponent("stderr").path
+		let statusPath = directory.appendingPathComponent("status").path
 
-		// sh -c '"$@" >out 2>err' sh <tool> <args...>: the shell's own stdout is the pipe we're
-		// handed, which closes when the shell exits, so reading it to EOF waits for the tool.
-		let script = "\"$@\" 1>'\(stdoutPath)' 2>'\(stderrPath)'"
+		// sh -c '"$@" >out 2>err; echo $? >status' sh <tool> <args...>: the shell's own stdout is the
+		// pipe we're handed, which closes when the shell exits, so reading it to EOF waits for the tool.
+		let script = "\"$@\" 1>'\(stdoutPath)' 2>'\(stderrPath)'; echo $? >'\(statusPath)'"
 		let shellArguments = ["-c", script, "sh", launchPath] + arguments
 
 		var cArguments = shellArguments.map { strdup($0) }
@@ -90,10 +105,10 @@ final class Privileges {
 		defer { cArguments.forEach { free($0) } }
 
 		var pipe: UnsafeMutablePointer<FILE>?
-		let status = cArguments.withUnsafeBufferPointer { buffer in
+		let launchStatus = cArguments.withUnsafeBufferPointer { buffer in
 			execute(authorization, "/bin/sh", [], buffer.baseAddress!, &pipe)
 		}
-		guard status == errAuthorizationSuccess else { return nil }
+		guard launchStatus == errAuthorizationSuccess else { return nil }
 
 		if let pipe = pipe {
 			let handle = FileHandle(fileDescriptor: fileno(pipe), closeOnDealloc: false)
@@ -103,6 +118,7 @@ final class Privileges {
 
 		let output = (try? String(contentsOfFile: stdoutPath, encoding: .utf8)) ?? ""
 		let error = (try? String(contentsOfFile: stderrPath, encoding: .utf8)) ?? ""
-		return (output, error)
+		let status = (try? String(contentsOfFile: statusPath, encoding: .utf8)).flatMap { Int32($0.trimmingCharacters(in: .whitespacesAndNewlines)) } ?? -1
+		return Result(output: output, error: error, status: status)
 	}
 }
