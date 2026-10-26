@@ -48,6 +48,8 @@ jobs:
           rm -rf build/Hackintool.build
           rm -rf build/SharedPrecompiledHeaders
           rm -rf build/XCBuildData
+          rm -rf build/*.swiftmodule
+          rm -rf build/SwiftExplicitPrecompiledModules
       - name: Get version
         id: version
         run: |
