@@ -93,6 +93,8 @@ enum Section: String, CaseIterable {
 		switch self {
 		case .system: return SystemViewController()
 		case .pci: return PCIViewController()
+		case .calculator: return CalculatorViewController()
+		case .power: return PowerViewController()
 		default: return PlaceholderViewController(section: self)
 		}
 	}

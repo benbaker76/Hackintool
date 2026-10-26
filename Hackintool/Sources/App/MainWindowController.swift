@@ -15,6 +15,7 @@ final class MainWindowController: NSWindowController {
 	private var sectionViewControllers: [Section: NSViewController] = [:]
 	private weak var searchField: NSSearchField?
 	private weak var refreshItem: NSToolbarItem?
+	private weak var lockItem: NSToolbarItem?
 
 	private static let selectedSectionKey = "SelectedSection"
 
@@ -97,6 +98,23 @@ final class MainWindowController: NSWindowController {
 		currentContent?.search(sender.stringValue)
 	}
 
+	/// Asks for administrator rights up front, so later admin actions don't prompt.
+	@objc func unlock(_ sender: Any?) {
+		Privileges.shared.unlock()
+	}
+
+	@objc private func privilegesDidUnlock(_ notification: Notification) {
+		updateLockItem()
+	}
+
+	private func updateLockItem() {
+		let unlocked = Privileges.shared.isUnlocked
+		let title = L(unlocked ? "Unlocked" : "Unlock")
+		lockItem?.label = title
+		lockItem?.toolTip = unlocked ? L("Administrator rights granted") : L("Unlock to make changes that need administrator rights")
+		lockItem?.image = (unlocked ? Symbol.unlock : Symbol.lock).image(description: title)
+	}
+
 	/// View ▸ <section>; the menu item's represented object is the section's raw value.
 	@objc func showSection(_ sender: NSMenuItem) {
 		guard let section = (sender.representedObject as? String).flatMap(Section.init(rawValue:)) else { return }
@@ -156,6 +174,7 @@ extension MainWindowController: SidebarViewControllerDelegate {
 private extension NSToolbarItem.Identifier {
 	static let refresh = NSToolbarItem.Identifier("Refresh")
 	static let search = NSToolbarItem.Identifier("Search")
+	static let lock = NSToolbarItem.Identifier("Lock")
 }
 
 extension MainWindowController: NSToolbarDelegate {
@@ -177,7 +196,7 @@ extension MainWindowController: NSToolbarDelegate {
 		if #available(macOS 11.0, *) {
 			identifiers.append(.sidebarTrackingSeparator)
 		}
-		identifiers += [.flexibleSpace, .refresh, .search]
+		identifiers += [.flexibleSpace, .lock, .refresh, .search]
 		return identifiers
 	}
 
@@ -198,6 +217,18 @@ extension MainWindowController: NSToolbarDelegate {
 				item.isBordered = true
 			}
 			refreshItem = item
+			return item
+
+		case .lock:
+			let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+			item.target = self
+			item.action = #selector(unlock(_:))
+			if #available(macOS 10.15, *) {
+				item.isBordered = true
+			}
+			lockItem = item
+			updateLockItem()
+			NotificationCenter.default.addObserver(self, selector: #selector(privilegesDidUnlock(_:)), name: Privileges.didUnlockNotification, object: nil)
 			return item
 
 		case .search:

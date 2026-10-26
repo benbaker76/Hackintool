@@ -32,16 +32,20 @@ struct DataColumn<Row> {
 	let text: (Row) -> String
 	/// Defaults to sorting by the displayed text.
 	var sortKey: ((Row) -> SortKey)?
+	/// Makes the column editable; called with the row and the new text.
+	var onEdit: ((Row, String) -> Void)?
 
 	/// - Parameter title: an English column title, localized for display.
 	init(_ identifier: String, _ title: String, width: CGFloat = 120, monospaced: Bool = false,
-	     alignment: NSTextAlignment = .natural, sortKey: ((Row) -> SortKey)? = nil, text: @escaping (Row) -> String) {
+	     alignment: NSTextAlignment = .natural, sortKey: ((Row) -> SortKey)? = nil,
+	     onEdit: ((Row, String) -> Void)? = nil, text: @escaping (Row) -> String) {
 		self.identifier = identifier
 		self.title = L(title)
 		self.width = width
 		self.monospaced = monospaced
 		self.alignment = alignment
 		self.sortKey = sortKey
+		self.onEdit = onEdit
 		self.text = text
 	}
 
@@ -176,7 +180,21 @@ class DataTableViewController<Row>: NSViewController, NSTableViewDataSource, NST
 			? .monospacedDigitSystemFont(ofSize: NSFont.systemFontSize, weight: .regular)
 			: .systemFont(ofSize: NSFont.systemFontSize)
 		cell.toolTip = value
+		if let textField = cell.textField {
+			textField.isEditable = column.onEdit != nil
+			textField.target = column.onEdit != nil ? self : nil
+			textField.action = column.onEdit != nil ? #selector(cellEdited(_:)) : nil
+			textField.identifier = tableColumn.identifier
+		}
 		return cell
+	}
+
+	@objc private func cellEdited(_ sender: NSTextField) {
+		let row = tableView.row(for: sender)
+		guard displayedRows.indices.contains(row), let identifier = sender.identifier?.rawValue,
+		      let column = columns.first(where: { $0.identifier == identifier }),
+		      sender.stringValue != column.text(displayedRows[row]) else { return }
+		column.onEdit?(displayedRows[row], sender.stringValue)
 	}
 
 	func tableView(_ tableView: NSTableView, didAdd rowView: NSTableRowView, forRow row: Int) {
