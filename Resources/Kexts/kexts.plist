@@ -826,6 +826,46 @@
 	</dict>
 	<dict>
 		<key>Description</key>
+		<string>Restores the original AppleHDA on macOS Tahoe through OpenCore and Lilu</string>
+		<key>Name</key>
+		<string>SimpleHDA</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/laobamac/SimpleHDA</string>
+		<key>Type</key>
+		<string>Lilu</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>A macOS driver for Realtek RTL8125/8126 2.5/5GBit Ethernet Controllers</string>
+		<key>Name</key>
+		<string>SimpleRTK5</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/laobamac/SimpleRTK5</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>A macOS kext for Intel I225/I226 2.5GBit Ethernet</string>
+		<key>Name</key>
+		<string>SimpleVGBE</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/laobamac/SimpleVGBE</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Description</key>
+		<string>Loads the firmware for MediaTek MT7921/MT7922 USB Bluetooth</string>
+		<key>Name</key>
+		<string>SimpleMtkBtFw</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/laobamac/SimpleMtkBtFw</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Description</key>
 		<string>A macOS kext for Metal driver patches for Vega M.</string>
 		<key>Name</key>
 		<string>Polaris22Fixup</string>
@@ -833,6 +873,6 @@
 		<string>https://github.com/Baio1977/Polaris22Fixup</string>
 		<key>Type</key>
 		<string>Kext</string>
-	</dict>	
+	</dict>
 </array>
 </plist>
