@@ -69,6 +69,9 @@ jobs:
           name: Artifacts
           path: build/*
       - name: Upload to Release
+        # Only master publishes a release (and the appcast users update from);
+        # other branches just build and upload to the workflow's artifacts.
+        if: github.ref == 'refs/heads/master'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
