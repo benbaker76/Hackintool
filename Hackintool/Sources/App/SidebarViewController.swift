@@ -124,7 +124,7 @@ extension SidebarViewController: NSOutlineViewDelegate {
 		guard let section = node.section else { return nil }
 		let cell = outlineView.makeView(withIdentifier: Self.sectionCellID, owner: self) as? NSTableCellView ?? makeSectionCell()
 		cell.textField?.stringValue = section.title
-		cell.imageView?.image = section.symbol.image(description: section.title)
+		cell.imageView?.image = section.symbol.image(description: section.title, size: 18)
 		return cell
 	}
 

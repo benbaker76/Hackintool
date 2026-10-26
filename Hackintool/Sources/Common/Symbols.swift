@@ -45,9 +45,10 @@ enum Symbol: String {
 	case settings = "Settings"
 
 	/// A template image for this symbol, labelled for VoiceOver.
-	func image(description: String? = nil) -> NSImage {
-		// Copy so the accessibility label doesn't leak into the shared named image.
+	func image(description: String? = nil, size: CGFloat = 16) -> NSImage {
+		// Copy so the size and label don't leak into the shared named image.
 		let image = (NSImage(named: "Symbol" + rawValue)?.copy() as? NSImage) ?? NSImage()
+		image.size = NSSize(width: size, height: size)
 		image.isTemplate = true
 		image.accessibilityDescription = description
 		return image

@@ -112,7 +112,7 @@ final class MainWindowController: NSWindowController {
 		let title = L(unlocked ? "Unlocked" : "Unlock")
 		lockItem?.label = title
 		lockItem?.toolTip = unlocked ? L("Administrator rights granted") : L("Unlock to make changes that need administrator rights")
-		lockItem?.image = (unlocked ? Symbol.unlock : Symbol.lock).image(description: title)
+		lockItem?.image = (unlocked ? Symbol.unlock : Symbol.lock).image(description: title, size: 18)
 	}
 
 	/// View ▸ <section>; the menu item's represented object is the section's raw value.
@@ -210,7 +210,7 @@ extension MainWindowController: NSToolbarDelegate {
 			let item = NSToolbarItem(itemIdentifier: itemIdentifier)
 			item.label = L("Refresh")
 			item.toolTip = L("Refresh")
-			item.image = Symbol.refresh.image(description: L("Refresh"))
+			item.image = Symbol.refresh.image(description: L("Refresh"), size: 18)
 			item.target = self
 			item.action = #selector(refresh(_:))
 			if #available(macOS 10.15, *) {

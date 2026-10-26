@@ -20,7 +20,7 @@ final class PlaceholderViewController: NSViewController {
 	}
 
 	override func loadView() {
-		let imageView = NSImageView(image: section.symbol.image())
+		let imageView = NSImageView(image: section.symbol.image(size: 48))
 		imageView.setTint(.tertiaryLabelColor)
 		imageView.setSymbolSize(48)
 
