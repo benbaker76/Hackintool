@@ -223,11 +223,16 @@ enum USBMapExport {
 				"                {",
 			]
 			for port in groupPorts.sorted(by: { $0.name < $1.name }) {
+				let portNumber = Data(littleEndian: port.port).hexString(delimiter: ", ", prefix: "0x")
+				// UsbConnector/port for older macOS, plus usb-port-type/usb-port-number,
+				// which macOS 26 reads instead.
 				lines += [
 					"                    \"\(port.name)\", Package ()",
 					"                    {",
 					"                        \"UsbConnector\", \(port.connector),",
-					"                        \"port\", Buffer () { \(Data(littleEndian: port.port).hexString(delimiter: ", ", prefix: "0x")) },",
+					"                        \"port\", Buffer () { \(portNumber) },",
+					"                        \"usb-port-type\", \(port.connector),",
+					"                        \"usb-port-number\", Buffer () { \(portNumber) },",
 				]
 				if let comment = port.comment, !comment.isEmpty {
 					lines.append("                        \"Comment\", Buffer () { \"\(comment)\" },")

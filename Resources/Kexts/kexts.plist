@@ -318,7 +318,7 @@
 		<key>ProjectUrl</key>
 		<string>https://github.com/acidanthera/BrcmPatchRAM</string>
 		<key>Type</key>
-		<string>Kext</string>
+		<string>Lilu</string>
 	</dict>
 	<dict>
 		<key>Description</key>
@@ -432,7 +432,7 @@
 		<key>ProjectUrl</key>
 		<string>https://github.com/acidanthera/IntelMausi</string>
 		<key>Type</key>
-		<string>Kext</string>
+		<string>Lilu</string>
 	</dict>
 	<dict>
 		<key>BundleID</key>

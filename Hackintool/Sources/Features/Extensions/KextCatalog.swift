@@ -93,7 +93,12 @@ enum KextCatalog {
 					let semaphore = DispatchSemaphore(value: 0)
 					// Called back off the main queue so this loop can wait for it.
 					GitHub.latestRelease(owner: repository.owner, repository: repository.repository, queue: nil) { release in
-						if let asset = release?.assets.first(where: { $0.name.hasSuffix(".zip") }) ?? release?.assets.first {
+						// acidanthera publishes -DEBUG.zip before -RELEASE.zip; take the release build.
+						let zips = release?.assets.filter { $0.name.lowercased().hasSuffix(".zip") } ?? []
+						let preferred = zips.first { $0.name.uppercased().contains("RELEASE") }
+							?? zips.first { !$0.name.uppercased().contains("DEBUG") }
+							?? zips.first
+						if let asset = preferred ?? release?.assets.first {
 							entry.downloadURL = asset.downloadURL
 							entry.downloadVersion = release?.version
 						}
@@ -250,7 +255,10 @@ final class KextJobs {
 			if let scheme = entry.scheme {
 				arguments += ["-scheme", scheme]
 			}
-			run("/usr/bin/xcodebuild", arguments)
+			guard run("/usr/bin/xcodebuild", arguments) == 0 else {
+				log(L("Building %@ failed. See the output above.", "\(entry.name) (\(configuration))") + "\n")
+				continue
+			}
 			run("/bin/cp", ["-r", products.path + "/.", destination.path])
 		}
 	}
