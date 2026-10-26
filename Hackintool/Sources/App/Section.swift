@@ -95,6 +95,7 @@ enum Section: String, CaseIterable {
 		case .pci: return PCIViewController()
 		case .calculator: return CalculatorViewController()
 		case .power: return PowerViewController()
+		case .nvram: return NVRAMViewController()
 		default: return PlaceholderViewController(section: self)
 		}
 	}
