@@ -69,7 +69,11 @@ class DataTableViewController<Row>: NSViewController, NSTableViewDataSource, NST
 	var rowColor: ((Row) -> NSColor?)?
 	/// Extra context-menu items, appended after Copy.
 	var contextMenuItems: [NSMenuItem] = [] {
-		didSet { tableView.menu = makeContextMenu() }
+		didSet {
+			if isViewLoaded {
+				tableView.menu = makeContextMenu()
+			}
+		}
 	}
 
 	init(columns: [DataColumn<Row>]) {
@@ -206,6 +210,8 @@ class DataTableViewController<Row>: NSViewController, NSTableViewDataSource, NST
 	}
 
 	private func makeContextMenu() -> NSMenu {
+		// A menu item can only belong to one menu at a time.
+		tableView.menu?.removeAllItems()
 		let menu = NSMenu()
 		menu.addItem(withTitle: L("Copy"), action: #selector(copy(_:)), keyEquivalent: "").target = self
 		if !contextMenuItems.isEmpty {

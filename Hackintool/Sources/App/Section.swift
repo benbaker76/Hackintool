@@ -92,6 +92,7 @@ enum Section: String, CaseIterable {
 	func makeViewController() -> NSViewController {
 		switch self {
 		case .system: return SystemViewController()
+		case .pci: return PCIViewController()
 		default: return PlaceholderViewController(section: self)
 		}
 	}
