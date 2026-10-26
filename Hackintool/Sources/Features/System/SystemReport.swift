@@ -33,7 +33,7 @@ enum SystemReport {
 			PropertyItem("RAM", SystemInfo.memorySize),
 			PropertyItem("Model Identifier", machine.modelIdentifier),
 			PropertyItem("CPU", SystemInfo.cpu),
-			PropertyItem("Intel Generation", machine.intelGeneration?.name),
+			PropertyItem("Intel Generation", machine.intelGeneration?.displayName),
 			PropertyItem("Platform ID", machine.platformID.map { $0.hex8 }),
 			PropertyItem("Board ID", deviceTree?.string("board-id")),
 			PropertyItem("FW Version", IORegistryEntry(path: "IODeviceTree:/rom")?.string("version")),

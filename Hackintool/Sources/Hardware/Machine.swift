@@ -16,6 +16,11 @@ enum IntelGeneration: Int, CaseIterable {
 		return ["Sandy Bridge", "Ivy Bridge", "Haswell", "Broadwell", "Skylake", "Kaby Lake", "Coffee Lake", "Ice Lake (LP)"][rawValue]
 	}
 
+	/// The name shown in the UI. Comet Lake uses Apple's Coffee Lake framebuffer, so say so.
+	var displayName: String {
+		return self == .coffeeLake ? "Coffee Lake / Comet Lake" : name
+	}
+
 	var shortName: String {
 		return ["SNB", "IVB", "HSW", "BDW", "SKL", "KBL", "CFL", "ICLLP"][rawValue]
 	}
@@ -72,8 +77,11 @@ final class Machine {
 
 	private(set) lazy var integratedGPU: IntegratedGPU? = {
 		guard let igpu = Machine.igpuEntry() else { return nil }
-		return IntegratedGPU(model: IOValue.string(igpu.property("model")) ?? "???",
-		                     deviceID: igpu.uint32("device-id") ?? 0,
+		let deviceID = igpu.uint32("device-id") ?? 0
+		let model = IOValue.string(igpu.property("model"))
+			?? BundledData.intelGPUs[String(format: "0x%04X", deviceID & 0xFFFF)] as? String
+		return IntegratedGPU(model: model ?? "???",
+		                     deviceID: deviceID,
 		                     vendorID: igpu.uint32("vendor-id") ?? 0,
 		                     vramSize: Machine.vramSize(of: igpu),
 		                     vramFree: Machine.vramFreeBytes())
@@ -87,8 +95,15 @@ final class Machine {
 
 	// MARK: Helpers
 
+	/// The Intel integrated GPU: the device named IGPU, or, when it hasn't been renamed
+	/// (e.g. still GFX0), the Intel display controller on the root bus.
 	static func igpuEntry() -> IORegistryEntry? {
-		return IORegistryEntry.services(matching: "IOPCIDevice").first { $0.name == "IGPU" }
+		let devices = IORegistryEntry.services(matching: "IOPCIDevice")
+		return devices.first { $0.name == "IGPU" } ?? devices.first { device in
+			device.uint32("vendor-id").map { $0 & 0xFFFF } == PCIVendor.intel
+				&& device.uint32("class-code").map { ($0 >> 16) & 0xFF } == 0x03
+				&& device.parent()?.className.hasPrefix("AppleACPIPCI") == true
+		}
 	}
 
 	/// VRAM in MB, from "VRAM,totalsize" (bytes) or "VRAM,totalMB".

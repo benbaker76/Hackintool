@@ -23,7 +23,7 @@ There are several ways to dump your framebuffer data (the second two require Wha
 
 ## Features
 
-- Supports generations from Sandy Bridge to Ice Lake (Sandy Bridge, Ivy Bridge, Haswell, Broadwell, Skylake, Kaby Lake, Coffee Lake, Cannon Lake, and Ice Lake)
+- Supports generations from Sandy Bridge to Ice Lake (Sandy Bridge, Ivy Bridge, Haswell, Broadwell, Skylake, Kaby Lake, Coffee Lake, Comet Lake (via the Coffee Lake framebuffer), Cannon Lake, and Ice Lake)
 - Create All, Connectors, or VRAM patches
 - Detect Changes for auto patch creation
 - Create Clover patches in hex, base64, or Devices/Properties formats

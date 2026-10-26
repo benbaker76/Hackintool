@@ -64,7 +64,8 @@ final class FramebufferTable {
 				// Not installed (e.g. on newer macOS); fall back to the bundled table.
 				return load(generation, from: .macOS10_14) ?? load(generation, from: .macOS10_13_6)
 			}
-			return parse(data, generation: generation)
+			// A kext whose table can't be found (e.g. a newer layout) falls back the same way.
+			return parse(data, generation: generation) ?? load(generation, from: .macOS10_14) ?? load(generation, from: .macOS10_13_6)
 		case .macOS10_13_6 where generation == .iceLakeLP:
 			// The 10.13.6 Ice Lake dump predates the final layout.
 			return load(generation, from: .macOS10_14)

@@ -27,11 +27,16 @@ struct PatchContext {
 		return pciDevices.first { $0.acpiPath == name } ?? pciDevices.first { $0.acpiName == name }
 	}
 
+	/// The IGPU to patch: the device named IGPU, else the Intel display controller at 00:02.0
+	/// (e.g. still named GFX0), else the standard IGPU path, so output is never silently empty.
 	var gpuDevice: PCIDevice? {
 		if let igpu = pciDevice(named: "IGPU") {
 			return igpu
 		}
-		return Settings.injectFakeIGPU ? PatchContext.fakeIGPU : nil
+		if !Settings.injectFakeIGPU, let display = pciDevices.first(where: { $0.vendorID == PCIVendor.intel && ($0.classCode >> 16) & 0xFF == 0x03 && $0.busDeviceFunction.hasPrefix("00:02.") }) {
+			return display
+		}
+		return PatchContext.fakeIGPU
 	}
 
 	/// A stand-in IGPU at the usual address, for generating patches on a machine without one.

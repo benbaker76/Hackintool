@@ -176,7 +176,7 @@ final class FramebufferInfoViewController: PropertyListViewController {
 		}
 		let generation = model.generation
 		var selected = [
-			PropertyItem("Intel Generation", generation.name),
+			PropertyItem("Intel Generation", generation.displayName),
 			PropertyItem("Platform ID", platformID.hex8),
 		]
 		if let deviceID = FramebufferTable.gpuDeviceID(for: platformID, generation: generation) {
@@ -197,7 +197,7 @@ final class FramebufferInfoViewController: PropertyListViewController {
 		let gpu = machine.integratedGPU
 		let current = [
 			PropertyItem("Model", machine.modelIdentifier),
-			PropertyItem("Intel Generation", machine.intelGeneration?.name),
+			PropertyItem("Intel Generation", machine.intelGeneration?.displayName),
 			PropertyItem("Platform ID", machine.platformID?.hex8),
 			PropertyItem("GPU Device ID", gpu.map { ($0.deviceID << 16 | $0.vendorID).hex8 }),
 			PropertyItem("GPU Name", gpu?.model),
@@ -240,7 +240,7 @@ final class FramebufferEditorViewController: NSViewController, SectionContent {
 		let isModified: Bool
 	}
 
-	private lazy var generationPopUp = ControlBar.popUp(IntelGeneration.allCases.map { $0.name }, target: self, action: #selector(generationChanged(_:)))
+	private lazy var generationPopUp = ControlBar.popUp(IntelGeneration.allCases.map { $0.displayName }, target: self, action: #selector(generationChanged(_:)))
 	private lazy var platformPopUp = ControlBar.popUp([], target: self, action: #selector(platformChanged(_:)))
 	private lazy var sourcePopUp = ControlBar.popUp(
 		[L("Installed Kext"), "macOS 10.13.6", "macOS 10.14", L("IOReg Dump (Native)"), L("IOReg Dump (Patched)")],
@@ -287,7 +287,14 @@ final class FramebufferEditorViewController: NSViewController, SectionContent {
 	override func loadView() {
 		[fields, framebufferFlags, connectors, connectorFlags].forEach(addChild)
 		fields.rowColor = { $0.isModified ? .systemOrange : nil }
-		connectors.rowColor = { $0.isModified ? .systemOrange : nil }
+		connectors.rowColor = { [unowned self] row in
+			if row.isModified {
+				return .systemOrange
+			}
+			// Connectors with an Intel-driven display attached: green for the built-in panel, red otherwise.
+			guard let display = self.attachedDisplay(row) else { return nil }
+			return display.isInternal ? .systemGreen : .systemRed
+		}
 		connectors.tableView.allowsMultipleSelection = false
 		connectors.onSelectionChange = { [weak self] rows in
 			guard let self = self, let row = rows.first else { return }
@@ -356,7 +363,7 @@ final class FramebufferEditorViewController: NSViewController, SectionContent {
 	}
 
 	private func update() {
-		generationPopUp.selectItem(withTitle: model.generation.name)
+		generationPopUp.selectItem(at: model.generation.rawValue)
 		sourcePopUp.selectItem(at: model.source.rawValue)
 		platformPopUp.removeAllItems()
 		if let table = model.table {
@@ -384,6 +391,22 @@ final class FramebufferEditorViewController: NSViewController, SectionContent {
 		let connectorIndex = min(selectedConnector, modified.layout.connectorCount - 1)
 		connectors.tableView.selectRowIndexes(IndexSet(integer: connectorIndex), byExtendingSelection: false)
 		connectorFlags.show(modified.connector(at: connectorIndex).flags)
+	}
+
+	/// The display on this connector, as 4.x worked it out. With current patches applied, the
+	/// display's port-number matches index + 4 (+ 3 on Sandy/Ivy Bridge, and 0 for the panel);
+	/// otherwise its framebuffer index matches the row.
+	private func attachedDisplay(_ row: ConnectorRow) -> Display? {
+		let index = row.connector.index
+		guard index != -1 else { return nil }
+		let offset: UInt32 = [.sandyBridge, .ivyBridge].contains(model.generation) ? 3 : 4
+		return model.displays.first { display in
+			guard display.videoID & 0xFFFF == PCIVendor.intel else { return false }
+			if Settings.applyCurrentPatches {
+				return index == 0 ? display.port == 0 : UInt32(index) + offset == display.port
+			}
+			return UInt32(row.index) == display.index
+		}
 	}
 
 	private func editConnector(_ row: ConnectorRow, _ change: (inout Connector) -> Void) {
@@ -431,7 +454,7 @@ final class FramebufferEditorViewController: NSViewController, SectionContent {
 	@objc private func moveConnectorDown(_ sender: Any?) { moveConnector(by: 1) }
 
 	@objc private func generationChanged(_ sender: NSPopUpButton) {
-		guard let generation = IntelGeneration(name: sender.titleOfSelectedItem ?? "") else { return }
+		guard let generation = IntelGeneration(rawValue: sender.indexOfSelectedItem) else { return }
 		model.setGeneration(generation)
 	}
 
