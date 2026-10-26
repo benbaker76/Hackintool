@@ -107,7 +107,7 @@ final class UtilitiesViewController: NSViewController {
 		let panel = NSOpenPanel()
 		panel.allowsMultipleSelection = true
 		panel.canChooseDirectories = false
-		panel.allowedFileTypes = ["kext"]
+		FilePanels.setAllowedExtensions(["kext"], on: panel)
 		panel.prompt = L("Select")
 		guard let window = view.window else { return }
 		panel.beginSheetModal(for: window) { response in

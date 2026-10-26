@@ -73,7 +73,7 @@ enum FilePanels {
 		begin(panel) { if let url = panel.url { completion(url) } }
 	}
 
-	private static func setAllowedExtensions(_ extensions: [String]?, on panel: NSSavePanel) {
+	static func setAllowedExtensions(_ extensions: [String]?, on panel: NSSavePanel) {
 		guard let extensions = extensions else { return }
 		if #available(macOS 11.0, *) {
 			panel.allowedContentTypes = extensions.compactMap { UTType(filenameExtension: $0) }

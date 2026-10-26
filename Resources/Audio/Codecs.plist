@@ -476,6 +476,7 @@
 			<integer>38</integer>
 			<integer>138</integer>
 			<integer>89</integer>
+			<integer>120</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -643,7 +644,7 @@
 		<key>MaxKernel</key>
 		<integer>15</integer>
 		<key>MinKernel</key>
-		<integer>13</integer>
+		<integer>12</integer>
 		<key>Revisions</key>
 		<array>
 			<string>0x100302</string>
@@ -1545,6 +1546,7 @@
 		<string>ALC897</string>
 		<key>LayoutIDs</key>
 		<array>
+			<integer>31</integer>
 			<integer>13</integer>
 			<integer>23</integer>
 			<integer>21</integer>
@@ -1554,6 +1556,7 @@
 			<integer>12</integer>
 			<integer>11</integer>
 			<integer>77</integer>
+			<integer>97</integer>
 			<integer>98</integer>
 			<integer>99</integer>
 		</array>
@@ -1594,12 +1597,13 @@
 		<key>LayoutIDs</key>
 		<array>
 			<integer>3</integer>
+			<integer>16</integer>
 			<integer>12</integer>
 			<integer>66</integer>
 			<integer>86</integer>
 			<integer>11</integer>
 			<integer>13</integer>
-			<string>15</string>
+			<integer>15</integer>
 			<integer>17</integer>
 			<integer>18</integer>
 			<integer>20</integer>
@@ -1615,11 +1619,12 @@
 			<integer>82</integer>
 			<integer>99</integer>
 			<integer>100</integer>
-			<string>96</string>
+			<integer>96</integer>
 			<integer>255</integer>
 			<integer>69</integer>
 			<integer>37</integer>
 			<integer>80</integer>
+			<integer>89</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -1774,6 +1779,7 @@
 			<integer>94</integer>
 			<integer>99</integer>
 			<integer>17</integer>
+			<integer>98</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>13</integer>
@@ -1800,6 +1806,7 @@
 			<integer>11</integer>
 			<integer>28</integer>
 			<integer>13</integer>
+			<integer>64</integer>
 			<integer>65</integer>
 			<integer>66</integer>
 			<integer>98</integer>
@@ -1971,6 +1978,7 @@
 			<integer>15</integer>
 			<integer>99</integer>
 			<integer>89</integer>
+			<integer>88</integer>
 		</array>
 		<key>MaxKernel</key>
 		<integer>15</integer>
@@ -2138,7 +2146,7 @@
 		<key>MaxKernel</key>
 		<integer>15</integer>
 		<key>MinKernel</key>
-		<integer>0</integer>
+		<integer>13</integer>
 		<key>Revisions</key>
 		<array>
 			<string>0x100100</string>

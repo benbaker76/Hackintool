@@ -35,4 +35,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 	func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
 		return true
 	}
+
+	/// File ▸ Generate Audio Codecs Info: rebuilds Audio/Codecs.plist from AppleALC's Resources folder.
+	@objc func generateAudioCodecsInfo(_ sender: Any?) {
+		let panel = NSOpenPanel()
+		panel.canChooseFiles = false
+		panel.canChooseDirectories = true
+		panel.message = L("Select AppleALC Resources Folder")
+		guard let window = NSApp.mainWindow else { return }
+		panel.beginSheetModal(for: window) { response in
+			guard response == .OK, let folder = panel.url else { return }
+			let codecs = AudioCodecCatalog.generate(fromAppleALCResources: folder)
+			guard !codecs.isEmpty else {
+				Alerts.error("No codecs found.", folder.path)
+				return
+			}
+			FilePanels.save(suggestedName: "Codecs.plist", allowedExtensions: ["plist"]) { url in
+				(codecs as NSArray).write(to: url, atomically: true)
+			}
+		}
+	}
 }

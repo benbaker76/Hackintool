@@ -60,6 +60,7 @@ enum MainMenu {
 		export.addItem(.separator())
 		export.addItem(item(L("USB SSDT-UIAC…"), #selector(USBViewController.exportSSDTUIAC(_:))))
 		menu.addItem(submenuItem(export))
+		menu.addItem(item(L("Generate Audio Codecs Info…"), #selector(AppDelegate.generateAudioCodecsInfo(_:))))
 		menu.addItem(.separator())
 		menu.addItem(item(L("Close"), #selector(NSWindow.performClose(_:)), key: "w"))
 		return menu
