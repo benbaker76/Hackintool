@@ -76,7 +76,7 @@ final class FramebufferPatchViewController: NSViewController, SectionContent {
 	private let settings = SettingsProxy()
 	private var checkboxes: [(NSButton, Option)] = []
 	private lazy var methodPopUp = ControlBar.popUp(Method.allCases.map { $0.title }, target: self, action: #selector(methodChanged(_:)))
-	private lazy var bootloaderPopUp = ControlBar.popUp(["Auto Detect", "Clover", "OpenCore"], target: self, action: #selector(bootloaderChanged(_:)))
+	private lazy var bootloaderPopUp = ControlBar.popUp([L("Auto Detect"), "Clover", "OpenCore"], target: self, action: #selector(bootloaderChanged(_:)))
 	private lazy var dpcdCheckbox = Form.checkbox("DPCD Max Link Rate", identifier: "DPCDMaxLinkRateFix", target: self, action: #selector(dpcdChanged(_:)))
 	private lazy var dpcdPopUp = ControlBar.popUp(["RBR", "HBR", "HBR2", "HBR3"], target: self, action: #selector(dpcdChanged(_:)))
 	private lazy var portLimitCheckbox = Form.checkbox("FB Port Limit", identifier: "FBPortLimit", target: self, action: #selector(portLimitChanged(_:)))
@@ -111,6 +111,9 @@ final class FramebufferPatchViewController: NSViewController, SectionContent {
 			grid.rowSpacing = 6
 			grid.columnSpacing = 16
 			// Keep the columns at their natural width when the box is wider than the grid.
+			let compact = grid.widthAnchor.constraint(equalToConstant: 0)
+			compact.priority = .defaultLow
+			compact.isActive = true
 			let container = NSStackView(views: [grid])
 			container.orientation = .vertical
 			container.alignment = .leading
