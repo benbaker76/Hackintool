@@ -35,16 +35,29 @@ enum SystemReport {
 			PropertyItem("CPU", SystemInfo.cpu),
 			PropertyItem("Intel Generation", machine.intelGeneration?.displayName),
 			PropertyItem("Platform ID", machine.platformID.map { $0.hex8 }),
-			PropertyItem("Board ID", deviceTree?.string("board-id")),
+			// Apple Silicon has no board-id; target-type ("J473") is the closest equivalent.
+			PropertyItem("Board ID", deviceTree?.string("board-id") ?? deviceTree?.string("target-type")),
 			PropertyItem("FW Version", IORegistryEntry(path: "IODeviceTree:/rom")?.string("version")),
 			PropertyItem("Serial Number", machine.serialNumber),
 			PropertyItem("Hardware UUID", deviceTree?.string("IOPlatformUUID")),
 			PropertyItem("System ID", systemID()),
 			PropertyItem("ROM", options?.data(appleVariable + "ROM")?.hexString()),
-			PropertyItem("Board Serial Number", options?.data(appleVariable + "MLB").flatMap { String(data: $0, encoding: .ascii) }),
+			PropertyItem("Board Serial Number", boardSerialNumber(options: options, deviceTree: deviceTree)),
 		]
 		items.append(PropertyItem("VDA Decoder", vdaDecoderStatus()))
 		return PropertyGroup("System Info", items)
+	}
+
+	/// The MLB from NVRAM (Hackintosh) or the device tree (Apple Silicon). On Intel, an MLB with a
+	/// bad length or checksum is flagged, as Clover does.
+	private static func boardSerialNumber(options: IORegistryEntry?, deviceTree: IORegistryEntry?) -> String? {
+		let data = options?.data("4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14:MLB") ?? deviceTree?.data("mlb-serial-number")
+		guard let mlb = data.flatMap({ String(data: $0, encoding: .ascii) })?.trimmingCharacters(in: CharacterSet(charactersIn: "\0 ")),
+		      !mlb.isEmpty else { return nil }
+		if !SystemInfo.isAppleSilicon && !MacSerial.isValidBoardSerial(mlb) {
+			return mlb + "  ⚠︎ " + L("Invalid length or checksum")
+		}
+		return mlb
 	}
 
 	static func serialItems(_ decoded: MacSerial.Decoded?) -> [PropertyItem] {

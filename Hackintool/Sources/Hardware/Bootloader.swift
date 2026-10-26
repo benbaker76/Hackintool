@@ -16,11 +16,13 @@ enum Bootloader {
 	static let detected: Bootloader? = detect()
 
 	private static func detect() -> Bootloader? {
-		if let version = openCoreVersion() {
-			return .openCore(bootedVersion: version)
-		}
+		// Clover first: OpenCore never sets clovergui-revision, but Clover can publish an
+		// opencore-version that looks real.
 		if let revision = cloverRevision() {
 			return .clover(bootedRevision: revision, installedRevision: cloverInstalledRevision())
+		}
+		if let version = openCoreVersion() {
+			return .openCore(bootedVersion: version)
 		}
 		return nil
 	}

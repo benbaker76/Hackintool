@@ -88,4 +88,18 @@ enum MacSerial {
 			String(cString: buffer.bindMemory(to: CChar.self).baseAddress!)
 		}
 	}
+
+	/// Whether a board serial number (MLB) has a valid length (17, or 13 on older models) and
+	/// checksum, using macserial's algorithm.
+	static func isValidBoardSerial(_ mlb: String) -> Bool {
+		let alphabet = Array("0123456789ABCDEFGHJKLMNPQRSTUVWXYZ")
+		let characters = Array(mlb)
+		guard characters.count == 17 || characters.count == 13 else { return false }
+		var checksum = 0
+		for (index, character) in characters.enumerated() {
+			guard let value = alphabet.firstIndex(of: character) else { return false }
+			checksum += ((index & 1) == (characters.count & 1) ? 3 : 1) * value
+		}
+		return checksum % alphabet.count == 0
+	}
 }
