@@ -21,6 +21,10 @@ final class FramebufferModel {
 	/// The device ID chosen for "Inject Device ID", as an index into deviceIDs.
 	var injectedDeviceIndex = 0
 
+	/// The selected record before auto patching (original plus any applied existing patches);
+	/// switching a quick fix off restores its fields from here.
+	private var baseline: Framebuffer?
+
 	private var observers: [() -> Void] = []
 	private static let sourceKey = "FramebufferSource"
 
@@ -115,9 +119,19 @@ final class FramebufferModel {
 	private func prepareSelection() {
 		guard let table = table else { return }
 		if Settings.applyCurrentPatches, let igpu = Machine.igpuEntry() {
-			FramebufferPatcher.applyProperties(igpu.properties, to: table, at: index)
+			let properties = igpu.properties
+			FramebufferPatcher.applyProperties(properties, to: table, at: index)
+			selectInjectedDeviceID(from: properties)
 		}
+		baseline = table.modified[index]
 		FramebufferPatcher.applyAutoPatches(to: table, at: index)
+	}
+
+	/// Selects the device ID a "device-id" property spoofs, if it's one this generation supports.
+	private func selectInjectedDeviceID(from properties: [String: Any]) {
+		guard let value = IOValue.uint32(properties["device-id"]),
+		      let found = deviceIDs.firstIndex(of: value & 0xFFFF) else { return }
+		injectedDeviceIndex = found
 	}
 
 	// MARK: Editing
@@ -128,16 +142,49 @@ final class FramebufferModel {
 		notify()
 	}
 
-	/// Re-applies the auto patches after a setting changed.
+	/// Undoes quick fixes that were switched off and applies the ones switched on.
 	func settingsChanged() {
 		guard let table = table else { return }
+		if let baseline = baseline {
+			FramebufferPatcher.resetAutoPatches(to: table, at: index, baseline: baseline)
+		}
 		FramebufferPatcher.applyAutoPatches(to: table, at: index)
 		notify()
 	}
 
+	/// Discards edits, then re-applies existing patches and quick fixes.
 	func resetChanges() {
 		table?.reset(at: index)
-		settingsChanged()
+		prepareSelection()
+		notify()
+	}
+
+	/// Finds `find` in the original records and writes `replace` at the same place in the edited
+	/// ones (so quick fixes already applied don't stop a stock-bytes patch from matching).
+	/// Returns the number of replacements.
+	@discardableResult
+	func findAndReplace(_ find: Data, with replace: Data) -> Int {
+		guard let table = table, !find.isEmpty, find.count == replace.count else { return 0 }
+		let pattern = [UInt8](find)
+		let replacement = [UInt8](replace)
+		var count = 0
+		for record in table.original.indices {
+			let original = table.original[record].bytes
+			var modified = table.modified[record]
+			var offset = 0
+			while offset + pattern.count <= original.count {
+				if Array(original[offset..<offset + pattern.count]) == pattern {
+					modified.bytes.replaceSubrange(offset..<offset + pattern.count, with: replacement)
+					count += 1
+					offset += pattern.count
+				} else {
+					offset += 1
+				}
+			}
+			table.modified[record] = modified
+		}
+		notify()
+		return count
 	}
 
 	/// Loads framebuffer properties (from a config.plist or System Configs preset) into the editor.
@@ -147,6 +194,9 @@ final class FramebufferModel {
 		}
 		guard let table = table else { return }
 		FramebufferPatcher.applyProperties(properties, to: table, at: index)
+		selectInjectedDeviceID(from: properties)
+		baseline = table.modified[index]
+		FramebufferPatcher.applyAutoPatches(to: table, at: index)
 		notify()
 	}
 

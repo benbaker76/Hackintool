@@ -96,7 +96,48 @@ enum FramebufferSelfTest {
 			print(FramebufferPatcher.kextsToPatch(context: context, format: .base64))
 			print(FramebufferPatcher.ssdt(context: context, forceAll: true))
 		}
+		if ProcessInfo.processInfo.environment["HACKINTOOL_FBTEST"] == "model" {
+			modelTest()
+		}
 		exit(0)
+	}
+
+	/// Existing patches must survive quick fixes, and find/replace must match stock bytes.
+	private static func modelTest() {
+		let savedDVMT = Settings.dvmtPrealloc32MB, savedHDMI = Settings.dpToHDMI
+		defer { Settings.dvmtPrealloc32MB = savedDVMT; Settings.dpToHDMI = savedHDMI }
+		Settings.dvmtPrealloc32MB = false
+		Settings.dpToHDMI = false
+		let model = FramebufferModel()
+		model.load()
+		model.apply(properties: [
+			"AAPL,ig-platform-id": Data([0x07, 0x00, 0x9B, 0x3E]),
+			"framebuffer-patch-enable": Data([1, 0, 0, 0]),
+			"framebuffer-stolenmem": Data([0x00, 0x00, 0x00, 0x02]),
+			"framebuffer-con1-enable": Data([1, 0, 0, 0]),
+			"framebuffer-con1-type": Data([0x00, 0x08, 0x00, 0x00]),
+			"device-id": Data([0x92, 0x3E, 0x00, 0x00]),
+		])
+		func state(_ label: String) {
+			guard let record = model.modified else { return print("\(label): no record") }
+			print(String(format: "%@: platform 0x%08X stolen 0x%08X con1 type 0x%X, device-id 0x%04X", label, model.platformID ?? 0, record.stolenMemory ?? 0, record.connector(at: 1).type,
+			             model.deviceIDs.indices.contains(model.injectedDeviceIndex) ? model.deviceIDs[model.injectedDeviceIndex] : 0))
+		}
+		state("loaded (expect stolen 0x02000000, type 0x800, id 0x3E92)")
+		Settings.dvmtPrealloc32MB = true
+		model.settingsChanged()
+		state("DVMT on (expect stolen 0x01300000 = 19 MB)")
+		Settings.dvmtPrealloc32MB = false
+		model.settingsChanged()
+		state("DVMT off (expect stolen back to 0x02000000 from the loaded patch)")
+		model.resetChanges()
+		Settings.dvmtPrealloc32MB = true
+		model.settingsChanged()
+		let original = model.original!
+		let stock = Data(original.bytes[0..<16])
+		var replacement = stock
+		replacement[5] ^= 0xFF
+		print("find/replace on stock bytes with DVMT on: \(model.findAndReplace(stock, with: replacement)) replacement(s) (expect >= 1)")
 	}
 }
 #endif

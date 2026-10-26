@@ -176,12 +176,12 @@ enum FramebufferPatcher {
 				// One "alldata" entry per run of consecutive changed connectors.
 				var index = 0
 				while index < count {
-					guard changed[index] || !autoDetect else {
+					guard changed[index] else {
 						index += 1
 						continue
 					}
 					var run = 1
-					while index + run < count && (changed[index + run] || !autoDetect) {
+					while index + run < count && changed[index + run] {
 						run += 1
 					}
 					set("framebuffer-con\(index)-enable", 1)
@@ -402,31 +402,72 @@ enum FramebufferPatcher {
 
 	// MARK: Auto patching
 
-	/// Applies the quick fixes (DVMT, VRAM, port limit, DP→HDMI, hotplug) to the modified record,
-	/// and undoes any that are switched off.
+	/// Applies the enabled quick fixes (DVMT, VRAM, port limit, DP→HDMI, hotplug) to the modified record.
+	/// Fixes that are off leave the record alone; resetAutoPatches undoes them when they're switched off.
 	static func applyAutoPatches(to table: FramebufferTable, at index: Int) {
 		let original = table.original[index]
 		var modified = table.modified[index]
 
 		if modified.stolenMemory != nil {
-			modified.stolenMemory = Settings.dvmtPrealloc32MB ? 0x130_0000 : original.stolenMemory      // 19 MB
-			modified.framebufferMemory = Settings.dvmtPrealloc32MB ? 0x90_0000 : original.framebufferMemory  // 9 MB
-			modified.unifiedMemory = Settings.vram2048MB ? 0x8000_0000 : original.unifiedMemory   // 2048 MB
-		}
-		modified.portCount = Settings.fbPortLimit ? UInt32(Settings.fbPortCount) : original.portCount
-
-		for connectorIndex in 0..<modified.layout.connectorCount {
-			let before = original.connector(at: connectorIndex)
-			var after = modified.connector(at: connectorIndex)
-			let disablePort = Settings.fbPortLimit && connectorIndex >= Settings.fbPortCount
-			if disablePort {
-				after.index = -1
-			} else {
-				after.index = before.index
-				after.type = Settings.dpToHDMI && before.type == ConnectorType.displayPort.rawValue ? ConnectorType.hdmi.rawValue : before.type
-				after.pipe = Settings.hotplugRebootFix && after.index != -1 ? 18 : before.pipe
+			if Settings.dvmtPrealloc32MB {
+				modified.stolenMemory = 0x130_0000       // 19 MB
+				modified.framebufferMemory = 0x90_0000   // 9 MB
 			}
-			modified.setConnector(after, at: connectorIndex)
+			if Settings.vram2048MB {
+				modified.unifiedMemory = 0x8000_0000     // 2048 MB
+			}
+		}
+		if Settings.fbPortLimit {
+			modified.portCount = UInt32(Settings.fbPortCount)
+		}
+		for connectorIndex in 0..<modified.layout.connectorCount {
+			var connector = modified.connector(at: connectorIndex)
+			if Settings.fbPortLimit && connectorIndex >= Settings.fbPortCount {
+				connector.index = -1
+			} else {
+				if Settings.dpToHDMI && original.connector(at: connectorIndex).type == ConnectorType.displayPort.rawValue {
+					connector.type = ConnectorType.hdmi.rawValue
+				}
+				if Settings.hotplugRebootFix && connector.index != -1 {
+					connector.pipe = 18
+				}
+			}
+			modified.setConnector(connector, at: connectorIndex)
+		}
+		table.modified[index] = modified
+	}
+
+	/// Restores the fields of quick fixes that are switched off to `baseline`
+	/// (the record before auto patching, including any applied existing patches).
+	static func resetAutoPatches(to table: FramebufferTable, at index: Int, baseline: Framebuffer) {
+		let original = table.original[index]
+		var modified = table.modified[index]
+
+		if modified.stolenMemory != nil {
+			if !Settings.dvmtPrealloc32MB {
+				modified.stolenMemory = baseline.stolenMemory
+				modified.framebufferMemory = baseline.framebufferMemory
+			}
+			if !Settings.vram2048MB {
+				modified.unifiedMemory = baseline.unifiedMemory
+			}
+		}
+		if !Settings.fbPortLimit {
+			modified.portCount = baseline.portCount
+		}
+		for connectorIndex in 0..<modified.layout.connectorCount {
+			let before = baseline.connector(at: connectorIndex)
+			var connector = modified.connector(at: connectorIndex)
+			if !(Settings.fbPortLimit && connectorIndex >= Settings.fbPortCount) {
+				connector.index = before.index
+			}
+			if !(Settings.dpToHDMI && original.connector(at: connectorIndex).type == ConnectorType.displayPort.rawValue) {
+				connector.type = before.type
+			}
+			if !(Settings.hotplugRebootFix && connector.index != -1) {
+				connector.pipe = before.pipe
+			}
+			modified.setConnector(connector, at: connectorIndex)
 		}
 		table.modified[index] = modified
 	}
@@ -510,15 +551,22 @@ enum FramebufferPatcher {
 		if let value = number("AAPL,GfxYTile") { Settings.gfxYTileFix = value != 0 }
 		if let value = number("enable-hdmi-dividers-fix") { Settings.hdmiInfiniteLoopFix = value != 0 }
 		if let value = number("enable-lspcon-support") { Settings.lspconEnable = value != 0 }
-		for connector in 0..<6 {
+		// The first connector (0-3) with LSPCON settings wins, as in the original.
+		for connector in 0..<4 {
+			var found = false
 			if number("framebuffer-con\(connector)-has-lspcon") != nil {
 				Settings.lspconAutoDetect = false
 				Settings.lspconConnector = true
 				Settings.lspconConnectorIndex = connector
+				found = true
 			}
 			if let mode = number("framebuffer-con\(connector)-preferred-lspcon-mode") {
 				Settings.lspconPreferredMode = true
 				Settings.lspconPreferredModeIndex = Int(mode)
+				found = true
+			}
+			if found {
+				break
 			}
 		}
 	}

@@ -111,12 +111,7 @@ final class FramebufferViewController: TabbedViewController, NSMenuItemValidatio
 			guard response == .alertFirstButtonReturn,
 			      let findData = Data(hexString: find.stringValue), let replaceData = Data(hexString: replace.stringValue),
 			      !findData.isEmpty, findData.count == replaceData.count else { return }
-			var replaced = 0
-			self.model.modify { framebuffer in
-				var bytes = Data(framebuffer.bytes)
-				replaced = bytes.replaceOccurrences(of: findData, with: replaceData)
-				framebuffer.bytes = Array(bytes)
-			}
+			let replaced = self.model.findAndReplace(findData, with: replaceData)
 			Alerts.show("Importing KextsToPatch", replaced > 0 ? "Patch Success!" : "Patch Fail!")
 		}
 	}
@@ -147,12 +142,8 @@ final class FramebufferViewController: TabbedViewController, NSMenuItemValidatio
 			// HDMI audio.
 			([0x01, 0x05, 0x09, 0x00, 0x00, 0x04, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00], [0x01, 0x05, 0x12, 0x00, 0x00, 0x08, 0x00, 0x00, 0x87, 0x00, 0x00, 0x00]),
 		]
-		model.modify { framebuffer in
-			var bytes = Data(framebuffer.bytes)
-			for (find, replace) in patches {
-				bytes.replaceOccurrences(of: Data(find), with: Data(replace))
-			}
-			framebuffer.bytes = Array(bytes)
+		for (find, replace) in patches {
+			model.findAndReplace(Data(find), with: Data(replace))
 		}
 	}
 }

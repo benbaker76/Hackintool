@@ -174,6 +174,8 @@ final class FramebufferPatchViewController: NSViewController, SectionContent {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		model.observe { [weak self] in
+			// Loading existing patches can change settings (HDMI 2.0, LSPCON, device ID...).
+			self?.updateControls()
 			self?.updateDeviceIDs()
 			self?.generate(nil)
 		}

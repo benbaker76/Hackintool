@@ -354,6 +354,9 @@ struct Framebuffer: Equatable {
 
 	/// Total stolen memory macOS reserves (see AppleIntelFramebufferController::hwSetupBuffers).
 	var totalStolenMemory: UInt32 {
+		// Sandy and Ivy Bridge reserve differently (the original tool's formulas).
+		if kind == .sandyBridge { return 0 }
+		if kind == .ivyBridge { return framebufferMemory ?? 0 }
 		guard let stolen = stolenMemory, let fbMemory = framebufferMemory else { return 0 }
 		let flags = self.flags ?? 0
 		var total: UInt32 = 0x100000
@@ -367,6 +370,8 @@ struct Framebuffer: Equatable {
 	}
 
 	var maxStolenMemory: UInt32 {
+		if kind == .sandyBridge { return 0 }
+		if kind == .ivyBridge { return (framebufferMemory ?? 0) &* memoryCount }
 		return (stolenMemory ?? 0) &* memoryCount &+ (framebufferMemory ?? 0) &+ 0x100000
 	}
 
