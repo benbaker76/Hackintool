@@ -84,7 +84,8 @@ final class IDDatabase {
 		defer { lock.unlock() }
 		guard !isLoaded else { return }
 		isLoaded = true
-		if let url = sourceURL, let text = try? String(contentsOf: url, encoding: .isoLatin1) {
+		// usb.ids is UTF-8 ("SideWinder®"); fall back to Latin-1 for any older file that isn't.
+		if let url = sourceURL, let text = (try? String(contentsOf: url, encoding: .utf8)) ?? (try? String(contentsOf: url, encoding: .isoLatin1)) {
 			parse(text)
 		}
 	}
