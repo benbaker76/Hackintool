@@ -80,6 +80,11 @@ final class MainWindowController: NSWindowController {
 		updateToolbar(for: viewController as? SectionContent)
 	}
 
+	/// Call when a section switches pages, so the toolbar reflects the new page.
+	func sectionContentDidChange() {
+		updateToolbar(for: currentContent)
+	}
+
 	private var currentContent: SectionContent? {
 		return currentSection.flatMap { sectionViewControllers[$0] } as? SectionContent
 	}

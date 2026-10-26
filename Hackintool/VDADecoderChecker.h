@@ -20,6 +20,15 @@
 #include <CoreVideo/CoreVideo.h>
 #include <VideoDecodeAcceleration/VDADecoder.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/// Tries to create a hardware H.264 decoder; returns a kVDADecoder status.
 OSStatus CreateDecoder(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* VDADecoderChecker_hpp */
