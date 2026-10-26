@@ -7,7 +7,8 @@
 //
 //    HACKINTOOL_SNAPSHOT=/tmp/shots HACKINTOOL_SNAPSHOT_SECTIONS=system,usb Hackintool.app/Contents/MacOS/Hackintool
 //
-//  Renders in light mode unless HACKINTOOL_SNAPSHOT_APPEARANCE=dark.
+//  Renders in light mode unless HACKINTOOL_SNAPSHOT_APPEARANCE=dark, at 2x (also used for
+//  the README screenshots).
 //
 
 #if DEBUG
@@ -42,19 +43,112 @@ enum DebugSnapshot {
 	}
 
 	private static func save(_ window: NSWindow?, to path: String) {
-		guard let view = window?.contentView?.superview ?? window?.contentView,
-		      let bitmap = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { return }
-		view.cacheDisplay(in: view.bounds, to: bitmap)
-		try? bitmap.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: path))
+		guard let view = window?.contentView?.superview ?? window?.contentView else { return }
+		view.layoutSubtreeIfNeeded()
+		guard let windowBitmap = render(view, rect: view.bounds) else { return }
 
-		// Translucent materials (the sidebar) don't render through cacheDisplay, so also
-		// save each table and outline view on its own.
+		// Behind-window materials (the sidebar) come out transparent, so composite: a solid
+		// sidebar background, a selection highlight, the sidebar drawn on its own, then the window.
+		let sidebar = tableViews(in: view).compactMap { $0 as? NSOutlineView }.first { $0.delegate is SidebarViewController }
+		let sidebarView = sidebar?.enclosingScrollView?.superview
+		let output = windowBitmap.copy() as! NSBitmapImageRep
+		output.size = view.bounds.size
+		if let sidebar = sidebar, let sidebarView = sidebarView, let context = NSGraphicsContext(bitmapImageRep: output) {
+			let isDark = view.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+			NSGraphicsContext.saveGraphicsState()
+			NSGraphicsContext.current = context
+			NSColor.clear.setFill()
+			view.bounds.fill(using: .copy)
+			(isDark ? NSColor(calibratedWhite: 0.17, alpha: 1) : NSColor(calibratedWhite: 0.93, alpha: 1)).setFill()
+			view.bounds.fill()
+
+			let row = sidebar.selectedRow
+			if row >= 0 {
+				let rowRect = sidebar.convert(sidebar.rect(ofRow: row), to: nil).insetBy(dx: 10, dy: 0)
+				(isDark ? NSColor(calibratedWhite: 1, alpha: 0.12) : NSColor(calibratedWhite: 0, alpha: 0.08)).setFill()
+				NSBezierPath(roundedRect: rowRect, xRadius: 6, yRadius: 6).fill()
+			}
+			// The system selection is drawn with a translucent material too; leave it to the
+			// highlight above.
+			let style = sidebar.selectionHighlightStyle
+			sidebar.selectionHighlightStyle = .none
+			// Vibrant appearances (faint headers, dark labels) don't render offscreen either.
+			let appearance = sidebarView.appearance
+			sidebarView.appearance = NSAppearance(named: isDark ? .darkAqua : .aqua)
+			sidebar.reloadData()
+			sidebar.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+			for index in 0..<sidebar.numberOfRows {
+				if let item = sidebar.item(atRow: index), sidebar.isExpandable(item) {
+					sidebar.expandItem(item)
+				}
+			}
+			// Group headers and the version label use vibrant secondary colours that render too
+			// dark offscreen; give them a fixed dimmed colour for the capture.
+			let dimmed = isDark ? NSColor(calibratedWhite: 1, alpha: 0.45) : NSColor(calibratedWhite: 0, alpha: 0.45)
+			var restoreColors: [(NSTextField, NSColor?)] = []
+			func dim(_ field: NSTextField) {
+				restoreColors.append((field, field.textColor))
+				field.textColor = dimmed
+			}
+			// The group row style recolours header text as it draws, so those are drawn by hand below.
+			var headers: [NSTextField] = []
+			for index in 0..<sidebar.numberOfRows {
+				if let cell = sidebar.view(atColumn: 0, row: index, makeIfNecessary: true) as? NSTableCellView,
+				   cell.imageView == nil, let field = cell.textField {
+					headers.append(field)
+				}
+			}
+			sidebarView.subviews.compactMap { $0 as? NSTextField }.forEach(dim)
+			sidebarView.layoutSubtreeIfNeeded()
+			// Caching the sidebar container draws nothing, but its views render one by one.
+			let parts: [(NSView, NSRect)] = [(sidebar, sidebar.visibleRect)] + sidebarView.subviews.compactMap { $0 as? NSTextField }.map { ($0, $0.bounds) }
+			windowBitmap.draw(in: view.bounds, from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: true, hints: nil)
+			for (part, rect) in parts {
+				guard let bitmap = render(part, rect: rect) else { continue }
+				// Clear what the window capture drew there (e.g. the label in the wrong colour) first.
+				let target = part.convert(rect, to: nil)
+				if part is NSTextField {
+					(isDark ? NSColor(calibratedWhite: 0.17, alpha: 1) : NSColor(calibratedWhite: 0.93, alpha: 1)).setFill()
+					target.fill()
+				}
+				bitmap.draw(in: target, from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: true, hints: nil)
+			}
+			let background = isDark ? NSColor(calibratedWhite: 0.17, alpha: 1) : NSColor(calibratedWhite: 0.93, alpha: 1)
+			for header in headers {
+				let rect = header.convert(header.bounds, to: nil)
+				background.setFill()
+				rect.fill()
+				let text = NSAttributedString(string: header.stringValue, attributes: [
+					.font: header.font ?? NSFont.boldSystemFont(ofSize: NSFont.smallSystemFontSize),
+					.foregroundColor: dimmed,
+				])
+				let size = text.size()
+				text.draw(at: NSPoint(x: rect.minX + 2, y: rect.midY - size.height / 2))
+			}
+			sidebar.selectionHighlightStyle = style
+			sidebarView.appearance = appearance
+			restoreColors.forEach { $0.0.textColor = $0.1 }
+			NSGraphicsContext.restoreGraphicsState()
+		}
+		try? output.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: path))
+
+		// Also save each table and outline view on its own, for checking cell contents.
 		for (index, table) in tableViews(in: view).enumerated() {
 			guard let tableBitmap = table.bitmapImageRepForCachingDisplay(in: table.visibleRect) else { continue }
 			table.cacheDisplay(in: table.visibleRect, to: tableBitmap)
 			let tablePath = (path as NSString).deletingPathExtension + "-table\(index).png"
 			try? tableBitmap.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: tablePath))
 		}
+	}
+
+	/// Renders at 2x so README screenshots stay sharp on Retina displays.
+	private static func render(_ view: NSView, rect: NSRect, scale: CGFloat = 2) -> NSBitmapImageRep? {
+		guard let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(rect.width * scale), pixelsHigh: Int(rect.height * scale),
+		                                    bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+		                                    colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0) else { return nil }
+		bitmap.size = rect.size
+		view.cacheDisplay(in: rect, to: bitmap)
+		return bitmap
 	}
 
 	private static func tableViews(in view: NSView) -> [NSTableView] {

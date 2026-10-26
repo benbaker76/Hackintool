@@ -43,35 +43,15 @@ There are several ways to dump your framebuffer data (the second two require Wha
 <details>
   <summary><strong>Click to expand</strong></summary>
   
-  ![Hackintool Screenshot 1](/images/Hackintool01.png)
+  ![Hackintool Framebuffer patching](/images/Hackintool-Patch.png)
 
-  ![Hackintool Screenshot 2](/images/Hackintool02.png)
+  ![Hackintool Disks](/images/Hackintool-Disks.png)
 
-  ![Hackintool Screenshot 3](/images/Hackintool03.png)
+  ![Hackintool Bootloader](/images/Hackintool-Bootloader.png)
 
-  ![Hackintool Screenshot 4](/images/Hackintool04.png)
+  ![Hackintool Extensions](/images/Hackintool-Extensions.png)
 
-  ![Hackintool Screenshot 5](/images/Hackintool05.png)
-
-  ![Hackintool Screenshot 6](/images/Hackintool06.png)
-
-  ![Hackintool Screenshot 7](/images/Hackintool07.png)
-
-  ![Hackintool Screenshot 8](/images/Hackintool08.png)
-
-  ![Hackintool Screenshot 9](/images/Hackintool09.png)
-
-  ![Hackintool Screenshot 10](/images/Hackintool10.png)
-
-  ![Hackintool Screenshot 11](/images/Hackintool11.png)
-
-  ![Hackintool Screenshot 12](/images/Hackintool12.png)
-
-  ![Hackintool Screenshot 13](/images/Hackintool13.png)
-
-  ![Hackintool Screenshot 14](/images/Hackintool14.png)
-
-  ![Hackintool Screenshot 15](/images/Hackintool15.png)
+  ![Hackintool Utilities](/images/Hackintool-Utilities.png)
 
 </details>
 
