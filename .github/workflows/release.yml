@@ -51,11 +51,18 @@ jobs:
           rm -rf build/*.swiftmodule
           rm -rf build/SwiftExplicitPrecompiledModules
           rm -rf build/ExplicitPrecompiledModules
-      - name: Sign Sparkle helpers
-        # Xcode re-signs Sparkle.framework but leaves its helpers ad-hoc signed, which
-        # notarization rejects. Re-sign inside out with a secure timestamp (Sparkle's docs).
+      - name: Sign nested code
+        # Notarization rejects anything inside the app that isn't Developer ID signed with
+        # a secure timestamp: the bundled tools and kexts (unsigned, or patched so their
+        # signature broke), and Sparkle's helpers, which Xcode leaves ad-hoc signed.
+        # Sign inside out, then re-seal the app.
         run: |
           ID="Developer ID Application: Benjamin Baker (9AM8849YMD)"
+          RESOURCES=build/Hackintool.app/Contents/Resources
+          codesign -f -s "$ID" -o runtime --timestamp $RESOURCES/Utilities/iasl
+          codesign -f -s "$ID" --timestamp $RESOURCES/DisplayMergeNub/DisplayMergeNub
+          codesign -f -s "$ID" --timestamp $RESOURCES/Kexts/AppleAHCIPortHotplug.kext
+          codesign -f -s "$ID" --timestamp $RESOURCES/Kexts/AppleIntelInfo.kext
           SPARKLE=build/Hackintool.app/Contents/Frameworks/Sparkle.framework
           codesign -f -s "$ID" -o runtime --timestamp $SPARKLE/Versions/B/XPCServices/Installer.xpc
           codesign -f -s "$ID" -o runtime --timestamp --preserve-metadata=entitlements $SPARKLE/Versions/B/XPCServices/Downloader.xpc
