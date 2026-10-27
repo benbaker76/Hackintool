@@ -53,6 +53,8 @@ enum ImageTextCell {
 		cell.identifier = identifier
 		let imageView = NSImageView()
 		imageView.setSymbolSize(16)
+		// Template icons in a muted colour; full-colour icons (disks) are unaffected.
+		imageView.contentTintColor = .secondaryLabelColor
 		let textField = NSTextField(labelWithString: "")
 		textField.lineBreakMode = .byTruncatingTail
 		textField.translatesAutoresizingMaskIntoConstraints = false

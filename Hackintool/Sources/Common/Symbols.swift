@@ -44,6 +44,23 @@ enum Symbol: String {
 	case heart = "Heart"
 	case gitHub = "GitHub"
 	case settings = "Settings"
+	case cpu = "CPU"
+	case wifi = "WiFi"
+	case desktop = "Desktop"
+	case laptop = "Laptop"
+	case iMac = "IMac"
+	case package = "Package"
+	case puzzle = "Puzzle"
+	case checkCircle = "CheckCircle"
+	case warning = "Warning"
+	case xCircle = "XCircle"
+	case updateCircle = "UpdateCircle"
+	case bridge = "Bridge"
+	case storage = "Storage"
+	case plug = "Plug"
+	case shieldLock = "ShieldLock"
+	case speaker = "Speaker"
+	case keyboard = "Keyboard"
 
 	/// A template image for this symbol, labelled for VoiceOver.
 	func image(description: String? = nil, size: CGFloat = 16) -> NSImage {

@@ -49,7 +49,18 @@ struct IntegratedGPU {
 final class Machine {
 	static let shared = Machine()
 
-	private init() {}
+	private init() {
+		#if DEBUG
+		if SampleData.isEnabled {
+			modelIdentifier = SampleData.modelIdentifier
+			serialNumber = SampleData.serialNumber
+			intelGeneration = .coffeeLake
+			platformID = SampleData.platformID
+			integratedGPU = SampleData.integratedGPU
+			bootDevicePath = nil
+		}
+		#endif
+	}
 
 	/// e.g. "iMac19,1".
 	private(set) lazy var modelIdentifier: String? = {

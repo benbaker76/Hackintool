@@ -15,7 +15,8 @@ final class DisplaysViewController: NSViewController, SectionContent {
 	private lazy var displayTable = DataTableViewController<Display>(columns: [
 		DataColumn("Name", "Name", width: 200, onEdit: { [weak self] display, value in
 			self?.update(display) { $0.name = value }
-		}) { [unowned self] in self.settings(for: $0).name },
+		}) { [unowned self] in self.settings(for: $0).name }
+			.with(image: { [unowned self] in (self.settings(for: $0).isInternal ? Symbol.laptop : Symbol.desktop).image() }),
 		DataColumn("VendorID", "Vendor ID", width: 80, monospaced: true, onEdit: { [weak self] display, value in
 			guard let id = value.hexOrDecimalValue else { return }
 			self?.update(display) { $0.vendorIDOverride = UInt32(truncatingIfNeeded: id) }
@@ -74,18 +75,19 @@ final class DisplaysViewController: NSViewController, SectionContent {
 		let patches = Form.box("Patch", content: flags)
 		let settingsColumn = Form.scrollingStack([options, patches], spacing: 12, insets: NSEdgeInsets(all: 12))
 
-		let resolutionBar = ControlBar.make([ControlBar.heading("Resolutions")], trailing: [
+		let resolutionsColumn = ControlBar.pane("Resolutions", symbol: .displays, content: resolutionTable.view, trailing: [
 			ControlBar.iconButton(.add, toolTip: "Add", target: self, action: #selector(addResolutions(_:))),
 			ControlBar.iconButton(.remove, toolTip: "Delete", target: self, action: #selector(deleteResolutions(_:))),
 		])
-		let resolutionsColumn = ControlBar.stack(header: resolutionBar, content: resolutionTable.view)
+		displayTable.emptyState = EmptyState(.displays, "No Displays", "No IODisplay services were found.")
+		resolutionTable.emptyState = EmptyState(.displays, "No Custom Resolutions", "Pick a Resolution preset or press + to add HiDPI modes.")
 
 		let bottom = NSSplitView()
 		bottom.isVertical = true
 		bottom.dividerStyle = .thin
-		bottom.addArrangedSubview(settingsColumn)
+		bottom.addArrangedSubview(ControlBar.pane("Override", symbol: .settings, content: settingsColumn))
 		bottom.addArrangedSubview(resolutionsColumn)
-		let settingsWidth = settingsColumn.widthAnchor.constraint(equalToConstant: 360)
+		let settingsWidth = bottom.arrangedSubviews[0].widthAnchor.constraint(equalToConstant: 360)
 		settingsWidth.priority = .defaultLow
 		settingsWidth.isActive = true
 

@@ -56,6 +56,9 @@ struct NVRAMVariable {
 
 enum NVRAM {
 	static func variables() -> [NVRAMVariable] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.nvramVariables }
+		#endif
 		guard let options = IORegistryEntry(path: "IODeviceTree:/options") else { return [] }
 		return options.properties.compactMap { name, value -> NVRAMVariable? in
 			switch value {

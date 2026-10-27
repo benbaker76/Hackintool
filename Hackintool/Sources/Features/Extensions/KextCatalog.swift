@@ -64,6 +64,11 @@ enum KextCatalog {
 			.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 			.map { entry in
 				entry.installedVersion = loaded[(entry.bundleID ?? entry.name).lowercased()]
+				#if DEBUG
+				if SampleData.isEnabled, entry.installedVersion != nil {
+					entry.downloadVersion = SampleData.latestKextVersions[entry.name.lowercased()] ?? entry.installedVersion
+				}
+				#endif
 				return entry
 			}
 	}
@@ -71,6 +76,9 @@ enum KextCatalog {
 	/// Loaded kext versions keyed by the last component of the bundle ID, lowercased
 	/// ("as.vit9696.lilu" → "lilu"), as the original app matched them.
 	static func loadedKextVersions() -> [String: String] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.loadedKextVersions }
+		#endif
 		var versions: [String: String] = [:]
 		// kmutil replaced kextstat on macOS 11; kextstat still works but warns.
 		guard let output = Shell.output("/usr/sbin/kextstat", ["-l"]) else { return versions }

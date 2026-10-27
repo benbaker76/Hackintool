@@ -15,7 +15,13 @@ final class ExtensionsViewController: NSViewController, SectionContent {
 	private lazy var table = DataTableViewController<KextEntry>(columns: [
 		DataColumn("Select", "", width: 24) { [unowned self] in self.selectedNames.contains($0.name) ? "1" : "0" }
 			.with(customView: { [unowned self] entry in self.checkbox(for: entry) }),
-		DataColumn("Name", "Name", width: 170) { $0.name },
+		DataColumn("Name", "Name", width: 170) { $0.name }
+			.with(image: { $0.isLiluPlugin ? Symbol.puzzle.image() : Symbol.package.image() }),
+		DataColumn("Status", "Status", width: 110) { ExtensionsViewController.status(of: $0).title }
+			.with(customView: { entry in
+				let status = ExtensionsViewController.status(of: entry)
+				return StatusBadge.make(status.title, color: status.color, symbol: status.symbol)
+			}),
 		DataColumn("InstalledVersion", "Installed", width: 80) { $0.installedVersion ?? "" },
 		DataColumn("CurrentVersion", "Current", width: 80) { $0.currentVersion ?? "" },
 		DataColumn("DownloadVersion", "Download", width: 80) { $0.downloadVersion ?? "" },
@@ -31,13 +37,22 @@ final class ExtensionsViewController: NSViewController, SectionContent {
 		ControlBar.button("Build", symbol: .terminal, target: self, action: #selector(buildSelected(_:))),
 	]
 
+	/// Installed, up to date or behind the latest release.
+	static func status(of entry: KextEntry) -> (title: String, color: NSColor, symbol: Symbol?) {
+		guard let installed = entry.installedVersion else {
+			return entry.superseder != nil ? (L("Obsolete"), .secondaryLabelColor, nil) : ("", .clear, nil)
+		}
+		guard let latest = entry.downloadVersion ?? entry.currentVersion else {
+			return (L("Installed"), .systemBlue, .checkCircle)
+		}
+		return VersionNumber.isNewer(latest, than: installed)
+			? (L("Update"), .systemOrange, .updateCircle)
+			: (L("Up to Date"), .systemGreen, .checkCircle)
+	}
+
 	override func loadView() {
 		addChild(table)
 		installedOnlyCheckbox.state = Settings.showInstalledOnly ? .on : .off
-		table.rowColor = { entry in
-			guard let installed = entry.installedVersion, let latest = entry.downloadVersion ?? entry.currentVersion else { return nil }
-			return VersionNumber.isNewer(latest, than: installed) ? .systemOrange : .systemGreen
-		}
 		table.contextMenuItems = [
 			{
 				let item = NSMenuItem(title: L("Open Url"), action: #selector(openProjectPage(_:)), keyEquivalent: "")

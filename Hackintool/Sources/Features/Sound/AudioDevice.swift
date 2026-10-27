@@ -50,6 +50,9 @@ struct AudioDevice {
 	}
 
 	static func all() -> [AudioDevice] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.audioDevices }
+		#endif
 		var devices: [AudioDevice] = []
 		for pci in IORegistryEntry.services(matching: "IOPCIDevice") {
 			// Audio devices below this controller, stopping at the next PCI device.
@@ -97,7 +100,7 @@ struct AudioDevice {
 		}
 	}
 
-	private mutating func addNames() {
+	mutating func addNames() {
 		let pci = IDDatabase.pci
 		vendorName = pci.vendorName(deviceID >> 16) ?? "???"
 		deviceName = pci.deviceName(vendorID: deviceID >> 16, deviceID: deviceID & 0xFFFF) ?? "???"

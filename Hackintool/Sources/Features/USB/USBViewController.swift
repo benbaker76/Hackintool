@@ -13,7 +13,8 @@ final class USBViewController: NSViewController, SectionContent {
 	private let map = USBPortMap()
 
 	private let controllers = DataTableViewController<USBController>(columns: [
-		DataColumn("Type", "Type", width: 70) { $0.name },
+		DataColumn("Type", "Type", width: 90) { $0.name }
+			.with(image: { _ in Symbol.usb.image() }),
 		DataColumn("Name", "Name", width: 300) { $0.deviceName },
 		DataColumn("Class", "Driver", width: 160) { $0.className },
 		DataColumn.hex("ID", "Location", width: 70, digits: 2) { $0.location },
@@ -21,7 +22,8 @@ final class USBViewController: NSViewController, SectionContent {
 	])
 
 	private lazy var ports = DataTableViewController<USBPort>(columns: [
-		DataColumn("UsbController", "Type", width: 70) { $0.isHubPort ? "\($0.controllerName) (Hub)" : $0.controllerName },
+		DataColumn("UsbController", "Type", width: 90) { $0.isHubPort ? "\($0.controllerName) (Hub)" : $0.controllerName }
+			.with(image: { ($0.connectorType == .internal ? Symbol.plug : Symbol.usb).image() }),
 		DataColumn("name", "Name", width: 70, onEdit: { [weak self] port, value in
 			self?.map.update(port) { $0.name = value }
 		}) { $0.name },
@@ -45,6 +47,8 @@ final class USBViewController: NSViewController, SectionContent {
 		ports.rowColor = { port in
 			port.deviceName != nil ? .systemGreen : (port.isActive ? .systemTeal : nil)
 		}
+		controllers.emptyState = EmptyState(.usb, "No USB Controllers")
+		ports.emptyState = EmptyState(.usb, "No Ports", "Ports appear here as the controllers are scanned. Use Inject to add the ports macOS hides.")
 		ports.contextMenuItems = [
 			menuItem("Delete", #selector(deleteSelected(_:))),
 		]

@@ -11,6 +11,9 @@ import Metal
 
 enum SystemReport {
 	static func groups(pciDevices: [PCIDevice], displays: [Display]) -> [PropertyGroup] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.systemGroups }
+		#endif
 		var groups = [systemGroup()]
 		if let serial = Machine.shared.serialNumber {
 			groups.append(PropertyGroup("Serial Info", serialItems(MacSerial.decode(serial))))

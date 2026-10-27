@@ -51,6 +51,21 @@ struct PCIDevice {
 
 	var isDisplay: Bool { return ioName == "display" }
 
+	/// An icon for the device's PCI class.
+	var symbol: Symbol {
+		switch (classCode >> 16, classCode >> 8 & 0xFF) {
+		case (0x03, _): return .gpu
+		case (0x04, _): return .sound
+		case (0x02, 0x80): return .wifi
+		case (0x02, _): return .network
+		case (0x01, _): return .storage
+		case (0x0C, 0x03): return .usb
+		case (0x06, 0x04), (0x06, 0x00): return .bridge
+		case (0x07, 0x80): return .shieldLock
+		default: return .cpu
+		}
+	}
+
 	/// (device << 16) | vendor, as used in framebuffer and audio patches.
 	var combinedID: UInt32 { return deviceID << 16 | vendorID }
 
@@ -64,6 +79,9 @@ struct PCIDevice {
 extension PCIDevice {
 	/// All PCI devices currently in the I/O Registry.
 	static func all() -> [PCIDevice] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.pciDevices }
+		#endif
 		let database = IDDatabase.pci
 		return IORegistryEntry.services(matching: "IOPCIDevice").compactMap { entry -> PCIDevice? in
 			guard let device = PCIDevice(entry: entry) else { return nil }

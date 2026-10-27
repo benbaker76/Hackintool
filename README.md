@@ -37,12 +37,13 @@ Hackintool helps you inspect and configure a Hackintosh: patch Intel framebuffer
 | **System** | Model, CPU, Intel graphics generation and platform ID, serial number checks and a serial generator, Mac model specs, and connected peripherals |
 | **Patch** | Intel framebuffer patching from Sandy Bridge to Ice Lake (Comet Lake via the Coffee Lake framebuffer): edit framebuffer fields, connectors and flags, then generate WhateverGreen DeviceProperties, KextsToPatch (hex or base64) or an SSDT, and save straight into your config.plist |
 | **Displays** | EDID details and fixes, display overrides and HiDPI scaled resolutions, and injector kexts |
+| **Radeon** | AMD GPU support check by family and macOS version, and WhateverGreen device properties and boot-args (experimental); points Vega-based Ryzen APUs to NootedRed |
 | **Sound** | Audio devices, codecs and their pin configuration, and AppleALC layout IDs |
 | **USB** | Live port discovery and mapping, connector types, and USBPorts.kext / SSDT-USBX export |
 | **Disks** | Partitions and EFI partitions, with mount and unmount |
 | **PCIe** | Every PCI device with names, device paths and ACPI paths; export as DeviceProperties or an SSDT |
 | **Power** | Your pmset power settings, editable, with a one-click fix for sleep problems caused by hibernation |
-| **Bootloader** | Detects OpenCore or Clover, checks for updates and applies common patches to your config.plist |
+| **Bootloader** | Detects OpenCore or Clover, checks for updates and applies common patches to your config.plist; AMD Vanilla kernel patches for AMD CPUs with your core count filled in |
 | **NVRAM** | View and edit NVRAM variables |
 | **Extensions** | Installed kexts against the latest releases, with download and build from source |
 | **Utilities** | Install kexts, rebuild the kext cache, dump ACPI tables, Windows Bluetooth and UTC registry files, AppleIntelInfo |
@@ -51,6 +52,18 @@ Hackintool helps you inspect and configure a Hackintosh: patch Intel framebuffer
 <details>
 <summary><strong>More screenshots</strong></summary>
 
+![System](images/Hackintool-System.png)
+
+![Displays](images/Hackintool-Displays.png)
+
+![Radeon](images/Hackintool-Radeon.png)
+
+![Sound](images/Hackintool-Sound.png)
+
+![USB](images/Hackintool-USB.png)
+
+![PCIe](images/Hackintool-PCIe.png)
+
 ![Disks](images/Hackintool-Disks.png)
 
 ![Bootloader](images/Hackintool-Bootloader.png)
@@ -58,6 +71,8 @@ Hackintool helps you inspect and configure a Hackintosh: patch Intel framebuffer
 ![Extensions](images/Hackintool-Extensions.png)
 
 ![Utilities](images/Hackintool-Utilities.png)
+
+Screenshots show a made-up Comet Lake desktop, not a real machine.
 
 </details>
 

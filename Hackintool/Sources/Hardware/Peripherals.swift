@@ -17,6 +17,9 @@ struct NetworkInterface {
 	let bundleID: String?
 
 	static func all() -> [NetworkInterface] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.networkInterfaces }
+		#endif
 		let database = IDDatabase.pci
 		return IORegistryEntry.services(matching: "IONetworkInterface").compactMap { entry in
 			guard let pci = entry.ancestor(conformingTo: ["IOPCIDevice"]) else { return nil }
@@ -44,6 +47,9 @@ struct BluetoothDevice {
 	/// USB Bluetooth controllers found through their transport driver, then through ports
 	/// owned by bluetoothd, then (native Apple hardware) through system_profiler.
 	static func all() -> [BluetoothDevice] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.bluetoothDevices }
+		#endif
 		let viaTransport = IORegistryEntry.services(matching: "IOBluetoothHostControllerTransport").compactMap {
 			$0.ancestor(conformingTo: usbDeviceClasses)
 		}
@@ -127,6 +133,9 @@ struct GraphicsDevice {
 
 	/// One entry per GPU, counting the framebuffers (ports) each drives.
 	static func all() -> [GraphicsDevice] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.graphicsDevices }
+		#endif
 		var devices: [GraphicsDevice] = []
 		var indexByModel: [String: Int] = [:]
 		for framebuffer in IORegistryEntry.services(matching: "IOFramebuffer") {
@@ -156,6 +165,9 @@ struct StorageDevice {
 	let bundleID: String?
 
 	static func all() -> [StorageDevice] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.storageDevices }
+		#endif
 		return IORegistryEntry.services(matching: "IOBlockStorageDevice").map { entry in
 			let properties = entry.properties
 			let device = properties["Device Characteristics"] as? [String: Any] ?? [:]

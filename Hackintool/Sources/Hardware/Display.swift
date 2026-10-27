@@ -28,6 +28,9 @@ struct Display {
 
 	/// All displays known to the I/O Registry.
 	static func all() -> [Display] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.displays }
+		#endif
 		let activeDisplays = Display.activeDisplayIDs()
 		return IORegistryEntry.services(matching: "IODisplay").compactMap { entry in
 			guard let framebuffer = entry.ancestor(conformingTo: ["IOFramebuffer"]),

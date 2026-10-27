@@ -24,6 +24,9 @@ struct PowerSetting {
 enum PowerManagement {
 	/// Parses `pmset -g`, returning the "Currently in use" section.
 	static func currentSettings() -> [PowerSetting] {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.powerSettings }
+		#endif
 		guard let output = Shell.output("/usr/bin/pmset", ["-g"]) else { return [] }
 		var inCurrentSection = false
 		var settings: [PowerSetting] = []
@@ -64,6 +67,12 @@ enum PowerManagement {
 final class PowerViewController: NSViewController, SectionContent {
 	private lazy var table = DataTableViewController<PowerSetting>(columns: [
 		DataColumn("Name", "Name", width: 220) { $0.name },
+		DataColumn("Status", "Status", width: 120) { $0.status.map { L($0 ? "OK" : "Should be 0") } ?? "" }
+			.with(customView: { setting in
+				guard let ok = setting.status else { return NSView() }
+				return ok ? StatusBadge.make(L("OK"), color: .systemGreen, symbol: .checkCircle)
+					: StatusBadge.make(L("Should be 0"), color: .systemRed, symbol: .warning)
+			}),
 		DataColumn("Value", "Value", width: 300, onEdit: { [weak self] setting, value in
 			self?.change(setting, to: value)
 		}) { $0.value },
@@ -71,11 +80,9 @@ final class PowerViewController: NSViewController, SectionContent {
 
 	override func loadView() {
 		addChild(table)
-		table.rowColor = { setting in
-			setting.status.map { $0 ? .systemGreen : .systemRed }
-		}
+		table.emptyState = EmptyState(.power, "No Power Settings", "pmset didn't report any settings.")
 		let footer = ControlBar.make([
-			ControlBar.label("Green and red rows show settings that affect sleep on a Hackintosh."),
+			ControlBar.label("Settings marked OK or Should be 0 affect sleep on a Hackintosh."),
 		], trailing: [
 			ControlBar.button("Fix Sleep Image", symbol: .wand, target: self, action: #selector(fixSleepImage(_:))),
 		])

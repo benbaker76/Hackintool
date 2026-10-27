@@ -121,7 +121,7 @@ final class BootloaderViewController: NSViewController, SectionContent {
 		split.isVertical = false
 		split.dividerStyle = .thin
 		split.addArrangedSubview(ControlBar.stack(header: infoHeader, content: info.view))
-		split.addArrangedSubview(ControlBar.stack(header: ControlBar.make([ControlBar.heading("Patches")]), content: patchTable.view, footer: patchFooter))
+		split.addArrangedSubview(ControlBar.pane("Patches", symbol: .wand, content: patchTable.view, footer: patchFooter))
 		let infoHeight = split.arrangedSubviews[0].heightAnchor.constraint(equalToConstant: 220)
 		infoHeight.priority = .defaultLow
 		infoHeight.isActive = true

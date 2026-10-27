@@ -99,4 +99,19 @@ enum ControlBar {
 		label.font = .boldSystemFont(ofSize: NSFont.systemFontSize)
 		return label
 	}
+
+	/// A heading with a tinted icon before it.
+	static func heading(_ title: String, symbol: Symbol) -> NSView {
+		let imageView = NSImageView(image: symbol.image(description: L(title)))
+		imageView.contentTintColor = .controlAccentColor
+		let stack = NSStackView(views: [imageView, heading(title)])
+		stack.spacing = 6
+		return stack
+	}
+
+	/// A titled pane: the heading (and any buttons) above content that fills the rest.
+	static func pane(_ title: String, symbol: Symbol? = nil, content: NSView, trailing: [NSView] = [], footer: NSView? = nil) -> NSView {
+		let title: NSView = symbol.map { heading(title, symbol: $0) } ?? heading(title)
+		return stack(header: make([title], trailing: trailing), content: content, footer: footer)
+	}
 }

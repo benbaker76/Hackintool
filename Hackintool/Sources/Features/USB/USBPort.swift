@@ -208,6 +208,9 @@ final class USBPortMap {
 
 	init() {
 		ports = USBPortMap.load()
+		#if DEBUG
+		if SampleData.isEnabled { ports = [] }
+		#endif
 	}
 
 	/// Watches for devices being plugged in, marking their ports active.
@@ -219,6 +222,16 @@ final class USBPortMap {
 
 	/// Re-reads controllers and ports, adding newly seen ports and keeping user edits to known ones.
 	func refresh() {
+		#if DEBUG
+		if SampleData.isEnabled {
+			controllers = SampleData.usbControllers
+			if ports.isEmpty || ports.first?.controllerID != SampleData.usbControllers[0].deviceID {
+				ports = SampleData.usbPorts
+			}
+			onChange?()
+			return
+		}
+		#endif
 		controllers = USBController.all()
 		let discovered = USBDiscovery.ports(controllers: controllers)
 		for var port in discovered {
@@ -240,6 +253,9 @@ final class USBPortMap {
 
 	/// Updates which ports have devices on them now.
 	func refreshDevices() {
+		#if DEBUG
+		if SampleData.isEnabled { return }
+		#endif
 		let devices = USBDiscovery.attachedDevices()
 		for index in ports.indices {
 			guard let path = ports[index].servicePath, let device = devices[path] else {
@@ -319,6 +335,10 @@ final class USBPortMap {
 	// MARK: Persistence (same keys as the Objective-C app)
 
 	private func save() {
+		#if DEBUG
+		// Keep the user's real map.
+		if SampleData.isEnabled { return }
+		#endif
 		let array: [[String: Any]] = ports.map { port in
 			var dictionary: [String: Any] = [
 				"name": port.name,

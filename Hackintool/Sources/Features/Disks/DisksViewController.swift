@@ -36,8 +36,8 @@ final class DisksViewController: NSViewController, SectionContent {
 	])
 
 	private lazy var stacked = StackedTablesViewController(panes: [
-		.init(title: "EFI Partitions", viewController: efiTable),
-		.init(title: "Partition Scheme", viewController: partitionTable),
+		.init(title: "EFI Partitions", symbol: .boot, viewController: efiTable),
+		.init(title: "Partition Scheme", symbol: .disks, viewController: partitionTable),
 	])
 
 	override func loadView() {
@@ -236,21 +236,5 @@ final class DiskActionButton: NSButton {
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) is not supported")
-	}
-}
-
-extension DataColumn {
-	/// Adds an icon before the column's text.
-	func with(image: @escaping (Row) -> NSImage?) -> DataColumn {
-		var column = self
-		column.image = image
-		return column
-	}
-
-	/// Replaces the column's cell with a custom view.
-	func with(customView: @escaping (Row) -> NSView) -> DataColumn {
-		var column = self
-		column.customView = customView
-		return column
 	}
 }

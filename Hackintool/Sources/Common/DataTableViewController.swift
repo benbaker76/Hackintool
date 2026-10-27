@@ -75,6 +75,11 @@ class DataTableViewController<Row>: NSViewController, NSTableViewDataSource, NST
 	var onRefresh: (() -> Void)?
 	/// Optional row tint, e.g. green for an active USB port.
 	var rowColor: ((Row) -> NSColor?)?
+	/// Shown over the table when it has no rows.
+	var emptyState: EmptyState? {
+		didSet { updateEmptyState() }
+	}
+	private let emptyStateView = EmptyStateView()
 	/// Extra context-menu items, appended after Copy.
 	var contextMenuItems: [NSMenuItem] = [] {
 		didSet {
@@ -114,7 +119,12 @@ class DataTableViewController<Row>: NSViewController, NSTableViewDataSource, NST
 		if #available(macOS 11.0, *) {
 			tableView.style = .fullWidth
 		}
-		view = ScrollingTable.wrap(tableView)
+		let container = NSView()
+		container.addPinnedSubview(ScrollingTable.wrap(tableView))
+		// Below the header row, so the column titles stay visible.
+		emptyStateView.isHidden = true
+		container.addPinnedSubview(emptyStateView, insets: NSEdgeInsets(top: 28, left: 0, bottom: 0, right: 0))
+		view = container
 	}
 
 	func setRows(_ rows: [Row]) {
@@ -154,6 +164,20 @@ class DataTableViewController<Row>: NSViewController, NSTableViewDataSource, NST
 		}
 		displayedRows = filtered
 		tableView.reloadData()
+		updateEmptyState()
+	}
+
+	private func updateEmptyState() {
+		guard isViewLoaded else { return }
+		let state = !displayedRows.isEmpty ? nil
+			: !rows.isEmpty ? EmptyState(.search, "No Matches")
+			: emptyState
+		if let state = state {
+			emptyStateView.show(state)
+		}
+		emptyStateView.isHidden = state == nil
+		// Stripes under a message look like a table that failed to load.
+		tableView.usesAlternatingRowBackgroundColors = state == nil
 	}
 
 	// MARK: SectionContent
@@ -184,7 +208,10 @@ class DataTableViewController<Row>: NSViewController, NSTableViewDataSource, NST
 			: TextCell.make(in: tableView, identifier: tableColumn.identifier)
 		cell.imageView?.image = column.image?(displayedRows[row])
 		let value = column.text(displayedRows[row])
-		cell.textField?.stringValue = value
+		// "???" marks a name that couldn't be looked up.
+		let isUnknown = value == "???" || value.hasSuffix(" ???")
+		cell.textField?.stringValue = isUnknown ? value.replacingOccurrences(of: "???", with: L("Unknown")) : value
+		cell.textField?.textColor = isUnknown ? .tertiaryLabelColor : .labelColor
 		cell.textField?.alignment = column.alignment
 		cell.textField?.font = column.monospaced
 			? .monospacedDigitSystemFont(ofSize: NSFont.systemFontSize, weight: .regular)
@@ -254,5 +281,21 @@ class DataTableViewController<Row>: NSViewController, NSTableViewDataSource, NST
 			return !targetRows.isEmpty
 		}
 		return true
+	}
+}
+
+extension DataColumn {
+	/// Adds an icon before the column's text.
+	func with(image: @escaping (Row) -> NSImage?) -> DataColumn {
+		var column = self
+		column.image = image
+		return column
+	}
+
+	/// Replaces the column's cell with a custom view.
+	func with(customView: @escaping (Row) -> NSView) -> DataColumn {
+		var column = self
+		column.customView = customView
+		return column
 	}
 }

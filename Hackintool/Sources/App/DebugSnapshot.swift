@@ -19,27 +19,44 @@ enum DebugSnapshot {
 		let environment = ProcessInfo.processInfo.environment
 		guard let directory = environment["HACKINTOOL_SNAPSHOT"] else { return }
 
-		let sections = environment["HACKINTOOL_SNAPSHOT_SECTIONS"]?
-			.split(separator: ",").compactMap { Section(rawValue: String($0)) } ?? Section.allCases
+		// "usb" or "framebuffer:1" for a section's second page.
+		let sections: [(section: Section, page: Int?)] = environment["HACKINTOOL_SNAPSHOT_SECTIONS"]?
+			.split(separator: ",").compactMap { item -> (Section, Int?)? in
+				let parts = item.split(separator: ":")
+				guard let section = Section(rawValue: String(parts[0])) else { return nil }
+				return (section, parts.count > 1 ? Int(parts[1]) : nil)
+			} ?? Section.allCases.map { ($0, nil) }
 		// Light by default: cacheDisplay draws onto white, so dark-mode text would vanish.
 		NSApp.appearance = NSAppearance(named: environment["HACKINTOOL_SNAPSHOT_APPEARANCE"] == "dark" ? .darkAqua : .aqua)
 		try? FileManager.default.createDirectory(atPath: directory, withIntermediateDirectories: true)
 
 		var remaining = sections
 		func next() {
-			guard let section = remaining.first else {
+			guard let (section, page) = remaining.first else {
 				NSApp.terminate(nil)
 				return
 			}
 			remaining.removeFirst()
 			windowController.show(section)
+			if let page = page, let tabs = tabbedViewController(in: windowController.window?.contentViewController) {
+				tabs.select(pageAt: page)
+			}
 			// Give the section time to load its data and lay out.
 			DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-				save(windowController.window, to: "\(directory)/\(section.rawValue).png")
+				save(windowController.window, to: "\(directory)/\(section.rawValue)\(page.map { "-page\($0)" } ?? "").png")
 				next()
 			}
 		}
 		next()
+	}
+
+	/// The outermost tabbed page controller on screen.
+	private static func tabbedViewController(in viewController: NSViewController?) -> TabbedViewController? {
+		guard let viewController = viewController else { return nil }
+		if let tabs = viewController as? TabbedViewController {
+			return tabs
+		}
+		return viewController.children.lazy.compactMap(tabbedViewController(in:)).first
 	}
 
 	private static func save(_ window: NSWindow?, to path: String) {

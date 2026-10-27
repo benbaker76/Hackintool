@@ -16,6 +16,9 @@ enum Bootloader {
 	static let detected: Bootloader? = detect()
 
 	private static func detect() -> Bootloader? {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.bootloader }
+		#endif
 		// Clover first: OpenCore never sets clovergui-revision, but Clover can publish an
 		// opencore-version that looks real.
 		if let revision = cloverRevision() {

@@ -30,7 +30,15 @@ final class AMDVanillaViewController: NSViewController, SectionContent {
 		DataColumn("macOS", "macOS", width: 110, sortKey: { .number(Double($0.patch.index)) }) { $0.patch.macOSRange },
 		DataColumn("Comment", "Comment", width: 420) { $0.patch.comment },
 		DataColumn("Identifier", "Identifier", width: 190) { $0.patch.identifier },
-		DataColumn("Status", "Status", width: 150) { $0.state?.title ?? "" },
+		DataColumn("Status", "Status", width: 150) { $0.state?.title ?? "" }
+			.with(customView: { row in
+				guard let state = row.state else { return NSView() }
+				switch state {
+				case .missing: return StatusBadge.make(state.title, color: .secondaryLabelColor)
+				case .current(let enabled): return StatusBadge.make(state.title, color: enabled ? .systemGreen : .secondaryLabelColor, symbol: enabled ? .checkCircle : nil)
+				case .outdated: return StatusBadge.make(state.title, color: .systemOrange, symbol: .warning)
+				}
+			}),
 	])
 	private lazy var coreCountPopUp = ControlBar.popUp([], target: self, action: #selector(coreCountChanged(_:)))
 	private lazy var quirkCheckbox = Form.checkbox("Enable ProvideCurrentCpuInfo", target: self, action: #selector(ignore(_:)))
@@ -61,7 +69,7 @@ final class AMDVanillaViewController: NSViewController, SectionContent {
 		split.isVertical = false
 		split.dividerStyle = .thin
 		split.addArrangedSubview(ControlBar.stack(header: header, content: info.view))
-		split.addArrangedSubview(ControlBar.stack(header: ControlBar.make([ControlBar.heading("Patches")]), content: table.view, footer: footer))
+		split.addArrangedSubview(ControlBar.pane("Patches", symbol: .cpu, content: table.view, footer: footer))
 		let infoHeight = split.arrangedSubviews[0].heightAnchor.constraint(equalToConstant: 200)
 		infoHeight.priority = .defaultLow
 		infoHeight.isActive = true

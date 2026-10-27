@@ -24,30 +24,48 @@ enum SystemInfo {
 	}
 
 	static var hostName: String {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.hostName }
+		#endif
 		return sysctlString("kern.hostname") ?? "???"
 	}
 
 	/// e.g. "Darwin 23.4.0 x86_64".
 	static var kernel: String {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.kernel }
+		#endif
 		return [sysctlString("kern.ostype"), sysctlString("kern.osrelease"), sysctlString("hw.machine")]
 			.compactMap { $0 }
 			.joined(separator: " ")
 	}
 
 	static var cpu: String {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.cpu }
+		#endif
 		return sysctlString("machdep.cpu.brand_string") ?? "???"
 	}
 
 	static var memorySize: String {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.memorySize }
+		#endif
 		return sysctlInt64("hw.memsize").map { ByteCount.string(for: Double($0)) } ?? "???"
 	}
 
 	static var isAppleSilicon: Bool {
+		#if DEBUG
+		if SampleData.isEnabled { return false }
+		#endif
 		return sysctlInt64("hw.optional.arm64") == 1
 	}
 
 	/// e.g. "macOS Sonoma Version 14.4 (Build 23E214)".
 	static var osName: String {
+		#if DEBUG
+		if SampleData.isEnabled { return SampleData.osName }
+		#endif
 		let processInfo = ProcessInfo.processInfo
 		return codeName(for: processInfo.operatingSystemVersion) + " " + processInfo.operatingSystemVersionString
 	}

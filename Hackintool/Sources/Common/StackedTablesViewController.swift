@@ -11,6 +11,7 @@ import Cocoa
 final class StackedTablesViewController: NSViewController, SectionContent {
 	struct Pane {
 		let title: String
+		var symbol: Symbol? = nil
 		let viewController: NSViewController
 	}
 
@@ -33,11 +34,7 @@ final class StackedTablesViewController: NSViewController, SectionContent {
 		splitView.dividerStyle = .thin
 		for pane in panes {
 			addChild(pane.viewController)
-			let heading = ControlBar.heading(pane.title)
-			let header = NSStackView(views: [heading])
-			header.edgeInsets = NSEdgeInsets(top: 8, left: 16, bottom: 4, right: 16)
-			header.alignment = .centerY
-			let paneView = ControlBar.stack(header: header, content: pane.viewController.view)
+			let paneView = ControlBar.pane(pane.title, symbol: pane.symbol, content: pane.viewController.view)
 			paneView.heightAnchor.constraint(greaterThanOrEqualToConstant: 90).isActive = true
 			splitView.addArrangedSubview(paneView)
 		}

@@ -321,23 +321,23 @@ final class FramebufferEditorViewController: NSViewController, SectionContent {
 			ControlBar.button("Reset", symbol: .refresh, target: self, action: #selector(reset(_:))),
 		])
 
-		func pane(_ title: String, _ content: NSView, trailing: [NSView] = []) -> NSView {
-			return ControlBar.stack(header: ControlBar.make([ControlBar.heading(title)], trailing: trailing), content: content)
+		func pane(_ title: String, _ symbol: Symbol, _ content: NSView, trailing: [NSView] = []) -> NSView {
+			return ControlBar.pane(title, symbol: symbol, content: content, trailing: trailing)
 		}
 		let left = NSSplitView()
 		left.isVertical = false
 		left.dividerStyle = .thin
-		left.addArrangedSubview(pane("Framebuffer", fields.view))
-		left.addArrangedSubview(pane("Flags", framebufferFlags.view))
+		left.addArrangedSubview(pane("Framebuffer", .framebuffer, fields.view))
+		left.addArrangedSubview(pane("Flags", .settings, framebufferFlags.view))
 
 		let right = NSSplitView()
 		right.isVertical = false
 		right.dividerStyle = .thin
-		right.addArrangedSubview(pane("Connectors", connectors.view, trailing: [
+		right.addArrangedSubview(pane("Connectors", .plug, connectors.view, trailing: [
 			ControlBar.iconButton(.export, toolTip: "Move Up", target: self, action: #selector(moveConnectorUp(_:))),
 			ControlBar.iconButton(.import, toolTip: "Move Down", target: self, action: #selector(moveConnectorDown(_:))),
 		]))
-		right.addArrangedSubview(pane("Connector Flags", connectorFlags.view))
+		right.addArrangedSubview(pane("Connector Flags", .settings, connectorFlags.view))
 		for split in [left, right] {
 			let top = split.arrangedSubviews[0].heightAnchor.constraint(equalTo: split.heightAnchor, multiplier: 0.5)
 			top.priority = .defaultLow

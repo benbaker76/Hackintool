@@ -14,7 +14,8 @@ final class SoundViewController: NSViewController, SectionContent {
 		DataColumn.hex("SubDevice", "Sub Device", width: 90, digits: 8) { $0.subDeviceID },
 		DataColumn.hex("Codec", "Codec", width: 90, digits: 8) { $0.codecID },
 		DataColumn.hex("Revision", "Revision", width: 80, digits: 6) { $0.codecRevisionID },
-		DataColumn("Name", "Name", width: 320) { "\($0.codecVendorName) \($0.codecName)" },
+		DataColumn("Name", "Name", width: 320) { "\($0.codecVendorName) \($0.codecName)" }
+			.with(image: { $0.deviceID >> 16 == PCIVendor.intel ? Symbol.speaker.image() : Symbol.gpu.image() }),
 		DataColumn("BundleID", "Kext", width: 220) { $0.bundleID ?? "" },
 	])
 	private let info = PropertyListViewController(showsGroupHeaders: false)
@@ -41,23 +42,23 @@ final class SoundViewController: NSViewController, SectionContent {
 		devices.onSelectionChange = { [weak self] rows in self?.show(rows.first) }
 		devices.onDoubleClick = { Kexts.reveal(bundleIdentifier: $0.bundleID) }
 
-		let bottom = NSSplitView()
-		bottom.isVertical = true
-		bottom.dividerStyle = .thin
-		bottom.addArrangedSubview(info.view)
-		bottom.addArrangedSubview(ControlBar.stack(header: ControlBar.make([ControlBar.heading("Pin Configuration")]), content: pins.view))
-		let infoWidth = info.view.widthAnchor.constraint(equalToConstant: 340)
-		infoWidth.priority = .defaultLow
-		infoWidth.isActive = true
+		devices.emptyState = EmptyState(.sound, "No Audio Devices", "No IOAudioDevice was found. AppleALC or VoodooHDA must be loaded for a codec to appear here.")
+		pins.emptyState = EmptyState(.speaker, "No Pin Configuration", "AppleALC publishes the codec's pin defaults when a layout ID is in use.")
 
+		// Full-width panes stacked top to bottom, so the wide pin table has room for every column.
 		let split = NSSplitView()
 		split.isVertical = false
 		split.dividerStyle = .thin
-		split.addArrangedSubview(devices.view)
-		split.addArrangedSubview(bottom)
-		let devicesHeight = devices.view.heightAnchor.constraint(equalToConstant: 150)
+		split.addArrangedSubview(ControlBar.pane("Audio Devices", symbol: .sound, content: devices.view))
+		split.addArrangedSubview(ControlBar.pane("Pin Configuration", symbol: .speaker, content: pins.view))
+		split.addArrangedSubview(ControlBar.pane("Details", symbol: .info, content: info.view))
+		let panes = split.arrangedSubviews
+		let devicesHeight = panes[0].heightAnchor.constraint(equalToConstant: 160)
 		devicesHeight.priority = .defaultLow
 		devicesHeight.isActive = true
+		let pinsHeight = panes[1].heightAnchor.constraint(equalTo: panes[2].heightAnchor, multiplier: 1.2)
+		pinsHeight.priority = .defaultLow
+		pinsHeight.isActive = true
 		view = split
 	}
 

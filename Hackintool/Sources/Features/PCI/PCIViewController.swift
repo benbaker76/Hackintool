@@ -17,7 +17,8 @@ final class PCIViewController: NSViewController, SectionContent {
 		DataColumn.hex("SubDeviceID", "Sub Device", width: 76) { $0.subsystemID },
 		DataColumn("ASPM", "ASPM", width: 60) { $0.aspm },
 		DataColumn("VendorName", "Vendor Name", width: 150) { $0.vendorName },
-		DataColumn("DeviceName", "Device Name", width: 220) { $0.deviceName },
+		DataColumn("DeviceName", "Device Name", width: 240) { $0.deviceName }
+			.with(image: { $0.symbol.image() }),
 		DataColumn("ClassName", "Class", width: 130) { $0.className },
 		DataColumn("SubClassName", "Subclass", width: 130) { $0.subclassName },
 		DataColumn("IORegName", "IOReg Name", width: 180) { $0.acpiPath },
@@ -38,6 +39,7 @@ final class PCIViewController: NSViewController, SectionContent {
 			.separator(),
 			menuItem("Show Kext in Finder", #selector(showKext(_:))),
 		]
+		table.emptyState = EmptyState(.pci, "No PCI Devices")
 		table.onDoubleClick = { Kexts.reveal(bundleIdentifier: $0.bundleID) }
 
 		let footer = ControlBar.make([], trailing: [

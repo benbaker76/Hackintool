@@ -110,6 +110,8 @@ class PropertyListViewController: NSViewController, SectionContent {
 
 	private func reload() {
 		nodes = groups.map { Node(group: $0, filter: filterText) }.filter { !$0.children.isEmpty }
+		// No stripes on an empty list; they look like a table that failed to load.
+		outlineView.usesAlternatingRowBackgroundColors = !showsGroupHeaders && !nodes.isEmpty
 		outlineView.reloadData()
 		outlineView.expandItem(nil, expandChildren: true)
 	}
@@ -201,8 +203,9 @@ extension PropertyListViewController: NSOutlineViewDataSource, NSOutlineViewDele
 		}
 		let isValue = tableColumn?.identifier == .value
 		let cell = TextCell.make(in: outlineView, identifier: isValue ? .valueCell : .nameCell)
-		cell.textField?.stringValue = isValue ? node.value : node.title
-		cell.textField?.textColor = isValue ? .labelColor : .secondaryLabelColor
+		let isUnknown = isValue && node.value == "???"
+		cell.textField?.stringValue = isValue ? node.value.replacingOccurrences(of: "???", with: L("Unknown")) : node.title
+		cell.textField?.textColor = isUnknown ? .tertiaryLabelColor : isValue ? .labelColor : .secondaryLabelColor
 		cell.textField?.isSelectable = isValue
 		cell.toolTip = isValue ? node.value : nil
 		return cell
