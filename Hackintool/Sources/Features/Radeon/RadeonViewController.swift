@@ -37,7 +37,7 @@ final class RadeonViewController: NSViewController, SectionContent, NSTextFieldD
 	private var gpu: RadeonGPU?
 	private var options: RadeonOptions?
 
-	private let output = ScrollingTextView(monospaced: true, wraps: false)
+	private let output = PlistOutputView()
 	private lazy var gpuPopUp = ControlBar.popUp([], target: self, action: #selector(gpuChanged(_:)))
 	private let nameLabel = NSTextField(labelWithString: "")
 	private let familyLabel = NSTextField(labelWithString: "")
@@ -78,7 +78,7 @@ final class RadeonViewController: NSViewController, SectionContent, NSTextFieldD
 		split.isVertical = true
 		split.dividerStyle = .thin
 		split.addArrangedSubview(form)
-		split.addArrangedSubview(output.scrollView)
+		split.addArrangedSubview(output)
 		form.widthAnchor.constraint(greaterThanOrEqualToConstant: 420).isActive = true
 		let formWidth = form.widthAnchor.constraint(equalToConstant: 520)
 		formWidth.priority = .defaultLow
@@ -87,7 +87,7 @@ final class RadeonViewController: NSViewController, SectionContent, NSTextFieldD
 		let header = ControlBar.make([ControlBar.label("GPU"), gpuPopUp], trailing: [
 			ControlBar.iconButton(.gitHub, toolTip: "NootedRed (Ryzen APU graphics)", target: self, action: #selector(openNootedRed(_:))),
 		])
-		let footer = ControlBar.make([], trailing: [
+		let footer = ControlBar.make([output.modeControl], trailing: [
 			ControlBar.button("Copy", symbol: .copy, target: self, action: #selector(copyOutput(_:))),
 			ControlBar.button("Apply to config.plist…", symbol: .wand, target: self, action: #selector(apply(_:))),
 		])

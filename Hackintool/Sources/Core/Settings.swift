@@ -108,4 +108,7 @@ enum Settings {
 	@Default("AII_LogIPGStyle", true) static var aiiLogIPGStyle: Bool
 	@Default("AII_LogIntelRegs", false) static var aiiLogIntelRegs: Bool
 	@Default("AII_LogMSRs", true) static var aiiLogMSRs: Bool
+
+	// Generated plists: show the tree (0) or the XML (1)
+	@Default("PlistOutputMode", 0) static var plistOutputMode: Int
 }

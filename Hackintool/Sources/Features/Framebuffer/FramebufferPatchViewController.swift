@@ -9,7 +9,7 @@ import Cocoa
 
 final class FramebufferPatchViewController: NSViewController, SectionContent {
 	private let model: FramebufferModel
-	private let output = ScrollingTextView(monospaced: true, wraps: false)
+	private let output = PlistOutputView()
 
 	/// Boolean options: title, tooltip identifier, setting, and whether it changes the auto patches.
 	private struct Option {
@@ -154,6 +154,7 @@ final class FramebufferPatchViewController: NSViewController, SectionContent {
 			ControlBar.label("Method"), methodPopUp,
 			ControlBar.label("Bootloader"), bootloaderPopUp,
 		], trailing: [
+			output.modeControl,
 			ControlBar.button("Generate Patch", symbol: .refresh, target: self, action: #selector(generate(_:))),
 			ControlBar.iconButton(.copy, toolTip: "Copy", target: self, action: #selector(copyOutput(_:))),
 			ControlBar.button("Save to config.plist…", symbol: .export, target: self, action: #selector(saveToConfig(_:))),
@@ -163,7 +164,7 @@ final class FramebufferPatchViewController: NSViewController, SectionContent {
 		split.isVertical = false
 		split.dividerStyle = .thin
 		split.addArrangedSubview(options)
-		split.addArrangedSubview(output.scrollView)
+		split.addArrangedSubview(output)
 		let top = options.heightAnchor.constraint(equalTo: split.heightAnchor, multiplier: 0.5)
 		top.priority = .defaultLow
 		top.isActive = true
@@ -282,10 +283,11 @@ final class FramebufferPatchViewController: NSViewController, SectionContent {
 	// MARK: Output
 
 	@objc private func generate(_ sender: Any?) {
-		output.clear()
-		guard let context = model.context else { return }
-		output.append(FramebufferPatchViewController.patchText(context: context, method: Method.current))
-		output.textView.scrollToBeginningOfDocument(nil)
+		guard let context = model.context else {
+			output.clear()
+			return
+		}
+		output.string = FramebufferPatchViewController.patchText(context: context, method: Method.current)
 	}
 
 	private static func patchText(context: PatchContext, method: Method) -> String {
@@ -315,7 +317,7 @@ final class FramebufferPatchViewController: NSViewController, SectionContent {
 	}
 
 	@objc private func copyOutput(_ sender: Any?) {
-		Pasteboard.copy(output.textView.string)
+		Pasteboard.copy(output.string)
 	}
 
 	@objc private func saveToConfig(_ sender: Any?) {

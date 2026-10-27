@@ -142,6 +142,7 @@ If you find Hackintool useful and want to support its development:
 - Icon & UI updates by ultratiem
 - USB mapping approach from [USBMap](https://github.com/corpnewt/USBMap) (corpnewt)
 - Icons from [Tabler Icons](https://tabler.io/icons) (MIT)
+- Property list editor ported from [LNPropertyListEditor](https://github.com/LeoNatan/LNPropertyListEditor) by Leo Natan (MIT)
 
 ## Release history
 
