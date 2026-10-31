@@ -90,7 +90,8 @@ final class FramebufferTable {
 	}
 
 	/// Finds the platform table in kext (or table) data: it starts with a generation's first
-	/// platform ID and runs until an 0xFFFFFFFF terminator (Sandy Bridge has a fixed 7 entries).
+	/// platform ID and runs until an 0xFFFFFFFF terminator. Sandy Bridge has no terminator: it has a
+	/// fixed 9 entries (WhateverGreen's SandyPlatformNum), the last being the default frame.
 	static func parse(_ data: Data, generation: IntelGeneration) -> FramebufferTable? {
 		let bytes = [UInt8](data)
 		func word(at offset: Int) -> UInt32 {
@@ -115,7 +116,7 @@ final class FramebufferTable {
 				}
 				records.append(Framebuffer(kind: found, bytes: Array(bytes[offset..<offset + size])))
 				offset += size
-				if found == .sandyBridge && records.count == 7 {
+				if found == .sandyBridge && records.count == sandyBridgePlatformIDs.count {
 					break
 				}
 			}

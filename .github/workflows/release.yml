@@ -76,6 +76,19 @@ jobs:
         run: |
           output=$(xcodebuild -project Hackintool.xcodeproj -configuration Release -showBuildSettings | grep MARKETING_VERSION | tr -d 'MARKETING_VERSION = ')
           echo "::set-output name=result::$output"
+      - name: Check for existing release
+        # A release is only published when MARKETING_VERSION changes; pushes that keep the
+        # version just build. To publish, bump the version (or delete that version's release).
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "${{ steps.version.outputs.result }}" --repo "${{ github.repository }}" > /dev/null 2>&1; then
+            echo "Release ${{ steps.version.outputs.result }} already exists; not publishing."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Compress Files
         # ditto keeps the symlinks inside Sparkle.framework; zip turned them into copies,
         # which broke the framework's code signature.
@@ -90,9 +103,9 @@ jobs:
           name: Artifacts
           path: build/*
       - name: Upload to Release
-        # Only master publishes a release (and the appcast users update from);
-        # other branches just build and upload to the workflow's artifacts.
-        if: github.ref == 'refs/heads/master'
+        # Only master publishes a release (and the appcast users update from), and only for
+        # a new version; other pushes just build and upload to the workflow's artifacts.
+        if: github.ref == 'refs/heads/master' && steps.release.outputs.exists == 'false'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}

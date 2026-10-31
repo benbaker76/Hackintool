@@ -194,7 +194,7 @@ final class USBViewController: NSViewController, SectionContent {
 		}
 	}
 
-	/// Exports SSDT-UIAC for setups still using USBInjectAll (Edit menu ▸ Export SSDT-UIAC).
+	/// Exports SSDT-UIAC for setups still using USBInjectAll (File ▸ Export ▸ USB SSDT-UIAC…).
 	@objc func exportSSDTUIAC(_ sender: Any?) {
 		FilePanels.chooseFolder(prompt: "Export") { folder in
 			if let aml = USBMapExport.compile(USBMapExport.ssdtUIAC(ports: self.map.ports), named: "SSDT-UIAC", in: folder) {
