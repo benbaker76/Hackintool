@@ -149,8 +149,13 @@ final class SystemLogViewController: LogTextViewController {
 enum BootLog {
 	/// The boot log published by OpenCore (IOService:/boot-log) or Clover (efi/platform).
 	static func bootloaderLog() -> String? {
-		let data = IORegistryEntry(path: "IOService:/")?.data("boot-log") ?? IORegistryEntry(path: "IODeviceTree:/efi/platform")?.data("boot-log")
-		return data.flatMap { String(data: $0, encoding: .ascii) }
+		guard var data = IORegistryEntry(path: "IOService:/")?.data("boot-log") ?? IORegistryEntry(path: "IODeviceTree:/efi/platform")?.data("boot-log") else { return nil }
+		while data.last == 0 {
+			data.removeLast()
+		}
+		// Not .ascii: Swift returns nil for it if any byte is over 0x7F (a volume name, say),
+		// which hid Clover's log. Latin-1 decodes any bytes.
+		return String(data: data, encoding: .utf8) ?? String(data: data, encoding: .isoLatin1)
 	}
 
 	static func latestLiluLog() -> URL? {
