@@ -11,6 +11,7 @@ import Cocoa
 final class DisplaysViewController: NSViewController, SectionContent {
 	private var displays: [Display] = []
 	private var settings: [String: DisplaySettings] = [:]
+	private var connections = DisplayConnections()
 
 	private lazy var displayTable = DataTableViewController<Display>(columns: [
 		DataColumn("Name", "Name", width: 200, onEdit: { [weak self] display, value in
@@ -29,6 +30,7 @@ final class DisplaysViewController: NSViewController, SectionContent {
 		// The framebuffer index on its GPU; it matches the connector row highlighted in Patch.
 		DataColumn("Framebuffer", "FB", width: 40, monospaced: true, sortKey: { .number(Double($0.index)) }) { String($0.index) },
 		DataColumn("Port", "Port", width: 50, monospaced: true) { String(format: "0x%02X", $0.port) },
+		DataColumn("Connection", "Type", width: 60) { [unowned self] in self.connections.name(for: $0) },
 		DataColumn("Internal", "Internal", width: 60) { [unowned self] in L(self.settings(for: $0).isInternal ? "Yes" : "No") },
 		DataColumn("Aspect", "Aspect", width: 70) { $0.edid.flatMap(EDID.init)?.aspectRatio ?? "" },
 	])
@@ -236,6 +238,7 @@ final class DisplaysViewController: NSViewController, SectionContent {
 
 	func refresh() {
 		displays = Display.all()
+		connections = DisplayConnections()
 		displayTable.setRows(displays)
 		if !displays.isEmpty && displayTable.tableView.selectedRow < 0 {
 			displayTable.tableView.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)

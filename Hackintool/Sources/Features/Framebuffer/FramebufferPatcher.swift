@@ -481,11 +481,14 @@ enum FramebufferPatcher {
 
 	/// Applies WhateverGreen framebuffer properties (from the running IGPU or a config.plist)
 	/// to the modified record. Returns false if they're for a different platform ID.
+	/// `updatesSettings` also picks up the non-framebuffer options into Settings.
 	@discardableResult
-	static func applyProperties(_ properties: [String: Any], to table: FramebufferTable, at index: Int) -> Bool {
+	static func applyProperties(_ properties: [String: Any], to table: FramebufferTable, at index: Int, updatesSettings: Bool = true) -> Bool {
 		func number(_ key: String) -> UInt32? { return IOValue.uint32(properties[key]) }
 		let platformID = table.platformIDs[index]
-		applySettings(from: properties)
+		if updatesSettings {
+			applySettings(from: properties)
+		}
 
 		guard number("framebuffer-patch-enable") == 1 else { return true }
 		let propertyID = number("AAPL,snb-platform-id") ?? number("AAPL,ig-platform-id")

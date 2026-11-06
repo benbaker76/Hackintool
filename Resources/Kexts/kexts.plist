@@ -816,6 +816,16 @@
 	</dict>
 	<dict>
 		<key>Description</key>
+		<string>Restores Broadcom Wi-Fi on macOS Sonoma, Sequoia and Tahoe through OpenCore</string>
+		<key>Name</key>
+		<string>SimpleBCM</string>
+		<key>ProjectUrl</key>
+		<string>https://github.com/laobamac/SimpleBCM</string>
+		<key>Type</key>
+		<string>Kext</string>
+	</dict>
+	<dict>
+		<key>Description</key>
 		<string>A macOS kext for Intel i210/211 Gbit Ethernet.</string>
 		<key>Name</key>
 		<string>SimpleGBE</string>
