@@ -3,7 +3,8 @@
 //  Hackintool
 //
 //  How each display is connected (HDMI, DP, DVI...). Displays on the Intel IGPU take the
-//  type of their framebuffer connector; others fall back to what the display's EDID declares.
+//  type of their framebuffer connector, and AMD ones the connector-type their framebuffer
+//  publishes; others fall back to what the display's EDID declares.
 //
 
 import Foundation
@@ -21,8 +22,23 @@ struct DisplayConnections {
 		if display.videoID & 0xFFFF == PCIVendor.intel, let type = intelPortTypes[display.port] {
 			return ConnectorType(rawValue: type).map { L($0.name) } ?? String(format: "0x%08X", type)
 		}
-		return display.edid.flatMap(EDID.init)?.videoInterface ?? ""
+		let edidInterface = display.edid.flatMap(EDID.init)?.videoInterface
+		if display.videoID & 0xFFFF == PCIVendor.amd, let type = display.connectorType {
+			// RadeonFramebuffer's tables built from the VBIOS can list an HDMI port as DVI.
+			if type == 0x4 && edidInterface == L("HDMI") {
+				return L("HDMI")
+			}
+			if let name = DisplayConnections.amdConnectorNames[type] {
+				return L(name)
+			}
+		}
+		return edidInterface ?? ""
 	}
+
+	/// AMD connector types, as in WhateverGreen's RADConnectors::ConnectorType.
+	private static let amdConnectorNames: [UInt32: String] = [
+		0x2: "LVDS", 0x4: "DVI", 0x8: "S-Video", 0x10: "VGA", 0x400: "DP", 0x800: "HDMI", 0x2000: "DVI-A",
+	]
 
 	/// The running platform ID's connectors, with the IGPU's framebuffer patches applied, keyed by
 	/// the port-number each gets: 0 for the panel, otherwise its index + 4 (+ 3 on Sandy/Ivy Bridge),

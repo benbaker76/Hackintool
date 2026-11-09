@@ -25,6 +25,8 @@ struct Display {
 	/// (device << 16) | vendor of that GPU.
 	let videoID: UInt32
 	let displayID: CGDirectDisplayID?
+	/// The framebuffer's "connector-type", which AMD publishes (an AMD ConnectorType, 0x400 = DP).
+	var connectorType: UInt32? = nil
 
 	/// All displays known to the I/O Registry.
 	static func all() -> [Display] {
@@ -48,6 +50,7 @@ struct Display {
 			let ports = [framebuffer] + framebuffer.ancestors().prefix { $0.registryID != gpu.registryID }
 			let index = ports.lazy.compactMap { $0.location().flatMap { UInt32($0) } }.first ?? 0
 			let port = ports.lazy.compactMap { $0.uint32("port-number") }.first ?? 0
+			let connectorType = ports.lazy.compactMap { $0.uint32("connector-type") }.first
 
 			let displayID = activeDisplays.first {
 				CGDisplayVendorNumber($0) == vendorID && CGDisplayModelNumber($0) == productID && CGDisplaySerialNumber($0) == serialNumber
@@ -64,7 +67,8 @@ struct Display {
 			               isInternal: entry.name == "AppleBacklightDisplay",
 			               videoPath: gpu.path(),
 			               videoID: gpuDevice << 16 | gpuVendor,
-			               displayID: displayID)
+			               displayID: displayID,
+			               connectorType: connectorType)
 		}
 	}
 
