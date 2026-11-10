@@ -37,7 +37,7 @@ final class DisksViewController: NSViewController, SectionContent {
 
 	private lazy var stacked = StackedTablesViewController(panes: [
 		.init(title: "EFI Partitions", symbol: .boot, viewController: efiTable),
-		.init(title: "Partition Scheme", symbol: .disks, viewController: partitionTable),
+		.init(title: "Partition Scheme", symbol: .disks, viewController: partitionTable, weight: 3),
 	])
 
 	override func loadView() {

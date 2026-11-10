@@ -13,6 +13,8 @@ final class StackedTablesViewController: NSViewController, SectionContent {
 		let title: String
 		var symbol: Symbol? = nil
 		let viewController: NSViewController
+		/// Starting height relative to the other panes.
+		var weight: CGFloat = 1
 	}
 
 	private let panes: [Pane]
@@ -39,10 +41,11 @@ final class StackedTablesViewController: NSViewController, SectionContent {
 			splitView.addArrangedSubview(paneView)
 		}
 
-		// Equal heights to start with, at a priority low enough that dragging a divider wins.
+		// Heights in proportion to the weights to start with, at a priority low enough that
+		// dragging a divider wins.
 		let paneViews = splitView.arrangedSubviews
-		for paneView in paneViews.dropFirst() {
-			let equal = paneView.heightAnchor.constraint(equalTo: paneViews[0].heightAnchor)
+		for (pane, paneView) in zip(panes, paneViews).dropFirst() {
+			let equal = paneView.heightAnchor.constraint(equalTo: paneViews[0].heightAnchor, multiplier: pane.weight / panes[0].weight)
 			equal.priority = .defaultLow
 			equal.isActive = true
 		}

@@ -22,17 +22,11 @@ struct DisplayConnections {
 		if display.videoID & 0xFFFF == PCIVendor.intel, let type = intelPortTypes[display.port] {
 			return ConnectorType(rawValue: type).map { L($0.name) } ?? String(format: "0x%08X", type)
 		}
-		let edidInterface = display.edid.flatMap(EDID.init)?.videoInterface
-		if display.videoID & 0xFFFF == PCIVendor.amd, let type = display.connectorType {
-			// RadeonFramebuffer's tables built from the VBIOS can list an HDMI port as DVI.
-			if type == 0x4 && edidInterface == L("HDMI") {
-				return L("HDMI")
-			}
-			if let name = DisplayConnections.amdConnectorNames[type] {
-				return L(name)
-			}
+		if display.videoID & 0xFFFF == PCIVendor.amd, let type = display.connectorType,
+		   let name = DisplayConnections.amdConnectorNames[type] {
+			return L(name)
 		}
-		return edidInterface ?? ""
+		return display.edid.flatMap(EDID.init)?.videoInterface ?? ""
 	}
 
 	/// AMD connector types, as in WhateverGreen's RADConnectors::ConnectorType.
