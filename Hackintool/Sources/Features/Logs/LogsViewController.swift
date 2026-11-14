@@ -124,6 +124,14 @@ final class SystemLogViewController: LogTextViewController {
 		show(nil)
 	}
 
+	/// The running `log show`, terminated if Show is pressed again.
+	private var process: Process?
+	private var run = 0
+
+	deinit {
+		process?.terminate()
+	}
+
 	@objc private func show(_ sender: Any?) {
 		var predicate = "process == \"\(processField.stringValue)\""
 		let contains = containsField.stringValue.trimmingCharacters(in: .whitespaces)
@@ -135,7 +143,37 @@ final class SystemLogViewController: LogTextViewController {
 			arguments += ["--last", "boot"]
 		}
 		arguments += ["--predicate", predicate]
-		load { Shell.output("/usr/bin/log", arguments) }
+
+		// The kernel alone can log gigabytes since boot, far more than a text view can take,
+		// so keep only the most recent part.
+		process?.terminate()
+		run += 1
+		let thisRun = run
+		let maxBytes = 4 << 20
+		output.string = L("Loading…")
+		DispatchQueue.global(qos: .userInitiated).async {
+			let result = Shell.tail("/usr/bin/log", arguments, maxBytes: maxBytes, started: { process in
+				DispatchQueue.main.async { if self.run == thisRun { self.process = process } else { process.terminate() } }
+			}, progress: { bytes in
+				DispatchQueue.main.async {
+					guard self.run == thisRun else { return }
+					self.output.string = L("Loading… %@ read", LogSize.string(bytes))
+				}
+			})
+			DispatchQueue.main.async {
+				guard self.run == thisRun else { return }
+				self.process = nil
+				guard let result = result else {
+					self.output.string = ""
+					return
+				}
+				var text = result.output
+				if result.totalBytes > maxBytes {
+					text = L("Showing the last %@ of %@. Use Contains to narrow it down.", LogSize.string(maxBytes), LogSize.string(result.totalBytes)) + "\n\n" + text
+				}
+				self.output.string = text
+			}
+		}
 	}
 
 	@objc private func erase(_ sender: Any?) {
@@ -143,6 +181,12 @@ final class SystemLogViewController: LogTextViewController {
 			guard confirmed else { return }
 			self.output.string = Privileges.shared.run("/usr/bin/log", ["erase", "--all"])?.output ?? ""
 		}
+	}
+}
+
+private enum LogSize {
+	static func string(_ bytes: Int) -> String {
+		return ByteCountFormatter.string(fromByteCount: Int64(bytes), countStyle: .file)
 	}
 }
 

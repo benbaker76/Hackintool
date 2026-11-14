@@ -41,6 +41,60 @@ enum Shell {
 		return run(launchPath, arguments)?.output
 	}
 
+	/// Runs a tool to completion on the calling (background) thread, keeping only the last
+	/// `maxBytes` of its combined output, for tools like `log show` that can print gigabytes.
+	/// `started` gets the process so the caller can terminate it; `progress` gets the number
+	/// of bytes read so far, every few megabytes.
+	static func tail(_ launchPath: String, _ arguments: [String], maxBytes: Int,
+	                 started: (Process) -> Void = { _ in },
+	                 progress: (Int) -> Void = { _ in }) -> (output: String, totalBytes: Int)? {
+		let process = Process()
+		process.executableURL = URL(fileURLWithPath: launchPath)
+		process.arguments = arguments
+		process.standardInput = FileHandle.nullDevice
+		let pipe = Pipe()
+		process.standardOutput = pipe
+		process.standardError = pipe
+		do {
+			try process.run()
+		} catch {
+			return nil
+		}
+		started(process)
+		let handle = pipe.fileHandleForReading
+		var buffer = Data()
+		var total = 0
+		var reported = 0
+		// Plain read(2) into one chunk: availableData autoreleases every chunk it returns.
+		var chunk = [UInt8](repeating: 0, count: 64 << 10)
+		let fd = handle.fileDescriptor
+		while true {
+			let count = chunk.withUnsafeMutableBytes { read(fd, $0.baseAddress, $0.count) }
+			if count < 0 && errno == EINTR { continue }
+			guard count > 0 else { break }
+			buffer.append(contentsOf: chunk[0..<count])
+			total += count
+			// Trim only once the buffer doubles, so the copying stays linear. subdata copies;
+			// a suffix slice would keep the whole storage alive.
+			if buffer.count > maxBytes * 2 {
+				buffer = buffer.subdata(in: buffer.endIndex - maxBytes..<buffer.endIndex)
+			}
+			if total - reported >= 8 << 20 {
+				reported = total
+				progress(total)
+			}
+		}
+		process.waitUntilExit()
+		if buffer.count > maxBytes {
+			buffer = buffer.suffix(maxBytes)
+		}
+		// Start on a whole line when the head was cut off.
+		if total > buffer.count, let newline = buffer.firstIndex(of: 0x0A) {
+			buffer = buffer.suffix(from: buffer.index(after: newline))
+		}
+		return (String(decoding: buffer, as: UTF8.self), total)
+	}
+
 	/// Runs a tool to completion on the calling (background) thread, passing output to
 	/// `output` on the main queue as it arrives. `isError` marks stderr.
 	@discardableResult
