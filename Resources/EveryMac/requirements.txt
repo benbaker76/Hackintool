@@ -4,6 +4,6 @@ certifi==2026.10.23
 charset-normalizer==3.5.2
 idna==3.20
 requests==2.34.2
-soupsieve==3.0.4
+soupsieve==4.0
 typing_extensions==4.16.0
 urllib3==2.8.0
